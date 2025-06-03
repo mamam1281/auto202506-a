@@ -8,3 +8,5 @@ pydantic
 python-dotenv
 confluent-kafka
 celery[redis]
+apscheduler
+pytest

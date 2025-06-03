@@ -9,10 +9,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# from app.models import Base; target_metadata = Base.metadata
-# For now, since models.py is empty, you can set target_metadata = None
-# or comment out the relevant lines if app.models doesn't define Base yet.
-target_metadata = None # Placeholder
+from app.models import Base # Import Base from your models
+target_metadata = Base.metadata # Configure Alembic to use your models' metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

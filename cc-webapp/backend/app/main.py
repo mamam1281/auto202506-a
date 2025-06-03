@@ -1,7 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .apscheduler_jobs import start_scheduler, scheduler # Import scheduler components
 
 app = FastAPI()
+
+@app.on_event("startup")
+async def startup_event():
+    print("FastAPI startup event: Initializing job scheduler...")
+    start_scheduler() # Corrected to call the function
+    print("FastAPI startup event: Job scheduler initialization process started.")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("FastAPI shutdown event: Shutting down scheduler...")
+    if scheduler.running:
+        scheduler.shutdown(wait=False) # wait=False for async scheduler
+    print("FastAPI shutdown event: Scheduler shut down.")
 
 # Configure CORS
 origins = [
@@ -22,11 +36,11 @@ async def root():
     return {"status": "OK"}
 
 # Placeholder for including routers (to be implemented later)
-# from .routers import users, actions, rewards, feedback, unlock, user_segments, notification # noqa
+from .routers import actions, notification, user_segments # users, rewards, feedback, unlock # noqa # Added user_segments
 # app.include_router(users.router, prefix="/api")
-# app.include_router(actions.router, prefix="/api")
+app.include_router(actions.router, prefix="/api", tags=["actions"])
 # app.include_router(rewards.router, prefix="/api")
 # app.include_router(feedback.router, prefix="/api")
 # app.include_router(unlock.router, prefix="/api")
-# app.include_router(user_segments.router, prefix="/api")
-# app.include_router(notification.router, prefix="/api")
+app.include_router(user_segments.router, prefix="/api", tags=["user_segments"]) # Added user_segments router
+app.include_router(notification.router, prefix="/api", tags=["notification"])
