@@ -1,6 +1,145 @@
-# from fastapi import APIRouter
-# router = APIRouter()
-# @router.post("/unlock")
-# async def unlock_feature():
-#     # Stub for POST /api/unlock
-#     return {"message": "Unlock endpoint stub"}
+# cc-webapp/backend/app/routers/unlock.py
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from sqlalchemy import desc # Correct import for desc
+from pydantic import BaseModel
+from datetime import datetime
+import logging # For logging
+
+from .. import models # Should import User, UserReward, AdultContent, UserSegment
+from ..database import SessionLocal
+
+logger = logging.getLogger(__name__)
+router = APIRouter()
+
+# --- Configuration ---
+MAX_UNLOCK_STAGE = 3 # Define this based on your content stages. Consider making it configurable.
+
+# --- Dependencies ---
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# --- Pydantic Models ---
+class UnlockResponse(BaseModel):
+    stage: int
+    name: str # Added name from AdultContent
+    description: str | None # Added description
+    thumbnail_url: str | None
+    media_url: str | None
+    # message: str | None = None # Optional: for any accompanying message
+
+    class Config:
+        orm_mode = True
+
+# --- Helper Functions ---
+def get_segment_level(rfm_group: str | None) -> int:
+    """Maps RFM group string to a numerical level."""
+    if rfm_group == "Whale":
+        return 3
+    elif rfm_group == "Medium":
+        return 2
+    elif rfm_group == "Low":
+        return 1
+    logger.debug(f"Unknown RFM group '{rfm_group}' received, defaulting to level 0.")
+    return 0 # Default for None or Unknown RFM groups
+
+# --- API Endpoint ---
+@router.get("/unlock", response_model=UnlockResponse, tags=["unlock", "content"])
+async def attempt_content_unlock(
+    user_id: int = Query(..., description="ID of the user attempting to unlock content"),
+    db: Session = Depends(get_db)
+):
+    # 1. Fetch User record
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        logger.warning(f"Attempt to unlock content for non-existent user_id: {user_id}")
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # 2. Query for the latest UserReward with reward_type="CONTENT_UNLOCK"
+    latest_unlock_reward = db.query(models.UserReward).filter(
+        models.UserReward.user_id == user_id,
+        models.UserReward.reward_type == "CONTENT_UNLOCK"
+    ).order_by(desc(models.UserReward.awarded_at)).first() # Order by awarded_at to get the latest
+
+    last_stage_unlocked = 0
+    if latest_unlock_reward and latest_unlock_reward.reward_value:
+        try:
+            # Assuming reward_value stores the stage number as a string
+            last_stage_unlocked = int(latest_unlock_reward.reward_value)
+        except ValueError:
+            logger.error(
+                f"Could not parse last_stage_unlocked from UserReward.reward_value='{latest_unlock_reward.reward_value}' for user {user_id}. Defaulting to 0."
+            )
+            # This indicates a data integrity issue or a different storage format than expected.
+            last_stage_unlocked = 0 # Default to 0 if parsing fails
+
+    logger.info(f"User {user_id}: Last stage unlocked = {last_stage_unlocked}.")
+
+    # 3. Compute next_stage
+    next_stage_to_unlock = last_stage_unlocked + 1
+    if next_stage_to_unlock > MAX_UNLOCK_STAGE:
+        logger.info(f"User {user_id}: All stages already unlocked (last stage {last_stage_unlocked}, max stage {MAX_UNLOCK_STAGE}).")
+        raise HTTPException(status_code=400, detail="All content stages already unlocked or no further stages available.")
+
+    # 4. Fetch AdultContent row for next_stage_to_unlock
+    adult_content_item = db.query(models.AdultContent).filter(models.AdultContent.stage == next_stage_to_unlock).first()
+    if not adult_content_item:
+        logger.error(f"Content for stage {next_stage_to_unlock} not found in adult_content table.")
+        raise HTTPException(status_code=404, detail=f"Content for stage {next_stage_to_unlock} not found.")
+
+    # 5. Verify user segment meets required_segment_level on AdultContent
+    user_segment = db.query(models.UserSegment).filter(models.UserSegment.user_id == user_id).first()
+
+    current_user_segment_level = 0 # Default to lowest if no segment info
+    if not user_segment:
+        logger.warning(f"User segment data for user_id {user_id} not found. Assuming lowest segment level (0).")
+    else:
+        current_user_segment_level = get_segment_level(user_segment.rfm_group)
+        logger.info(f"User {user_id}: Current segment level = {current_user_segment_level} (from RFM group '{user_segment.rfm_group}').")
+
+    required_content_level = adult_content_item.required_segment_level
+    logger.info(f"Content stage {next_stage_to_unlock} requires segment level {required_content_level}.")
+
+    if current_user_segment_level < required_content_level:
+        logger.warning(
+            f"User {user_id} (segment level {current_user_segment_level}) failed to unlock stage {next_stage_to_unlock} (requires level {required_content_level})."
+        )
+        raise HTTPException(
+            status_code=403,
+            detail=(
+                f"Your current segment level ({current_user_segment_level}) does not meet the required "
+                f"level ({required_content_level}) to unlock content stage {next_stage_to_unlock}."
+            )
+        )
+
+    # 6. Insert a new UserReward to mark this stage as unlocked
+    new_reward = models.UserReward(
+        user_id=user_id,
+        reward_type="CONTENT_UNLOCK",
+        reward_value=str(next_stage_to_unlock), # Store stage as string
+        awarded_at=datetime.utcnow(),
+        trigger_action_id=None # This unlock is direct
+    )
+    db.add(new_reward)
+    db.commit()
+    db.refresh(new_reward)
+    # db.refresh(adult_content_item) # Not strictly necessary as we're not changing adult_content_item
+
+    logger.info(f"User {user_id} successfully unlocked content stage {next_stage_to_unlock}.")
+
+    # 7. Return response with details of the unlocked content
+    return UnlockResponse(
+        stage=adult_content_item.stage,
+        name=adult_content_item.name,
+        description=adult_content_item.description,
+        thumbnail_url=adult_content_item.thumbnail_url,
+        media_url=adult_content_item.media_url
+    )
+
+# Ensure this router is included in app/main.py:
+# from .routers import unlock
+# app.include_router(unlock.router, prefix="/api", tags=["unlock"])
