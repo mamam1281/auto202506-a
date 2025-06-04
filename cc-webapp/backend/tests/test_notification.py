@@ -6,9 +6,9 @@ from typing import Generator, List # List for type hinting
 from datetime import datetime, timedelta, timezone # Added timezone for robust datetime comparisons
 
 # Assuming Base is defined in models.py and can be imported
-from backend.app.models import Base, User, Notification
-from backend.app.main import app
-from backend.app.database import get_db # Original get_db dependency to override
+from app.models import Base, User, Notification
+from app.main import app
+from app.database import get_db  # Original get_db dependency to override
 
 # --- Test Database Setup ---
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_notification.db" # Specific DB file for these tests

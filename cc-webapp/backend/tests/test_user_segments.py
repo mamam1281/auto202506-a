@@ -4,17 +4,17 @@ import pytest # pytest is not strictly needed for these basic tests but good pra
 
 # Adjust the import path for 'app' if your structure is different.
 # This assumes 'app' is the FastAPI instance in backend/app/main.py
-from backend.app.main import app
+from app.main import app
 # Import UserSegment for creating mock return values
-from backend.app.models import UserSegment
+from app.models import UserSegment
 
 client = TestClient(app)
 
 # Test Case 1: Whale/High-Risk, high streak
 # Patch paths should correspond to where 'redis_client' and 'SessionLocal' are LOOKED UP
 # in the 'user_segments.py' file.
-@patch('backend.app.routers.user_segments.redis_client')
-@patch('backend.app.routers.user_segments.SessionLocal')
+@patch('app.routers.user_segments.redis_client')
+@patch('app.routers.user_segments.SessionLocal')
 def test_recommendation_whale_high_risk_high_streak(MockSessionLocal, mock_redis_client_instance):
     # Mock DB session and query
     mock_db_session = MagicMock()
@@ -52,8 +52,8 @@ def test_recommendation_whale_high_risk_high_streak(MockSessionLocal, mock_redis
     assert data["recommended_time_window"] == "next 2 hours"
 
 # Test Case 2: Medium/Low-Risk, zero streak
-@patch('backend.app.routers.user_segments.redis_client')
-@patch('backend.app.routers.user_segments.SessionLocal')
+@patch('app.routers.user_segments.redis_client')
+@patch('app.routers.user_segments.SessionLocal')
 def test_recommendation_medium_low_risk_zero_streak(MockSessionLocal, mock_redis_client_instance):
     mock_db_session = MagicMock()
     mock_user_segment_db_instance = UserSegment(user_id=2, rfm_group="Medium", risk_profile="Low-Risk")
@@ -74,8 +74,8 @@ def test_recommendation_medium_low_risk_zero_streak(MockSessionLocal, mock_redis
     assert data["recommended_time_window"] == "next 6 hours"
 
 # Test Case 3: Low RFM, any risk, no streak in Redis (default to 0)
-@patch('backend.app.routers.user_segments.redis_client')
-@patch('backend.app.routers.user_segments.SessionLocal')
+@patch('app.routers.user_segments.redis_client')
+@patch('app.routers.user_segments.SessionLocal')
 def test_recommendation_low_rfm_no_streak_in_redis(MockSessionLocal, mock_redis_client_instance):
     mock_db_session = MagicMock()
     mock_user_segment_db_instance = UserSegment(user_id=3, rfm_group="Low", risk_profile="Medium-Risk")
@@ -96,8 +96,8 @@ def test_recommendation_low_rfm_no_streak_in_redis(MockSessionLocal, mock_redis_
     assert data["recommended_time_window"] == "next 24 hours"
 
 # Test Case 4: User segment not found in DB
-@patch('backend.app.routers.user_segments.redis_client')
-@patch('backend.app.routers.user_segments.SessionLocal')
+@patch('app.routers.user_segments.redis_client')
+@patch('app.routers.user_segments.SessionLocal')
 def test_recommendation_user_segment_not_found(MockSessionLocal, mock_redis_client_instance):
     mock_db_session = MagicMock()
     mock_db_session.query(UserSegment).filter().first.return_value = None # User segment not found
@@ -117,8 +117,8 @@ def test_recommendation_user_segment_not_found(MockSessionLocal, mock_redis_clie
     assert data["recommended_time_window"] == "next 24 hours" # For Low RFM default
 
 # Test Case 5: Redis client is None (simulating connection failure at startup)
-@patch('backend.app.routers.user_segments.redis_client', None) # Patch redis_client to be None
-@patch('backend.app.routers.user_segments.SessionLocal')
+@patch('app.routers.user_segments.redis_client', None) # Patch redis_client to be None
+@patch('app.routers.user_segments.SessionLocal')
 def test_recommendation_redis_client_none(MockSessionLocal):
     mock_db_session = MagicMock()
     mock_user_segment_db_instance = UserSegment(user_id=1, rfm_group="Whale", risk_profile="High-Risk")
