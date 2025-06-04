@@ -1,8 +1,10 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+
 try:
     from .apscheduler_jobs import start_scheduler, scheduler
 except Exception:  # noqa: BLE001
+
     def start_scheduler():
         print("Scheduler disabled or APScheduler not installed")
 
@@ -23,8 +25,8 @@ try:
 except Exception:  # noqa: BLE001
     sentry_sdk = None
     FastApiIntegration = None
-import os # For Sentry DSN from env var
-from pydantic import BaseModel # For request/response models
+import os  # For Sentry DSN from env var
+from pydantic import BaseModel  # For request/response models
 from typing import Optional
 
 from app.routers import (
@@ -39,7 +41,11 @@ from app.routers import (
     adult_content,
     corporate,
     users,
-    auth,  # ✅ 이미 등록됨!
+
+    auth,
+    chat,
+
+
 )
 
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---
@@ -59,7 +65,9 @@ if SENTRY_DSN and sentry_sdk and FastApiIntegration:
     except Exception as e:  # noqa: BLE001
         print(f"Error: Failed to initialize Sentry SDK. {e}")
 else:
-    print("Warning: SENTRY_DSN not found or sentry_sdk missing. Sentry not initialized.")
+    print(
+        "Warning: SENTRY_DSN not found or sentry_sdk missing. Sentry not initialized."
+    )
 # --- End Sentry Initialization Placeholder ---
 
 
@@ -68,7 +76,7 @@ app = FastAPI(
     description="API for interactive mini-games and token-based reward system",
     version="0.1.0",
     docs_url="/docs",  # Swagger UI 경로
-    redoc_url="/redoc"  # ReDoc 문서 경로
+    redoc_url="/redoc",  # ReDoc 문서 경로
 )
 
 # Prometheus Instrumentation - ADDED SECTION
@@ -82,7 +90,9 @@ if Instrumentator:
         inprogress_labels=True,
     )
     instrumentator.instrument(app)
-    instrumentator.expose(app, include_in_schema=False, endpoint="/metrics", tags=["monitoring"])
+    instrumentator.expose(
+        app, include_in_schema=False, endpoint="/metrics", tags=["monitoring"]
+    )
 
 
 @app.on_event("startup")
@@ -94,12 +104,14 @@ async def startup_event():
     start_scheduler()
     print("FastAPI startup event: Job scheduler initialization process started.")
 
+
 @app.on_event("shutdown")
 async def shutdown_event():
     print("FastAPI shutdown event: Shutting down scheduler...")
     if scheduler.running:
-        scheduler.shutdown(wait=False) # wait=False for async scheduler
+        scheduler.shutdown(wait=False)  # wait=False for async scheduler
     print("FastAPI shutdown event: Scheduler shut down.")
+
 
 # Configure CORS
 origins = [
@@ -127,19 +139,29 @@ app.include_router(feedback.router, prefix="/api")
 app.include_router(adult_content.router, prefix="/api")
 app.include_router(corporate.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
+
+app.include_router(auth.router, prefix="/api")
+app.include_router(chat.router)
+
+
 app.include_router(auth.router, prefix="/api")   # ✅ 이미 포함됨!
+
 
 # Request/Response Models
 class UserLogin(BaseModel):
     """사용자 로그인 스키마"""
+
     user_id: str
     password: str
 
+
 class LoginResponse(BaseModel):
     """로그인 응답 스키마"""
+
     token: str
     user_id: str
     message: Optional[str] = None
+
 
 @app.post("/login", response_model=LoginResponse, tags=["Authentication"])
 async def login(user: UserLogin):
@@ -155,15 +177,16 @@ async def login(user: UserLogin):
         return {
             "token": "sample_jwt_token",
             "user_id": user.user_id,
-            "message": "로그인 성공"
+            "message": "로그인 성공",
         }
     raise HTTPException(status_code=401, detail="인증 실패")
+
 
 @app.get("/health", tags=["System"])
 async def health_check():
     """
     시스템 상태 확인 엔드포인트
-    
+
     - 서버 정상 동작 여부 확인
     - 헬스체크 용도
     """
