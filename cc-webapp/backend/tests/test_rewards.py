@@ -51,7 +51,7 @@ def db_session() -> Generator[Session, None, None]:
 def seed_rewards_data(db: Session, user_id: int, num_rewards: int, email_suffix: str = "") -> List[UserReward]:
     user = db.query(User).filter_by(id=user_id).first()
     if not user:
-        user = User(id=user_id, email=f"rewards_user{user_id}{email_suffix}@example.com")
+        user = User(id=user_id)
         db.add(user)
         # Must commit user if it's new before adding rewards that reference it,
         # or ensure user_id in UserReward is just an int and FK is handled by DB.
@@ -142,7 +142,7 @@ def test_get_rewards_page_out_of_bounds(db_session: Session):
 
 def test_get_rewards_no_rewards(db_session: Session):
     # Ensure user exists but has no rewards
-    user = User(id=USER_ID_FOR_REWARDS_TESTS, email=f"rewards_user{USER_ID_FOR_REWARDS_TESTS}_norewards@example.com")
+    user = User(id=USER_ID_FOR_REWARDS_TESTS)
     db_session.add(user)
     db_session.commit()
 

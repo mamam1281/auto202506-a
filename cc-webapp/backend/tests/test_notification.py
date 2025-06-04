@@ -51,7 +51,7 @@ def db_session() -> Generator[Session, None, None]:
 def seed_notifications_data(db: Session, user_id: int, num_pending: int, num_sent: int, email_suffix: str = ""):
     user = db.query(User).filter_by(id=user_id).first()
     if not user:
-        user = User(id=user_id, email=f"notify_user{user_id}{email_suffix}@example.com")
+        user = User(id=user_id)
         db.add(user)
         try:
             db.commit()
