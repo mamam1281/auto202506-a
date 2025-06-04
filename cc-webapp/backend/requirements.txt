@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+redis
+alembic
+pydantic
+python-dotenv
+confluent-kafka
+celery[redis]
+apscheduler
+pytest
+prometheus-fastapi-instrumentator>=6.0.0,<8.0.0
+sentry-sdk[fastapi]>=1.0.0 # Using >=1.0.0 as an example, ensure latest stable if possible

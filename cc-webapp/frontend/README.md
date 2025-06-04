@@ -60,6 +60,43 @@ The frontend includes both unit tests (Jest & React Testing Library) and end-to-
         ```
     *   Note: E2E tests expect the backend and frontend development servers to be running.
 
+To run tests via Docker Compose (ensure services are up, e.g., `docker-compose up -d frontend backend` or the full stack):
+-   **Unit/Component Tests (Jest):**
+    ```bash
+    # From the project root (cc-webapp directory)
+    docker-compose exec frontend npm test -- --watchAll=false
+    ```
+-   **End-to-End Tests (Cypress):**
+    Cypress tests require a running application. Ensure the full stack is up:
+    ```bash
+    # From the project root (cc-webapp directory)
+    docker-compose up --build -d
+    # Then open Cypress runner (from cc-webapp/frontend directory):
+    # npm run cy:open
+    # Or run headlessly via Docker Compose:
+    docker-compose exec frontend npm run cy:run
+    # Note: Running Cypress headlessly inside `docker-compose exec` might require
+    # the frontend container to have browser dependencies (see frontend/Dockerfile comments)
+    # or for Cypress to be configured to connect to a browser elsewhere.
+    # For simplicity, `npm run cy:open` on the host against `http://localhost:3000` is often easiest for local E2E.
+    ```
+
+### Vulnerability Scanning (Frontend)
+
+To check for known vulnerabilities in frontend dependencies, run the following command from the `cc-webapp/frontend` directory:
+
+```bash
+npm audit
+```
+
+For a CI environment, you might want the command to fail if vulnerabilities of a certain level are found:
+```bash
+npm audit --audit-level=high # Example: Fails if 'high' or 'critical' severity vulnerabilities are found
+```
+Alternatively, tools like `audit-ci` or `better-npm-audit` can be integrated into CI pipelines for more configurable behavior.
+
+Regularly review the audit output and update packages as necessary, paying attention to breaking changes.
+
 ## Backend Interaction
 
 The frontend application interacts with the backend services, which are expected to be running on `http://localhost:8000` during local development when the frontend is run via `npm run dev`.

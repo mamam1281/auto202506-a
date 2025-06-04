@@ -109,3 +109,41 @@ Unit tests are located in the `tests/` directory and can be run using pytest:
 # Or from cc-webapp/backend directory:
 pytest
 ```
+
+To run tests via Docker Compose (ensure services are up, e.g., `docker-compose up -d backend db` or the full stack):
+```bash
+# From the project root (cc-webapp directory)
+docker-compose exec backend pytest tests/
+```
+
+### Vulnerability Scanning (Backend)
+
+To check for known vulnerabilities in Python dependencies, you can use tools like `pip-audit` or `safety`.
+
+1.  **Using `pip-audit` (Recommended by PyPA):**
+    *   Ensure `pip-audit` is installed in your development environment or CI runner:
+        ```bash
+        pip install pip-audit
+        ```
+    *   Navigate to the `cc-webapp/backend` directory (where `requirements.txt` is located) and run:
+        ```bash
+        pip-audit
+        ```
+    *   To make this a CI check that fails on any vulnerability:
+        ```bash
+        pip-audit --fail-on-vulnerability
+        ```
+    *   `pip-audit` uses data from the Python Packaging Advisory Database (PyPI Advisory DB) and others.
+
+2.  **Using `safety` (Alternative):**
+    *   Ensure `safety` is installed:
+        ```bash
+        pip install safety
+        ```
+    *   Navigate to the `cc-webapp/backend` directory and run:
+        ```bash
+        safety check -r requirements.txt
+        ```
+    *   `safety` uses its own vulnerability database (requires a free or commercial license for the latest data, otherwise uses a freely available but potentially delayed database).
+
+Regularly review the output from these tools and update your dependencies in `requirements.txt` as needed, testing thoroughly for compatibility.
