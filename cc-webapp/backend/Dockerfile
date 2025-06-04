@@ -62,12 +62,18 @@ ENV JWT_SECRET="your_default_entwicklung_secret_key_do_not_use_in_prod_change_th
 RUN echo "Attempting to run Alembic migrations (alembic upgrade head)." && \
     echo "INFO: This step requires the database to be accessible if Alembic is configured to connect." && \
     echo "INFO: Current DATABASE_URL for build is $DATABASE_URL" && \
-    alembic upgrade head
-    # If this fails, consider moving migrations to an entrypoint script that waits for the DB.
+    # RUN alembic upgrade head # <<< THIS LINE IS NOW REMOVED. Migrations moved to entrypoint.sh
+
+# Copy the entrypoint script and make it executable
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8000
 
-# Command to run the Uvicorn server
-# Using --host 0.0.0.0 makes it accessible externally (from the Docker host).
-# --reload is typically for development; removed for a more production-like image.
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Set the entrypoint to the script.
+# The entrypoint.sh script will be responsible for running migrations and then starting the app.
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+# CMD can be removed or left as is if entrypoint.sh uses 'exec "$@"'.
+# Since our entrypoint.sh directly execs uvicorn, this CMD is effectively ignored.
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

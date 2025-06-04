@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CC Webapp - Frontend
 
-## Getting Started
+This directory contains the Next.js frontend for the CC Webapp.
 
-First, run the development server:
+## Prerequisites
+- Node.js (version 18.x or as specified in `.nvmrc` if present, or `frontend/Dockerfile`)
+- npm (comes with Node.js)
 
+## Local Development
+
+1.  Navigate to the `frontend` directory:
+    ```bash
+    cd cc-webapp/frontend
+    # Or from project root: cd frontend
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    # Or 'npm ci' for cleaner installs if package-lock.json is up-to-date and you want to match it exactly
+    ```
+3.  Run the Next.js development server:
+    ```bash
+    npm run dev
+    ```
+The frontend will be available at `http://localhost:3000`. It expects the backend to be running, typically on `http://localhost:8000`.
+
+## Building for Production
+To create a production build:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+```
+To serve the production build locally (after running `npm run build`):
+```bash
+npm start
+# (This usually runs 'next start')
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Testing
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+The frontend includes both unit tests (Jest & React Testing Library) and end-to-end tests (Cypress).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+-   **Unit/Component Tests (Jest):**
+    ```bash
+    npm test
+    ```
+    To run in watch mode:
+    ```bash
+    npm run test:watch
+    ```
+    Coverage reports are generated if configured in Jest setup.
 
-## Learn More
+-   **End-to-End Tests (Cypress):**
+    *   To open the Cypress Test Runner (interactive mode):
+        ```bash
+        npm run cy:open
+        ```
+    *   To run Cypress tests headlessly (e.g., for CI):
+        ```bash
+        npm run cy:run
+        ```
+    *   Note: E2E tests expect the backend and frontend development servers to be running.
 
-To learn more about Next.js, take a look at the following resources:
+## Backend Interaction
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The frontend application interacts with the backend services, which are expected to be running on `http://localhost:8000` during local development when the frontend is run via `npm run dev`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The backend provides various API endpoints for game logic, user data, actions, rewards, content unlocking, recommendations, notifications, etc. Key backend monitoring endpoints that the frontend might indirectly benefit from (or that developers should be aware of) include:
 
-## Deploy on Vercel
+-   `GET /health`: Provides the health status of the backend API.
+-   `GET /metrics`: Exposes application metrics in Prometheus format for monitoring the backend.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Frontend API calls are generally directed to `http://localhost:8000/api/...`. Refer to backend documentation or OpenAPI schema (`http://localhost:8000/docs`) for full API details.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+-   `app/`: Contains page components (App Router structure).
+-   `components/`: Shared React components used across pages.
+-   `hooks/`: Custom React hooks.
+-   `utils/`: Utility functions.
+-   `public/`: Static assets (images, sounds, etc.).
+-   `__tests__/`: Jest unit/component tests.
+-   `cypress/`: Cypress E2E tests.
+-   `jest.config.js`, `jest.setup.js`: Configuration for Jest.
+-   `cypress.json` (or `cypress.config.js`): Configuration for Cypress.
+-   `tailwind.config.js`, `postcss.config.js`: Configuration for Tailwind CSS.

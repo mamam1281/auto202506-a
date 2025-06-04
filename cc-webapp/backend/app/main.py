@@ -1,8 +1,26 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .apscheduler_jobs import start_scheduler, scheduler # Import scheduler components
+from prometheus_fastapi_instrumentator import Instrumentator # ADDED IMPORT
 
 app = FastAPI()
+
+# Prometheus Instrumentation - ADDED SECTION
+# This should ideally be done after app creation and before other middlewares/routers if possible,
+# or at least before routers that you want to be instrumented by default.
+instrumentator = Instrumentator(
+    should_group_status_codes=True,    # Group status codes (2xx, 3xx, etc.)
+    should_instrument_requests_inprogress=True, # Expose gauge for in-progress requests
+    excluded_handlers=["/metrics"],    # Don't instrument the /metrics endpoint itself
+    inprogress_labels=True,            # Add labels to in-progress metric
+    # Other options are available for more detailed metrics if needed
+)
+instrumentator.instrument(app) # Apply instrumentation middleware
+# Expose the /metrics endpoint
+# include_in_schema=False to hide it from OpenAPI docs
+# tags for organization if it were included in schema
+instrumentator.expose(app, include_in_schema=False, endpoint="/metrics", tags=["monitoring"])
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -30,6 +48,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/health", tags=["healthcheck"])
+async def health():
+    """
+    Health check endpoint for Docker Compose and other monitoring systems.
+    """
+    return {"status": "healthy"}
 
 @app.get("/")
 async def root():

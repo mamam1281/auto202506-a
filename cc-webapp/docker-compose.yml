@@ -105,6 +105,14 @@ services:
       # For production, remove this to use code baked into the image.
       - ./backend:/app
     # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload # Uncomment for dev hot-reload
+    healthcheck:
+      # Curl the /health endpoint. -f makes curl fail silently on HTTP errors.
+      # || exit 1 ensures that if curl fails, the healthcheck command itself exits with a non-zero status.
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s # How often to run the check
+      timeout: 10s  # How long to wait for a response
+      retries: 3    # How many times to retry before marking as unhealthy
+      start_period: 60s # Grace period for container to start up before first healthcheck
 
   frontend:
     build:

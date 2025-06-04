@@ -10,3 +10,4 @@ confluent-kafka
 celery[redis]
 apscheduler
 pytest
+prometheus-fastapi-instrumentator>=6.0.0,<8.0.0

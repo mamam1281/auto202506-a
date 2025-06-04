@@ -1,138 +1,222 @@
+// cc-webapp/frontend/app/profile/page.jsx
 'use client';
 
-import { useState, useEffect } from 'react';
-import axios from 'axios'; // Or your apiClient
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+// import apiClient from '@/utils/apiClient'; // If you have a central apiClient
 import { useRouter } from 'next/navigation';
-import { BarChart2, Clock, Gift, Zap, AlertTriangle, Info, PlayCircle } from 'lucide-react';
+import Head from 'next/head'; // For older Next.js or specific client-side title needs
+import { BarChart2, Clock, Gift, Zap, AlertTriangle, Info, PlayCircle, UserCircle, LogOut } from 'lucide-react';
+import { motion } from 'framer-motion';
+// Ensure React is imported if not automatically handled by your JSX transform
+// import React from 'react'; (already imported by React, { useState... })
+
+// For Next.js 13+ App Router, metadata can be exported for server components:
+// export const metadata = {
+//   title: 'Your Profile & Insights - CC Webapp',
+//   description: 'View your personalized recommendations and game statistics.',
+// };
 
 export default function ProfilePage() {
   const router = useRouter();
-  const userId = 1; // Placeholder, replace with actual user ID from auth context
+  const currentUserId = 1; // As per guideline, use 1 or accept as prop
 
   const [recommendation, setRecommendation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // apiClient setup (use global if available, or define per component)
+  const apiClient = axios.create({ baseURL: 'http://localhost:8000/api' });
+
+
   useEffect(() => {
+    let isMounted = true; // Prevent state updates if component is unmounted
     const fetchRecommendation = async () => {
-      if (!userId) {
-        setError("User ID not available. Please log in.");
-        setIsLoading(false);
+      if (!currentUserId) {
+        if(isMounted) setError("User ID not available. Cannot fetch profile data.");
+        if(isMounted) setIsLoading(false);
         return;
       }
-      setIsLoading(true);
-      setError(null);
-      setRecommendation(null); // Reset on new fetch
+      if(isMounted) setIsLoading(true);
+      if(isMounted) setError(null);
+      if(isMounted) setRecommendation(null); // Reset on new fetch
       try {
-        const response = await axios.get(`http://localhost:8000/api/user-segments/${userId}/recommendation`);
-        setRecommendation(response.data);
+        const response = await apiClient.get(`/user-segments/${currentUserId}/recommendation`);
+        if (isMounted) setRecommendation(response.data);
       } catch (err) {
+        if (!isMounted) return;
+        let errorMessage = "Failed to fetch recommendations. Please try again later.";
         if (err.response) {
-            if (err.response.status === 404) {
-                // Assuming 404 from this endpoint means no recommendation data specifically
-                setError(`No recommendation data currently available for user ${userId}. Keep playing to unlock insights!`);
-            } else {
-                 setError(`Error ${err.response.status}: ${err.response.data.detail || 'Failed to fetch recommendations.'}`);
-            }
+          if (err.response.status === 404) {
+            errorMessage = `No recommendation data found for user ${currentUserId}. Keep playing to generate insights!`;
+          } else {
+            errorMessage = `Error (${err.response.status}): ${err.response.data?.detail || 'Could not fetch recommendations.'}`;
+          }
         } else if (err.request) {
-          setError("Network error: Could not connect to the server. Please try again later.");
-        } else {
-          setError("An unexpected error occurred while fetching recommendations.");
+          errorMessage = 'No response from server. Check your connection or if the backend is running.';
         }
+        setError(errorMessage);
         console.error("Error fetching recommendations:", err);
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
+
     fetchRecommendation();
-  }, [userId]);
+    return () => { isMounted = false; }; // Cleanup
+  }, [currentUserId]); // Re-fetch if userId changes (e.g. after login)
 
   const formatProbability = (prob) => {
-    if (typeof prob !== 'number') return 'N/A';
+    if (typeof prob !== 'number' || isNaN(prob)) return 'N/A';
     return `${(prob * 100).toFixed(0)}%`;
   };
 
+  const handleLogout = () => {
+    // Placeholder for actual logout logic (e.g., clear token, call API, update auth context)
+    console.log("User logged out (placeholder action)");
+    alert("Logout functionality not fully implemented in this demo.");
+    // router.push('/'); // Example: Redirect to home after logout
+  };
+
+  // If this page must be a Client Component and needs to set the title dynamically:
+  useEffect(() => {
+    if (recommendation) {
+      document.title = `Profile: ${recommendation.rfm_group || 'User'} - CC Webapp`;
+    } else {
+      document.title = 'Your Profile & Insights - CC Webapp';
+    }
+  }, [recommendation]);
+
+
   return (
-    <div className="container mx-auto px-4 py-12 bg-gray-900 min-h-screen text-white">
-      <header className="text-center mb-12 pt-4 sm:pt-0"> {/* Adjusted padding for banner */}
-        <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
-          Your Profile & Insights
-        </h1>
-        <p className="text-lg text-gray-300 mt-3">Personalized recommendations to enhance your experience.</p>
-      </header>
+    <>
+      {/* <Head> component for Next.js < 13 or specific client-side updates */}
+      <Head>
+        <title>Your Profile & Insights - CC Webapp</title>
+        <meta name="description" content="View your personalized recommendations and game statistics." />
+      </Head>
+      <div className="container mx-auto px-2 sm:px-4 py-8 sm:py-12 bg-gray-900 min-h-screen text-white selection:bg-indigo-500 selection:text-white">
+        <header className="text-center mb-8 sm:mb-10">
+           <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, type: 'spring', stiffness: 150 }}
+            className="inline-block p-2 bg-gray-700 rounded-full mb-3"
+          >
+            <UserCircle size={56} className="text-indigo-300" />
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400"
+          >
+            Your Profile & Game Insights
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-sm sm:text-md text-gray-400 mt-2"
+          >
+            Personalized tips to maximize your fun and rewards!
+          </motion.p>
+        </header>
 
-      <main> {/* Removed pt-12 as banner will be part of layout flow or main content pushed down */}
         {isLoading && (
-          <div className="flex flex-col items-center justify-center text-purple-400 p-10">
-            <Zap size={52} className="animate-ping mb-4" />
-            <p className="text-lg">Fetching your personalized insights...</p>
+          <div className="flex flex-col items-center justify-center text-indigo-300 min-h-[200px] p-6">
+            <motion.div
+              animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              className="p-2"
+            >
+              <Zap size={40} />
+            </motion.div>
+            <p className="text-lg mt-2">Fetching your personalized insights...</p>
           </div>
         )}
 
-        {error && !isLoading && (
-          <div className="bg-red-900 border border-red-700 text-red-300 px-6 py-5 rounded-lg shadow-xl max-w-lg mx-auto text-center flex flex-col items-center">
-            <AlertTriangle size={36} className="mb-3 text-red-400" />
-            <p className="text-xl font-semibold mb-1">Accessing Insights Failed</p>
-            <p className="text-sm">{error}</p>
-          </div>
+        {!isLoading && error && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="bg-red-800 border border-red-600 text-red-200 px-4 sm:px-6 py-5 rounded-lg shadow-lg max-w-lg mx-auto text-center flex flex-col items-center"
+          >
+            <AlertTriangle size={36} className="mb-3 text-red-300" />
+            <p className="font-semibold text-md mb-1">Oops! Could not load insights.</p>
+            <p className="text-xs sm:text-sm">{error}</p>
+          </motion.div>
         )}
 
-        {recommendation && !isLoading && !error && (
-          <div className="max-w-lg mx-auto bg-gray-800 p-8 rounded-xl shadow-2xl border border-purple-700 hover:border-purple-500 transition-all duration-300">
-            <div className="flex items-center mb-8 pb-4 border-b border-gray-700">
-              <div className="p-3 bg-purple-600 rounded-full mr-5 shadow-md">
-                  <BarChart2 size={32} className="text-white" />
-              </div>
+        {!isLoading && !error && recommendation && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="max-w-lg mx-auto bg-gray-800 p-6 sm:p-8 rounded-xl shadow-2xl border border-indigo-700 hover:border-indigo-500 transition-colors"
+          >
+            <div className="flex items-center mb-5 pb-4 border-b border-gray-700">
+              <BarChart2 size={36} className="text-indigo-400 mr-4 flex-shrink-0" />
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-100">Your Next Best Move</h2>
-                <p className="text-xs sm:text-sm text-gray-400 mt-1">
-                  RFM: <span className="font-semibold text-gray-200">{recommendation.rfm_group || 'N/A'}</span> |
-                  Risk: <span className="font-semibold text-gray-200">{recommendation.risk_profile || 'N/A'}</span> |
-                  Streak: <span className="font-semibold text-gray-200">{recommendation.streak_count ?? '0'} days</span>
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-100">Your Next Best Move</h2>
+                <p className="text-xs sm:text-sm text-gray-400">
+                  RFM: <span className="font-medium text-indigo-300">{recommendation.rfm_group || 'N/A'}</span>,
+                  Risk: <span className="font-medium text-indigo-300">{recommendation.risk_profile || 'N/A'}</span>,
+                  Streak: <span className="font-medium text-indigo-300">{recommendation.streak_count ?? '0'} days</span>
                 </p>
               </div>
             </div>
 
-            <div className="space-y-6 mb-10">
-              <div className="flex items-center p-5 bg-gray-700 rounded-lg shadow-lg hover:shadow-purple-500/30 transition-shadow">
-                <div className="p-2.5 bg-purple-500 rounded-lg mr-4">
-                  <Gift size={24} className="text-white" />
-                </div>
+            <div className="space-y-4 sm:space-y-5 mb-6 sm:mb-8">
+              <motion.div whileHover={{ x: 5 }} className="flex items-center p-3 sm:p-4 bg-gray-700 rounded-lg shadow-md transition-shadow hover:shadow-purple-500/40">
+                <Gift size={24} className="text-purple-400 mr-3 flex-shrink-0" />
                 <div>
-                  <p className="text-md font-semibold text-gray-200">Personalized Reward Chance</p>
-                  <p className="text-2xl font-bold text-purple-300">{formatProbability(recommendation.recommended_reward_probability)}</p>
+                  <p className="text-xs sm:text-sm font-medium text-gray-300">Personalized Reward Chance</p>
+                  <p className="text-lg sm:text-xl font-bold text-purple-300">{formatProbability(recommendation.recommended_reward_probability)}</p>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="flex items-center p-5 bg-gray-700 rounded-lg shadow-lg hover:shadow-indigo-500/30 transition-shadow">
-                <div className="p-2.5 bg-indigo-500 rounded-lg mr-4">
-                   <Clock size={24} className="text-white" />
-                </div>
+              <motion.div whileHover={{ x: 5 }} className="flex items-center p-3 sm:p-4 bg-gray-700 rounded-lg shadow-md transition-shadow hover:shadow-cyan-500/40">
+                <Clock size={24} className="text-cyan-400 mr-3 flex-shrink-0" />
                 <div>
-                  <p className="text-md font-semibold text-gray-200">Optimal Engagement Window</p>
-                  <p className="text-2xl font-bold text-indigo-300">{recommendation.recommended_time_window || 'Anytime'}</p>
+                  <p className="text-xs sm:text-sm font-medium text-gray-300">Optimal Engagement Window</p>
+                  <p className="text-lg sm:text-xl font-bold text-cyan-300">{recommendation.recommended_time_window || 'Anytime'}</p>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
-            <button
-              onClick={() => router.push('/slots')} // Assuming /slots is a relevant game page
-              className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 ease-in-out text-lg font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-purple-400 focus:ring-opacity-60 flex items-center justify-center"
+            <motion.button
+              onClick={() => router.push('/slots')} // Example game page
+              className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-md hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 ease-in-out text-md sm:text-lg font-semibold shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 flex items-center justify-center"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <PlayCircle size={24} className="mr-2.5" />
+              <PlayCircle size={20} className="mr-2" />
               Play Now & Test Your Luck!
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         )}
 
         {!isLoading && !error && !recommendation && (
-           <div className="bg-yellow-900 border border-yellow-700 text-yellow-300 px-6 py-5 rounded-lg shadow-xl max-w-lg mx-auto text-center flex flex-col items-center">
+           <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="bg-gray-700 border border-yellow-700_ text-yellow-300 px-4 sm:px-6 py-5 rounded-lg shadow-lg max-w-lg mx-auto text-center flex flex-col items-center"
+          >
             <Info size={36} className="mb-3 text-yellow-400" />
-            <p className="text-xl font-semibold mb-1">Insights Pending</p>
-            <p className="text-sm">No specific recommendation available at this time. Keep playing to unlock personalized tips and enhance your journey!</p>
-          </div>
+            <p className="font-semibold text-md mb-1">Insights Pending</p>
+            <p className="text-xs sm:text-sm">No specific recommendation available at this time. Keep playing to unlock personalized tips!</p>
+          </motion.div>
         )}
-      </main>
-    </div>
+
+        <div className="mt-12 text-center">
+            <motion.button
+              onClick={handleLogout}
+              className="px-4 py-2 text-xs text-gray-500 hover:text-red-400 hover:bg-gray-700 rounded-md transition-colors flex items-center justify-center mx-auto"
+              whileHover={{ scale: 1.05, color: '#f87171' /* red-400 */ }}
+            >
+              <LogOut size={14} className="mr-2" /> Logout (Placeholder)
+            </motion.button>
+        </div>
+      </div>
+    </>
   );
 }
