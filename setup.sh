@@ -79,13 +79,15 @@ echo "  ✅ PYTHONPATH 설정: $PYTHONPATH"
 
 # === 3. 디렉토리 확인 ===
 echo "🔍 디렉토리 구조 확인 중..."
-if [ ! -d "cc-webapp/backend" ]; then
-    echo "  ❌ cc-webapp/backend 디렉토리가 없습니다"
+BACKEND_DIR="cc-webapp/backend"
+FRONTEND_DIR="cc-webapp/frontend"
+if [ ! -d "$BACKEND_DIR" ]; then
+    echo "  ❌ $BACKEND_DIR 디렉토리가 없습니다"
     exit 1
 fi
 
-if [ ! -d "cc-webapp/frontend" ]; then
-    echo "  ⚠️  cc-webapp/frontend 디렉토리가 없습니다 (프론트엔드 개발 시 필요)"
+if [ ! -d "$FRONTEND_DIR" ]; then
+    echo "  ⚠️  $FRONTEND_DIR 디렉토리가 없습니다 (프론트엔드 개발 시 필요)"
     FRONTEND_AVAILABLE=false
 else
     FRONTEND_AVAILABLE=true
@@ -95,7 +97,7 @@ echo "  ✅ 백엔드 디렉토리 구조 확인 완료"
 
 # === 4. Python 의존성 설치 ===
 echo "🐍 Python 의존성 설치 중..."
-cd cc-webapp/backend
+cd "$BACKEND_DIR"
 
 if [ -f requirements.txt ]; then
     $PYTHON_CMD -m pip install -r requirements.txt
@@ -108,22 +110,21 @@ fi
 # === 5. Node.js 의존성 설치 (선택적) ===
 if [ "$FRONTEND_AVAILABLE" = true ] && [ "$NPM_AVAILABLE" = true ]; then
     echo "📦 Node.js 의존성 설치 중..."
-    cd ../frontend
-    
+    cd "../../$FRONTEND_DIR"
     if [ -f package.json ]; then
         npm install
         echo "  ✅ Node.js 패키지 설치 완료"
     else
         echo "  ⚠️  package.json이 없습니다"
     fi
+    cd "../../$BACKEND_DIR"
 else
     echo "📦 Node.js 의존성 설치 건너뜀 (Node.js/npm 없음 또는 프론트엔드 디렉토리 없음)"
 fi
 
 # === 6. 데이터베이스 초기화 (선택적) ===
 echo "🗃️  데이터베이스 설정 확인 중..."
-cd cc-webapp/backend
-
+# 현재 디렉토리: cc-webapp/backend
 $PYTHON_CMD -c "
 try:
     import sys
