@@ -234,22 +234,67 @@
    - 개인화 추천 엔진
    - UI/UX 고도화
 
-### 📋 브랜치 병합 가이드
-외부 AI 작업 결과를 병합할 때:
+
+## 🚨 외부 AI 검증 결과 (2025-06-04) - 현실적 평가
+
+### 🔄 백엔드 구조 표준화 + 테스트 수정 완료 ✨
+- [x] 백엔드 디렉토리 통합 (`/app` → `/cc-webapp/backend/app`)
+- [x] 라우터 파일 생성 (adult_content.py, corporate.py 추가)
+- [x] 토큰 서비스 구현 (token_service.py)
+- [x] Docker 환경 개선 (docker-compose.yml 경로 수정)
+- [x] 테스트 파일 업데이트 (import 경로 수정)
+- [x] **외부 AI 브랜치 발견**: `origin/codex/fix-test-failures-and-ensure-stability` 
+- [x] **브랜치 병합 완료**: 테스트 실패 수정 및 안정성 개선 작업 반영
+
+### 🚨 즉시 구현 필요 (현재 단계) - 외부 AI 검증 결과 반영
+- [x] **외부 AI 브랜치 병합**: `git merge origin/codex/fix-test-failures-and-ensure-stability`
+- [ ] **병합 후 검증**: 테스트 실행 및 안정성 확인
+- [ ] **auth.py 라우터 생성**: 파일 자체가 존재하지 않음
+
+## 🚀 다음 단계 실행 가이드
+
+### 1단계: 외부 AI 브랜치 병합 📋
 ```bash
-# 1. 현재 브랜치 백업
-git checkout -b backup-before-merge
+# 현재 상태 백업
+git checkout -b backup-before-codex-merge
+git add .
+git commit -m "Backup before codex merge"
 
-# 2. 외부 브랜치 병합
+# 외부 AI 브랜치 병합
 git checkout main
-git pull origin main
-git merge [외부-ai-브랜치]
+git merge origin/codex/fix-test-failures-and-ensure-stability
 
-# 3. 즉시 수정할 파일들
-- cc-webapp/backend/app/database.py
-- cc-webapp/backend/app/routers/*.py
-- cc-webapp/backend/tests/conftest.py
+# 병합 후 테스트 확인
+cd cc-webapp/backend
+python -m pytest -v
 ```
+
+### 2단계: 병합된 변경사항 확인 🔧
+```bash
+# 변경된 파일들 확인
+git diff HEAD~1 --name-only
+
+# 특히 다음 파일들 중점 확인
+# - cc-webapp/backend/app/main.py (APScheduler 처리)
+# - cc-webapp/backend/app/routers/user_segments.py (Redis 처리)
+# - cc-webapp/backend/app/routers/notification.py (테스트 실패 수정)
+```
+
+## 📋 외부 AI 작업 파일 변경 요약
+
+### 🔧 수정 예정 파일들 (병합 후 확인 필요)
+- **`main.py`**: APScheduler 선택적 의존성 처리 (try/except 블록, 더미 스케줄러)
+- **`user_segments.py`**: Redis 조건부 import 및 연결 오류 처리  
+- **`notification.py`**: 테스트 실패 해결
+- **기타 안정성 개선**: 의존성 누락 시에도 크래시 없이 동작
+
+### 🎯 병합 후 예상되는 개선사항
+1. **테스트 안정성**: `pytest tests/test_rewards.py::test_get_rewards_first_page` 성공 유지
+2. **의존성 내성**: APScheduler, Redis 미설치 시에도 정상 동작
+3. **notification 테스트**: `test_get_one_pending_notification` 실패 해결 예상
+4. **환경 호환성**: 다양한 개발 환경에서 안정적 실행
+
+
 
 ## 검증 체크리스트 프롬프트 예시:
 Before providing your response, confirm that it aligns with:
@@ -261,38 +306,10 @@ Before providing your response, confirm that it aligns with:
 
 Your response must explicitly reference which documents were consulted.
 
-## ✅ 외부 AI 작업 완료 현황 (2025-06-04 병합)
-
-### 🔄 백엔드 구조 표준화 완료
-- [x] 백엔드 디렉토리 통합 (`/app` → `/cc-webapp/backend/app`)
-- [x] 라우터 파일 생성 (adult_content.py, corporate.py 추가)
-- [x] 토큰 서비스 구현 (token_service.py)
-- [x] Docker 환경 개선 (docker-compose.yml 경로 수정)
-- [x] 테스트 파일 업데이트 (import 경로 수정)
-
-### 🚨 즉시 수정 필요 (다음 단계)
-- [ ] 테스트 실행 및 실패 항목 수정
-- [ ] database.py 완성 (실제 DB 연결 로직)
-- [ ] 라우터 함수 구현체 완성
-- [ ] Redis 토큰 시스템 연동
-
----
-
-## 초기 세팅 및 인프라 구축 🚀
-
-### ✅ 완료된 항목들 (업데이트됨)
-- [x] 코드 리포지토리 및 버전 관리 체계 구축
-- [x] **백엔드 구조 표준화** ✨ (외부 AI 완료)
-- [x] **라우터 파일 생성** ✨ (auth.py, games.py, feedback.py, adult_content.py, corporate.py, users.py)
-- [x] **토큰 서비스 구현** ✨ (token_service.py)
-- [x] 초대 코드 테이블 및 모델 정의 (invite_codes)
-- [x] FastAPI 인증 엔드포인트 (/api/auth/login) 구현
-- [x] 백엔드 인프라 구축 (FastAPI + PostgreSQL + Redis + Celery/APScheduler)
-- [x] Tailwind CSS + Lucide-react 아이콘 설치
-- [x] Redux Toolkit 스토어 구조 생성
-- [x] Axios 기반 apiClient.js 설정
 
 ### 🔄 진행 중 (다음 우선순위)
+- [x] **외부 AI 브랜치 병합**: origin/codex/fix-test-failures-and-ensure-stability
+- [ ] **병합 후 검증 테스트**: pytest 실행 및 결과 확인
 - [ ] User 모델 필드 추가 (invite_code, nickname, password_hash, cyber_token_balance)
 - [ ] PostgreSQL 스키마 마이그레이션 완성
 - [ ] Redis 연결 및 user:{id}:cyber_token_balance 키 패턴 정의
