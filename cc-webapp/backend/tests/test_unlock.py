@@ -69,7 +69,7 @@ def seed_initial_data(db: Session, user_id: int, rfm_group: str = "Whale", email
     # User
     test_user = db.query(User).filter_by(id=user_id).first()
     if not test_user:
-        test_user = User(id=user_id, email=f"user{user_id}{email_suffix}@example.com")
+        test_user = User(id=user_id)
         db.add(test_user)
 
     # UserSegment

@@ -74,9 +74,9 @@ def run_migrations_online() -> None:
     # Create a new section in the config for the database URL
     # if it doesn't already exist.
     section = config.config_ini_section
-    if not config.has_section(section):
-        config.add_section(section)
-    config.set_section_option(section, "sqlalchemy.url", db_url)
+    # Alembic's Config object doesn't support has_section/add_section like
+    # ConfigParser. Use set_main_option to set the database URL directly.
+    config.set_main_option("sqlalchemy.url", db_url)
 
     connectable = engine_from_config(
         config.get_section(section), # Use the modified section
