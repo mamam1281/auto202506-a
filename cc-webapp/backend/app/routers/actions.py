@@ -2,7 +2,10 @@ import os
 import json
 from fastapi import APIRouter, Depends, HTTPException
 # from sqlalchemy.orm import Session # Will be needed later
-from confluent_kafka import Producer
+try:
+    from confluent_kafka import Producer
+except ImportError:  # In case library is not installed during lightweight tests
+    Producer = None
 # from .. import models, schemas, database # Assuming these exist and will be used later
 from datetime import datetime
 
@@ -10,8 +13,15 @@ router = APIRouter()
 
 # Kafka Producer Configuration
 KAFKA_BROKER = os.getenv("KAFKA_BROKER", "localhost:9092")
-conf = {'bootstrap.servers': KAFKA_BROKER}
-producer = Producer(conf)
+KAFKA_ENABLED = os.getenv("KAFKA_ENABLED", "0") == "1"
+conf = {"bootstrap.servers": KAFKA_BROKER}
+producer = None
+if KAFKA_ENABLED and Producer is not None:
+    try:
+        producer = Producer(conf)
+    except Exception as e:
+        print(f"Kafka producer init failed: {e}")
+        producer = None
 TOPIC_USER_ACTIONS = "topic_user_actions"
 
 def delivery_report(err, msg):
@@ -52,18 +62,24 @@ async def create_action(user_id: int, action_type: str): # Simplified for now, m
         "action_timestamp": action_timestamp
     }
 
-    try:
-        producer.produce(
-            TOPIC_USER_ACTIONS,
-            key=str(user_id), # Optional: use user_id as key for partitioning
-            value=json.dumps(payload).encode('utf-8'),
-            callback=delivery_report
-        )
-        producer.poll(0) # Trigger delivery report callbacks. Non-blocking.
-        print(f"Produced message to Kafka topic {TOPIC_USER_ACTIONS}: {payload}") # Added for logging
-    except BufferError:
-         # Kafka local queue is full
-         print(f"Kafka local queue full ({len(producer)} messages), messages will be dropped.")
+    if producer:
+        try:
+            producer.produce(
+                TOPIC_USER_ACTIONS,
+                key=str(user_id),
+                value=json.dumps(payload).encode("utf-8"),
+                callback=delivery_report,
+            )
+            producer.poll(0)
+            print(
+                f"Produced message to Kafka topic {TOPIC_USER_ACTIONS}: {payload}"
+            )
+        except BufferError:
+            print(
+                f"Kafka local queue full ({len(producer)} messages), messages will be dropped."
+            )
+    else:
+        print(f"Kafka disabled - action logged locally: {payload}")
     # producer.flush() # Optional: wait for all messages to be delivered. Can be blocking.
 
     # return db_action # Or a schema.Action if returning DB object

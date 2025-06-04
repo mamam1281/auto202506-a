@@ -1,6 +1,9 @@
 # cc-webapp/backend/app/routers/user_segments.py
 import os
-import redis # Ensure redis is imported
+try:
+    import redis
+except Exception:  # noqa: BLE001
+    redis = None
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -18,21 +21,19 @@ REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 redis_client = None # Initialize as None
 try:
     # decode_responses=True is important for getting strings from Redis
-    redis_client = redis.Redis.from_url(REDIS_URL, decode_responses=True)
-    redis_client.ping()
-    logger.info("Successfully connected to Redis.")
-except redis.exceptions.ConnectionError as e:
+    if redis is not None:
+        redis_client = redis.Redis.from_url(REDIS_URL, decode_responses=True)
+        redis_client.ping()
+        logger.info("Successfully connected to Redis.")
+except Exception as e:  # noqa: BLE001
     logger.warning(f"Could not connect to Redis: {e}. Recommendation endpoint will use default streak_count (0).")
     redis_client = None # Explicitly set to None on failure
 
 
 # Dependency to get DB session
 def get_db():
-    db = SessionLocal()
-    try:
+    with SessionLocal() as db:
         yield db
-    finally:
-        db.close()
 
 class RecommendationResponse(BaseModel):
     user_id: int
@@ -74,7 +75,7 @@ async def get_user_recommendation(
                 logger.info(f"User {user_id}: Streak count {streak_count} from Redis.")
             else:
                 logger.info(f"Streak count for user {user_id} not found in Redis (key: {streak_key}), defaulting to 0.")
-        except redis.exceptions.RedisError as e:
+        except Exception as e:
             logger.warning(f"Redis error while fetching streak count for user {user_id} (key: {streak_key}): {e}. Defaulting to 0.")
         except ValueError: # Handle case where streak_val is not a valid int
             logger.warning(f"Invalid streak count value '{streak_val}' in Redis for user {user_id} (key: {streak_key}), defaulting to 0.")

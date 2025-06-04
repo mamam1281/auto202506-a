@@ -198,3 +198,192 @@ from app.database import get_db
 
 **🔄 반복 개선**: 
 첫 시도가 실패해도 괜찮습니다. 실패 원인을 분석하고 개선된 접근법으로 재시도하세요.
+
+
+
+
+# CC Webapp 테스트 실행 및 실패 항목 수정 가이드
+
+## 🎯 작업 목표
+
+백엔드 구조 표준화가 완료된 상태에서 테스트를 실행하고, 실패하는 모든 항목을 수정하여 기본 테스트 통과 상태로 만들어주세요.
+
+## 📋 현재 상황
+
+### ✅ 이미 완료된 작업
+- 백엔드 디렉토리 통합 (`/app` → `/cc-webapp/backend/app`)
+- 라우터 파일 생성 (adult_content.py, corporate.py 추가)
+- 토큰 서비스 구현 (token_service.py)
+- Docker 환경 개선
+- 테스트 파일 import 경로 수정
+
+### 🚨 해결해야 할 문제
+테스트 실행 시 예상되는 실패 항목들을 모두 수정해야 합니다.
+
+## 🔧 단계별 작업 가이드
+
+### 1단계: 테스트 환경 확인 및 실행
+```bash
+cd cc-webapp/backend
+python -m pytest -v --tb=short
+```
+
+### 2단계: 예상되는 주요 실패 항목들
+
+#### A. Database 연결 오류
+**파일**: `cc-webapp/backend/app/database.py`
+**문제**: 실제 PostgreSQL 연결 로직 미완성
+**해결 방법**:
+```python
+# database.py에 다음 기능 구현 필요:
+- SQLAlchemy 엔진 설정
+- 세션 팩토리 구현
+- get_db() 의존성 함수
+- 테스트용 in-memory SQLite 옵션
+```
+
+#### B. 라우터 함수 구현체 누락
+**파일들**: 
+- `cc-webapp/backend/app/routers/adult_content.py`
+- `cc-webapp/backend/app/routers/corporate.py`
+
+**문제**: 라우터 파일은 생성되었지만 실제 함수 구현체 누락
+**해결 방법**:
+```python
+# adult_content.py에 필요한 엔드포인트:
+@router.post("/unlock")
+async def unlock_content(stage: int, user_id: int, db: Session = Depends(get_db)):
+    # Stage별 토큰 비용: Stage 1=200, Stage 2=500, Stage 3=1000
+    # 사용자 세그먼트 체크 로직
+    # 토큰 차감 로직
+    pass
+
+# corporate.py에 필요한 엔드포인트:
+@router.post("/tokens/earn")
+async def earn_tokens(amount: int, user_id: int):
+    # 본사 사이트 활동으로 토큰 획득
+    pass
+
+@router.get("/tokens/balance")
+async def get_token_balance(user_id: int):
+    # 사용자 토큰 잔고 조회
+    pass
+```
+
+#### C. Redis 연결 Fallback
+**문제**: 개발 환경에서 Redis 연결 실패 시 애플리케이션 중단
+**해결 방법**:
+```python
+# Redis 연결 실패 시 in-memory 딕셔너리로 fallback
+try:
+    redis_client = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
+    redis_client.ping()
+except:
+    # Fallback to in-memory storage for development
+    redis_client = None
+```
+
+#### D. Kafka 연결 문제
+**문제**: 개발 환경에서 Kafka 없이도 동작해야 함
+**해결 방법**:
+```python
+# Kafka 연결 선택적으로 만들기
+if settings.KAFKA_ENABLED:
+    # Kafka 설정
+else:
+    # 로그로만 기록
+```
+
+### 3단계: 모델 및 스키마 완성
+
+#### User 모델 업데이트
+**파일**: `cc-webapp/backend/app/models.py` (또는 `models/user.py`)
+```python
+class User(Base):
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True)
+    nickname = Column(String(50), unique=True, nullable=False)
+    password_hash = Column(String(255), nullable=False)
+    invite_code = Column(String(6), nullable=False)
+    cyber_token_balance = Column(Integer, default=200)  # 초기 토큰
+    created_at = Column(DateTime, default=datetime.utcnow)
+    segment = Column(String(20), default="Low")  # Low, Medium, High, Whale
+```
+
+#### Pydantic 스키마 추가
+**파일**: `cc-webapp/backend/app/schemas.py`
+```python
+class TokenEarnRequest(BaseModel):
+    amount: int
+    activity_type: str  # "login", "quiz", "event"
+
+class UnlockRequest(BaseModel):
+    stage: int  # 1, 2, 3
+    
+class UnlockResponse(BaseModel):
+    success: bool
+    stage: int
+    tokens_spent: int
+    content_url: Optional[str]
+```
+
+## 📊 참조 문서 검증
+
+이 작업은 다음 문서들의 요구사항을 만족해야 합니다:
+
+### 필수 확인 사항:
+- [ ] **04_adult_rewards_en.md**: Stage별 토큰 비용 (Stage 1=200, Stage 2=500, Stage 3=1000)
+- [ ] **05_corporate_retention_en.md**: 토큰 적립/소비 플로우
+- [ ] **02_data_personalization_en.md**: 사용자 세그먼테이션 (Low, Medium, High, Whale)
+- [ ] **01_architecture_en.md**: 전체 시스템 아키텍처
+
+## 🧪 테스트 케이스 확인
+
+모든 수정 완료 후 다음 테스트들이 통과해야 합니다:
+
+```bash
+# 기본 테스트 실행
+python -m pytest -v
+
+# 특정 테스트 파일별 실행
+python -m pytest tests/test_adult_content.py -v
+python -m pytest tests/test_corporate.py -v
+python -m pytest tests/test_token_service.py -v
+```
+
+## 🔍 성공 기준
+
+### 최소 요구사항:
+1. **모든 테스트가 PASS 또는 SKIP 상태**
+2. **Import 오류 없음**
+3. **기본 API 엔드포인트 호출 가능**
+4. **토큰 시스템 기본 동작**
+
+### 예상 테스트 결과:
+```
+===== test session starts =====
+cc-webapp/backend/tests/test_adult_content.py::test_unlock_stage_1 PASSED
+cc-webapp/backend/tests/test_corporate.py::test_earn_tokens PASSED
+cc-webapp/backend/tests/test_token_service.py::test_get_balance PASSED
+===== X passed, Y skipped in Z.ZZs =====
+```
+
+## 🚨 중요 제약사항
+
+1. **기존 파일 구조 유지**: 이미 생성된 파일들의 위치는 변경하지 마세요
+2. **환경 호환성**: 개발 환경에서 외부 의존성(Redis, Kafka) 없이도 동작해야 합니다
+3. **문서 일치성**: 위에 명시된 참조 문서들의 요구사항을 정확히 따라야 합니다
+
+## 📝 완료 후 제출사항
+
+작업 완료 후 다음 정보를 제공해주세요:
+
+1. **테스트 실행 결과** (전체 로그)
+2. **수정한 파일 목록** 및 주요 변경사항
+3. **남은 문제점** (있다면)
+4. **다음 단계 권장사항**
+
+---
+
+**목표: 모든 기본 테스트가 통과하는 안정적인 백엔드 환경 구축** 🎯
