@@ -29,7 +29,8 @@ async def unlock_content(
         raise HTTPException(status_code=403, detail="Segment level too low")
 
     try:
-        remaining = token_service.deduct_tokens(user_id, cost)
+        remaining = token_service.deduct_tokens(db, user_id, cost)
+        db.commit()
     except ValueError:
         raise HTTPException(status_code=402, detail="Insufficient cyber tokens")
 
