@@ -92,6 +92,10 @@
 - [x] **기본 라우터 골격**: adult_content, corporate, auth 라우터 추가
 - [x] **토큰 언락 시스템**: 성인 콘텐츠 단계별 비용 구조 구현
 - [x] **테스트 인프라**: test_unlock.py, test_rewards.py, test_notification.py 추가
+### ✅ 프론트엔드 구조 표준화 (추가 필요)
+- [x] **프론트엔드 중복 구조 해결**: 루트 `/frontend/` 제거 및 `/cc-webapp/frontend/` 통합
+- [ ] **참조 경로 표준화**: 모든 문서 및 설정에서 일관된 경로 사용
+- [ ] **Docker 설정 검증**: 프론트엔드 빌드 경로 정상 동작 확인
 
 #### ⚠️ 외부 AI 작업 중 발생한 문제
 - **테스트 수집 실패**: `pytest` 실행 시 누락된 의존성으로 인한 ModuleNotFoundError
