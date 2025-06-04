@@ -76,3 +76,4 @@
 - **Deployment & Installation:** `/docs/deployment_installation.md`
 - **Maintenance Guide:** `/docs/maintenance_guide.md`
 - **Security & Auth:** `/docs/security_authentication_en.md`
+- **Game Dev Checklist (Korean):** `/docs/game_dev_full_checklist_ko.md`
