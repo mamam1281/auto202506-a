@@ -36,4 +36,26 @@ class RegistrationResponse(BaseModel):
     verification_status: str = "pending"
 
 class ContentUnlockRequest(BaseModel):
-    content_id: str
+    user_id: int
+    stage: int
+
+
+class GameResult(BaseModel):
+    user_id: int
+    game_type: str  # e.g., SLOT, ROULETTE, RPS, GACHA
+    outcome: str    # WIN or FAIL
+    token_delta: int
+
+
+class FeedbackRequest(BaseModel):
+    user_id: int
+    action_type: str
+    metadata: dict = {}
+
+
+class FeedbackResponse(BaseModel):
+    emotion: str
+    message: str
+    animation: Optional[str]
+    sound: Optional[str]
+    token_delta: int

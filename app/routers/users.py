@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from app.schemas import UserProfile
 
-router = APIRouter(prefix="/v1/user", tags=["User"])
+router = APIRouter(prefix="/v1/users", tags=["Users"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @router.get("/profile", response_model=UserProfile)
