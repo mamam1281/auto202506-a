@@ -70,10 +70,49 @@ POST /api/games/gacha    # 가챠 (50토큰 소모, 티켓/코인 보상)
 - **05_corporate_retention_en.md**: 본사 사이트 연동 토큰 흐름
 - **10_onboarding_en.md**: 닉네임/비밀번호 로그인 (email 제외)
 
+## 🛠️ 환경 설정 및 시작 방법
+
+### Codex/외부 AI 환경에서 시작하기
+```bash
+# 1. 프로젝트 루트에서 설정 스크립트 실행
+bash setup.sh
+
+# 2. 또는 Codex 전용 시작 스크립트 (서버 자동 시작)
+bash codex-startup.sh
+
+# 3. 환경변수 확인/수정
+cat .env
+```
+
+### 환경변수 중요 설정값
+```bash
+# 데이터베이스 (개발용 SQLite 자동 설정)
+DATABASE_URL=postgresql://cc_user:cc_password@localhost:5432/cc_webapp_db
+TEST_DATABASE_URL=sqlite:///./test_cc_webapp.db
+
+# JWT 인증
+JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+
+# 토큰 설정 (문서 기준 유지)
+INITIAL_TOKEN_AMOUNT=200
+STAGE_1_COST=200
+STAGE_2_COST=500
+STAGE_3_COST=1000
+```
+
+### 필수 확인사항
+1. **Python 3.10+** 환경 확인
+2. **Node.js 18+** 환경 확인  
+3. **setup.sh 실행 성공** 여부
+4. **기본 테스트 1개 이상 통과** 확인
+
 ## 🎯 성공 기준
 작업 완료 후 다음이 모두 통과해야 합니다:
 
 ```bash
+# 0. 환경 설정 (반드시 먼저 실행)
+bash setup.sh
+
 # 1. 테스트 통과
 cd cc-webapp/backend
 python -m pytest tests/ -v
@@ -83,11 +122,20 @@ curl -X POST http://localhost:8000/api/auth/signup
 curl -X POST http://localhost:8000/api/games/slot
 curl -X POST http://localhost:8000/api/games/gacha
 
-# 3. 데이터베이스 테이블 확인
-docker exec -it postgres psql -U user -d cc_db -c "\dt"
+# 3. 데이터베이스 테이블 확인 (SQLite 개발환경)
+python -c "
+from app.database import engine, Base
+from app.models import User
+Base.metadata.create_all(bind=engine)
+print('테이블 생성 완료')
+"
 
-# 4. Redis 토큰 시스템 확인
-docker exec -it redis redis-cli get user:1:cyber_token_balance
+# 4. 환경변수 기반 설정 확인
+python -c "
+import os
+print('JWT_SECRET_KEY:', os.getenv('JWT_SECRET_KEY', 'NOT_SET'))
+print('DATABASE_URL:', os.getenv('DATABASE_URL', 'NOT_SET'))
+"
 ```
 
 ## 📝 구현 가이드라인
