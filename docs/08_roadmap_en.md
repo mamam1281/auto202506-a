@@ -1,49 +1,51 @@
-# Roadmap & Future Development Plan
+# 🗺️ 프로젝트 로드맵
 
-## 8.1. Short-Term (1–2 months)
-1. **MVP Completion:**  
-   - Complete mini‐games (Slot, RPS, Roulette) MVP  
-   - Implement core backend (FastAPI) CRUD and reward logic  
-   - Deploy initial emotion feedback system
+## 8.1. Q2: 초기 안정화 🚀
 
-2. **Data Pipeline Setup:**  
-   - Schedule RFM batch job (daily at 2 AM)  
-   - Integrate Kafka → ClickHouse  
-   - Finalize Redis cache key strategy
+### 초대 코드 시스템 강화 🔐
+- 관리자용 Invite Code 발급 스크립트 고도화
+- 초대 코드 유효성 검사 로직 강화
+  - 만료 날짜 적용
+  - 중복 방지 메커니즘 구현
 
-3. **Adult Content Staging:**  
-   - Admin dashboard: upload & manage images/videos per stage  
-   - Store media URLs and access requirements
+### CJ AI 커뮤니케이션 기반 구축 🤖
+- 기본 키워드 매핑 및 감정 응답 룰셋 설정
+- `/api/chat` 엔드포인트 배포
+- 프론트엔드와 seamless 연동
 
-## 8.2. Mid-Term (3–6 months)
-1. **Advanced Personalization Engine:**  
-   - Incorporate psychometric quiz results  
-   - Develop churn‐prediction model (scikit‐learn) to preemptively re‐engage users
+### 사이버 토큰 통합 테스트 💰
+- 본사 사이트 → 앱 토큰 획득 플로우 검증
+- 앱 내 토큰 사용 플로우 테스트
+- Redis > DB 동기화 백업 작업 스케줄링
 
-2. **PVP Competition & Leaderboard:**  
-   - Build Top‐N leaderboard  
-   - Add matchmaking for friend vs. friend battles
+## 8.2. Q3: 도파민 루프 최적화 🎢
 
-3. **Onboarding & UX Polish:**  
-   - A/B test landing page UI/UX  
-   - Optimize animations and performance for smoother interactions
+### UI/UX 개선 🎨
+- 슬롯·룰렛·가챠 애니메이션 고도화
+- "한 번 더" 토스트 반복 로직
+- 애니메이션 속도 최적화
 
-## 8.3. Long-Term (6+ months)
-1. **Enhanced AI Character:**  
-   - Integrate GPT‐4o‐mini (or similar) for dynamic, contextual dialogues  
-   - Add STT/TTS for voice‐based interaction and emotion detection  
+### AI 모델 고도화 🧠
+- 심화 CJ AI 모델 통합
+- 외부 LLM 연동 테스트
+- 감정 분석 + 자연어 생성 고도화
+  - Prompt 엔지니어링 적용
 
-2. **Cloud Scalability & High Availability:**  
-   - Migrate to AWS/GCP with CI/CD (GitHub Actions → ECS/Cloud Run)  
-   - Set up Auto Scaling, Load Balancers, DB replication across regions
+### 이벤트 시스템 구축 🎉
+- 주말 이벤트 자동 생성 스케줄러
+- 푸시/배너 노출 로직 개발
 
-3. **Global Launch:**  
-   - Implement i18n for multi‐language support  
-   - Integrate multiple payment gateways  
-   - Partner with adult content providers worldwide  
+## 8.3. Q4: 고급 분석 및 확장 📊
 
-## 8.4. Major Milestones
-- **M1 (Month 1):** Release mini‐games + reward system v1  
-- **M2 (Month 3):** Beta launch of personalization recommendation engine  
-- **M3 (Month 6):** Pilot voice‐enabled AI character interaction  
-- **M4 (Month 9):** Global launch v1
+### 예측 모델 배포 🔮
+- LTV/Churn Prediction 모델 개발
+- XGBoost 기반 예측 모델 훈련
+- 관리자용 Analytics 대시보드 시각화
+
+### 커뮤니티 기능 프로토타입 🤝
+- 리더보드 개선
+  - 친구 초대 랭킹
+  - 주간 랭킹
+  - VIP 랭킹
+- 실시간 채팅 시스템
+- 게시판 기능 초기 버전 개발

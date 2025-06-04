@@ -1,324 +1,171 @@
-# Technical Implementation Document
+# 🖥️ 기술 구현 문서
 
-## 7.1. Frontend Implementation
+## 7.1. Frontend 구현 (React/Next.js) 🌐
 
-### 7.1.1. Project Structure (React/Next.js)
+### 7.1.1. 프로젝트 구조 📂
+
 ```
 /frontend
 │
 ├── public/
-│   ├── sounds/           # victory.mp3, failure.mp3 etc.
-│   ├── images/           # thumbnails, stage assets
+│   ├── sounds/           # 게임 사운드 파일
+│   ├── images/           # 이미지 리소스
+│   └── cheatsheet/       # 가이드 문서
 │
 ├── src/
-│   ├── components/
-│   │    ├── SlotMachine.jsx
-│   │    ├── RPSGame.jsx
-│   │    ├── Roulette.jsx
-│   │    ├── EmotionFeedback.jsx
-│   │    ├── AdultContentViewer.jsx
-│   │    ├── QuizForm.jsx
-│   │    └── NotificationBanner.jsx
+│   ├── components/       # 주요 컴포넌트
+│   │    ├── Auth/        # 인증 관련 컴포넌트
+│   │    ├── Dashboard/   # 대시보드 컴포넌트
+│   │    ├── Games/       # 게임 컴포넌트
+│   │    ├── AdultContent/# 성인 콘텐츠 컴포넌트
+│   │    └── ... (기타 컴포넌트)
 │   │
-│   ├── hooks/
-│   │    └── useEmotionFeedback.js
-│   │
-│   ├── pages/
-│   │    ├── index.jsx       # Landing page
-│   │    ├── app.jsx         # Next.js App wrapper
-│   │    ├── _document.jsx   # HTML <head>
-│   │    ├── slots.jsx       # /slots route
-│   │    ├── rps.jsx         # /rps route
-│   │    ├── roulette.jsx    # /roulette route
-│   │    ├── adult_content.jsx # /adult_content route
-│   │    ├── quiz.jsx        # /quiz route
-│   │    └── profile.jsx     # /profile route
-│   │
-│   ├── utils/
-│   │    ├── rewardUtils.js   # calculateReward, spinGacha
-│   │    └── apiClient.js     # axios instance, baseURL
-│   │
-│   ├── styles/
-│   │    ├── globals.css
-│   │    └── modules/         # CSS modules per component
-│   │
-│   └── AppRouter.jsx         # React Router (if not using Next.js)
+│   ├── hooks/            # 커스텀 훅
+│   ├── pages/            # 페이지 라우팅
+│   ├── redux/            # 상태 관리
+│   ├── utils/            # 유틸리티 함수
+│   └── styles/           # 스타일시트
 │
-├── package.json
-└── tailwind.config.js
+└── 설정 파일들
 ```
 
-### 7.1.2. Example Component: `SlotMachine.jsx`
-```jsx
-import React, { useState, useEffect } from "react";
-import { calculateReward } from "../utils/rewardUtils";
-import { fetchEmotionFeedback } from "../hooks/useEmotionFeedback";
-import confetti from "canvas-confetti";
-import useSound from "use-sound";
-import victorySound from "../public/sounds/victory.mp3";
-import failureSound from "../public/sounds/failure.mp3";
-import styles from "../styles/SlotMachine.module.css";
+### 7.1.2. 인증 흐름 🔐
 
-const SlotMachine = ({ userId }) => {
-  const [reels, setReels] = useState([0, 0, 0]);
-  const [streakCount, setStreakCount] = useState(0);
-  const [feedback, setFeedback] = useState({ emotion: "", message: "" });
-  const [playVictory] = useSound(victorySound);
-  const [playFailure] = useSound(failureSound);
+#### 초대 코드 입력 컴포넌트
 
-  const spin = async () => {
-    const isWin = calculateReward(streakCount);
-    if (isWin) {
-      setStreakCount(streakCount + 1);
-      playVictory();
-      confetti();
-      const resp = await fetchEmotionFeedback(userId, "GAME_WIN");
-      setFeedback(resp);
-    } else {
-      setStreakCount(0);
-      playFailure();
-      const resp = await fetchEmotionFeedback(userId, "GAME_FAIL");
-      setFeedback(resp);
-    }
-    // Update reels randomly (0-9)
-    setReels([
-      Math.floor(Math.random() * 10),
-      Math.floor(Math.random() * 10),
-      Math.floor(Math.random() * 10),
-    ]);
-  };
-
-  return (
-    <div className={styles.container}>
-      <h2>Slot Machine</h2>
-      <div className={styles.reels}>
-        {reels.map((num, idx) => (
-          <div key={idx} className={styles.reel}>{num}</div>
-        ))}
-      </div>
-      <button onClick={spin} className={styles.spinButton}>Spin</button>
-      {feedback.message && (
-        <div className={`${styles.feedback} ${styles[feedback.emotion]}`}>
-          {feedback.message}
-        </div>
-      )}
-      <div className={styles.streak}>Streak: {streakCount}</div>
-    </div>
-  );
-};
-
-export default SlotMachine;
+```javascript
+// 초대 코드 유효성 검사 예시
+if (!/^[A-Z0-9]{6}$/.test(inputCode)) {
+  setError("유효한 초대 코드가 아닙니다.");
+  return;
+}
+setInviteValid(true);
 ```
 
-### 7.1.3. CSS Module Example: `SlotMachine.module.css`
-```css
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 2rem;
-}
+#### 로그인/회원가입 API 호출
 
-.reels {
-  display: flex;
-  gap: 1rem;
-}
-
-.reel {
-  width: 60px;
-  height: 60px;
-  background-color: #f0f0f0;
-  font-size: 2rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.5rem;
-}
-
-.spinButton {
-  margin-top: 1.5rem;
-  background-color: #4f46e5;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.spinButton:hover {
-  background-color: #4338ca;
-}
-
-.feedback {
-  margin-top: 1rem;
-  font-size: 1.2rem;
-  font-weight: 500;
-}
-
-.happiness {
-  color: #16a34a;
-}
-
-.frustration {
-  color: #dc2626;
-}
-
-.determination {
-  color: #1e40af;
-}
-
-.streak {
-  margin-top: 0.5rem;
-  font-size: 1rem;
-  color: #6b7280;
-}
-```
-
-## 7.2. Backend Implementation (FastAPI)
-```markdown
-## 7.2. Backend Implementation
-
-### 7.2.1. Project Structure (FastAPI)
-```
-/backend
-│
-├── app/
-│   ├── main.py              # FastAPI app and router registration
-│   ├── models.py            # SQLAlchemy models
-│   ├── schemas.py           # Pydantic schemas (User, Action, Reward, etc.)
-│   ├── database.py          # DB engine, session, Redis client setup
-│   ├── routers/
-│   │    ├── users.py        # /api/users
-│   │    ├── actions.py      # /api/actions
-│   │    ├── rewards.py      # /api/users/{id}/rewards
-│   │    ├── feedback.py     # /api/feedback
-│   │    ├── unlock.py       # /api/unlock
-│   │    ├── user_segments.py # /api/user-segments
-│   │    └── notification.py # /api/notification
-│   │
-│   ├── utils/
-│   │    ├── reward_utils.py  # calculateReward, spin_gacha, etc.
-│   │    └── emotion_utils.py # emotion_matrix processing
-│   │
-│   └── celery_worker.py      # Celery task definitions
-│
-├── requirements.txt
-└── alembic/                 # Migration scripts
-```
-
-### 7.2.2. Example FastAPI Endpoint: `/api/actions`
 ```python
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from .database import get_db, get_redis
-from .models import UserAction
-from .schemas import ActionCreate
+@app.post("/api/auth/login")
+def login(auth_req: AuthRequest, db=Depends(get_db)):
+    # 인증 로직
+    user = db.query(User).filter(
+        User.invite_code == auth_req.invite_code,
+        User.nickname == auth_req.nickname
+    ).first()
+    
+    if not user or not verify_password(auth_req.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="인증 실패")
+    
+    # JWT 토큰 발급
+    access_token = create_access_token({"sub": user.id})
+    return {"access_token": access_token, "token_type": "bearer"}
+```
 
-router = APIRouter()
+## 7.2. Backend 구현 (FastAPI) 🚀
 
-@router.post("/api/actions", status_code=200)
-def create_action(action: ActionCreate, db: Session = Depends(get_db), redis=Depends(get_redis)):
-    user = db.query(User).filter(User.id == action.user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+### 7.2.1. 인증 모델 및 스키마
 
-    new_action = UserAction(
-        user_id=action.user_id,
-        action_type=action.action_type,
-        action_timestamp=action.timestamp,
-        metadata=action.metadata
-    )
-    db.add(new_action)
+```python
+# 사용자 모델
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    invite_code = Column(String(6), unique=True)
+    nickname = Column(String(50), unique=True)
+    password_hash = Column(String(255))
+    cyber_token_balance = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+```
+
+### 7.2.2. 초대 코드 생성 🎫
+
+```python
+def generate_invite_codes(n=100):
+    codes = set()
+    while len(codes) < n:
+        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        if not db.query(User).filter(User.invite_code == code).first():
+            codes.add(code)
+    
+    for c in codes:
+        new_user = User(invite_code=c, nickname=None, password_hash=None)
+        db.add(new_user)
+    
     db.commit()
-    db.refresh(new_action)
-
-    # Redis cache update
-    streak_key = f"user:{action.user_id}:streak_count"
-    last_ts_key = f"user:{action.user_id}:last_action_ts"
-    redis.incr(streak_key)
-    redis.set(last_ts_key, int(action.timestamp.timestamp()))
-
-    return {"action_id": new_action.id}
 ```
 
-### 7.2.3. Reward Logic Example (`reward_utils.py`)
+### 7.2.3. 토큰 잔고 동기화 💰
+
 ```python
-import random
-
-def calculate_reward(streak_count: int) -> bool:
-    base_prob = 0.10
-    streak_bonus = min(streak_count * 0.01, 0.30)  # max +30% bonus
-    actual_prob = base_prob + streak_bonus
-    return random.random() < actual_prob
-
-def spin_gacha():
-    gacha_table = [
-        { "weight": 5,  "result": { "type": "CONTENT_UNLOCK", "stage": 3 } },
-        { "weight": 20, "result": { "type": "CONTENT_UNLOCK", "stage": 2 } },
-        { "weight": 50, "result": { "type": "CONTENT_UNLOCK", "stage": 1 } },
-        { "weight": 25, "result": { "type": "COIN", "amount": 100 } },
-    ]
-    total = sum(entry["weight"] for entry in gacha_table)
-    rand = random.random() * total
-    for entry in gacha_table:
-        if rand < entry["weight"]:
-            return entry["result"]
-        rand -= entry["weight"]
-    return None
+@celery.task
+def sync_token_from_redis_to_db():
+    all_users = db.query(User).all()
+    for user in all_users:
+        redis_balance = int(redis.get(f"user:{user.id}:cyber_token_balance") or 0)
+        user.cyber_token_balance = redis_balance
+    db.commit()
 ```
 
-### 7.2.4. Redis & Kafka Setup Example (`database.py`)
+### 7.2.4. CJ AI 대화 엔드포인트 🤖
+
 ```python
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-import redis
-from confluent_kafka import Consumer, Producer
+@app.post("/api/chat")
+def chat_with_cj(request: ChatRequest, db=Depends(get_db), redis=Depends(get_redis)):
+    # 유저 메시지 저장
+    new_action = UserAction(
+        user_id=request.user_id,
+        action_type="USER_CHAT",
+        metadata={"message": request.message},
+        timestamp=datetime.utcnow()
+    )
+    db.add(new_action); db.commit()
 
-DATABASE_URL = "postgresql://user:password@localhost:5432/cc_db"
-REDIS_URL = "redis://localhost:6379/0"
-KAFKA_BROKER = "localhost:9092"
+    # AI 응답 생성
+    response_text, emotion = generate_ai_response(
+        request.user_id, 
+        request.message, 
+        db, 
+        redis
+    )
 
-# PostgreSQL session
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    # AI 응답 기록
+    new_action = UserAction(
+        user_id=request.user_id,
+        action_type="CJ_CHAT",
+        metadata={"message": response_text, "emotion": emotion},
+        timestamp=datetime.utcnow()
+    )
+    db.add(new_action); db.commit()
 
-# Redis client
-redis_client = redis.Redis.from_url(REDIS_URL)
-
-# Kafka producer/consumer example
-producer = Producer({"bootstrap.servers": KAFKA_BROKER})
-consumer = Consumer({
-    "bootstrap.servers": KAFKA_BROKER,
-    "group.id": "cc_app_group"
-})
+    return {"message": response_text, "emotion": emotion}
 ```
 
-## 7.3. Image/Outfit Management System
-- Admin uploads character/outfit images, which are dynamically loaded per stage for the AI character
-- Example:
-  ```python
-  import os
-  from PIL import Image
+### AI 응답 생성 로직
 
-  def load_outfit(character_id: str, stage: int):
-      outfit_path = f"assets/{character_id}/outfits/{stage}.png"
-      if os.path.exists(outfit_path):
-          return Image.open(outfit_path)
-      return None
-  ```
+```python
+def generate_ai_response(user_id: int, user_msg: str, db, redis):
+    # 토큰 부족 감지
+    if "토큰 부족" in user_msg or "토큰 없어" in user_msg:
+        balance = int(redis.get(f"user:{user_id}:cyber_token_balance") or 0)
+        if balance < 100:
+            return (f"{balance}토큰밖에 없어요. 본사 사이트 접속 시 200토큰을 드립니다!", "concern")
+    
+    # 게임 확률 정보
+    if "확률" in user_msg:
+        return ("슬롯 머신 기본 승률은 10%이며, 연속 승리 스트릭에 따라 최대 +30%까지 보너스가 지급됩니다.", "informative")
+    
+    # 기본 응답
+    return ("무엇을 도와드릴까요?", "neutral")
+```
 
-## 7.4. Emotion Analytics Pipeline
-- Emotion matrix is used by FastAPI to provide real-time feedback messages
-- Example:
-  ```python
-  emotion_matrix = {
-      "GAME_WIN": {"emotion":"happiness", "feedback":"You did amazing! Keep it up!"},
-      "GAME_FAIL": {"emotion":"frustration", "feedback":"Don't worry! Try again!"},
-      "GAME_RETRY":{"emotion":"determination","feedback":"You can do it, give it another shot!"}
-  }
+주요 특징:
+- 심플하고 명확한 구조
+- 키워드 기반 AI 응답
+- 상황별 맞춤 메시지 제공
 
-  def get_feedback_message(action_type: str):
-      return emotion_matrix.get(action_type, {"emotion":"neutral","feedback":"You're doing great!"})
-  ```
+## 7.3. 요약 및 기대 효과 🌈
+
+- 제한된 사용자 환경
+- 초대 코드 기반 접근 제어
+- 실시간 토큰 동기화
+- AI 기반 상호작용

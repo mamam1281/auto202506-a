@@ -13,9 +13,16 @@ This project aims to deliver a rich user journey with features like:
 
 ## 🛠️ Prerequisites
 
-Before you begin, ensure you have the following installed:
--   Docker Engine (latest stable version)
--   Docker Compose (latest stable version)
+기본 인증 설정:
+```env
+# 기본 인증 설정
+JWT_SECRET=매우_안전한_시크릿_키
+AUTHORIZED_USERS_ONLY=true
+```
+
+추가 참고사항:
+- 제한된 사용자 환경
+- 사전 승인된 계정만 접근 가능
 
 ## 🚀 Getting Started / Running with Docker Compose
 

@@ -1,9 +1,11 @@
-from fastapi import FastAPI, HTTPException # Added HTTPException
+from fastapi import FastAPI, HTTPException, Depends # Added Depends
 from fastapi.middleware.cors import CORSMiddleware
 from .apscheduler_jobs import start_scheduler, scheduler # Import scheduler components
 from prometheus_fastapi_instrumentator import Instrumentator # ADDED IMPORT
 import sentry_sdk # ADDED Sentry SDK import
 import os # For Sentry DSN from env var
+from pydantic import BaseModel # For request/response models
+from typing import Optional # For optional fields in models
 
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---
 # It's good practice to initialize Sentry as early as possible.
@@ -30,7 +32,13 @@ else:
 # --- End Sentry Initialization Placeholder ---
 
 
-app = FastAPI()
+app = FastAPI(
+    title="Casino Club API",
+    description="API for interactive mini-games and token-based reward system",
+    version="0.1.0",
+    docs_url="/docs",  # Swagger UI 경로
+    redoc_url="/redoc"  # ReDoc 문서 경로
+)
 
 # Prometheus Instrumentation - ADDED SECTION
 # This should ideally be done after app creation and before other middlewares/routers if possible,
@@ -76,49 +84,42 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/health", tags=["healthcheck"])
-async def health():
+# Request/Response Models
+class UserLogin(BaseModel):
+    """사용자 로그인 스키마"""
+    user_id: str
+    password: str
+
+class LoginResponse(BaseModel):
+    """로그인 응답 스키마"""
+    token: str
+    user_id: str
+    message: Optional[str] = None
+
+@app.post("/login", response_model=LoginResponse, tags=["Authentication"])
+async def login(user: UserLogin):
     """
-    Health check endpoint for Docker Compose and other monitoring systems.
+    사용자 로그인 엔드포인트
+
+    - **user_id**: 사용자 ID
+    - **password**: 비밀번호
+    - 성공 시 JWT 토큰 반환
+    """
+    # 실제 로직은 추후 구현
+    if user.user_id == "test" and user.password == "password":
+        return {
+            "token": "sample_jwt_token",
+            "user_id": user.user_id,
+            "message": "로그인 성공"
+        }
+    raise HTTPException(status_code=401, detail="인증 실패")
+
+@app.get("/health", tags=["System"])
+async def health_check():
+    """
+    시스템 상태 확인 엔드포인트
+    
+    - 서버 정상 동작 여부 확인
+    - 헬스체크 용도
     """
     return {"status": "healthy"}
-
-@app.get("/")
-async def root():
-    return {"status": "OK"}
-
-@app.get("/debug-sentry", tags=["debug"])
-async def trigger_sentry_error():
-    """
-    A debug endpoint to deliberately raise an exception and test Sentry integration.
-    This endpoint should ideally be removed or secured (e.g., restricted to dev environments) in production.
-    """
-    error_message = "This is a test exception to verify Sentry integration for cc-webapp."
-    print(f"Debug: Intentionally raising an exception: {error_message}")
-    try:
-        # Example of a common error
-        result = 1 / 0
-        return {"result_should_not_be_reached": result} # Should not be reached
-    except Exception as e:
-        # Sentry's FastAPI integration should automatically capture unhandled exceptions
-        # that result in a 500 error. Raising HTTPException might be handled differently
-        # or might need explicit capture if not a standard unhandled Python exception.
-        # For a clear test, just re-raising the original error is often best.
-        # sentry_sdk.capture_exception(e) # Explicit capture if needed, but usually automatic
-        print(f"Deliberately caused error for Sentry: {e}")
-        # Re-raise the original error to let FastAPI and Sentry middleware handle it
-        raise e
-        # Alternatively, to show a specific message in HTTP response while still sending to Sentry:
-        # raise HTTPException(status_code=500, detail=f"Sentry Test: Deliberate error occurred - {str(e)}")
-
-
-# Placeholder for including routers (to be implemented later)
-from .routers import actions, notification, user_segments, rewards, unlock, gacha # users, feedback # noqa # Added gacha
-# app.include_router(users.router, prefix="/api")
-app.include_router(actions.router, prefix="/api", tags=["actions"])
-app.include_router(rewards.router, prefix="/api", tags=["rewards"])
-# app.include_router(feedback.router, prefix="/api")
-app.include_router(unlock.router, prefix="/api", tags=["unlock"])
-app.include_router(user_segments.router, prefix="/api", tags=["user_segments"])
-app.include_router(notification.router, prefix="/api", tags=["notification"])
-app.include_router(gacha.router, prefix="/api", tags=["gacha"]) # Added gacha router

@@ -1,66 +1,116 @@
-# Corporate Site Retention System Document
+# 🤝 Corporate Site Retention & Cross-Platform Reward System
 
-## 5.1. Objective
-- **Purpose:** Increase retention and cross‐engagement between the CC webapp and the corporate “home site” (HQ site). Every action in the webapp should funnel visits back to HQ site, and vice versa.
-- **Key Metrics:**  
-  - **Webapp → Site Conversion Rate**  
-  - **Site → Webapp Re‐Engagement Rate**  
-  - **Time Spent on Site**  
-  - **Cross‐Platform Revenue Lift**
+## 5.1. 목표 🎯
 
-## 5.2. Integration Workflow
+### 주요 목적
 
-### 5.2.1. Webapp → Corporate Site
-1. **Trigger:** User completes a milestone in webapp (e.g., unlocks stage 2 adult content, levels up, or wins VIP reward).
-2. **Prompt UI:** Show modal/banner:  
-   ```
-   Congratulations! You just unlocked Premium Content. Visit our Corporate Site to access exclusive deals and more!
-   [Visit HQ Site]
-   ```
-3. **Deep Link:**  
-   - URL: `https://corporate‐site.com/welcome?userId={user_id}&rewardCode={code}`
-   - Backend logs:  
-     ```sql
-     INSERT INTO site_visits (user_id, source, timestamp) VALUES (?, 'webapp', NOW());
-     ```
-4. **Corporate Site Landing:**  
-   - If `rewardCode` valid, show “Exclusive 10% discount” coupon → store in `site_rewards` table.
+본사 사이트(Corporate Site)와 앱 간의 강력한 리텐션 사이클을 구축
 
-### 5.2.2. Corporate Site → Webapp
-1. **Trigger:** User logs into HQ site and visits a specific page (e.g., “Adult Gallery Previews”).
-2. **Action:** Show a “Play Now in CC App” button:  
-   ```
-   People who enjoyed our VIP Gallery also love our CC Webapp. Click here to try CC’s new Slot Machine and unlock more content!
-   [Play CC App]
-   ```
-3. **Deep Link:**  
-   - URL: `https://cc‐app.com/loginRedirect?userId={user_id}&campaign=sitePromo`
-   - Upon redirect, backend records:  
-     ```sql
-     INSERT INTO user_actions (user_id, action_type, metadata, action_timestamp)
-     VALUES (?, 'SITE_TO_WEBAPP', '{ "campaign": "sitePromo" }', NOW());
-     ```
+- "사이버 토큰"을 본사 사이트 이용 보상으로 제공하여,
+- 유저가 본사 사이트에 재방문하도록 유도
+- 본사 사이트 활동을 통해 토큰을 획득하고 다시 앱 내 소비
 
-## 5.3. Reward Mechanism
-- **Visit Rewards:**  
-  - If user visits HQ site via webapp link, automatically grant 50 coins in CC app.  
-  - Insert into `user_rewards`:  
-    ```sql
-    INSERT INTO user_rewards (user_id, reward_type, reward_value, awarded_at, trigger_action_id)
-    VALUES (?, 'COIN', 50, NOW(), NULL);
-    ```
-- **Site Activity Rewards:**  
-  - If user makes a purchase on HQ site (≥20,000₩), grant “Stage 2 adult content unlock” in CC app.  
-  - Push notification via WebSocket:  
-    ```
-    New Reward Unlocked! You’ve earned Stage 2 Adult Content for spending 20,000₩ on our HQ site. Click here to view.
-    ```
+### 핵심 전략 🌐
 
-## 5.4. Analytics & Retention Tracking
-- **Tables Involved:**  
-  - `site_visits (visit_id, user_id, source, timestamp)`  
-  - `site_rewards (reward_id, user_id, reward_type, reward_value, issued_at)`  
-  - `user_actions` (tracks cross‐platform actions)  
-- **Scheduled Jobs (Celery/APS):**  
-  - Daily: aggregate cross‐platform conversion rates, write to analytics DB.  
-  - Weekly: identify “visited site but didn’t return to app” segment → send re‐engagement email.
+- 본사 사이트와 앱 간의 **교차 참여율** 및 **교차 매출** 극대화
+- "행위중독 트리거"를 본사 사이트 ↔ 앱 전환 시점마다 적용하여 도파민 루프 강화
+
+## 5.2. 통합 워크플로우 🔄
+
+### 5.2.1. 앱 → 본사 사이트 (App to Corporate Site)
+
+#### 트리거 사례:
+
+- 앱 내 토큰 잔고 부족 알림 
+  - "본사 사이트에서 100토큰만 더 모아오세요"
+
+- Flash Offer 종료 임박 알림 
+  - "본사 사이트 이벤트 30분 후 종료 → 지금 방문하면 추가 보너스"
+
+#### Deep Link 메커니즘:
+
+```
+https://corporate-site.com/login?userId={user_id}&source=app_shortage
+```
+
+#### 본사 사이트 랜딩 페이지 (토큰 미션):
+
+- "앱에서 부족한 토큰을 채워보세요!"
+- 퀴즈 / 설문 / 이벤트 참여로 사이버 토큰 즉시 획득 (예: 100~500 토큰)
+
+#### 자동 보상 메커니즘:
+- 본사 사이트 로그인만으로 100토큰 보상
+- Redis 즉시 토큰 잔고 증가
+- 앱 푸시 알림: "본사 사이트에서 100토큰 획득! 지금 앱으로 돌아가서 사용하세요 🚀"
+
+### 5.2.2. 본사 사이트 → 앱 (Corporate Site to App)
+
+#### 트리거 사례:
+
+- 본사 사이트 Flash Event 참여 후
+  - "축하합니다! 300토큰 획득 → 앱에서 사용하세요"
+
+- 본사 사이트에서 Purchase/Subscription 완료 시
+  - "스페셜 쿠폰: 앱 내 가챠 1회 무료 제공"
+
+#### 도파민 루프 강화:
+- 본사에서 보상을 받은 직후 앱 진입 시
+  - 화려한 애니메이션 + 사운드 + 무료 가챠 기회 제공
+- 즉시 가챠 결과가 성공(티켓 획득) 시 Stage 2 언락까지 이어지는 몰입 루프
+
+## 5.3. 보상 메커니즘 & 사이버 토큰 흐름 💰
+
+### 5.3.1. 방문 보상
+- 본사 사이트 방문으로 100~500 사이버 토큰 지급
+- "앱 내에서 사용 가능한 토큰" 획득
+- Redis 즉시 갱신 → 앱 푸시 알림
+
+### 5.3.2. 사이트 활동 보상
+- 본사 사이트 결제(현금) 완료 시
+  - 300 사이버 토큰 지급 + "앱 내 Stage 2 언락 쿠폰"
+
+- 본사 사이트 퀴즈/이벤트 참여 시
+  - 참여 유형에 따라 100~200 사이버 토큰
+  - "이번 달 참여 횟수"에 따라 추가 보너스 토큰
+
+## 5.4. 분석 및 리텐션 추적 📊
+
+### 5.4.1. 주요 테이블
+| 테이블 | 설명 |
+|--------|------|
+| site_visits | 본사 사이트 방문 이력 |
+| site_rewards | 본사 사이트에서 지급된 보상(토큰/쿠폰) 기록 |
+| user_actions | 앱 내 모든 액션 기록 |
+| user_rewards | 앱 내 보상 (콘텐츠 언락, 무료 가챠, 코인 등) |
+
+### 5.4.2. 예약된 작업
+- **일간 배치 (02시 UTC):**
+  - RFM + 사이버 토큰 잔고 업데이트
+  - 본사 사이트 방문자 중 "토큰 미사용" 사용자 대상 리마인더 발송
+
+- **주간 분석 (일요일 자정):**
+  - "본사 → 앱 유입률" 및 "앱 → 본사 재방문률" 지표 계산
+
+## 5.5. 도파민 루프 및 중독 트리거 🧠
+
+| 트리거 유형 | 상세 내용 | 기대 효과 |
+|-------------|-----------|-----------|
+| Variable-Ratio Reward | 슬롯/룰렛/가챠에서 "언제 당첨될지 모름" 긴장감 | 도파민 분비 ↑, 사용자 반복 플레이 유도 |
+| Limited-Time Offer | 본사 사이트 주말 할인 이벤트 | 희소성 자극, 즉시 행동 유도 |
+| Social Proof | 앱 내 리더보드 노출 | 경쟁심 자극, 과금 욕구 상승 |
+| Free Gacha Ticket | 본사 사이트 이벤트 참여 시 앱 내 가챠 1회 무료 | 즉각적 보상 제공, 앱 복귀 유도 |
+
+## 5.6. 요약 및 기대 효과 🚀
+
+### 주요 성과
+- **본사 사이트 리텐션 ↑**
+  - "앱 내 토큰 부족" → "본사 사이트 방문" → "토큰 획득" → "앱 복귀" 순환 고리 완성
+
+- **앱 내 과금 전환율 ↑**
+  - 본사 사이트 획득 토큰으로 언락/가챠 시도 → 추가 토큰 부족 시 현금 결제 유도
+
+- **지속적 개인화**
+  - RFM + 심리 프로필 기반 추천 엔진으로 유입율 극대화
+
+### 최종 목표
+앱과 본사 사이트 간의 시너지를 통해 양쪽 플랫폼 모두 사용자 체류 시간 및 매출 증대
