@@ -7,14 +7,11 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-# Install system dependencies that might be needed by some Python packages (e.g., psycopg2)
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#     build-essential \
-#     libpq-dev \
-#  && rm -rf /var/lib/apt/lists/*
-# For psycopg2-binary (used in requirements.txt), pre-built binaries are used,
-# so libpq-dev might not be strictly needed unless building from source.
-# Keeping it simple for now; add if build fails for specific packages.
+# Install system dependencies
+# Added postgresql-client for pg_isready utility in entrypoint.sh
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client && rm -rf /var/lib/apt/lists/*
+    # build-essential and libpq-dev might be needed if not using psycopg2-binary or for other C extensions.
+    # For now, only adding postgresql-client.
 
 # Copy requirements first to leverage Docker cache
 COPY requirements.txt .
