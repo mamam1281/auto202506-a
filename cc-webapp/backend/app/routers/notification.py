@@ -1,5 +1,5 @@
 # cc-webapp/backend/app/routers/notification.py
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from datetime import datetime
