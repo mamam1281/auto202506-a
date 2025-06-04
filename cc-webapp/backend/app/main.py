@@ -30,7 +30,7 @@ from typing import Optional
 from app.routers import (
     actions,
     gacha,
-    games,
+    games,  # ✅ 이미 등록됨!
     rewards,
     unlock,
     notification,
@@ -39,7 +39,7 @@ from app.routers import (
     adult_content,
     corporate,
     users,
-    auth,
+    auth,  # ✅ 이미 등록됨!
 )
 
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---
@@ -118,7 +118,7 @@ app.add_middleware(
 # Register API routers
 app.include_router(actions.router, prefix="/api")
 app.include_router(gacha.router, prefix="/api")
-app.include_router(games.router, prefix="/api")
+app.include_router(games.router, prefix="/api")  # ✅ 이미 포함됨!
 app.include_router(rewards.router, prefix="/api")
 app.include_router(unlock.router, prefix="/api")
 app.include_router(notification.router, prefix="/api")
@@ -127,7 +127,7 @@ app.include_router(feedback.router, prefix="/api")
 app.include_router(adult_content.router, prefix="/api")
 app.include_router(corporate.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
-app.include_router(auth.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")   # ✅ 이미 포함됨!
 
 # Request/Response Models
 class UserLogin(BaseModel):
