@@ -12,7 +12,7 @@
    ```
 2. **Backend Dependencies**
    ```bash
-   cd backend
+   cd cc-webapp/backend
    python3 -m venv venv
    source venv/bin/activate
    pip install -r requirements.txt
@@ -33,22 +33,23 @@
 ## 10.3. Running the Applications
 1. **Start Backend (FastAPI)**
    ```bash
-   cd backend
+   cd cc-webapp/backend
    alembic upgrade head   # DB migrations
    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
    ```
 2. **Start Frontend (Next.js)**
    ```bash
-   cd ../frontend
+   cd cc-webapp/frontend
    npm run dev
    ```
 3. **Run Celery Worker**
    ```bash
-   cd backend
+   cd cc-webapp/backend
    celery -A celery_worker worker --loglevel=info
    ```
 4. **(Optional) Kafka Consumer**
    ```bash
+   cd cc-webapp/backend
    python scripts/kafka_consumer.py
    ```
 
