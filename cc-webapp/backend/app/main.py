@@ -23,9 +23,7 @@ try:
 except Exception:  # noqa: BLE001
     sentry_sdk = None
     FastApiIntegration = None
-import os # For Sentry DSN from env var
-from pydantic import BaseModel # For request/response models
-from typing import Optional
+import os  # For Sentry DSN from env var
 
 from app.routers import (
     actions,
@@ -38,6 +36,7 @@ from app.routers import (
     adult_content,
     corporate,
     users,
+    auth,
 )
 
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---
@@ -125,35 +124,7 @@ app.include_router(adult_content.router, prefix="/api")
 app.include_router(corporate.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 
-# Request/Response Models
-class UserLogin(BaseModel):
-    """사용자 로그인 스키마"""
-    user_id: str
-    password: str
-
-class LoginResponse(BaseModel):
-    """로그인 응답 스키마"""
-    token: str
-    user_id: str
-    message: Optional[str] = None
-
-@app.post("/login", response_model=LoginResponse, tags=["Authentication"])
-async def login(user: UserLogin):
-    """
-    사용자 로그인 엔드포인트
-
-    - **user_id**: 사용자 ID
-    - **password**: 비밀번호
-    - 성공 시 JWT 토큰 반환
-    """
-    # 실제 로직은 추후 구현
-    if user.user_id == "test" and user.password == "password":
-        return {
-            "token": "sample_jwt_token",
-            "user_id": user.user_id,
-            "message": "로그인 성공"
-        }
-    raise HTTPException(status_code=401, detail="인증 실패")
+app.include_router(auth.router, prefix="/api")
 
 @app.get("/health", tags=["System"])
 async def health_check():
