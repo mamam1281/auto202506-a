@@ -271,7 +271,7 @@ def gacha_pull(request: GachaPullRequest, db: Session = Depends(get_db)):
     db.commit()
 
     return GachaPullResponse(results=results, tokens_change=-cost, balance=balance)
-=======
+
 import random
 from pydantic import BaseModel
 
