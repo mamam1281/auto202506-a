@@ -108,6 +108,16 @@ The backend provides various API endpoints for game logic, user data, actions, r
 
 Frontend API calls are generally directed to `http://localhost:8000/api/...`. Refer to backend documentation or OpenAPI schema (`http://localhost:8000/docs`) for full API details.
 
+### Example Login Request
+
+To authenticate a user, send a JSON payload to the login endpoint:
+
+```bash
+curl -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"nickname": "testuser", "password": "password", "invite_code": "INVITE"}'
+```
+
 ## Project Structure
 
 -   `app/`: Contains page components (App Router structure).

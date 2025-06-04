@@ -38,6 +38,7 @@ from app.routers import (
     adult_content,
     corporate,
     users,
+    auth,
 )
 
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---
@@ -124,6 +125,7 @@ app.include_router(feedback.router, prefix="/api")
 app.include_router(adult_content.router, prefix="/api")
 app.include_router(corporate.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")
 
 # Request/Response Models
 class UserLogin(BaseModel):
