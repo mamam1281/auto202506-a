@@ -59,30 +59,44 @@
 - [x] **본사 연동 라우터**: 토큰 획득 및 잔고 조회 기본 구조
 - [ ] **⚠️ 미완성**: 실제 토큰 차감 및 콘텐츠 제공 로직
 
-## 🚨 현재 발생 중인 문제 (2025.06.04)
+## 🚨 현재 발생 중인 문제 (2025.06.04 - 외부 AI 작업 후)
 
-### 테스트 수집 실패
-- **문제**: `pytest -q` 실행 시 테스트 수집 단계에서 실패
-- **원인**: 
-  - 누락된 라우터 함수들 (missing router functions)
-  - 데이터베이스 설정 미완성 (database setup)
-  - Kafka 연결 오류 (failing Kafka connections)
+### 백엔드 구조 표준화 결과 ✅❌
+- **✅ 완료**: Import 경로 표준화 (`from app.` 형태로 통일)
+- **✅ 완료**: 중복 `/app/` 디렉토리 제거 및 `/cc-webapp/backend/` 통합
+- **✅ 완료**: Docker Compose 경로 수정
+- **❌ 실패**: 테스트 수집 단계에서 `ModuleNotFoundError` 및 Kafka 연결 오류
 
-### 즉시 해결 필요 항목
-- [ ] **우선순위 1**: 데이터베이스 연결 및 SessionLocal 설정 완성
-- [ ] **우선순위 2**: 누락된 라우터 함수 구현 (auth, adult_content, corporate)
-- [ ] **우선순위 3**: Kafka 연결 설정 또는 선택적 비활성화
-- [ ] **우선순위 4**: 테스트 환경 데이터베이스 설정
+### 외부 AI 브랜치 병합 후 즉시 수정 작업 ⚡
+> **참조 문서**: `IMMEDIATE_FIX_GUIDE.md`, `AI_BACKEND_STANDARDIZATION_PROMPT.md`
+
+- [ ] **우선순위 1**: `database.py` 완성 - SessionLocal, get_db 함수 완전 구현
+- [ ] **우선순위 2**: 누락된 라우터 함수 구현 (auth, adult_content, corporate 실제 로직)
+- [ ] **우선순위 3**: Kafka 설정 graceful fallback (연결 실패 시 로컬 로깅)
+- [ ] **우선순위 4**: 테스트 환경 SQLite DB 설정 (conftest.py 추가)
+
+### 다음 단계 실행 지침 📋
+1. **브랜치 병합**: `git merge <외부AI브랜치명>`
+2. **자동 수정 스크립트 실행**: `bash fix_backend_structure.sh`
+3. **검증 스크립트 실행**: `bash verify_backend_structure.sh`
+4. **즉시 수정 가이드 참조**: `IMMEDIATE_FIX_GUIDE.md` 단계별 실행
 
 ## 기능 구현 💻
 
 ### 단기 (1~2개월) - 현재 단계 🎯
 
-#### 📋 외부 AI 완료 작업 (2025.06.04)
-- [x] **백엔드 구조 리팩토링**: 중복 app/ 디렉토리 제거
-- [x] **Docker 경로 표준화**: cc-webapp/backend로 통합
-- [x] **기본 라우터 골격**: adult_content, corporate 라우터 추가
-- [x] **토큰 언락 시스템**: 성인 콘텐츠 단계별 비용 구현
+#### 📋 외부 AI 완료 작업 (2025.06.04) ✅
+- [x] **백엔드 구조 리팩토링**: 중복 `/app/` 디렉토리 제거
+- [x] **Import 경로 표준화**: `from backend.app.` → `from app.` 전환
+- [x] **Docker 경로 표준화**: 빌드 컨텍스트 `./cc-webapp/backend`로 통합
+- [x] **기본 라우터 골격**: adult_content, corporate, auth 라우터 추가
+- [x] **토큰 언락 시스템**: 성인 콘텐츠 단계별 비용 구조 구현
+- [x] **테스트 인프라**: test_unlock.py, test_rewards.py, test_notification.py 추가
+
+#### ⚠️ 외부 AI 작업 중 발생한 문제
+- **테스트 수집 실패**: `pytest` 실행 시 누락된 의존성으로 인한 ModuleNotFoundError
+- **Kafka 연결 오류**: 개발 환경에서 Kafka 브로커 미설정으로 인한 연결 실패
+- **데이터베이스 미설정**: `database.py`의 SessionLocal 및 get_db 함수 미완성
 
 #### ⚠️ 즉시 수정 필요 (테스트 실패 해결)
 - [ ] **database.py 완성**: SessionLocal, get_db 함수 완전 구현
