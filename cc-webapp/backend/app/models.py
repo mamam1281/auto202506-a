@@ -58,6 +58,15 @@ class SiteVisit(Base):
 
     user = relationship("User", back_populates="site_visits")
 
+
+class InviteCode(Base):
+    __tablename__ = "invite_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String(6), unique=True, nullable=False, index=True)
+    is_used = Column(Boolean, default=False, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 class UserReward(Base):
     __tablename__ = "user_rewards"
 
@@ -97,6 +106,44 @@ class Notification(Base):
     sent_at = Column(DateTime, nullable=True)
 
     user = relationship("User", back_populates="notifications")
+
+
+class GameLog(Base):
+    __tablename__ = "game_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    game_type = Column(String(50), nullable=False)
+    result = Column(String(50), nullable=False)
+    tokens_spent = Column(Integer, default=0)
+    reward_given = Column(String(255), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+    user = relationship("User")
+
+
+class UserStreak(Base):
+    __tablename__ = "user_streaks"
+
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    win_streak = Column(Integer, default=0)
+    loss_streak = Column(Integer, default=0)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User")
+
+
+class TokenTransfer(Base):
+    __tablename__ = "token_transfers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    from_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    to_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    amount = Column(Integer, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+    from_user = relationship("User", foreign_keys=[from_user_id])
+    to_user = relationship("User", foreign_keys=[to_user_id])
 
 
 # In User model, add the other side of the relationship if you want two-way population

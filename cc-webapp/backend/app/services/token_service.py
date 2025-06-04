@@ -138,3 +138,19 @@ def sync_from_db(user_id: int, db: Session) -> int:
         user_tokens[user_id] = balance
         
     return balance
+
+
+def bulk_add_tokens(user_amounts: dict[int, int], db: Optional[Session] = None) -> None:
+    """Add tokens to multiple users in bulk."""
+    for uid, amount in user_amounts.items():
+        add_tokens(uid, amount, db=db)
+
+
+def transfer_tokens(
+    from_user_id: int, to_user_id: int, amount: int, db: Optional[Session] = None
+) -> tuple[int, int]:
+    """Transfer tokens between users and return both balances."""
+    deduct_tokens(from_user_id, amount, db=db)
+    to_balance = add_tokens(to_user_id, amount, db=db)
+    from_balance = get_balance(from_user_id, db=db)
+    return from_balance, to_balance
