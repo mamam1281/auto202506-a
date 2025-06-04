@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Boolean # Added Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.dialects.postgresql import JSONB # Added for AgeVerificationRecord
 from datetime import datetime
 
 Base = declarative_base()
@@ -22,6 +23,11 @@ class User(Base):
     rewards = relationship("UserReward", back_populates="user")
     site_visits = relationship("SiteVisit", back_populates="user")
     notifications = relationship("Notification", back_populates="user") # Added for Notification
+
+    # Relationships for new models
+    flash_offers = relationship("FlashOffer", back_populates="user")
+    vip_access_logs = relationship("VIPAccessLog", back_populates="user")
+    age_verification_records = relationship("AgeVerificationRecord", back_populates="user")
 
 class UserAction(Base):
     __tablename__ = "user_actions"
@@ -98,6 +104,51 @@ class Notification(Base):
 
     user = relationship("User", back_populates="notifications")
 
+# New Models
+
+class FlashOffer(Base):
+    __tablename__ = "flash_offers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    content_id = Column(Integer, ForeignKey("adult_content.id"), nullable=False)
+    original_price = Column(Integer, nullable=False)
+    discounted_price = Column(Integer, nullable=False)
+    discount_rate = Column(Float, nullable=False)
+    trigger_reason = Column(String(100))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, nullable=False)
+    is_purchased = Column(Boolean, default=False)
+    purchased_at = Column(DateTime, nullable=True)
+
+    user = relationship("User", back_populates="flash_offers")
+    adult_content = relationship("AdultContent") # Assuming one-way relationship for now
+
+class VIPAccessLog(Base):
+    __tablename__ = "vip_access_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    content_id = Column(Integer, ForeignKey("adult_content.id"), nullable=False)
+    access_tier = Column(String(20))
+    tokens_spent = Column(Integer)
+    accessed_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="vip_access_logs")
+    adult_content = relationship("AdultContent") # Assuming one-way relationship for now
+
+class AgeVerificationRecord(Base):
+    __tablename__ = "age_verification_records"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    verification_method = Column(String(50)) # "document", "phone", "ipin"
+    verified_at = Column(DateTime, default=datetime.utcnow)
+    verification_data = Column(JSONB) # Encrypted verification data
+    is_valid = Column(Boolean, default=True)
+
+    user = relationship("User", back_populates="age_verification_records")
+
 
 # In User model, add the other side of the relationship if you want two-way population
 # class User(Base):
@@ -105,6 +156,9 @@ class Notification(Base):
 #   rewards = relationship("UserReward", back_populates="user")
 #   site_visits = relationship("SiteVisit", back_populates="user")
 #   notifications = relationship("Notification", back_populates="user") # This is now added above
+#   flash_offers = relationship("FlashOffer", back_populates="user")
+#   vip_access_logs = relationship("VIPAccessLog", back_populates="user")
+#   age_verification_records = relationship("AgeVerificationRecord", back_populates="user")
 #   ...
 
 
