@@ -260,3 +260,40 @@ Before providing your response, confirm that it aligns with:
 [ ] Corporate site retention flow from 05_corporate_retention_en.md
 
 Your response must explicitly reference which documents were consulted.
+
+## ✅ 외부 AI 작업 완료 현황 (2025-06-04 병합)
+
+### 🔄 백엔드 구조 표준화 완료
+- [x] 백엔드 디렉토리 통합 (`/app` → `/cc-webapp/backend/app`)
+- [x] 라우터 파일 생성 (adult_content.py, corporate.py 추가)
+- [x] 토큰 서비스 구현 (token_service.py)
+- [x] Docker 환경 개선 (docker-compose.yml 경로 수정)
+- [x] 테스트 파일 업데이트 (import 경로 수정)
+
+### 🚨 즉시 수정 필요 (다음 단계)
+- [ ] 테스트 실행 및 실패 항목 수정
+- [ ] database.py 완성 (실제 DB 연결 로직)
+- [ ] 라우터 함수 구현체 완성
+- [ ] Redis 토큰 시스템 연동
+
+---
+
+## 초기 세팅 및 인프라 구축 🚀
+
+### ✅ 완료된 항목들 (업데이트됨)
+- [x] 코드 리포지토리 및 버전 관리 체계 구축
+- [x] **백엔드 구조 표준화** ✨ (외부 AI 완료)
+- [x] **라우터 파일 생성** ✨ (auth.py, games.py, feedback.py, adult_content.py, corporate.py, users.py)
+- [x] **토큰 서비스 구현** ✨ (token_service.py)
+- [x] 초대 코드 테이블 및 모델 정의 (invite_codes)
+- [x] FastAPI 인증 엔드포인트 (/api/auth/login) 구현
+- [x] 백엔드 인프라 구축 (FastAPI + PostgreSQL + Redis + Celery/APScheduler)
+- [x] Tailwind CSS + Lucide-react 아이콘 설치
+- [x] Redux Toolkit 스토어 구조 생성
+- [x] Axios 기반 apiClient.js 설정
+
+### 🔄 진행 중 (다음 우선순위)
+- [ ] User 모델 필드 추가 (invite_code, nickname, password_hash, cyber_token_balance)
+- [ ] PostgreSQL 스키마 마이그레이션 완성
+- [ ] Redis 연결 및 user:{id}:cyber_token_balance 키 패턴 정의
+- [ ] Celery/APScheduler 기본 설정
