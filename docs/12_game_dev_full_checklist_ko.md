@@ -309,6 +309,9 @@ Your response must explicitly reference which documents were consulted.
 
 ### 🔄 진행 중 (다음 우선순위)
 - [x] **외부 AI 브랜치 병합**: origin/codex/fix-test-failures-and-ensure-stability
+- [x] **환경변수 설정 스크립트**: .env.example, setup.sh, codex-startup.sh 생성
+- [x] **스크립트 오류 수정**: codex-startup.sh 간소화 및 안정성 개선
+- [x] **setup.sh 프론트엔드 처리**: npm 설치 유지, 빌드 제거, 선택적 처리
 - [ ] **병합 후 검증 테스트**: pytest 실행 및 결과 확인
 - [ ] User 모델 필드 추가 (invite_code, nickname, password_hash, cyber_token_balance)
 - [ ] PostgreSQL 스키마 마이그레이션 완성
