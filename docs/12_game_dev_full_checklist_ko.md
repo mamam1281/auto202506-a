@@ -28,23 +28,69 @@
 - [x] 본사 사이트 재방문 타이밍 예측 알고리즘 스케치
 
 ## 초기 세팅 및 인프라 구축 🚀
+
+### 백엔드 구조 표준화 ✅ (2025.06.04 완료)
 - [x] 코드 리포지토리 및 버전 관리 체계 구축
-- [x] 인증 시스템 구축
+- [x] **백엔드 중복 구조 해결**: 루트 `/app/` 제거 및 `/cc-webapp/backend/` 통합
+- [x] **Import 경로 표준화**: `from backend.app.` → `from app.` 변경
+- [x] **Docker Compose 설정 수정**: 빌드 경로 `./cc-webapp/backend`로 변경
+- [x] **환경 변수 시스템**: PYTHONPATH 및 백엔드 경로 설정
+
+### 인증 시스템 구축 🔐
 - [x] 초대 코드 테이블 및 모델 정의 (invite_codes)
-- [ ] User 모델에 invite_code, nickname, password_hash, cyber_token_balance 필드 추가
 - [x] FastAPI 인증 엔드포인트 (/api/auth/login) 구현
+- [ ] User 모델에 invite_code, nickname, password_hash, cyber_token_balance 필드 추가
+- [ ] **⚠️ 미완성**: 데이터베이스 연결 및 라우터 구현체 누락 (테스트 실패 원인)
+
+### 인프라 기본 구축 🚀
 - [x] 백엔드 인프라 구축 (FastAPI + PostgreSQL + Redis + Celery/APScheduler)
-- [ ] PostgreSQL 스키마 마이그레이션 (User, UserAction, UserReward, AdultContent, UserSegment 등)
-- [ ] Redis 연결 및 user:{id}:cyber_token_balance 키 패턴 정의
-- [ ] Celery/APScheduler 기본 설정 (RFM 배치, 토큰 동기화)
+- [ ] **🔧 진행 중**: PostgreSQL 스키마 마이그레이션 (User, UserAction, UserReward, AdultContent, UserSegment 등)
+- [ ] **❌ 실패**: Redis 연결 및 user:{id}:cyber_token_balance 키 패턴 정의 (Kafka 연결 오류)
+- [ ] **❌ 실패**: Celery/APScheduler 기본 설정 (RFM 배치, 토큰 동기화)
+### 프론트엔드 프로젝트 세팅 🎨
 - [ ] 프론트엔드 프로젝트 세팅 (React/Next.js)
 - [x] Tailwind CSS + Lucide-react 아이콘 설치
 - [x] Redux Toolkit 스토어 구조 생성 (authSlice, tokenSlice, recommendationSlice, leaderboardSlice)
 - [x] Axios 기반 apiClient.js 설정 (baseURL, 인터셉터)
 
+### 토큰 및 성인 콘텐츠 시스템 💰
+- [x] **사이버 토큰 기본 구조**: 본사 사이트 연동 토큰 시스템 설계
+- [x] **성인 콘텐츠 언락 비용**: Stage별 토큰 비용 정의 (Stage 1=200, Stage 2=500, Stage 3=1000)
+- [x] **본사 연동 라우터**: 토큰 획득 및 잔고 조회 기본 구조
+- [ ] **⚠️ 미완성**: 실제 토큰 차감 및 콘텐츠 제공 로직
+
+## 🚨 현재 발생 중인 문제 (2025.06.04)
+
+### 테스트 수집 실패
+- **문제**: `pytest -q` 실행 시 테스트 수집 단계에서 실패
+- **원인**: 
+  - 누락된 라우터 함수들 (missing router functions)
+  - 데이터베이스 설정 미완성 (database setup)
+  - Kafka 연결 오류 (failing Kafka connections)
+
+### 즉시 해결 필요 항목
+- [ ] **우선순위 1**: 데이터베이스 연결 및 SessionLocal 설정 완성
+- [ ] **우선순위 2**: 누락된 라우터 함수 구현 (auth, adult_content, corporate)
+- [ ] **우선순위 3**: Kafka 연결 설정 또는 선택적 비활성화
+- [ ] **우선순위 4**: 테스트 환경 데이터베이스 설정
+
 ## 기능 구현 💻
 
-### 단기 (1~2개월)
+### 단기 (1~2개월) - 현재 단계 🎯
+
+#### 📋 외부 AI 완료 작업 (2025.06.04)
+- [x] **백엔드 구조 리팩토링**: 중복 app/ 디렉토리 제거
+- [x] **Docker 경로 표준화**: cc-webapp/backend로 통합
+- [x] **기본 라우터 골격**: adult_content, corporate 라우터 추가
+- [x] **토큰 언락 시스템**: 성인 콘텐츠 단계별 비용 구현
+
+#### ⚠️ 즉시 수정 필요 (테스트 실패 해결)
+- [ ] **database.py 완성**: SessionLocal, get_db 함수 완전 구현
+- [ ] **라우터 함수 구현**: auth, adult_content, corporate 실제 로직
+- [ ] **Kafka 설정**: 연결 실패 시 graceful fallback 구현
+- [ ] **테스트 환경**: SQLite 테스트 DB 설정
+
+#### 🔄 이어서 진행할 작업
 - [ ] 인증 및 CJ AI 기본 챗 시스템 완성
 - [ ] InviteCodeInput, NicknamePasswordForm 컴포넌트 완성
 - [ ] FastAPI /api/auth/login, /api/chat 엔드포인트 구현
@@ -137,6 +183,59 @@
 - [ ] 성능 테스트 (스트레스 테스트, 로드 테스트)
 - [ ] 이용약관/개인정보처리방침 등 법적 문서 배포
 
+
+## 📊 현재 진행 상황 요약 (2025.06.04)
+
+### ✅ 완료된 주요 작업
+1. **백엔드 구조 표준화** (외부 AI 작업)
+   - 중복된 `/app/` 디렉토리 제거
+   - `/cc-webapp/backend/` 단일 구조로 통합
+   - Docker Compose 경로 표준화
+   - Import 경로 수정 (`from backend.app.` → `from app.`)
+
+2. **기본 시스템 설계**
+   - 사이버 토큰 경제 시스템 설계
+   - 성인 콘텐츠 단계별 언락 비용 정의
+   - 본사 사이트 연동 구조 기획
+
+### ❌ 해결 필요한 문제
+1. **테스트 수집 실패**
+   - 데이터베이스 연결 미완성
+   - 라우터 함수 구현체 누락
+   - Kafka 연결 오류
+
+### 🎯 다음 우선순위 작업
+1. **즉시 수정** (1-2일)
+   - database.py 완전 구현
+   - 누락된 라우터 함수 추가
+   - 테스트 환경 설정
+
+2. **단기 개발** (1-2주)
+   - 인증 시스템 완성
+   - 토큰 플로우 구현
+   - 기본 게임 로직
+
+3. **중기 개발** (1-2개월)
+   - 가챠 시스템
+   - 개인화 추천 엔진
+   - UI/UX 고도화
+
+### 📋 브랜치 병합 가이드
+외부 AI 작업 결과를 병합할 때:
+```bash
+# 1. 현재 브랜치 백업
+git checkout -b backup-before-merge
+
+# 2. 외부 브랜치 병합
+git checkout main
+git pull origin main
+git merge [외부-ai-브랜치]
+
+# 3. 즉시 수정할 파일들
+- cc-webapp/backend/app/database.py
+- cc-webapp/backend/app/routers/*.py
+- cc-webapp/backend/tests/conftest.py
+```
 
 ## 검증 체크리스트 프롬프트 예시:
 Before providing your response, confirm that it aligns with:
