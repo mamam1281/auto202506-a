@@ -7,6 +7,8 @@ from pydantic import BaseModel
 from typing import Optional
 from jose import jwt, JWTError
 from passlib.context import CryptContext
+import random
+import string
 
 from ..database import get_db
 from .. import models
@@ -113,3 +115,34 @@ async def get_me(user_id: int = Depends(get_user_from_token), db: Session = Depe
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+
+class InviteCodeCreateRequest(BaseModel):
+    count: int = 1
+
+
+class InviteCodeCreateResponse(BaseModel):
+    codes: list[str]
+
+
+@router.post("/admin/invite-codes", response_model=InviteCodeCreateResponse)
+async def create_invite_codes(
+    req: InviteCodeCreateRequest,
+    user_id: int = Depends(get_user_from_token),
+    db: Session = Depends(get_db),
+):
+    """Generate new invite codes. Simple admin check: only user_id 1 allowed."""
+    if user_id != 1:
+        raise HTTPException(status_code=403, detail="Admin only")
+
+    codes: list[str] = []
+    for _ in range(max(req.count, 1)):
+        while True:
+            code = "".join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            if not db.query(models.InviteCode).filter(models.InviteCode.code == code).first():
+                invite = models.InviteCode(code=code)
+                db.add(invite)
+                codes.append(code)
+                break
+    db.commit()
+    return InviteCodeCreateResponse(codes=codes)

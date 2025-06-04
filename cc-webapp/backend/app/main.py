@@ -30,6 +30,7 @@ from typing import Optional
 from app.routers import (
     actions,
     gacha,
+    games,
     rewards,
     unlock,
     notification,
@@ -117,6 +118,7 @@ app.add_middleware(
 # Register API routers
 app.include_router(actions.router, prefix="/api")
 app.include_router(gacha.router, prefix="/api")
+app.include_router(games.router, prefix="/api")
 app.include_router(rewards.router, prefix="/api")
 app.include_router(unlock.router, prefix="/api")
 app.include_router(notification.router, prefix="/api")
