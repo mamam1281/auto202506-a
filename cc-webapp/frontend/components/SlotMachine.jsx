@@ -1,61 +1,66 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react'; // Added useRef
 import EmotionFeedback from './EmotionFeedback';
-import { useEmotionFeedback } from '@/hooks/useEmotionFeedback'; // Adjust path if using @ alias
+import { useEmotionFeedback } from '@/hooks/useEmotionFeedback';
 import useSound from 'use-sound';
 import confetti from 'canvas-confetti';
 
-// Dummy sound file paths (ensure these exist in public/sounds/)
 const victorySoundPath = '/sounds/victory.mp3';
 const failureSoundPath = '/sounds/failure.mp3';
 
 export default function SlotMachine({ userId = 1 }) {
   const [feedback, setFeedback] = useState({ emotion: '', message: '' });
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(false); // Added isSpinning state
   const { fetchEmotionFeedback } = useEmotionFeedback();
 
-  const [playVictory] = useSound(victorySoundPath, { volume: 0.5 });
-  const [playFailure] = useSound(failureSoundPath, { volume: 0.5 });
+  const [playVictory, { stop: stopVictorySound }] = useSound(victorySoundPath, { volume: 0.5 });
+  const [playFailure, { stop: stopFailureSound }] = useSound(failureSoundPath, { volume: 0.5 });
 
-  // Timer ID for clearing feedback
-  let feedbackTimer = null;
+  const feedbackTimerRef = useRef(null); // Use useRef for the timer ID
 
   useEffect(() => {
     // Cleanup timer on component unmount
     return () => {
-      if (feedbackTimer) {
-        clearTimeout(feedbackTimer);
+      if (feedbackTimerRef.current) {
+        clearTimeout(feedbackTimerRef.current);
       }
     };
-  }, [feedbackTimer]);
+  }, []); // Empty dependency array, runs only on mount and unmount
 
-  const showFeedbackTemporarily = (emotion, message, duration = 5000) => {
+  const showFeedbackTemporarily = (emotion, message, duration = 4000) => {
     setFeedback({ emotion, message });
     setIsFeedbackVisible(true);
 
-    if (feedbackTimer) {
-      clearTimeout(feedbackTimer);
+    if (feedbackTimerRef.current) {
+      clearTimeout(feedbackTimerRef.current);
     }
-    // Store timer ID to clear if another feedback comes in or component unmounts
-    // Type casting to any to avoid TS errors with NodeJS.Timeout vs number
-    feedbackTimer = setTimeout(() => {
+    feedbackTimerRef.current = setTimeout(() => {
       setIsFeedbackVisible(false);
-      // Optionally clear the message too, or leave it to be replaced by next feedback
-      // setFeedback({ emotion: '', message: '' });
-    }, duration) as any;
+    }, duration);
   };
 
   const handleSpin = async () => {
-    setIsFeedbackVisible(false); // Hide previous feedback immediately
-    if (feedbackTimer) clearTimeout(feedbackTimer); // Clear pending timeout
+    if (isSpinning) return; // Prevent multiple spins
+    setIsSpinning(true);
 
-    const isWin = Math.random() < 0.3; // 30% chance to win for slots
+    // Hide previous feedback immediately & clear its timer
+    setIsFeedbackVisible(false);
+    if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
+
+    showFeedbackTemporarily('determination', 'Spinning the reels...', 2000); // Initial feedback
+
+    // Simulate game spin duration
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    const isWin = Math.random() < 0.4; // 40% chance to win for slots
     const actionType = isWin ? "SLOT_WIN" : "SLOT_LOSE";
 
     try {
       const feedbackResult = await fetchEmotionFeedback(userId, actionType);
       if (feedbackResult) {
+        // Override the "Spinning..." message with the actual result feedback
         showFeedbackTemporarily(feedbackResult.emotion, feedbackResult.message);
         if (isWin) {
           playVictory();
@@ -73,29 +78,31 @@ export default function SlotMachine({ userId = 1 }) {
       }
     } catch (error) {
       console.error("Error during spin or fetching feedback:", error);
-      showFeedbackTemporarily('frustration', 'Could not connect to feedback service.');
-      playFailure();
+      showFeedbackTemporarily('frustration', 'Feedback service error. Please try again.');
+      playFailure(); // Play failure sound on error too
+    } finally {
+      setIsSpinning(false); // Reset spinning state
     }
   };
 
-  // Helper for confetti variety
-  const randomRange = (min, max) => Math.random() * (max - min) + min;
+  const randomRange = (min, max) => Math.random() * (max - min) + min; // Helper for confetti
 
   return (
-    <div className="p-6 border rounded-xl shadow-lg bg-white max-w-md mx-auto">
+    <div className="p-6 border rounded-xl shadow-lg bg-white max-w-md mx-auto my-4">
       <h2 className="text-2xl font-bold mb-6 text-center text-indigo-600">Slot Machine</h2>
       <div className="text-5xl mb-6 p-8 bg-gray-100 rounded-lg text-center shadow-inner">
-        🎰 <span className="animate-pulse">🤔</span> 🎰
+        {isSpinning ? '🌀🌀🌀' : '🎰 🤔 🎰'}
       </div>
 
       <button
         onClick={handleSpin}
-        className="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 shadow-md active:bg-indigo-800"
+        disabled={isSpinning} // Disable button while spinning
+        className="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 shadow-md active:bg-indigo-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
-        Spin to Win!
+        {isSpinning ? 'Spinning...' : 'Spin to Win!'}
       </button>
 
-      <div className="mt-6 h-20"> {/* Fixed height container for feedback to prevent layout shifts */}
+      <div className="mt-6 h-24"> {/* Adjusted height for potentially taller feedback box */}
         <EmotionFeedback
           isVisible={isFeedbackVisible}
           emotion={feedback.emotion}

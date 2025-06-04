@@ -36,11 +36,12 @@ async def root():
     return {"status": "OK"}
 
 # Placeholder for including routers (to be implemented later)
-from .routers import actions, notification, user_segments, rewards, unlock # users, feedback # noqa # Added unlock
+from .routers import actions, notification, user_segments, rewards, unlock, gacha # users, feedback # noqa # Added gacha
 # app.include_router(users.router, prefix="/api")
 app.include_router(actions.router, prefix="/api", tags=["actions"])
 app.include_router(rewards.router, prefix="/api", tags=["rewards"])
 # app.include_router(feedback.router, prefix="/api")
-app.include_router(unlock.router, prefix="/api", tags=["unlock"]) # Added unlock router
+app.include_router(unlock.router, prefix="/api", tags=["unlock"])
 app.include_router(user_segments.router, prefix="/api", tags=["user_segments"])
 app.include_router(notification.router, prefix="/api", tags=["notification"])
+app.include_router(gacha.router, prefix="/api", tags=["gacha"]) # Added gacha router

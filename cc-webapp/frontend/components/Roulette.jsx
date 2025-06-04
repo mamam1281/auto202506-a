@@ -1,64 +1,73 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react'; // Added useRef
 import EmotionFeedback from './EmotionFeedback';
 import { useEmotionFeedback } from '@/hooks/useEmotionFeedback';
 import useSound from 'use-sound';
 import confetti from 'canvas-confetti';
-import { motion } from 'framer-motion'; // For wheel animation
+import { motion } from 'framer-motion';
+import { Target } from 'lucide-react'; // Icon for wheel
 
 const victorySoundPath = '/sounds/victory.mp3';
 const failureSoundPath = '/sounds/failure.mp3';
 
-const wheelNumbers = Array.from({ length: 37 }, (_, i) => i); // 0-36
+const wheelNumbers = Array.from({ length: 37 }, (_, i) => i); // 0-36 numbers for roulette
 
 export default function Roulette({ userId = 1 }) {
   const [feedback, setFeedback] = useState({ emotion: '', message: '' });
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
   const { fetchEmotionFeedback } = useEmotionFeedback();
 
-  const [spinning, setSpinning] = useState(false);
-  const [chosenNumber, setChosenNumber] = useState(null); // User's bet
+  const [isSpinning, setIsSpinning] = useState(false); // Renamed from 'spinning' for consistency
+  const [chosenNumber, setChosenNumber] = useState(null);
   const [winningNumber, setWinningNumber] = useState(null);
-  const [rotation, setRotation] = useState(0); // For wheel animation
+  const [rotation, setRotation] = useState(0);
 
   const [playVictory] = useSound(victorySoundPath, { volume: 0.5 });
   const [playFailure] = useSound(failureSoundPath, { volume: 0.5 });
 
-  let feedbackTimer = null;
+  const feedbackTimerRef = useRef(null); // Use useRef for the timer ID
 
   useEffect(() => {
-    return () => { if (feedbackTimer) clearTimeout(feedbackTimer); };
-  }, [feedbackTimer]);
+    return () => { if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current); };
+  }, []); // Empty dependency array
 
-  const showFeedbackTemporarily = (emotion, message, duration = 5000) => {
+  const showFeedbackTemporarily = (emotion, message, duration = 4000) => {
     setFeedback({ emotion, message });
     setIsFeedbackVisible(true);
-    if (feedbackTimer) clearTimeout(feedbackTimer);
-    feedbackTimer = setTimeout(() => setIsFeedbackVisible(false), duration) as any;
+    if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
+    feedbackTimerRef.current = setTimeout(() => setIsFeedbackVisible(false), duration);
   };
 
   const handleSpin = async () => {
     if (chosenNumber === null) {
-      showFeedbackTemporarily('neutral', 'Please pick a number to bet on first!');
+      showFeedbackTemporarily('neutral', 'Please select a number to bet on before spinning!');
       return;
     }
-    setIsFeedbackVisible(false);
-    if (feedbackTimer) clearTimeout(feedbackTimer);
-    setSpinning(true);
+    if (isSpinning) return;
 
-    // Simulate wheel spin animation
-    const randomSpins = Math.floor(Math.random() * 5) + 3; // 3 to 7 full spins
-    const finalRotation = randomSpins * 360 + Math.random() * 360; // Add random partial spin
+    setIsSpinning(true);
+    setWinningNumber(null); // Clear previous winning number
+    setIsFeedbackVisible(false);
+    if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
+    showFeedbackTemporarily('determination', 'Wheel is spinning... No more bets!', 3500);
+
+
+    const randomSpins = Math.floor(Math.random() * 4) + 4; // 4 to 7 full spins
+    // Calculate a target rotation ensuring it lands visually on a number.
+    // This is tricky for a real visual wheel; for a simple display, less so.
+    const landedNumber = Math.floor(Math.random() * wheelNumbers.length); // 0-36
+    // Simulate rotation to roughly point to the number. For 37 numbers, each slot is ~9.7 degrees.
+    // This is a visual approximation.
+    const targetAngleOffset = (360 / wheelNumbers.length) * landedNumber;
+    const finalRotation = (randomSpins * 360) + targetAngleOffset + (Math.random() * (360/wheelNumbers.length/2) - (360/wheelNumbers.length/4));
+
     setRotation(finalRotation);
 
-    const landedNumber = Math.floor(Math.random() * wheelNumbers.length); // 0-36
-
-    // Simulate delay for spin animation
-    await new Promise(resolve => setTimeout(resolve, 3000)); // 3 seconds for spin
+    await new Promise(resolve => setTimeout(resolve, 3000)); // Spin duration
 
     setWinningNumber(landedNumber);
-    setSpinning(false);
+    setIsSpinning(false);
 
     const isWin = landedNumber === chosenNumber;
     const actionType = isWin ? "ROULETTE_WIN" : "ROULETTE_LOSE";
@@ -69,43 +78,45 @@ export default function Roulette({ userId = 1 }) {
         showFeedbackTemporarily(feedbackResult.emotion, feedbackResult.message);
         if (isWin) {
           playVictory();
-          confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+          confetti({ particleCount: 200, spread: 120, origin: { y: 0.4 } });
         } else {
           playFailure();
         }
       }
     } catch (error) {
       console.error("Error fetching/processing feedback:", error);
-      showFeedbackTemporarily('frustration', 'Could not get feedback.');
+      showFeedbackTemporarily('frustration', 'Could not get feedback from server.');
       playFailure();
     }
   };
 
   return (
-    <div className="p-6 border rounded-xl shadow-lg bg-white max-w-lg mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center text-red-600">Roulette</h2>
+    <div className="p-6 border rounded-xl shadow-lg bg-white max-w-lg mx-auto my-4">
+      <h2 className="text-2xl font-bold mb-6 text-center text-red-600">Roulette Rush</h2>
 
-      {/* Simplified Roulette Wheel visualization */}
       <motion.div
-        className="w-48 h-48 rounded-full border-8 border-red-700 bg-red-500 flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-2xl"
+        className="w-56 h-56 rounded-full border-8 border-red-700 bg-red-600 flex items-center justify-center text-white text-4xl font-bold mx-auto mb-8 shadow-2xl relative"
         animate={{ rotate: rotation }}
-        transition={{ duration: 2.8, ease: "circOut" }} // Slightly shorter than spin delay
+        transition={{ type: "spring", stiffness: 50, damping: 15, duration: 2.8 }}
       >
-        {winningNumber !== null && !spinning ? winningNumber : '?'}
+        <div className="absolute top-[-10px] left-1/2 transform -translate-x-1/2 text-xl text-yellow-300">▼</div>
+        {/* Displaying the target icon, or the number if landed */}
+        {isSpinning ? <Target size={48} className="animate-ping" /> : (winningNumber !== null ? winningNumber : <Target size={48}/>)}
       </motion.div>
 
-      <div className="mb-4">
-        <label htmlFor="betNumber" className="block text-sm font-medium text-gray-700 mb-1">
-          Choose your number (0-36):
+
+      <div className="mb-6">
+        <label htmlFor="betNumberRoulette" className="block text-sm font-medium text-gray-700 mb-1">
+          Place your bet (0-36):
         </label>
         <select
-          id="betNumber"
+          id="betNumberRoulette"
           value={chosenNumber === null ? '' : chosenNumber}
           onChange={(e) => setChosenNumber(parseInt(e.target.value, 10))}
-          disabled={spinning}
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+          disabled={isSpinning}
+          className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all"
         >
-          <option value="" disabled>Select a number</option>
+          <option value="" disabled>-- Select Number --</option>
           {wheelNumbers.map(num => (
             <option key={num} value={num}>{num}</option>
           ))}
@@ -114,21 +125,21 @@ export default function Roulette({ userId = 1 }) {
 
       <button
         onClick={handleSpin}
-        disabled={spinning || chosenNumber === null}
-        className="w-full px-6 py-3 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shadow-md"
+        disabled={isSpinning || chosenNumber === null}
+        className="w-full px-6 py-4 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shadow-lg text-lg"
       >
-        {spinning ? 'Spinning...' : 'Spin the Wheel!'}
+        {isSpinning ? 'Spinning...' : 'Spin the Wheel!'}
       </button>
 
-      {winningNumber !== null && !spinning && (
-        <p className={`text-xl font-semibold text-center mt-4 ${
-          winningNumber === chosenNumber ? 'text-green-500' : 'text-red-500'
+      {winningNumber !== null && !isSpinning && (
+        <p className={`text-2xl font-bold text-center mt-6 animate-pulse ${
+          winningNumber === chosenNumber ? 'text-green-600' : 'text-red-700'
         }`}>
-          {winningNumber === chosenNumber ? `Congratulations! You won on ${winningNumber}!` : `Sorry, the winning number was ${winningNumber}.`}
+          {winningNumber === chosenNumber ? `🎉 Winner! Landed on ${winningNumber}! 🎉` : `Landed on ${winningNumber}. Better luck next time!`}
         </p>
       )}
 
-      <div className="mt-6 h-20">
+      <div className="mt-6 h-24"> {/* Adjusted height */}
         <EmotionFeedback
           isVisible={isFeedbackVisible}
           emotion={feedback.emotion}
