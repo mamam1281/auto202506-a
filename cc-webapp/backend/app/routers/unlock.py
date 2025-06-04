@@ -7,7 +7,7 @@ from datetime import datetime
 import logging # For logging
 
 from .. import models # Should import User, UserReward, AdultContent, UserSegment
-from ..database import SessionLocal
+from ..database import get_db
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -16,12 +16,6 @@ router = APIRouter()
 MAX_UNLOCK_STAGE = 3 # Define this based on your content stages. Consider making it configurable.
 
 # --- Dependencies ---
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 # --- Pydantic Models ---
 class UnlockResponse(BaseModel):
@@ -111,8 +105,7 @@ async def attempt_content_unlock(
         raise HTTPException(
             status_code=403,
             detail=(
-                f"Your current segment level ({current_user_segment_level}) does not meet the required "
-                f"level ({required_content_level}) to unlock content stage {next_stage_to_unlock}."
+                f"User current segment level ({current_user_segment_level}) does not meet the required level ({required_content_level}) to unlock content stage {next_stage_to_unlock}"
             )
         )
 

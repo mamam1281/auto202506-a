@@ -2,33 +2,29 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Path
 from sqlalchemy.orm import Session
 from typing import List, Any # Any might not be needed if using specific Pydantic models
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field, field_serializer
+from datetime import timezone
 from datetime import datetime
 
 # Assuming models and database session setup are in these locations
 from .. import models # This should import UserReward and User
-from ..database import SessionLocal
+from ..database import get_db
 
 router = APIRouter()
 
-# Dependency to get DB session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 # Pydantic model for individual reward item in the response
 class RewardItem(BaseModel):
-    reward_id: int # This will map from UserReward.id
+    id: int = Field(alias="reward_id")
     reward_type: str
-    reward_value: str # Kept as string to accommodate various types like "50" or "FIRST_CLICK_BADGE"
+    reward_value: str
     awarded_at: datetime
 
-    class Config:
-        orm_mode = True # Enables conversion from SQLAlchemy model instance (Pydantic V1)
-        # from_attributes = True # For Pydantic V2
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+    @field_serializer("awarded_at")
+    def serialize_awarded_at(self, dt: datetime):  # noqa: D401
+        """Return ISO string with Z timezone."""
+        return dt.replace(tzinfo=timezone.utc).isoformat().replace("+00:00", "Z")
 
 # Pydantic model for the overall response
 class PaginatedRewardsResponse(BaseModel):
@@ -37,6 +33,8 @@ class PaginatedRewardsResponse(BaseModel):
     page_size: int
     total_rewards: int # Renamed from 'total' for clarity
     total_pages: int
+
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 
 @router.get(

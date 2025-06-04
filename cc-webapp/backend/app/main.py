@@ -1,9 +1,28 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from .apscheduler_jobs import start_scheduler, scheduler
-from prometheus_fastapi_instrumentator import Instrumentator # ADDED IMPORT
-import sentry_sdk
-from sentry_sdk.integrations.fastapi import FastApiIntegration
+try:
+    from .apscheduler_jobs import start_scheduler, scheduler
+except Exception:  # noqa: BLE001
+    def start_scheduler():
+        print("Scheduler disabled or APScheduler not installed")
+
+    class _DummyScheduler:
+        running = False
+
+        def shutdown(self, wait: bool = False) -> None:  # noqa: D401
+            """No-op shutdown when scheduler is unavailable."""
+
+    scheduler = _DummyScheduler()
+try:
+    from prometheus_fastapi_instrumentator import Instrumentator
+except ImportError:  # Optional dependency in tests
+    Instrumentator = None
+try:
+    import sentry_sdk
+    from sentry_sdk.integrations.fastapi import FastApiIntegration
+except Exception:  # noqa: BLE001
+    sentry_sdk = None
+    FastApiIntegration = None
 import os # For Sentry DSN from env var
 from pydantic import BaseModel # For request/response models
 from typing import Optional
@@ -24,23 +43,21 @@ from app.routers import (
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---
 # It's good practice to initialize Sentry as early as possible.
 # The DSN should be configured via an environment variable for security and flexibility.
-SENTRY_DSN = os.getenv("SENTRY_DSN", None) # Example: https://your_key@sentry.io/your_project_id
-if SENTRY_DSN:
+SENTRY_DSN = os.getenv("SENTRY_DSN")
+if SENTRY_DSN and sentry_sdk and FastApiIntegration:
     try:
         sentry_sdk.init(
             dsn=SENTRY_DSN,
-            traces_sample_rate=1.0, # Capture 100% of transactions for performance monitoring. Adjust in production.
-            profiles_sample_rate=1.0, # For performance profiling. Adjust in production.
-            environment=os.getenv("ENVIRONMENT", "development"), # e.g., development, staging, production
-            # release="cc-webapp-backend@1.0.0" # Optional: set your release version
-            # Enable FastAPI integration
-            integrations=[FastApiIntegration()]
+            traces_sample_rate=1.0,
+            profiles_sample_rate=1.0,
+            environment=os.getenv("ENVIRONMENT", "development"),
+            integrations=[FastApiIntegration()],
         )
         print("Sentry SDK initialized successfully.")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Error: Failed to initialize Sentry SDK. {e}")
 else:
-    print("Warning: SENTRY_DSN not found. Sentry SDK not initialized.")
+    print("Warning: SENTRY_DSN not found or sentry_sdk missing. Sentry not initialized.")
 # --- End Sentry Initialization Placeholder ---
 
 
@@ -55,24 +72,24 @@ app = FastAPI(
 # Prometheus Instrumentation - ADDED SECTION
 # This should ideally be done after app creation and before other middlewares/routers if possible,
 # or at least before routers that you want to be instrumented by default.
-instrumentator = Instrumentator(
-    should_group_status_codes=True,    # Group status codes (2xx, 3xx, etc.)
-    should_instrument_requests_inprogress=True, # Expose gauge for in-progress requests
-    excluded_handlers=["/metrics"],    # Don't instrument the /metrics endpoint itself
-    inprogress_labels=True,            # Add labels to in-progress metric
-    # Other options are available for more detailed metrics if needed
-)
-instrumentator.instrument(app) # Apply instrumentation middleware
-# Expose the /metrics endpoint
-# include_in_schema=False to hide it from OpenAPI docs
-# tags for organization if it were included in schema
-instrumentator.expose(app, include_in_schema=False, endpoint="/metrics", tags=["monitoring"])
+if Instrumentator:
+    instrumentator = Instrumentator(
+        should_group_status_codes=True,
+        should_instrument_requests_inprogress=True,
+        excluded_handlers=["/metrics"],
+        inprogress_labels=True,
+    )
+    instrumentator.instrument(app)
+    instrumentator.expose(app, include_in_schema=False, endpoint="/metrics", tags=["monitoring"])
 
 
 @app.on_event("startup")
 async def startup_event():
+    if os.getenv("DISABLE_SCHEDULER") == "1":
+        print("Scheduler disabled in environment.")
+        return
     print("FastAPI startup event: Initializing job scheduler...")
-    start_scheduler() # Corrected to call the function
+    start_scheduler()
     print("FastAPI startup event: Job scheduler initialization process started.")
 
 @app.on_event("shutdown")

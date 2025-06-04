@@ -1,17 +1,19 @@
-"""Simplified SQLAlchemy session setup for testing."""
+"""SQLAlchemy engine and session configuration."""
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import os
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./dev.db"
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./dev.db")
+
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def get_db():
     db = SessionLocal()
+    print(f"Using DB: {engine.url}")
     try:
         yield db
     finally:
