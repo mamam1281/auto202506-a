@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from app.schemas import ContentUnlockRequest
 
-router = APIRouter(prefix="/v1/content", tags=["Content"])
+router = APIRouter(prefix="/v1/adult", tags=["AdultContent"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @router.post("/unlock")
@@ -15,9 +15,9 @@ async def unlock_content(
     """
     # TODO: Implement actual content unlocking logic
     # Placeholder implementation
-    if content_request.content_id == "premium_content_001":
+    if content_request.stage == 1:
         return {
-            "status": "success", 
+            "status": "success",
             "message": "Content successfully unlocked"
         }
     
