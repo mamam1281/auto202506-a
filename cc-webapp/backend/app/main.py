@@ -37,6 +37,8 @@ from app.routers import (
     feedback,
     adult_content,
     corporate,
+    auth,
+    games,
     users,
 )
 
@@ -123,6 +125,8 @@ app.include_router(user_segments.router, prefix="/api")
 app.include_router(feedback.router, prefix="/api")
 app.include_router(adult_content.router, prefix="/api")
 app.include_router(corporate.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")
+app.include_router(games.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 
 # Request/Response Models

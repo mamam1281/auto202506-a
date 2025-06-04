@@ -98,6 +98,14 @@ class Notification(Base):
 
     user = relationship("User", back_populates="notifications")
 
+class InviteCode(Base):
+    __tablename__ = "invite_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String(20), unique=True, nullable=False, index=True)
+    is_used = Column(Boolean, default=False, nullable=False, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 
 # In User model, add the other side of the relationship if you want two-way population
 # class User(Base):
