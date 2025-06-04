@@ -1,37 +1,61 @@
-# 🎮 게임 개발 전체 체크리스트 (#12) - 실제 현황 반영
+# 🎮 게임 개발 전체 체크리스트 (#12) - 실제 현황 반영 (업데이트: 2025.06.05)
 
-## 🚨 외부 AI 검증 결과 (2025-06-04) - 현실적 평가
+## 📊 프로젝트 진행 현황 요약
 
-### 🔄 백엔드 구조 표준화 + 테스트 수정 완료 ✨
-- [x] 백엔드 디렉토리 통합 (`/app` → `/cc-webapp/backend/app`)
-- [x] **SQLAlchemy 2.x 호환성 패치** (`__init__.py`에 Engine.execute 지원)
-- [x] **데이터베이스 연결 개선** (환경변수 기반 설정, 디버그 출력 추가)
-- [x] **선택적 의존성 처리** (Sentry, 모니터링 도구들 선택적 import)
-- [x] **APScheduler 선택적 의존성 처리** (main.py에 try/except 블록, 더미 스케줄러 제공)
-- [x] **Redis 선택적 의존성 처리** (user_segments.py에서 조건부 import 및 연결 오류 처리)
-- [x] **User 모델 확장** (토큰, 초대코드 필드 추가)
-- [x] **Kafka Fallback 로직** (production 환경에서만 활성화)
-- [x] **라우터 로직 개선** (세그먼트 체크, 토큰 라우터 표준화)
-- [x] **Pydantic 스키마 개선** (ORM 객체 처리, 타임존 출력)
+### ✅ 완전히 구현된 기능 (비즈니스 로직 완성)
+1. **인증 시스템**
+   - auth.py 라우터에 실제 JWT 토큰 발급 및 검증 로직 구현
+   - 비밀번호 bcrypt 해싱 및 실제 검증 구현
+   - 초대 코드 검증 및 사용 처리 로직 구현
 
-### ✅ 프론트엔드 구조 표준화 완료 ✨
-- [x] **프론트엔드 중복 구조 해결**: 루트 `/frontend/` 제거 및 `/cc-webapp/frontend/` 메인 설정
-- [x] **Docker 설정 일치**: 이미 올바른 경로로 설정되어 있었음
-- [x] **참조 경로 표준화**: 프로젝트 전체에서 일관된 구조 적용
+2. **토큰 서비스 하이브리드 구현**
+   - Redis와 DB 양쪽에 토큰 잔고 저장 로직 구현
+   - 트랜잭션 안전성 보장 (Redis watch 활용)
+   - 장애 복구 메커니즘 (Redis 실패 시 DB 폴백)
 
-### 🧪 테스트 상태 개선
-- [x] **일부 테스트 통과**: `test_rewards.py::test_get_rewards_first_page` 성공
-- [x] **SQLAlchemy 호환성**: 버전 2.x 대응 완료
-- [x] **환경 변수 기반 DB**: 테스트 환경 설정 개선
-- [x] **스케줄러 초기화 안정성**: APScheduler 미설치 시에도 크래시 없이 시작/종료 이벤트 실행
-- [ ] **notification 테스트 실패**: `test_get_one_pending_notification` 여전히 실패 상태
+### 🔄 부분적으로 구현된 기능 (기본 구조만 완성)
+1. **백엔드 구조 표준화**
+   - 디렉토리 구조 통합 및 Import 경로 표준화 완료
+   - 환경 변수 표준화 진행 중 (일부 변수만 통일)
 
-### ⚠️ 외부 AI 검증으로 밝혀진 실제 미구현 항목들
-- [ ] **auth.py 라우터**: 파일 자체가 존재하지 않음 (인증 시스템 완전 미구현)
-- [ ] **games.py 라우터**: 파일 자체가 존재하지 않음 (게임 로직 완전 미구현)
-- [ ] **Redis 연동**: 메모리 딕셔너리로만 동작 (실제 Redis 미연결)
-- [ ] **Kafka 이벤트**: 완전히 우회됨 (실제 이벤트 스트리밍 없음)
-- [ ] **데이터베이스 마이그레이션**: 실제 테이블 생성 안됨
+2. **데이터베이스 모델 설계**
+   - 모델 스키마 정의 완료
+   - 일부 마이그레이션 생성되었으나 실제 테이블 생성 검증 필요
+
+3. **Redis 연결 설정**
+   - 기본 연결 코드 작성
+   - 실제 프로덕션 환경 테스트 및 최적화 필요
+
+### ⚠️ 미구현 핵심 비즈니스 로직
+1. **게임 로직 (완전 미구현)**
+   - 슬롯머신 확률 및 보상 로직
+   - 룰렛 스핀 및 결과 계산 알고리즘
+   - 가챠 시스템의 아이템 드롭 레이트 구현
+
+2. **콘텐츠 언락 시스템 (부분 구현)**
+   - 기본 라우터 구조만 있고 실제 비즈니스 로직 미구현
+   - 세그먼트별 접근 제어 로직 테스트 필요
+
+3. **토큰 경제 시스템 (부분 구현)**
+   - 토큰 추가/차감 기본 기능 구현
+   - 본사 사이트 연동 및 복잡한 보상 로직 미구현
+
+## 🔄 코드 통합 상태
+
+### 성공적으로 병합된 PR
+- **백엔드 구조 표준화** (PR: fix-test-failures-and-ensure-stability)
+- **User email nullable** (PR #12)
+- **토큰 서비스 DB 연동** (PR #15)
+- **인증 JSON 형식 개선** (PR #18)
+
+### 비즈니스 로직이 완전히 구현된 파일
+- **auth.py**: 인증 시스템 (로그인, 회원가입, 초대코드)
+- **token_service.py**: 하이브리드 토큰 관리 (Redis+DB)
+
+### 기본 구조만 있는 파일 (비즈니스 로직 미구현)
+- **adult_content.py**: 기본 라우터 구조만 존재
+- **games.py**: 아직 생성되지 않음
+- **notification.py**: 테스트 실패 중
 
 ## 프로젝트 기획 및 설계 📋
 
@@ -62,201 +86,92 @@
 
 ## 초기 세팅 및 인프라 구축 🚀
 
-### ✅ 완료된 항목들 (최신 업데이트)
+### ✅ 실제 비즈니스 로직까지 완전히 구현된 항목
+- [x] **auth.py 라우터 구현** ✨ (JWT, bcrypt, 초대코드 검증)
+- [x] **토큰 서비스 구현** ✨ (Redis+DB 하이브리드, 실제 토큰 관리 로직)
+- [x] **User email nullable** ✨ (모델 변경 및 마이그레이션 스크립트)
+
+### 🔄 기본 구조만 구현된 항목 (비즈니스 로직 미완성)
 - [x] 코드 리포지토리 및 버전 관리 체계 구축
-- [x] **백엔드 구조 표준화** ✨ (외부 AI 완료)
-- [x] **프론트엔드 구조 표준화** ✨ (루트 frontend 제거)
-- [x] **SQLAlchemy 2.x 호환성** ✨ (새로 추가)
-- [x] **라우터 파일 생성** ✨ (~auth.py, games.py~, feedback.py, adult_content.py, corporate.py, users.py)
-- [x] **토큰 서비스 구현** ✨ (token_service.py - 메모리 기반 stub)
-- [x] **User 모델 확장** ✨ (토큰, 초대코드 필드)
-- [x] **환경변수 기반 DB 설정** ✨ (개발/프로덕션 분리)
-- [x] **Kafka Fallback 처리** ✨ (개발 환경 호환성)
-- [ ] ~~초대 코드 테이블 및 모델 정의 (invite_codes)~~ **모델만 정의, 실제 테이블 미생성**
-- [ ] ~~FastAPI 인증 엔드포인트 (/api/auth/login) 구현~~ **auth.py 파일 자체가 없음**
-- [x] 백엔드 인프라 구축 (FastAPI + PostgreSQL + Redis + Celery/APScheduler)
-- [x] Tailwind CSS + Lucide-react 아이콘 설치
-- [x] Redux Toolkit 스토어 구조 생성
-- [x] Axios 기반 apiClient.js 설정
+- [x] **백엔드 구조 표준화** ✨ (디렉토리 구조만 정리)
+- [x] **프론트엔드 구조 표준화** ✨ (기본 구조만 정리)
+- [x] **SQLAlchemy 2.x 호환성** ✨ (기본 지원만 추가)
+- [x] **User 모델 확장** ✨ (필드 정의만 있고 실제 비즈니스 로직 연동 필요)
+- [x] **환경변수 기반 DB 설정** ✨ (기본 설정만 있고 실제 최적화 필요)
+- [x] **Kafka Fallback 처리** ✨ (기본 fallback만 있고 실제 이벤트 처리 로직 없음)
+- [x] 초대 코드 테이블 및 모델 정의 (기본 모델만 있음)
+- [x] 백엔드 인프라 구축 (기본 설정만 있고 실제 최적화 필요)
+- [x] Tailwind CSS + Lucide-react 아이콘 설치 (기본 설치만 완료)
+- [x] Redux Toolkit 스토어 구조 생성 (빈 구조만 있음)
+- [x] Axios 기반 apiClient.js 설정 (기본 설정만 있음)
 
 ### 🔄 진행 중 (다음 우선순위)
-- [x] ~~User 모델 필드 추가~~ ✅ **완료** (invite_code, nickname, password_hash, cyber_token_balance)
-- [ ] **즉시 수정**: 남은 테스트 실패 해결 (notification/reward 엔드포인트)
-- [ ] **타임존 이슈 해결**: datetime 처리 표준화
-- [ ] **PostgreSQL 스키마 마이그레이션 완성**: 실제 테이블 생성
-- [ ] **Redis 연결 및 user:{id}:cyber_token_balance 키 패턴 정의**: 현재 메모리 딕셔너리 상태
-- [ ] Celery/APScheduler 기본 설정
+- [x] **PR 병합 작업**: 다수 PR 병합 및 통합 ✅
+- [ ] **games.py 라우터 실제 구현**: 확률 기반 게임 로직, 보상 시스템, 스트릭 보너스 등 핵심 비즈니스 로직
+- [ ] **notification 엔드포인트 완전 구현**: 실시간 알림, 푸시 알림, 이메일 알림 등 실제 비즈니스 로직
+- [ ] **PostgreSQL 스키마 실제 적용**: 프로덕션 환경 마이그레이션 및 데이터 검증
+- [ ] **Redis 실제 연동 및 최적화**: 커넥션 풀링, 장애 복구, 성능 최적화
+- [ ] **Celery/APScheduler 실제 작업 구현**: 실제 배치 작업 구현 및 스케줄링
 
-### 🚨 즉시 구현 필요 (현재 단계) - 외부 AI 검증 결과 반영
-- [ ] **auth.py 라우터 생성**: 파일 자체가 존재하지 않음
-  - [ ] 초대 코드 검증 로직
-  - [ ] 닉네임/비밀번호 회원가입
-  - [ ] JWT 로그인 시스템
-- [ ] **games.py 라우터 생성**: 파일 자체가 존재하지 않음
-  - [ ] 슬롯머신 게임 로직
-  - [ ] 가챠 시스템
-  - [ ] 룰렛 게임
-- [ ] **실제 데이터베이스 연동**: 현재 모델만 정의된 상태
-  - [ ] PostgreSQL 마이그레이션 실행
-  - [ ] 실제 테이블 생성
-- [ ] **Redis 토큰 시스템**: 현재 메모리 딕셔너리 상태
-  - [ ] 실제 Redis 연결
-  - [ ] 실시간 토큰 잔고 관리
-- [ ] **남은 테스트 실패 해결**
-  - [ ] **notification 엔드포인트 관련 오류** (test_get_one_pending_notification 실패)
-  - [ ] reward 시스템 일부 기능
-  - [ ] 타임존 처리 표준화
+## 🚀 출시 전 필수 작업 (Release Checklist)
 
-## 🚀 다음 단계 실행 가이드
+### 백엔드 완성 (Backend Completion)
+- [x] 인증 시스템 구현 (Authentication) - **실제 비즈니스 로직 구현 완료**
+- [ ] 게임 로직 구현 (Game Logic) - **전체 미구현**
+- [ ] 토큰 경제 시스템 완성 (Token Economy) - **기본 기능만 구현, 복잡한 비즈니스 로직 필요**
+- [ ] 콘텐츠 언락 시스템 검증 (Content Unlock) - **기본 구조만 있음**
+- [ ] 알림 시스템 완성 (Notification) - **기본 구조만 있음**
+- [ ] 리더보드/소셜 기능 구현 (Leaderboard/Social) - **전체 미구현**
 
-### 1단계: 현재 테스트 상태 확인 📋
+### 프론트엔드 완성 (Frontend Completion)
+- [ ] 인증 화면 구현 (Login/Signup)
+- [ ] 게임 컴포넌트 구현 (Game Components)
+- [ ] 토큰 표시 및 관리 UI (Token Management)
+- [ ] 콘텐츠 언락 UI (Content Unlock UI)
+- [ ] 애니메이션 및 사운드 효과 (Animations/Sound)
+- [ ] 모바일 반응형 최적화 (Mobile Responsive)
 
-### 3단계: 다음 기능 개발 준비 🎯
-- [ ] **인증 시스템 완성** (닉네임/비밀번호 로그인) - auth.py 생성부터 시작
-- [ ] **토큰 플로우 구현** (Redis 연동) - 메모리 딕셔너리에서 실제 Redis로
-- [ ] **기본 게임 로직** (슬롯/룰렛 MVP) - games.py 생성부터 시작
+### 테스트 및 QA (Testing & QA)
+- [ ] 전체 테스트 스위트 통과 (Test Suite Pass)
+- [ ] 성능 테스트 (Performance Testing)
+- [ ] 보안 검토 (Security Review)
+- [ ] 사용성 테스트 (Usability Testing)
+- [ ] 크로스 브라우저 검증 (Cross-browser Testing)
 
-## 🚨 외부 AI 검증 결과 (2025-06-04) - 현실적 평가
+### 배포 준비 (Deployment Preparation)
+- [ ] CI/CD 파이프라인 구축 (CI/CD Pipeline)
+- [ ] 프로덕션 환경 구성 (Production Environment)
+- [ ] 모니터링 시스템 설정 (Monitoring)
+- [ ] 백업 및 복구 계획 (Backup & Recovery)
+- [ ] 스케일링 전략 (Scaling Strategy)
 
-### 🔄 백엔드 구조 표준화 + 테스트 수정 완료 ✨
-- [x] 백엔드 디렉토리 통합 (`/app` → `/cc-webapp/backend/app`)
-- [x] 라우터 파일 생성 (adult_content.py, corporate.py 추가)
-- [x] 토큰 서비스 구현 (token_service.py)
-- [x] Docker 환경 개선 (docker-compose.yml 경로 수정)
-- [x] 테스트 파일 업데이트 (import 경로 수정)
-- [x] **외부 AI 브랜치 발견**: `origin/codex/fix-test-failures-and-ensure-stability` 
-- [x] **브랜치 병합 완료**: 테스트 실패 수정 및 안정성 개선 작업 반영
+### 런칭 준비 (Launch Preparation)
+- [ ] 법적 문서 준비 (Legal Documents)
+- [ ] 사용자 가이드 작성 (User Guide)
+- [ ] 기술 문서 완성 (Technical Documentation)
+- [ ] 초기 사용자 초대 계획 (Initial User Invitations)
+- [ ] 런칭 후 지원 계획 (Post-launch Support)
 
-### 🚨 즉시 구현 필요 (현재 단계) - 외부 AI 검증 결과 반영
-- [x] **외부 AI 브랜치 병합**: `git merge origin/codex/fix-test-failures-and-ensure-stability`
-- [ ] **병합 후 검증**: 테스트 실행 및 안정성 확인
-- [ ] **auth.py 라우터 생성**: 파일 자체가 존재하지 않음
+## 진행률 요약 📈
 
-## 🚀 다음 단계 실행 가이드
+### 1. 전체 프로젝트 완성률 (실제 비즈니스 로직 기준)
+- 백엔드: **40%** (이전 과대평가: 75%)
+- 프론트엔드: **10%** (이전 과대평가: 40%)
+- 인프라/DevOps: **30%** (이전 과대평가: 50%)
+- 전체 프로젝트: **25%** (이전 과대평가: 55%)
 
-## 📋 외부 AI 작업 파일 변경 요약
+### 2. 출시까지 예상 일정 (실제 비즈니스 로직 구현 기준)
+- 백엔드 완성: 4주 (핵심 게임 로직 및 토큰 경제 시스템)
+- 프론트엔드 완성: 6주 (실제 UI/UX 및 게임 컴포넌트)
+- 테스트 및 QA: 2주 (실제 사용자 시나리오 테스트)
+- 배포 및 런칭 준비: 2주 (실제 환경 구성 및 최적화)
+- **총 예상 기간: 14주** (이전 과소평가: 7주)
 
-### 🔧 수정 예정 파일들 (병합 후 확인 필요)
-- **`main.py`**: APScheduler 선택적 의존성 처리 (try/except 블록, 더미 스케줄러)
-- **`user_segments.py`**: Redis 조건부 import 및 연결 오류 처리  
-- **`notification.py`**: 테스트 실패 해결
-- **기타 안정성 개선**: 의존성 누락 시에도 크래시 없이 동작
+---
 
-### 🎯 병합 후 예상되는 개선사항
-1. **테스트 안정성**: `pytest tests/test_rewards.py::test_get_rewards_first_page` 성공 유지
-2. **의존성 내성**: APScheduler, Redis 미설치 시에도 정상 동작
-3. **notification 테스트**: `test_get_one_pending_notification` 실패 해결 예상
-4. **환경 호환성**: 다양한 개발 환경에서 안정적 실행
-
-
-## 검증 체크리스트 프롬프트 예시:
-Before providing your response, confirm that it aligns with:
-[ ] Dopamine loop mechanics from 01_architecture_en.md
-[ ] User segmentation rules from 02_data_personalization_en.md
-[ ] Emotion feedback patterns from 03_emotion_feedback_en.md
-[ ] Adult content progression from 04_adult_rewards_en.md
-[ ] Corporate site retention flow from 05_corporate_retention_en.md
-
-
-## 📊 현재 진행 상황 요약 (2025.06.04 - 최신)
-
-### ✅ 완료된 주요 작업
-1. **백엔드 + 프론트엔드 구조 표준화** ✨
-   - 중복된 디렉토리 제거 (`/app/`, `/frontend/`)
-   - 통합된 구조로 정리 (`/cc-webapp/backend/`, `/cc-webapp/frontend/`)
-   - Docker 설정 일치성 확보
-
-2. **호환성 및 안정성 개선** ✨
-   - SQLAlchemy 2.x 호환성 패치
-   - 환경변수 기반 설정
-   - 선택적 의존성 처리
-   - Kafka Fallback 로직
-
-3. **기본 시스템 설계**
-   - 사이버 토큰 경제 시스템 설계
-   - 성인 콘텐츠 단계별 언락 비용 정의
-   - 본사 사이트 연동 구조 기획
-
-### 🔄 현재 상태 (외부 AI 검증 후 현실적 평가)
-1. **일부 테스트 통과** ✅
-   - `test_rewards.py::test_get_rewards_first_page` 성공
-   - 기본 인프라 동작 확인
-
-2. **주요 미구현 항목 발견** ❌
-   - auth.py, games.py 라우터 파일 자체가 존재하지 않음
-   - Redis 연동 없음 (메모리 딕셔너리만 사용)
-   - 실제 데이터베이스 테이블 생성 안됨
-   - Kafka 이벤트 스트리밍 완전 우회
-
-3. **남은 문제** ⚠️
-   - notification/reward 엔드포인트 일부 실패
-   - 타임존 처리 이슈
-   - 선택적 의존성 추가 분리 필요
-
-### 🎯 다음 우선순위 작업 (현실적 평가 반영)
-1. **즉시 구현** (1주일) - **핵심 기능 생성**
-   - auth.py 라우터 생성 및 인증 시스템 구현
-   - games.py 라우터 생성 및 기본 게임 로직
-   - 실제 데이터베이스 마이그레이션 실행
-
-2. **단기 개발** (2주) - **실제 연동**
-   - Redis 토큰 시스템 실제 구현
-   - 남은 테스트 실패 해결
-   - 프론트엔드 API 연동
-
-3. **중기 개발** (1-2개월) - **고도화**
-   - 가챠 시스템 완성
-   - 개인화 추천 엔진
-   - UI/UX 고도화
-
-## 📋 외부 AI 작업 파일 변경 요약
-
-### 🔧 수정된 파일들 (12개)
-- **`__init__.py`**: SQLAlchemy 2.x 호환성 패치 (+14줄)
-- **`database.py`**: 환경변수 기반 DB 설정, 디버그 출력 (+7/-5줄)
-- **`main.py`**: 선택적 의존성 import 처리, APScheduler 안전 초기화 (+44/-27줄)
-- **`models.py`**: User 모델 필드 확장 (+6/-1줄)
-- **`actions.py`**: Kafka fallback, 프로덕션 플래그 (+31/-15줄)
-- **`adult_content.py`**: 세그먼트 체크 로직 강화 (+17/-6줄)
-- **`corporate.py`**: 토큰 라우터 표준화 (+3/-3줄)
-- **`notification.py`**: 간소화 (+1/-9줄)
-- **`rewards.py`**: ORM 객체 처리 개선 (+13/-15줄)
-- **`unlock.py`**: 코드 정리 (+2/-9줄)
-- **`user_segments.py`**: Redis 조건부 import 및 연결 오류 처리 (+11/-10줄)
-- **`schemas.py`**: Pydantic 모델 개선, 타임존 출력 (+16줄)
-
-### 🎯 핵심 개선사항
-1. **호환성**: SQLAlchemy 2.x 완전 지원
-2. **안정성**: 선택적 의존성으로 개발 환경 안정화 (APScheduler, Redis 포함)
-3. **표준화**: 라우터 로직 및 스키마 통일
-4. **확장성**: User 모델 및 토큰 시스템 기반 마련
-5. **환경 내성**: 의존성 누락 시에도 크래시 없이 동작
-
-### 🚨 발견된 문제점 (외부 AI 검증 결과)
-1. **누락된 핵심 파일**: auth.py, games.py 라우터 없음
-2. **Stub 구현**: 토큰 서비스가 메모리 딕셔너리로만 동작
-3. **미완성 연동**: Redis, Kafka 실제 연결 없음
-4. **DB 마이그레이션**: 모델 정의만 있고 실제 테이블 없음
-
-**다음 단계: 누락된 핵심 파일들 생성하고 실제 구현체 완성이 우선!** 🚀
-
-## 참조 문서 검증 ✅
-
-이 업데이트는 다음 문서들의 요구사항을 반영합니다:
-
-- ✅ **04_adult_rewards_en.md**: Stage별 토큰 비용 및 세그먼트 체크
-- ✅ **05_corporate_retention_en.md**: 토큰 적립/소비 플로우
-- ✅ **02_data_personalization_en.md**: 사용자 세그먼테이션
-- ✅ **01_architecture_en.md**: 전체 시스템 아키텍처
-- ✅ **10_onboarding_en.md**: 닉네임/비밀번호 로그인 (email 제외)
-
-##이 프로그램 사용자는 소수인증받은 회원대상이라 닉네임과 pw만 활용하여 인증절차 간소화##
-
-### 🔄 진행 중 (다음 우선순위)
-- [x] **외부 AI 브랜치 병합**: origin/codex/fix-test-failures-and-ensure-stability
-- [ ] **병합 후 검증 테스트**: pytest 실행 및 결과 확인
-- [ ] User 모델 필드 추가 (invite_code, nickname, password_hash, cyber_token_balance)
-- [ ] PostgreSQL 스키마 마이그레이션 완성
-- [ ] Redis 연결 및 user:{id}:cyber_token_balance 키 패턴 정의
-- [ ] Celery/APScheduler 기본 설정
+<!-- 미구현/주석처리 항목 모음 (삭제 금지, 참고용) -->
+<!--
+- [ ] Kafka 연결 및 이벤트 스트리밍
+- [ ] Celery/APScheduler 기본 설정 (RFM 배치, 토큰 동기화)
+-->
 
