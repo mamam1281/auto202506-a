@@ -33,8 +33,6 @@
 - [ ] **Kafka 이벤트**: 완전히 우회됨 (실제 이벤트 스트리밍 없음)
 - [ ] **데이터베이스 마이그레이션**: 실제 테이블 생성 안됨
 
----
-
 ## 프로젝트 기획 및 설계 📋
 
 ### 핵심 시스템 설계
@@ -112,40 +110,53 @@
 ## 🚀 다음 단계 실행 가이드
 
 ### 1단계: 현재 테스트 상태 확인 📋
-```bash
-cd cc-webapp/backend
-
-# 전체 테스트 실행
-python -m pytest -v
-
-# 성공한 테스트 확인
-python -m pytest tests/test_rewards.py::test_get_rewards_first_page -vv
-
-# 실패하는 테스트들 확인
-python -m pytest --tb=short | grep FAILED
-```
-
-### 2단계: 남은 문제 해결 🔧
-```bash
-# notification 관련 테스트
-python -m pytest tests/test_notification.py -v
-
-# reward 시스템 테스트
-python -m pytest tests/test_rewards.py -v
-
-# 타임존 관련 오류 확인
-python -c "
-from app.schemas import *
-from datetime import datetime
-import pytz
-print('Timezone support check')
-"
-```
 
 ### 3단계: 다음 기능 개발 준비 🎯
 - [ ] **인증 시스템 완성** (닉네임/비밀번호 로그인) - auth.py 생성부터 시작
 - [ ] **토큰 플로우 구현** (Redis 연동) - 메모리 딕셔너리에서 실제 Redis로
 - [ ] **기본 게임 로직** (슬롯/룰렛 MVP) - games.py 생성부터 시작
+
+## 🚨 외부 AI 검증 결과 (2025-06-04) - 현실적 평가
+
+### 🔄 백엔드 구조 표준화 + 테스트 수정 완료 ✨
+- [x] 백엔드 디렉토리 통합 (`/app` → `/cc-webapp/backend/app`)
+- [x] 라우터 파일 생성 (adult_content.py, corporate.py 추가)
+- [x] 토큰 서비스 구현 (token_service.py)
+- [x] Docker 환경 개선 (docker-compose.yml 경로 수정)
+- [x] 테스트 파일 업데이트 (import 경로 수정)
+- [x] **외부 AI 브랜치 발견**: `origin/codex/fix-test-failures-and-ensure-stability` 
+- [x] **브랜치 병합 완료**: 테스트 실패 수정 및 안정성 개선 작업 반영
+
+### 🚨 즉시 구현 필요 (현재 단계) - 외부 AI 검증 결과 반영
+- [x] **외부 AI 브랜치 병합**: `git merge origin/codex/fix-test-failures-and-ensure-stability`
+- [ ] **병합 후 검증**: 테스트 실행 및 안정성 확인
+- [ ] **auth.py 라우터 생성**: 파일 자체가 존재하지 않음
+
+## 🚀 다음 단계 실행 가이드
+
+## 📋 외부 AI 작업 파일 변경 요약
+
+### 🔧 수정 예정 파일들 (병합 후 확인 필요)
+- **`main.py`**: APScheduler 선택적 의존성 처리 (try/except 블록, 더미 스케줄러)
+- **`user_segments.py`**: Redis 조건부 import 및 연결 오류 처리  
+- **`notification.py`**: 테스트 실패 해결
+- **기타 안정성 개선**: 의존성 누락 시에도 크래시 없이 동작
+
+### 🎯 병합 후 예상되는 개선사항
+1. **테스트 안정성**: `pytest tests/test_rewards.py::test_get_rewards_first_page` 성공 유지
+2. **의존성 내성**: APScheduler, Redis 미설치 시에도 정상 동작
+3. **notification 테스트**: `test_get_one_pending_notification` 실패 해결 예상
+4. **환경 호환성**: 다양한 개발 환경에서 안정적 실행
+
+
+## 검증 체크리스트 프롬프트 예시:
+Before providing your response, confirm that it aligns with:
+[ ] Dopamine loop mechanics from 01_architecture_en.md
+[ ] User segmentation rules from 02_data_personalization_en.md
+[ ] Emotion feedback patterns from 03_emotion_feedback_en.md
+[ ] Adult content progression from 04_adult_rewards_en.md
+[ ] Corporate site retention flow from 05_corporate_retention_en.md
+
 
 ## 📊 현재 진행 상황 요약 (2025.06.04 - 최신)
 
@@ -229,8 +240,6 @@ print('Timezone support check')
 
 **다음 단계: 누락된 핵심 파일들 생성하고 실제 구현체 완성이 우선!** 🚀
 
----
-
 ## 참조 문서 검증 ✅
 
 이 업데이트는 다음 문서들의 요구사항을 반영합니다:
@@ -242,3 +251,12 @@ print('Timezone support check')
 - ✅ **10_onboarding_en.md**: 닉네임/비밀번호 로그인 (email 제외)
 
 ##이 프로그램 사용자는 소수인증받은 회원대상이라 닉네임과 pw만 활용하여 인증절차 간소화##
+
+### 🔄 진행 중 (다음 우선순위)
+- [x] **외부 AI 브랜치 병합**: origin/codex/fix-test-failures-and-ensure-stability
+- [ ] **병합 후 검증 테스트**: pytest 실행 및 결과 확인
+- [ ] User 모델 필드 추가 (invite_code, nickname, password_hash, cyber_token_balance)
+- [ ] PostgreSQL 스키마 마이그레이션 완성
+- [ ] Redis 연결 및 user:{id}:cyber_token_balance 키 패턴 정의
+- [ ] Celery/APScheduler 기본 설정
+
