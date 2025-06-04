@@ -7,7 +7,7 @@ from datetime import datetime
 # Assuming models and database session setup are in these locations
 from .. import models # This will import the new SiteVisit model
 # Assuming database.py defines SessionLocal correctly
-from ..database import SessionLocal
+from ..database import get_db
 
 # Pydantic model for request body
 class SiteVisitCreate(BaseModel):
@@ -25,14 +25,6 @@ class SiteVisitResponse(BaseModel):
         orm_mode = True # For Pydantic v1/SQLAlchemy compatibility (use from_attributes = True for Pydantic v2)
 
 router = APIRouter()
-
-# Dependency to get DB session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.post("/notify/site_visit", status_code=201, response_model=SiteVisitResponse)
 async def log_site_visit(visit_data: SiteVisitCreate, db: Session = Depends(get_db)):

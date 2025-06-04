@@ -9,8 +9,13 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True, nullable=False) # Example field
+    email = Column(String, unique=True, index=True, nullable=False)
+    nickname = Column(String(50), unique=True, nullable=True)
+    password_hash = Column(String(255), nullable=True)
+    invite_code = Column(String(6), nullable=True)
+    cyber_token_balance = Column(Integer, default=200)
     created_at = Column(DateTime, default=datetime.utcnow)
+    segment_label = Column(String(20), default="Low")
 
     actions = relationship("UserAction", back_populates="user")
     segment = relationship("UserSegment", uselist=False, back_populates="user") # One-to-one

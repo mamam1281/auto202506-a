@@ -10,7 +10,7 @@ class TokenEarnRequest(BaseModel):
 
 router = APIRouter(prefix="/v1/corporate", tags=["Corporate"])
 
-@router.post("/earn-tokens")
+@router.post("/tokens/earn")
 async def earn_tokens(req: TokenEarnRequest):
     """Simulate earning cyber tokens on the corporate site"""
     if req.amount <= 0:
@@ -19,8 +19,8 @@ async def earn_tokens(req: TokenEarnRequest):
     return {"balance": new_balance}
 
 
-@router.get("/balance/{user_id}")
-async def get_balance(user_id: int):
+@router.get("/tokens/balance")
+async def get_token_balance(user_id: int):
     """Retrieve a user's current cyber token balance"""
     return {"balance": token_service.get_balance(user_id)}
 
