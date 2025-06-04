@@ -1,11 +1,25 @@
-from fastapi import FastAPI, HTTPException, Depends # Added Depends
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from .apscheduler_jobs import start_scheduler, scheduler # Import scheduler components
+from .apscheduler_jobs import start_scheduler, scheduler
 from prometheus_fastapi_instrumentator import Instrumentator # ADDED IMPORT
-import sentry_sdk # ADDED Sentry SDK import
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 import os # For Sentry DSN from env var
 from pydantic import BaseModel # For request/response models
-from typing import Optional # For optional fields in models
+from typing import Optional
+
+from app.routers import (
+    actions,
+    gacha,
+    rewards,
+    unlock,
+    notification,
+    user_segments,
+    feedback,
+    adult_content,
+    corporate,
+    users,
+)
 
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---
 # It's good practice to initialize Sentry as early as possible.
@@ -20,9 +34,7 @@ if SENTRY_DSN:
             environment=os.getenv("ENVIRONMENT", "development"), # e.g., development, staging, production
             # release="cc-webapp-backend@1.0.0" # Optional: set your release version
             # Enable FastAPI integration
-            integrations=[
-                from sentry_sdk.integrations.fastapi import FastApiIntegration
-            ]
+            integrations=[FastApiIntegration()]
         )
         print("Sentry SDK initialized successfully.")
     except Exception as e:
@@ -83,6 +95,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Register API routers
+app.include_router(actions.router, prefix="/api")
+app.include_router(gacha.router, prefix="/api")
+app.include_router(rewards.router, prefix="/api")
+app.include_router(unlock.router, prefix="/api")
+app.include_router(notification.router, prefix="/api")
+app.include_router(user_segments.router, prefix="/api")
+app.include_router(feedback.router, prefix="/api")
+app.include_router(adult_content.router, prefix="/api")
+app.include_router(corporate.router, prefix="/api")
+app.include_router(users.router, prefix="/api")
 
 # Request/Response Models
 class UserLogin(BaseModel):

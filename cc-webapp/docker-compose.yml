@@ -81,7 +81,7 @@ services:
 
   backend:
     build:
-      context: ./backend # Path relative to docker-compose.yml
+      context: ./cc-webapp/backend
       dockerfile: Dockerfile
     container_name: cc_backend
     environment:
@@ -103,7 +103,7 @@ services:
     volumes:
       # Mount local backend code into container for development hot-reloading.
       # For production, remove this to use code baked into the image.
-      - ./backend:/app
+      - ./cc-webapp/backend/app:/app/app
     # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload # Uncomment for dev hot-reload
     healthcheck:
       # Curl the /health endpoint. -f makes curl fail silently on HTTP errors.
