@@ -539,3 +539,44 @@ Before providing your response, confirm that it aligns with:
 - 백엔드 완성률: 70% → 87% (외부 AI 기여)
 - 외부 AI 활용 모범 사례 확립
 -->
+
+
+📑 기술문서 핵심 요약 (1~4단계 리팩터링/통합 기준)
+1. 시스템 아키텍처(01_architecture_en.md)
+목표: 도파민 루프(즉각 보상, 변수 보상, 한정 이벤트)와 Freemium 경제, 데이터 기반 개인화, 성인 콘텐츠 언락, 크로스 플랫폼 리텐션을 통합한 F2P 웹앱.
+핵심 구조:
+FastAPI(백엔드), React(프론트), PostgreSQL/SQLite, Redis, Kafka 등 사용.
+RFM 분석, LTV 예측, 실시간 행동 로그 기반 세그먼트/추천/보상.
+슬롯·룰렛·가챠 등 확률형 보상, Flash Offer, VIP 콘텐츠, Battle-Pass 구조.
+2. 데이터 개인화(02_data_personalization_en.md)
+RFM 세그먼트: Recency, Frequency, Monetary 점수로 사용자 그룹화(Whale, Medium 등).
+실시간 추천: 행동 로그/심리 프로파일 기반 추천, 토큰 흐름/보상/이벤트 타이밍 개인화.
+세그먼트/토큰 로직: 사용자별 토큰 잔고, 세그먼트 레벨, 추천 엔진이 연동됨.
+3. 감정 피드백(03_emotion_feedback_en.md)
+AI 응답: 게임 결과/사용자 상태에 따라 CJ AI가 실시간 감정 피드백 제공.
+도파민 루프 트리거: 승리/패배/스트릭/이벤트 등 상황별 맞춤 메시지.
+실시간 피드백: 멀티미디어(애니메이션, 사운드)와 연동.
+4. 성인 콘텐츠(04_adult_rewards_en.md)
+단계별 언락: Stage 1~3, VIP 등급별로 콘텐츠 점진적 공개.
+가챠/토큰 소비: 토큰/가챠/이벤트로 언락, 세그먼트별 접근 제한.
+Flash Offer: 한정 시간/조건부 할인, 개인화 오퍼.
+5. 본사 연동(05_corporate_retention_en.md)
+크로스 플랫폼 토큰 흐름: 본사 사이트 방문/이벤트로 토큰 획득, 앱에서 소비.
+리텐션 트리거: 앱↔본사 간 Deep Link, 푸시/이벤트/보상 루프.
+분석/추적: site_visits, site_rewards, user_actions, user_rewards 등 테이블로 유입/재방문/보상 추적.
+6. 테스트/QA(09_test_qa_en.md)
+주요 시나리오: 초대 코드 인증, 토큰 흐름, 성인 콘텐츠 언락, 가챠, AI 채팅 등.
+기대 결과: 각 기능별 정상 동작, 권한/레벨 체크, 확률 분배, 감정 피드백 일관성.
+7. 온보딩/UX(10_onboarding_en.md, 11_ui_ux_en.md)
+초대 코드 기반 온보딩: 제한된 회원, 가입 즉시 토큰 지급, CJ AI 웰컴 메시지.
+몰입형 UI/UX: 도파민 루프, 희소성, 즉각 피드백, 다크 테마, 감정 곡선 설계.
+8. 기술 구현/로드맵(07_technical_implementation_en.md, 08_roadmap_en.md)
+프론트/백엔드 구조: 컴포넌트/라우터/서비스/모델 분리, 상태관리, API 명세.
+CI/CD: 테스트, 마이그레이션, 배포 자동화.
+로드맵: Q2~Q4 단계별 기능 확장, AI/이벤트/분석/커뮤니티 고도화.
+✅ 단계별 리팩터링/통합 작업에 적용할 핵심 원칙
+모든 변경은 위 문서의 설계 원칙과 데이터 흐름, 도메인 책임 분리에 맞춰야 함.
+UserSegment, UserService, AdultContent, FlashOffer, Reward, Notification 등은 서비스 계층에서 통합 관리.
+테스트/마이그레이션/배포는 자동화, 각 단계별로 PR 분리 및 테스트 통과율 보고.
+API/DB/테스트/프론트 연동까지 전체 흐름을 고려해 점진적으로 리팩터링.
+
