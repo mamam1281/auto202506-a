@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Boolean # Added Boolean
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Boolean, Text # Added Boolean, Text
+from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.types import JSON
 from datetime import datetime
@@ -45,22 +44,12 @@ class UserSegment(Base):
     __tablename__ = "user_segments"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), unique=True, index=True, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    rfm_group = Column(String(50), nullable=False)
+    risk_profile = Column(String(50), nullable=False)
+    name = Column(String(50), nullable=True)  # Add missing column
 
-    # Human readable name of the segment (e.g. "Whale", "Medium")
-    name = Column(String(50), nullable=True)
-
-    rfm_group = Column(String, index=True, nullable=True) # e.g., Whale, Medium, Low
-    risk_profile = Column(String, index=True, nullable=True) # e.g., High, Medium, Low (can be from other logic)
-    streak_count = Column(Integer, default=0) # Example of another segmentation attribute
-
-    # Store raw scores used for RFM segmentation so that logic can be revisited later
-    recency_score = Column(Integer, default=0)
-    frequency_score = Column(Integer, default=0)
-    monetary_score = Column(Integer, default=0)
-
-    last_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
+    # Relationship
     user = relationship("User", back_populates="segment")
 
 class SiteVisit(Base):
@@ -86,16 +75,14 @@ class UserReward(Base):
     __tablename__ = "user_rewards"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
-    reward_type = Column(String(50), index=True, nullable=False)  # e.g., "COIN", "BADGE", "CONTENT_UNLOCK"
-    reward_value = Column(String(255), nullable=False) # Stores amount for COIN, badge name for BADGE, item_id for UNLOCK
-    source_description = Column(String(255), nullable=True)  # New field for context
-    awarded_at = Column(DateTime, default=datetime.utcnow, index=True)
-    trigger_action_id = Column(Integer, ForeignKey("user_actions.id"), nullable=True) # Optional: link to action that triggered reward
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    reward_type = Column(String(50), nullable=False)
+    reward_value = Column(String(255), nullable=False)
+    awarded_at = Column(DateTime, default=datetime.utcnow)
+    source_description = Column(Text, nullable=True)  # Add missing column
 
+    # Relationship
     user = relationship("User", back_populates="rewards")
-    # Optional: if you want to link a reward back to the specific action that triggered it
-    # trigger_action = relationship("UserAction") # Define how UserAction relates back if needed
 
 class AdultContent(Base):
     __tablename__ = "adult_content"
