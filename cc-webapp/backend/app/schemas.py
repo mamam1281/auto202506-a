@@ -200,7 +200,7 @@ class VIPExclusiveContentResponse(BaseModel):
 class AgeVerificationRequest(BaseModel):
     # user_id will likely come from authenticated user context, not request body
     method: str  # "document", "phone", "ipin"
-    verification_data: Json[Any] # Structure depends on method, flexible with Json
+    verification_data: dict  # use plain dict for tests expecting direct JSON
 
 class AgeVerificationResponse(BaseModel):
     user_id: int
