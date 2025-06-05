@@ -42,6 +42,8 @@ from app.routers import (
     corporate,
     users,
     doc_titles,
+    # Routers for new services
+    tracking, # Added for TrackingService
 
     auth,
     chat,
@@ -141,6 +143,9 @@ app.include_router(adult_content.router, prefix="/api")
 app.include_router(corporate.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 app.include_router(doc_titles.router, prefix="/api")
+
+# Router for TrackingService
+app.include_router(tracking.router, prefix="/api") # This will make routes like /api/tracking/site-visit
 
 app.include_router(auth.router, prefix="/api")
 app.include_router(chat.router)

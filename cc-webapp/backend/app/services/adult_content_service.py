@@ -8,6 +8,7 @@ from app.schemas import (
 ) # Ensure these are the correct and fully defined schema names
 from app.services.token_service import TokenService # Assuming a token service exists
 from app.services.age_verification_service import AgeVerificationService # For age checks
+from app.services.reward_service import RewardService # Added RewardService
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import List, Optional, Dict # Added Dict
@@ -34,10 +35,11 @@ USER_SEGMENT_ACCESS_ORDER: Dict[str, int] = {
 }
 
 class AdultContentService:
-    def __init__(self, db: Session, token_service: TokenService, age_verification_service: AgeVerificationService):
+    def __init__(self, db: Session, token_service: TokenService, age_verification_service: AgeVerificationService, reward_service: RewardService): # Added reward_service
         self.db = db
         self.token_service = token_service
         self.age_verification_service = age_verification_service
+        self.reward_service = reward_service # Added reward_service
 
     def _get_user_segment_max_order(self, user_id: int) -> int:
         user_segment = self.db.query(UserSegment).filter(UserSegment.user_id == user_id).first()
@@ -174,16 +176,13 @@ class AdultContentService:
 
         remaining_tokens = self.token_service.deduct_tokens(user_id, cost) # Raises ValueError if insufficient
 
-        unlock_record = UserReward(
+        # Use RewardService to grant content unlock
+        self.reward_service.grant_content_unlock(
             user_id=user_id,
-            reward_type="CONTENT_UNLOCK", # Standardized type
-            reward_value=f"{request.content_id}_{stage_to_unlock_enum.value}", # e.g. "123_Partial"
-            awarded_at=datetime.utcnow()
-            # Consider adding 'tokens_spent=cost' if UserReward model is extended or using UnlockLog
+            content_id=request.content_id,
+            stage_name=stage_to_unlock_enum.value,
+            source_description="Direct purchase"
         )
-        self.db.add(unlock_record)
-        self.db.commit()
-        # self.db.refresh(unlock_record) # If UserReward has an ID and we need it back
 
         return ContentUnlockResponse(
             status="success",

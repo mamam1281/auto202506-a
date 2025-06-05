@@ -89,6 +89,7 @@ class UserReward(Base):
     user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
     reward_type = Column(String(50), index=True, nullable=False)  # e.g., "COIN", "BADGE", "CONTENT_UNLOCK"
     reward_value = Column(String(255), nullable=False) # Stores amount for COIN, badge name for BADGE, item_id for UNLOCK
+    source_description = Column(String(255), nullable=True)  # New field for context
     awarded_at = Column(DateTime, default=datetime.utcnow, index=True)
     trigger_action_id = Column(Integer, ForeignKey("user_actions.id"), nullable=True) # Optional: link to action that triggered reward
 
@@ -138,6 +139,7 @@ class FlashOffer(Base):
     expires_at = Column(DateTime, nullable=False)
     is_purchased = Column(Boolean, default=False)
     purchased_at = Column(DateTime, nullable=True)
+    target_stage_name = Column(String(50), nullable=False, default="Full") # Added field
 
     user = relationship("User", back_populates="flash_offers")
     adult_content = relationship("AdultContent") # Assuming one-way relationship for now
