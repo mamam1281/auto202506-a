@@ -156,6 +156,7 @@ class FlashOfferResponseItem(BaseModel):
     discount_rate: float
     expires_at: datetime
     trigger_reason: Optional[str] = None
+    target_stage_name: str # Added field
 
 class ActiveFlashOffersResponse(BaseModel):
     offers: List[FlashOfferResponseItem]

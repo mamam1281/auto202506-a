@@ -2,103 +2,83 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from datetime import datetime
+from typing import Optional # Added Optional
 
-# Assuming models and database session setup are in these locations
-from .. import models # This will import the new SiteVisit model
-# Assuming database.py defines SessionLocal correctly
+from .. import models
 from ..database import get_db
-
-# Pydantic model for request body
-class SiteVisitCreate(BaseModel):
-    user_id: int
-    source: str
-
-# Pydantic model for response
-class SiteVisitResponse(BaseModel):
-    id: int
-    user_id: int
-    source: str
-    visit_timestamp: datetime
-
-    class Config:
-        orm_mode = True # For Pydantic v1/SQLAlchemy compatibility (use from_attributes = True for Pydantic v2)
+from ..services.notification_service import NotificationService # Added NotificationService
 
 router = APIRouter()
 
-@router.post("/notify/site_visit", status_code=201, response_model=SiteVisitResponse)
-async def log_site_visit(visit_data: SiteVisitCreate, db: Session = Depends(get_db)):
-    """
-    Logs a visit to an external corporate site.
-    """
-    db_site_visit = models.SiteVisit(
-        user_id=visit_data.user_id,
-        source=visit_data.source,
-        # visit_timestamp is handled by default in the model
-    )
-    db.add(db_site_visit)
-    db.commit()
-    db.refresh(db_site_visit)
-    print(f"Logged site visit for user {visit_data.user_id} from source {visit_data.source}")
-    return db_site_visit
-
+# Dependency provider for NotificationService
+def get_notification_service(db: Session = Depends(get_db)):
+    return NotificationService(db=db)
 
 # Pydantic model for the pending notification response
 class PendingNotificationResponse(BaseModel):
-    message: str | None = None # Message can be null if no pending notifications
-    # Consider adding notification_id if client might need to acknowledge or reference it
-    # notification_id: int | None = None
+    id: Optional[int] = None
+    message: Optional[str] = None
+    created_at: Optional[datetime] = None
+    sent_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True # Pydantic V2
+
 
 @router.get(
-    "/notification/pending/{user_id}",
+    "/notification/pending/{user_id}", # Path maintained from original
     response_model=PendingNotificationResponse,
-    tags=["notification"] # Existing tag is fine
+    tags=["notification"]
 )
 async def get_pending_notification(
     user_id: int = Path(..., title="The ID of the user to check for pending notifications", ge=1),
-    db: Session = Depends(get_db) # get_db is already defined in this file
+    service: NotificationService = Depends(get_notification_service)
 ):
     """
-    Retrieves the oldest pending (is_sent=False) notification for a user,
-    marks it as sent (is_sent=True, sent_at=utcnow), and returns its message.
-    If no pending notifications, returns { "message": null }.
+    Retrieves the oldest pending notification for a user, marks it as sent,
+    and returns its details. If no pending notifications, returns empty object or specific fields as None.
     """
-    # First, check if user exists - good practice, though not strictly required if FK constraints handle it
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
-        # This check might be redundant if all notification creations ensure valid user_id
-        # However, it's a safeguard.
-        raise HTTPException(status_code=404, detail=f"User with id {user_id} not found.")
+    notification = service.get_oldest_pending_notification(user_id=user_id)
 
-    # Query for the oldest pending notification for this user
-    # Order by created_at to ensure FIFO for notifications
-    pending_notification = db.query(models.Notification).filter(
-        models.Notification.user_id == user_id,
-        models.Notification.is_sent == False # SQLAlchemy uses '==' for comparison, not 'is False' for query construction
-    ).order_by(models.Notification.created_at.asc()).first()
+    if not notification:
+        # Return a response indicating no pending notification found
+        # Based on the Pydantic model, all fields are Optional, so an empty call works
+        return PendingNotificationResponse()
 
-    if not pending_notification:
-        return PendingNotificationResponse(message=None)
+    # If service might raise an error that should be propagated as HTTP error:
+    # try:
+    #     notification = service.get_oldest_pending_notification(user_id=user_id)
+    # except SomeServiceSpecificException as e:
+    #     raise HTTPException(status_code=400, detail=str(e))
 
-    # Mark the notification as sent
-    pending_notification.is_sent = True
-    pending_notification.sent_at = datetime.utcnow()
+    # The service now handles committing and refreshing.
+    # The router just needs to return the data.
+    return PendingNotificationResponse.model_validate(notification) # Pydantic V2
 
-    try:
-        db.commit()
-        db.refresh(pending_notification)
-        print(f"Notification ID {pending_notification.id} for user {user_id} marked as sent.")
-    except Exception as e:
-        db.rollback()
-        print(f"Error marking notification {pending_notification.id} as sent for user {user_id}: {e}")
-        # Depending on policy, you might re-raise or return an error response.
-        # If the update fails, the client gets the message but it's not marked sent, leading to re-delivery.
-        # Better to raise an error so client knows the operation wasn't fully successful.
-        raise HTTPException(status_code=500, detail="Failed to update notification status in database.")
+# Example of how to create a notification (optional, for testing or direct use if needed)
+# class NotificationCreateRequest(BaseModel):
+#     user_id: int
+#     message: str
+#     notification_type: Optional[str] = "general"
 
-    return PendingNotificationResponse(message=pending_notification.message)
+# @router.post("/notification/create", response_model=PendingNotificationResponse, tags=["notification"])
+# async def create_new_notification(
+#     request: NotificationCreateRequest,
+#     service: NotificationService = Depends(get_notification_service)
+# ):
+#     try:
+#         notification = service.create_notification(
+#             user_id=request.user_id,
+#             message=request.message
+#             # notification_type=request.notification_type # If model and service support it
+#         )
+#         return PendingNotificationResponse.from_orm(notification)
+#     except Exception as e:
+#         # Handle specific exceptions from service if any (e.g., user not found if service checked)
+#         raise HTTPException(status_code=500, detail=f"Failed to create notification: {str(e)}")
+
 
 # Ensure this router is included in app/main.py:
 # from .routers import notification
 # app.include_router(notification.router, prefix="/api", tags=["notification"])
-# This should already be done from the previous SiteVisit endpoint.
+# This should already be done.

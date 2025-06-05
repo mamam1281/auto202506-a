@@ -7,6 +7,7 @@ from app.schemas import (
 ) # Ensure these are correct schema names
 from app.services.token_service import TokenService # Assumed
 from app.services.age_verification_service import AgeVerificationService
+from app.services.reward_service import RewardService # Added RewardService
 # Import ContentStageEnum and STAGE_DETAILS directly for _get_content_original_price helper
 from app.services.adult_content_service import ContentStageEnum, STAGE_DETAILS
 from datetime import datetime, timedelta
@@ -27,10 +28,12 @@ class FlashOfferTrigger(str, Enum):
 class FlashOfferService:
     def __init__(self, db: Session, token_service: TokenService,
                  age_verification_service: AgeVerificationService,
+                 reward_service: RewardService, # Added reward_service
                  adult_content_service: object): # adult_content_service is not used directly in methods, so object type
         self.db = db
         self.token_service = token_service
         self.age_verification_service = age_verification_service
+        self.reward_service = reward_service # Added reward_service
         # self.adult_content_service = adult_content_service # Not directly used in the final logic provided
 
     def _get_content_original_price(self, content_id: int, stage: ContentStageEnum) -> Optional[int]:
@@ -80,7 +83,7 @@ class FlashOfferService:
         db_flash_offer = FlashOffer(
             user_id=user_id,
             content_id=content_id,
-            # target_stage_name=target_stage.value, # Recommended to add to FlashOffer model
+            target_stage_name=target_stage.value, # Save the target stage name
             original_price=original_price,
             discounted_price=discounted_price,
             discount_rate=discount_rate,
@@ -101,8 +104,8 @@ class FlashOfferService:
             discounted_price=db_flash_offer.discounted_price,
             discount_rate=db_flash_offer.discount_rate,
             expires_at=db_flash_offer.expires_at,
-            trigger_reason=db_flash_offer.trigger_reason
-            # target_stage_name=db_flash_offer.target_stage_name # If added to model and schema
+            trigger_reason=db_flash_offer.trigger_reason,
+            target_stage_name=db_flash_offer.target_stage_name # Include in response
         )
 
     def get_active_flash_offers(self, user_id: int) -> ActiveFlashOffersResponse:
@@ -128,8 +131,8 @@ class FlashOfferService:
                 discounted_price=offer.discounted_price,
                 discount_rate=offer.discount_rate,
                 expires_at=offer.expires_at,
-                trigger_reason=offer.trigger_reason
-                # target_stage_name=offer.target_stage_name # If added
+                trigger_reason=offer.trigger_reason,
+                target_stage_name=offer.target_stage_name # Include in response
             ))
         return ActiveFlashOffersResponse(offers=offer_items)
 
@@ -159,29 +162,33 @@ class FlashOfferService:
         db_offer.is_purchased = True
         db_offer.purchased_at = now
 
-        # Unlock content: Using simplified direct UserReward recording.
-        # Assumes FlashOffer was for ContentStageEnum.FULL as per create_flash_offer default.
-        # A robust solution would store target_stage_name on FlashOffer model.
-        target_stage_for_unlock = ContentStageEnum.FULL
-        # if db_offer.target_stage_name: # If target_stage_name was stored on the model
-        #    try:
-        #        target_stage_for_unlock = ContentStageEnum(db_offer.target_stage_name)
-        #    except ValueError:
-        #        # Log error: Invalid stage name stored on offer
-        #        raise ValueError("Invalid target stage configured for the offer.")
+        # Unlock content using the target_stage_name stored in the offer
+        try:
+            target_stage_for_unlock = ContentStageEnum(db_offer.target_stage_name)
+        except ValueError:
+            # Log error: Invalid stage name stored on offer
+            # This case should ideally not happen if data is validated on creation
+            raise ValueError(f"Invalid target stage '{db_offer.target_stage_name}' configured for the offer ID {db_offer.id}.")
 
-        unlock_record = UserReward(
+        # Use RewardService to grant content unlock
+        self.reward_service.grant_content_unlock(
             user_id=user_id,
-            reward_type="CONTENT_UNLOCK",
-            reward_value=f"{db_offer.content_id}_{target_stage_for_unlock.value}",
-            awarded_at=datetime.utcnow(),
-            # Consider adding a field to UserReward for 'transaction_details' (JSONB)
-            # to store e.g. {'offer_id': db_offer.id, 'price_paid': db_offer.discounted_price}
+            content_id=db_offer.content_id,
+            stage_name=target_stage_for_unlock.value, # Use the determined enum member's value
+            source_description=f"Flash offer purchase: ID {db_offer.id}"
+            # awarded_at can be omitted to use default datetime.utcnow() in reward_service
         )
-        self.db.add(unlock_record)
 
         try:
-            self.db.commit()
+            # Note: reward_service.grant_content_unlock already commits.
+            # If process_flash_purchase needs to be more atomic with other DB changes
+            # then grant_content_unlock might need a flag to skip commit,
+            # or the Session object could be shared and committed here.
+            # For now, assuming grant_content_unlock's commit is acceptable.
+            # If UserReward was added in this session before grant_content_unlock,
+            # then this commit would be redundant or could conflict if not handled well.
+            # However, UserReward is no longer directly added here.
+            self.db.commit() # Commit changes to db_offer (is_purchased, purchased_at)
             self.db.refresh(db_offer)
         except Exception as e:
             self.db.rollback()
@@ -192,8 +199,8 @@ class FlashOfferService:
             offer_id=db_offer.id, content_id=db_offer.content_id, content_name=content_name,
             original_price=db_offer.original_price, discounted_price=db_offer.discounted_price,
             discount_rate=db_offer.discount_rate, expires_at=db_offer.expires_at,
-            trigger_reason=db_offer.trigger_reason
-            # target_stage_name=db_offer.target_stage_name # If added
+            trigger_reason=db_offer.trigger_reason,
+            target_stage_name=db_offer.target_stage_name # Include in response
         )
 
         return FlashOfferPurchaseResponse(

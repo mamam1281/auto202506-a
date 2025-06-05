@@ -10,6 +10,7 @@ from app.services.age_verification_service import AgeVerificationService
 from app.services.adult_content_service import AdultContentService
 from app.services.vip_content_service import VIPContentService
 from app.services.flash_offer_service import FlashOfferService
+from app.services.reward_service import RewardService # Added RewardService
 
 # Import schemas
 from app.schemas import (
@@ -40,12 +41,17 @@ def get_token_service(db: Session = Depends(get_db)):
 def get_age_verification_service(db: Session = Depends(get_db)):
     return AgeVerificationService(db=db)
 
+# Dependency provider for RewardService
+def get_reward_service(db: Session = Depends(get_db)):
+    return RewardService(db=db)
+
 def get_adult_content_service(
     db: Session = Depends(get_db),
     token_service: TokenService = Depends(get_token_service),
-    age_service: AgeVerificationService = Depends(get_age_verification_service)
+    age_service: AgeVerificationService = Depends(get_age_verification_service),
+    reward_service: RewardService = Depends(get_reward_service) # Added reward_service
 ):
-    return AdultContentService(db=db, token_service=token_service, age_verification_service=age_service)
+    return AdultContentService(db=db, token_service=token_service, age_verification_service=age_service, reward_service=reward_service) # Added reward_service
 
 def get_vip_content_service(
     db: Session = Depends(get_db),
@@ -58,9 +64,10 @@ def get_flash_offer_service(
     db: Session = Depends(get_db),
     token_service: TokenService = Depends(get_token_service),
     age_service: AgeVerificationService = Depends(get_age_verification_service),
+    reward_service: RewardService = Depends(get_reward_service), # Added reward_service
     adult_content_service: AdultContentService = Depends(get_adult_content_service) # For price fetching
 ):
-    return FlashOfferService(db=db, token_service=token_service, age_verification_service=age_service, adult_content_service=adult_content_service)
+    return FlashOfferService(db=db, token_service=token_service, age_verification_service=age_service, reward_service=reward_service, adult_content_service=adult_content_service) # Added reward_service
 
 # Helper for error handling
 def handle_service_errors(e: ValueError):
