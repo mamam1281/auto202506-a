@@ -365,3 +365,7 @@ def submit_quiz(response: QuizResponse, db: Session = Depends(get_db)):
 
 이로써 “사이버 토큰 = A 업체 이용 보상” 을 핵심 축으로,
 “모바일게임식 과금 구조 + 데이터 기반 개인화 + 도파민 루프 강화”가 통합된 F2P 시스템을 완성할 수 있습니다.
+## 2.8. Refactoring Guideline Integration
+- User segment creation and retrieval logic has been centralized in `UserService`.
+- Routers must call `UserService.get_or_create_segment` instead of direct DB access.
+
