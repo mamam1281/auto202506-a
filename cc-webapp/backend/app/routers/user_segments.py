@@ -62,17 +62,14 @@ async def get_user_recommendation(
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-    user_segment = db.query(models.UserSegment).filter(models.UserSegment.user_id == user_id).first()
+    # Fetch existing segment or create a default one via the service layer
+    user_segment = user_service.get_or_create_segment(user_id)
 
-    rfm_group = "Low" # Default if no segment found or segment has no rfm_group
-    risk_profile = "Unknown" # Default if no segment found or segment has no risk_profile
-
-    if not user_segment:
-        logger.info(f"User segment for user_id {user_id} not found, using default RFM group '{rfm_group}' and risk profile '{risk_profile}'.")
-    else:
-        rfm_group = user_segment.rfm_group if user_segment.rfm_group else rfm_group
-        risk_profile = user_segment.risk_profile if user_segment.risk_profile else risk_profile
-        logger.info(f"User {user_id}: RFM='{rfm_group}', Risk='{risk_profile}' from DB.")
+    rfm_group = user_segment.rfm_group or "Low"
+    risk_profile = user_segment.risk_profile or "Unknown"
+    logger.info(
+        f"User {user_id}: RFM='{rfm_group}', Risk='{risk_profile}' returned from UserService."
+    )
 
 
     streak_count = 0
