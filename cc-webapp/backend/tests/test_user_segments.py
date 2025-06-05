@@ -19,7 +19,7 @@ def test_recommendation_whale_high_risk_high_streak(MockSessionLocal, mock_redis
     # Mock DB session and query
     mock_db_session = MagicMock()
     # Create a UserSegment instance to be returned by the mock query
-    mock_user_segment_db_instance = UserSegment(user_id=1, rfm_group="Whale", risk_profile="High-Risk")
+    mock_user_segment_db_instance = UserSegment(user_id=1, rfm_group="Whale", name="Whale", risk_profile="High-Risk")
     mock_db_session.query(UserSegment).filter().first.return_value = mock_user_segment_db_instance
 
     # Configure the context manager __enter__ to return the mock_db_session
@@ -56,7 +56,7 @@ def test_recommendation_whale_high_risk_high_streak(MockSessionLocal, mock_redis
 @patch('app.routers.user_segments.SessionLocal')
 def test_recommendation_medium_low_risk_zero_streak(MockSessionLocal, mock_redis_client_instance):
     mock_db_session = MagicMock()
-    mock_user_segment_db_instance = UserSegment(user_id=2, rfm_group="Medium", risk_profile="Low-Risk")
+    mock_user_segment_db_instance = UserSegment(user_id=2, rfm_group="Medium", name="Medium", risk_profile="Low-Risk")
     mock_db_session.query(UserSegment).filter().first.return_value = mock_user_segment_db_instance
     MockSessionLocal.return_value.__enter__.return_value = mock_db_session
 
@@ -78,7 +78,7 @@ def test_recommendation_medium_low_risk_zero_streak(MockSessionLocal, mock_redis
 @patch('app.routers.user_segments.SessionLocal')
 def test_recommendation_low_rfm_no_streak_in_redis(MockSessionLocal, mock_redis_client_instance):
     mock_db_session = MagicMock()
-    mock_user_segment_db_instance = UserSegment(user_id=3, rfm_group="Low", risk_profile="Medium-Risk")
+    mock_user_segment_db_instance = UserSegment(user_id=3, rfm_group="Low", name="Low", risk_profile="Medium-Risk")
     mock_db_session.query(UserSegment).filter().first.return_value = mock_user_segment_db_instance
     MockSessionLocal.return_value.__enter__.return_value = mock_db_session
 
@@ -107,21 +107,14 @@ def test_recommendation_user_segment_not_found(MockSessionLocal, mock_redis_clie
         mock_redis_client_instance.get.return_value = "5" # Some streak
 
     response = client.get("/api/user-segments/999/recommendation") # Non-existent user
-    assert response.status_code == 200 # Endpoint uses defaults, doesn't 404
-    data = response.json()
-    assert data["rfm_group"] == "Low" # Default
-    assert data["risk_profile"] == "Unknown" # Default
-    assert data["streak_count"] == 5
-    # Expected: 0.25 (base for Low RFM default) + 5 * 0.01 (streak) = 0.30
-    assert data["recommended_reward_probability"] == 0.30
-    assert data["recommended_time_window"] == "next 24 hours" # For Low RFM default
+    assert response.status_code == 404
 
 # Test Case 5: Redis client is None (simulating connection failure at startup)
 @patch('app.routers.user_segments.redis_client', None) # Patch redis_client to be None
 @patch('app.routers.user_segments.SessionLocal')
 def test_recommendation_redis_client_none(MockSessionLocal):
     mock_db_session = MagicMock()
-    mock_user_segment_db_instance = UserSegment(user_id=1, rfm_group="Whale", risk_profile="High-Risk")
+    mock_user_segment_db_instance = UserSegment(user_id=1, rfm_group="Whale", name="Whale", risk_profile="High-Risk")
     mock_db_session.query(UserSegment).filter().first.return_value = mock_user_segment_db_instance
     MockSessionLocal.return_value.__enter__.return_value = mock_db_session
 

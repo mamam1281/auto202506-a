@@ -50,15 +50,20 @@ class FlashOfferService:
         if not self.age_verification_service.is_user_age_verified(user_id):
             raise ValueError("Age verification required") # Raise error to be handled by router
 
-        existing_offer = self.db.query(FlashOffer).filter(
-            FlashOffer.user_id == user_id,
-            FlashOffer.content_id == content_id, # Assuming one offer per content item at a time
-            # FlashOffer.target_stage_name == target_stage.value, # If offer is stage-specific
-            FlashOffer.is_purchased == False,
-            FlashOffer.expires_at > datetime.utcnow()
-        ).first()
+        existing_offer = (
+            self.db.query(FlashOffer)
+            .filter(
+                FlashOffer.user_id == user_id,
+                FlashOffer.content_id == content_id,
+                FlashOffer.is_purchased.is_(False),
+                FlashOffer.expires_at > datetime.utcnow(),
+            )
+            .with_for_update()
+            .first()
+        )
         if existing_offer:
-            raise ValueError(f"Active flash offer already exists for this content (ID: {content_id})")
+            existing_offer.expires_at = datetime.utcnow()
+            self.db.commit()
 
         content = self.db.query(AdultContent).filter(AdultContent.id == content_id).first()
         if not content:

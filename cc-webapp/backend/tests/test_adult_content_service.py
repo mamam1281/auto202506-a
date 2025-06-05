@@ -32,7 +32,7 @@ class TestAdultContentService(unittest.TestCase):
         self.mock_age_verification_service.is_user_age_verified.return_value = True
 
     def test_get_user_segment_max_order_whale(self):
-        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Whale")
+        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Whale", name="Whale")
         self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == self.user_id).first.return_value = mock_segment
         order = self.adult_content_service._get_user_segment_max_order(self.user_id)
         self.assertEqual(order, USER_SEGMENT_ACCESS_ORDER["Whale"])
@@ -64,7 +64,7 @@ class TestAdultContentService(unittest.TestCase):
 
     def test_get_content_access_level_segment_access(self):
         # User is "Medium" segment, no specific unlocks for this content
-        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Medium")
+        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Medium", name="Medium")
         self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == self.user_id).first.return_value = mock_segment
         self.mock_db_session.query(UserReward).filter(...).all.return_value = [] # No specific unlocks
 
@@ -75,7 +75,7 @@ class TestAdultContentService(unittest.TestCase):
         self.mock_db_session.query(AdultContent).filter(AdultContent.id == self.content_id).first.return_value = self.mock_content
 
         # Assume user is "Low" segment, has purchased "Partial" for this content
-        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Low")
+        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Low", name="Low")
         self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == self.user_id).first.return_value = mock_segment
         unlock_rewards = [UserReward(user_id=self.user_id, reward_type="CONTENT_UNLOCK", reward_value=f"{self.content_id}_Partial")]
         self.mock_db_session.query(UserReward).filter(...).all.return_value = unlock_rewards
@@ -102,7 +102,7 @@ class TestAdultContentService(unittest.TestCase):
         self.mock_db_session.query(AdultContent).filter(AdultContent.id == self.content_id).first.return_value = self.mock_content
 
         # User is "Low" segment, no prior unlocks for this content
-        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Low")
+        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Low", name="Low")
         self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == self.user_id).first.return_value = mock_segment
         self.mock_db_session.query(UserReward).filter(...).all.return_value = []
 
@@ -126,7 +126,7 @@ class TestAdultContentService(unittest.TestCase):
 
     def test_unlock_content_stage_insufficient_tokens(self):
         self.mock_db_session.query(AdultContent).filter(AdultContent.id == self.content_id).first.return_value = self.mock_content
-        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Low")
+        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Low", name="Low")
         self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == self.user_id).first.return_value = mock_segment
         self.mock_db_session.query(UserReward).filter(...).all.return_value = []
 
@@ -147,7 +147,7 @@ class TestAdultContentService(unittest.TestCase):
 
         # User is "Low" (Teaser access by default for content1 if its req_segment_level allows)
         # and has no specific unlocks for content2
-        mock_segment_low = UserSegment(user_id=self.user_id, rfm_group="Low")
+        mock_segment_low = UserSegment(user_id=self.user_id, rfm_group="Low", name="Low")
         self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == self.user_id).first.return_value = mock_segment_low
 
         # Mock _get_user_unlocked_stage_order:
@@ -190,7 +190,7 @@ class TestAdultContentService(unittest.TestCase):
 
     def test_upgrade_access_temporarily_simulated_success(self):
         self.mock_db_session.query(User).filter(User.id == self.user_id).first.return_value = self.mock_user
-        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Low") # Current segment
+        mock_segment = UserSegment(user_id=self.user_id, rfm_group="Low", name="Low") # Current segment
         self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == self.user_id).first.return_value = mock_segment
 
         self.mock_token_service.deduct_tokens.return_value = 1000 # Remaining tokens

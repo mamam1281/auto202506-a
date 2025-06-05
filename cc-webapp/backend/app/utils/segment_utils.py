@@ -123,17 +123,25 @@ def compute_rfm_and_update_segments(db: Session):
         current_time = datetime.utcnow()
         if user_segment:
             user_segment.rfm_group = rfm_group
+            user_segment.name = rfm_group
+            user_segment.recency_score = r_score
+            user_segment.frequency_score = f_score
+            user_segment.monetary_score = m_score
             user_segment.last_updated = current_time
-            updated_count +=1
+            updated_count += 1
         else:
             user_segment = UserSegment(
                 user_id=user_id,
                 rfm_group=rfm_group,
+                name=rfm_group,
+                recency_score=r_score,
+                frequency_score=f_score,
+                monetary_score=m_score,
                 # risk_profile will be set by another process or if logic is added here
-                last_updated=current_time
+                last_updated=current_time,
             )
             db.add(user_segment)
-            created_count +=1
+            created_count += 1
 
         # print(f"User {user_id}: R={recency_days}d (Score {r_score}), F={frequency} (Score {f_score}), M={monetary_value} (Score {m_score}) -> RFM Group: {rfm_group}")
 

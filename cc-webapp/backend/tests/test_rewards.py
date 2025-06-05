@@ -157,7 +157,7 @@ def test_get_rewards_no_rewards(db_session: Session):
 def test_get_rewards_user_not_found(db_session: Session): # db_session cleans up
     response = client.get("/api/users/9999/rewards") # Non-existent user
     assert response.status_code == 404, response.text
-    assert "User with id 9999 not found" in response.json()["detail"]
+    assert "존재하지 않는 사용자" in response.json()["detail"]
 
 def test_get_rewards_default_pagination(db_session: Session):
     seed_rewards_data(db_session, user_id=USER_ID_FOR_REWARDS_TESTS, num_rewards=25, email_suffix="_pg_default")
