@@ -6,8 +6,9 @@ from pydantic import BaseModel
 from datetime import datetime
 import logging # For logging
 
-from .. import models # Should import User, UserReward, AdultContent, UserSegment
+from .. import models  # Should import User, UserReward, AdultContent, UserSegment
 from ..database import get_db
+from ..services.user_service import UserService
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -16,6 +17,8 @@ router = APIRouter()
 MAX_UNLOCK_STAGE = 3 # Define this based on your content stages. Consider making it configurable.
 
 # --- Dependencies ---
+def get_user_service(db: Session = Depends(get_db)) -> UserService:
+    return UserService(db)
 
 # --- Pydantic Models ---
 class UnlockResponse(BaseModel):
@@ -45,13 +48,15 @@ def get_segment_level(rfm_group: str | None) -> int:
 @router.get("/unlock", response_model=UnlockResponse, tags=["unlock", "content"])
 async def attempt_content_unlock(
     user_id: int = Query(..., description="ID of the user attempting to unlock content"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_service: UserService = Depends(get_user_service)
 ):
-    # 1. Fetch User record
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
+    # 1. Fetch User record with unified error handling
+    try:
+        user_service.get_user_or_error(user_id)
+    except ValueError as e:
         logger.warning(f"Attempt to unlock content for non-existent user_id: {user_id}")
-        raise HTTPException(status_code=404, detail="User not found.")
+        raise HTTPException(status_code=404, detail=str(e))
 
     # 2. Query for the latest UserReward with reward_type="CONTENT_UNLOCK"
     latest_unlock_reward = db.query(models.UserReward).filter(

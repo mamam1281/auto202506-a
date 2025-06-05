@@ -164,7 +164,7 @@ def test_get_pending_notifications_none_pending(db_session: Session):
 def test_get_pending_notifications_user_not_found(db_session: Session): # db_session will clean up
     response = client.get("/api/notification/pending/99999") # Non-existent user
     assert response.status_code == 404, response.text
-    assert "User with id 99999 not found" in response.json()["detail"] # Match actual error message
+    assert "존재하지 않는 사용자" in response.json()["detail"]
 
 # This test name from prompt was "idempotency_after_error", but the logic for that is hard to test
 # without complex mocking of db.commit(). The current endpoint is not idempotent on error by design

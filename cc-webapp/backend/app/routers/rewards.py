@@ -7,8 +7,9 @@ from datetime import timezone
 from datetime import datetime
 
 # Assuming models and database session setup are in these locations
-from .. import models # This should import UserReward and User
+from .. import models  # This should import UserReward and User
 from ..database import get_db
+from ..services.user_service import UserService
 
 router = APIRouter()
 
@@ -46,15 +47,17 @@ async def get_user_rewards(
     user_id: int = Path(..., title="The ID of the user to get rewards for", ge=1),
     page: int = Query(1, ge=1, description="Page number, 1-indexed"),
     page_size: int = Query(20, ge=1, le=100, description="Number of items per page"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_service: UserService = Depends(lambda db=Depends(get_db): UserService(db))
 ):
     """
     Retrieves a paginated list of rewards for a specific user.
     """
     # First, check if user exists (optional, but good practice for FK constraints)
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail=f"User with id {user_id} not found.")
+    try:
+        user_service.get_user_or_error(user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
     # Calculate offset
     offset = (page - 1) * page_size

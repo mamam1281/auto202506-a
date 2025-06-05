@@ -8,8 +8,9 @@ from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from .. import models # Assuming UserSegment model is here
-from ..database import SessionLocal # For DB session
+from .. import models  # Assuming UserSegment model is here
+from ..database import SessionLocal  # For DB session
+from ..services.user_service import UserService
 import logging # For logging
 
 logger = logging.getLogger(__name__)
@@ -35,6 +36,9 @@ def get_db():
     with SessionLocal() as db:
         yield db
 
+def get_user_service(db: Session = Depends(get_db)) -> UserService:
+    return UserService(db)
+
 class RecommendationResponse(BaseModel):
     user_id: int
     rfm_group: str | None # Can be None if user has no segment yet and we don't default
@@ -50,8 +54,14 @@ class RecommendationResponse(BaseModel):
 )
 async def get_user_recommendation(
     user_id: int = Path(..., title="The ID of the user to get recommendations for", ge=1),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_service: UserService = Depends(get_user_service)
 ):
+    try:
+        user_service.get_user_or_error(user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
     user_segment = db.query(models.UserSegment).filter(models.UserSegment.user_id == user_id).first()
 
     rfm_group = "Low" # Default if no segment found or segment has no rfm_group

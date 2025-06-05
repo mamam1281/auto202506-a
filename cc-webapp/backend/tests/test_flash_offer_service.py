@@ -82,10 +82,20 @@ class TestFlashOfferService(unittest.TestCase):
             self.flash_offer_service.create_flash_offer(self.user_id, self.content_id, FlashOfferTrigger.GAME_FAILURE)
         self.mock_db_session.add.assert_not_called()
 
-    def test_create_flash_offer_existing_active_offer(self):
-        self.mock_db_session.query(FlashOffer).filter(...).first.return_value = MagicMock(spec=FlashOffer) # Existing offer
-        with self.assertRaisesRegex(ValueError, "Active flash offer already exists"):
-            self.flash_offer_service.create_flash_offer(self.user_id, self.content_id, FlashOfferTrigger.GAME_FAILURE)
+    @patch('app.services.flash_offer_service.datetime')
+    def test_create_flash_offer_existing_active_offer(self, mock_datetime):
+        mock_datetime.utcnow.return_value = self.fixed_now
+        existing = MagicMock(spec=FlashOffer)
+        (self.mock_db_session.query.return_value
+            .filter.return_value
+            .with_for_update.return_value
+            .first.return_value) = existing
+        self.mock_db_session.query(AdultContent).filter(AdultContent.id == self.content_id).first.return_value = self.mock_content
+
+        response_item = self.flash_offer_service.create_flash_offer(self.user_id, self.content_id, FlashOfferTrigger.GAME_FAILURE)
+
+        self.assertIsNotNone(response_item)
+        self.assertEqual(existing.expires_at, self.fixed_now)
 
     def test_get_active_flash_offers_returns_active(self):
         mock_offer_db = FlashOffer(id=1, user_id=self.user_id, content_id=self.content_id, original_price=1000,

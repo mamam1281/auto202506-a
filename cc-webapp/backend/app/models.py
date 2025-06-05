@@ -47,9 +47,17 @@ class UserSegment(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), unique=True, index=True, nullable=False)
 
+    # Human readable name of the segment (e.g. "Whale", "Medium")
+    name = Column(String(50), nullable=True)
+
     rfm_group = Column(String, index=True, nullable=True) # e.g., Whale, Medium, Low
     risk_profile = Column(String, index=True, nullable=True) # e.g., High, Medium, Low (can be from other logic)
     streak_count = Column(Integer, default=0) # Example of another segmentation attribute
+
+    # Store raw scores used for RFM segmentation so that logic can be revisited later
+    recency_score = Column(Integer, default=0)
+    frequency_score = Column(Integer, default=0)
+    monetary_score = Column(Integer, default=0)
 
     last_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

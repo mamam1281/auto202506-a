@@ -161,7 +161,7 @@ def test_unlock_insufficient_segment(db_session: Session):
 def test_unlock_user_not_found(db_session: Session): # db_session fixture will clean tables
     response = client.get("/api/unlock?user_id=999") # Non-existent user
     assert response.status_code == 404, response.text
-    assert "User not found" in response.json()["detail"]
+    assert "존재하지 않는 사용자" in response.json()["detail"]
 
 
 def test_unlock_content_stage_not_found(db_session: Session):
