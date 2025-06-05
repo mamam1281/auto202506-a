@@ -369,3 +369,376 @@ def submit_quiz(response: QuizResponse, db: Session = Depends(get_db)):
 - User segment creation and retrieval logic has been centralized in `UserService`.
 - Routers must call `UserService.get_or_create_segment` instead of direct DB access.
 
+<!-- English translation below -->
+
+# Data Personalization (English Translation)
+
+## 2.1. Data Collection Overview 📊
+
+### User Data Sources
+
+#### 1. Mini-game Events 🎲
+- Play records from slots, rock-paper-scissors, roulette, etc.
+- Results (win/loss), coins/cyber tokens used, number of repetitions, etc.
+
+#### 2. Adult Content Unlock Records 🔓
+- Stage-wise unlock timestamps (stage, timestamp)
+- Amount of cyber tokens used as unlock triggers
+
+#### 3. User Action Logs 📝
+- All interactions: CLAIM_REWARD, VIEW_CONTENT, FAIL_GAME, BUY_ITEM, etc.
+- Especially important is the "Cyber Token Acquisition" item
+
+#### 4. Psychological Quizzes and Mini Surveys 🧠
+- Short surveys to measure risk propensity, preferences, reward responsiveness, etc.
+
+#### 5. Corporate Usage History 💻
+- Number of visits to Company A, dwell time, actions performed
+- Amount of cyber tokens rewarded
+
+#### 6. Cohort Metrics 📈
+- DAU, MAU, Churn Rate, Cohort-specific survival rates (D1/D7/D14/D30)
+
+## 2.2. RFM + Cyber Token Based User Segmentation
+### 2.2.1. Recency-Frequency-Monetary (RFM) Calculation
+#### Recency (R):
+- Days elapsed since the last action (game play, content unlock, A token acquisition, etc.)
+- SQL Example:
+```sql
+SELECT DATEDIFF(day, MAX(action_timestamp), CURRENT_DATE) 
+FROM user_actions 
+WHERE user_id = X;
+```
+
+#### Frequency (F):
+- Total number of actions in the last 30 days (especially "game plays" + "cyber token uses" + "visits to Company A")
+- SQL Example:
+```sql
+SELECT COUNT(*) 
+FROM user_actions 
+WHERE user_id = X 
+  AND action_timestamp >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY);
+```
+
+#### Monetary (M):
+- Actual amount spent in the last 30 days (total amount of cyber tokens used converted from cash purchases)
+- Or total amount of "cyber tokens acquired through Company A"
+- SQL Example:
+```sql
+-- Token usage based on cash payment
+SELECT SUM(metadata->>'spent_tokens')::INTEGER 
+FROM user_actions 
+WHERE user_id = X 
+  AND action_type = 'SPEND_CYBER_TOKENS'
+  AND action_timestamp >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY);
+
+-- Cumulative amount of tokens acquired from Company A
+SELECT SUM(metadata->>'earned_tokens')::INTEGER 
+FROM user_actions 
+WHERE user_id = X 
+  AND action_type = 'EARN_CYBER_TOKENS'
+  AND action_timestamp >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY);
+```
+
+### 2.2.2. Segment Definitions (Cyber Token Focused)
+#### Whale (Top Spenders)
+- R ≤ 2 days, F ≥ 30 times (mainly game/mission plays),
+- M ≥ 10,000 cyber tokens (including cash payments)
+- "Cyber Token Balance" ≥ 1,000 or more
+
+#### High Engaged (Regular Payers)
+- R ≤ 5 days, F ≥ 15 times,
+- M ≥ 2,000 cyber tokens
+- "Visits to Company A" ≥ 5 times/month
+
+#### Medium (Active Users)
+- R 6∼15 days, F 5∼14 times,
+- M 100∼1,999 cyber tokens
+- "Visits to Company A" 2∼4 times/month
+
+#### Low / At-risk (Needs Attention)
+- R > 15 days or F < 5 times,
+- M < 100 cyber tokens
+- "Visits to Company A" 0∼1 time/month
+
+> Note: "Visits to Company A" and "Cyber Token Acquisition" can be treated identically
+> However, it is also necessary to track how much "in-game consumption" was made through the tokens acquired from Company A.
+
+### 2.2.3. Implementation and Scheduling
+#### Batch Job (Nightly / Once a day)
+- user_actions → Retrieve data from the last 30 days to calculate RFM
+- Separately aggregate the "number of tokens acquired from Company A"
+- Update the user_segments table:
+```sql
+UPDATE user_segments
+SET rfm_group = CASE
+  WHEN r <= 2 AND f >= 30 AND m >= 10000 THEN 'Whale'
+  WHEN r <= 5 AND f >= 15 AND m >= 2000 THEN 'High Engaged'
+  WHEN r <= 15 AND f BETWEEN 5 AND 14 AND m BETWEEN 100 AND 1999 THEN 'Medium'
+  ELSE 'Low'
+END
+WHERE user_id = X;
+```
+
+- Update cyber token balance (Redis)
+```
+user:{id}:cyber_token_balance =
+Previous balance + Number of tokens acquired through A in this batch - Number of tokens used in this batch
+```
+
+#### Event Trigger (Real-time)
+- Every time tokens are acquired from Company A, immediately record EARN_CYBER_TOKENS in user_actions
+- Immediately increase Redis key (user:{id}:cyber_token_balance)
+- Instant push notification:
+```json
+{
+  "type": "NEW_TOKEN_ARRIVAL",
+  "user_id": 123,
+  "earned_tokens": 500,
+  "message": "You have acquired 500 cyber tokens from Company A! Use them in the game now."
+}
+```
+
+- Then, when the segment changes through the previously guided RFM work, "grade upgrade rewards" are paid.
+
+## 2.3. Cyber-Token Based Personalized Recommendation Engine
+### 2.3.1. Objective
+- To induce users to consume as much as possible of the "cyber tokens" they hold through personalization
+- To increase app inflow from Company A,
+- Recommend "additional missions to acquire tokens from A" or provide opportunities to use the tokens held
+- Strengthen the dopamine pathway: provide instant rewards + gradual upgrade plans
+
+### 2.3.2. Input Values
+- user_segments table (rfm_group, risk_profile)
+- Redis:
+  - user:{id}:streak_count (consecutive play count)
+  - user:{id}:cyber_token_balance (current cyber token balance)
+- Records of using Company A:
+  - Latest visit timestamp & event participation record
+  - "Number of A token acquisitions this month"
+
+### 2.3.3. Output Values
+- Recommended Reward Proposal
+  - "Increase the probability of big win on slots with the tokens you have now by 20%"
+  - "Unlock Stage 2 Adult Content by spinning the roulette one more time"
+  - "Acquire VIP badge by collecting just 300 more tokens at Company A"
+- Recommended Mission Proposal
+  - "Receive an additional 100 tokens just by logging in to Company A today"
+  - "Get 200 token reward + in-depth profile update by participating in the quiz"
+- Recommended Usage Window
+  - By analyzing the user's play pattern and the most recent visit to A,
+  → Indicate the "optimal time zone for the user to access the app" (e.g., 20:00~21:00)
+
+### 2.3.4. Algorithm Sketch (Pseudocode)
+```python
+def generate_recommendation(user_id):
+    # 1. Retrieve user segment
+    segment = db.query("SELECT rfm_group, risk_profile FROM user_segments WHERE user_id = %s", (user_id,))
+    # 2. Retrieve hot metrics from Redis
+    streak = redis.get(f"user:{user_id}:streak_count") or 0
+    token_balance = redis.get(f"user:{user_id}:cyber_token_balance") or 0
+    last_corporate_visit = db.query_last_corporate_visit(user_id)
+    corporate_token_count = db.query_monthly_earned_tokens(user_id)
+    
+    # 3. Basic settings for reward probability / recommendation strategy
+    if segment.rfm_group == "Whale":
+        base_reward_level = 3  # Recommend top-level rewards
+        recommended_game = "Roulette"  # Recommend high payout game
+    elif segment.rfm_group == "High Engaged":
+        base_reward_level = 2
+        recommended_game = "SlotMachine"
+    elif segment.rfm_group == "Medium":
+        base_reward_level = 1
+        recommended_game = "RPSGame"
+    else:  # 'Low' or At-risk
+        base_reward_level = 0
+        recommended_game = "Quiz"  # Quiz/mission to induce re-participation
+
+    # 4. Reward proposal based on token balance
+    proposals = []
+    if token_balance >= 500:
+        proposals.append({
+            "type": "HIGH_STAKE",
+            "message": f"You currently have {token_balance} tokens! Bet on the roulette once → Increase the probability of big win",
+            "game": "Roulette"
+        })
+    elif token_balance >= 200:
+        proposals.append({
+            "type": "MID_STAKE",
+            "message": f"You have {token_balance} tokens! Aim for stable rewards on the slot machine",
+            "game": "SlotMachine"
+        })
+    else:
+        # Induce to Company A if token balance is insufficient
+        proposals.append({
+            "type": "EARN_MORE",
+            "message": f"Your token balance is {token_balance}. Collect just 300 more tokens at Company A!",
+            "action": "VISIT_CORPORATE_SITE"
+        })
+
+    # 5. Reward adjustment based on risk profile
+    if segment.risk_profile == "High-Risk":
+        # Recommend high betting
+        proposals.append({
+            "type": "RISKY_PLAY",
+            "message": "You seem to enjoy risks! Aim for a big win with premium roulette → Increase the probability of big win by 15%",
+            "game": "Roulette"
+        })
+    elif segment.risk_profile == "Low-Risk":
+        # Small betting + stable rewards
+        proposals.append({
+            "type": "SAFE_PLAY",
+            "message": "If you want stable play, steadily accumulate rewards with small bets on the slot machine",
+            "game": "SlotMachine"
+        })
+
+    # 6. Proposal of missions from Company A
+    if time_since(last_corporate_visit) > timedelta(days=7):
+        proposals.append({
+            "type": "CORPORATE_ENGAGE",
+            "message": "It's been a week since your last visit to A! Just log in now to receive a reward of 100 tokens",
+            "action": "VISIT_CORPORATE_SITE"
+        })
+    elif corporate_token_count < 500:
+        proposals.append({
+            "type": "CORPORATE_MISSION",
+            "message": "You have acquired {corporate_token_count} tokens this month. Answer the quiz at Company A and receive 200 tokens!",
+            "action": "COMPLETE_CORPORATE_QUIZ"
+        })
+
+    # 7. Return the final recommendation object
+    return {
+        "recommended_game": recommended_game,
+        "proposals": proposals
+    }
+```
+
+#### Example Result (JSON):
+```json
+{
+  "recommended_game": "SlotMachine",
+  "proposals": [
+    {
+      "type": "MID_STAKE",
+      "message": "You have 250 tokens! Aim for stable rewards on the slot machine",
+      "game": "SlotMachine"
+    },
+    {
+      "type": "SAFE_PLAY",
+      "message": "If you want stable play, steadily accumulate rewards with small bets on the slot machine",
+      "game": "SlotMachine"
+    },
+    {
+      "type": "CORPORATE_MISSION",
+      "message": "You have acquired 150 tokens this month. Answer the quiz at Company A and receive 200 tokens!",
+      "action": "COMPLETE_CORPORATE_QUIZ"
+    }
+  ]
+}
+```
+
+> Note: The front-end will receive this recommendation result to
+> - Display it on the main dashboard "Today's Proposal" card
+> - Expose "Go to Game" button and "Go to Company A" button
+
+## 2.4. Psychometric Quiz & Micro Survey (F2P Psychological Utilization)
+### 2.4.1. Purpose
+- Identify user tendencies (Risk-Taker vs. Risk-Averse)
+- Establish personalized "token usage/reward preference" strategies
+- Obtain dopamine sensitivity indicators
+
+### 2.4.2. Implementation Details
+#### Front-end:
+- React Multi-Step Form (2-3 questions at a time)
+- Example questions:
+  - "Do you tend to bet large amounts for high payouts?" (1-5)
+  - "Do you try again when you lose?" (Yes/No)
+- On completion, call /api/quiz/submit
+
+#### Back-end Endpoint:
+```python
+@app.post("/api/quiz/submit")
+def submit_quiz(response: QuizResponse, db: Session = Depends(get_db)):
+    # QuizResponse: { user_id: int, answers: { q1: int, q2: int, q3: int } }
+    # Score weights: Risk-Taker questions +1, Risk-Averse questions -1
+    score = compute_risk_score(response.answers)
+    risk_profile = "High-Risk" if score >= 2 else "Low-Risk" if score <= -2 else "Moderate-Risk"
+    db.execute(
+        "UPDATE user_segments SET risk_profile = %s WHERE user_id = %s",
+        (risk_profile, response.user_id)
+    )
+    db.commit()
+    return {"status": "ok", "risk_profile": risk_profile}
+```
+
+#### Utilization of Results:
+- Token usage suggestions/betting recommendations vary based on risk profile
+- Example:
+  - High-Risk: "Challenge high-stakes roulette with 500 cyber tokens"
+  - Low-Risk: "Gradually accumulate by betting small amounts on the slot machine with 100 tokens"
+
+## 2.5. Analytics & Continuous Personalization
+### 2.5.1. Real-time Dashboard (Monitoring)
+#### Role:
+- Real-time monitoring of key KPIs on the admin dashboard
+- Daily/Monthly token acquisition amount (A vs. in-app)
+- Paying user ratio (Whale %), Churn Rate
+- Peak play times, user distribution (by RFM group)
+
+#### Tech Stack:
+- ClickHouse / Druid: OLAP aggregation
+- Grafana / Metabase: Visualization
+- Prometheus + Alertmanager: Infrastructure performance and error monitoring
+
+### 2.5.2. Periodic Recommendation Updates
+#### Scheduling:
+- Nightly Batch → RFM update → Recalculate recommendation weights
+- Real-time Trigger → Immediately update Redis when tokens are acquired from Company A → Push notification to the user + "Use now" suggestion
+
+#### Adaptive Learning Loop:
+- Track the ratio of users clicking on suggestions and leading to "actual actions"
+- Adjust recommendation algorithm parameters based on click-through rate, conversion rate (token usage → big win/unlock success)
+
+### 2.5.3. Predictive Models (Optional)
+#### Churn Prediction
+- Based on the number of visits to Company A, app play frequency, token balance, and RFM group in the last 7 days
+- Predict "likelihood of churn within 7 days" using XGBoost/LightGBM model
+- Push "special invitation" (A company event) to users with high churn probability
+
+#### LTV Prediction
+- Based on past 30 days' payment patterns, play behavior, adult content unlock history, etc.
+- Using machine learning model (XGBoost)
+- Provide VIP exclusive rewards to users predicted to have high LTV (Whale Candidate)
+
+## 2.6. Key Tables and Fields Summary
+| Table | Field (Key) | Description |
+| --- | --- | --- |
+| user_actions | id, user_id, action_type, metadata, action_timestamp | All action logs (games, events, token acquisition/usage, etc.) |
+| user_segments | user_id, rfm_group, risk_profile, streak_count, last_updated | RFM, psychological profile, consecutive play, last updated time |
+| user_rewards | id, user_id, reward_type, reward_value, awarded_at, trigger_action_id | All reward details such as coins/tokens/adult content unlock |
+| adult_content | id, stage, name, description, thumbnail_url, media_url, required_segment_level | Metadata of adult content by stage |
+| notifications | id, user_id, message, is_sent, created_at, sent_at | Notification records such as push/email |
+| Redis Keys | user:{id}:streak_count<br>user:{id}:last_action_ts<br>user:{id}:cyber_token_balance | Real-time caching metrics (winning streak, last action, token balance) |
+| site_visits | id, user_id, source, visit_timestamp | Visit history to Company A (use "corporate_site" in source) |
+| site_rewards | id, user_id, reward_type, reward_value, issued_at | Token records issued by Company A (linked with "EARN_CYBER_TOKENS" records) |
+
+## 2.7. Summary and Expected Effects
+- Increased retention for Company A ↑
+  - Designed with a structure of "cyber tokens obtainable only at A", not only for visiting Company A but also for receiving "high-value rewards in the app with tokens"
+  - In other words, forming a循環ループ leading from "app → A → app"
+- Increased in-app payment conversion rate ↑
+  - Induce visits to Company A if the cyber token balance is insufficient
+  - Induce charging through "cash payment" when tokens are exhausted (linked with in-game payment in One-Pass game)
+- Strengthened data-driven personalization
+  - Customized proposals combining RFM + token usage patterns + psychological profile information
+  - Continuously learn user behavior to automatically advanced recommendation strategies
+- Optimized dopamine loop
+  - Maximizing addiction through Variable-Ratio rewards (gacha, roulette) + instant feedback animations/sounds
+  - Psychological stimulation of "just one more step": Visualization of "50 tokens left → If you spin once more, probability UP"
+
+Thus, with "cyber tokens = rewards for using Company A" as the core axis,
+We can complete the F2P system integrated with "mobile game-like charging structure + data-based personalization + dopamine loop enhancement".
+## 2.8. Refactoring Guideline Integration
+- User segment creation and retrieval logic has been centralized in `UserService`.
+- Routers must call `UserService.get_or_create_segment` instead of direct DB access.
+

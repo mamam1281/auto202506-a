@@ -86,3 +86,94 @@ navigate("/dashboard");
 ### 3. 관계 중심 온보딩
 - CJ AI의 첫 인사로 "친밀감" 형성
 - 지속적인 대화 유도
+
+<!-- English translation below -->
+
+# Restricted Code Member Onboarding Guide (English Translation)
+
+## 10.1. Entry Flow (Invitation Code-Based Authentication) 🔐
+
+### Invitation Code Input Page (/)
+
+#### Screen Description
+- Instruction Text: 
+  - "This app is for restricted code members only. Please request an invitation code from the administrator."
+
+#### Input Fields and Validation
+- Input: "Invitation Code (6 digits)"
+- Button: "Next"
+
+#### Client-Side Validation
+```javascript
+if (!/^[A-Z0-9]{6}$/.test(code)) {
+  setError("Please enter a valid invitation code.");
+  return;
+}
+// There is no API to verify code validity on the server, so proceed to the next step directly on the client
+navigate("/login");
+```
+
+### Nickname/Password Setting Page (/login) 🔑
+
+#### Screen Description
+- Instruction Text: 
+  - "Have you entered the invitation code? Now, please set your nickname and password."
+
+#### Input Fields
+- Nickname (English/Numbers, 3~12 characters)
+- Password (8~20 characters, must include English and numbers)
+- Confirm Password
+
+#### Input Validation and API Call
+```javascript
+if (nickname.length < 3 || nickname.length > 12) {
+  setError("Nickname must be 3~12 characters long.");
+  return;
+}
+if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(password)) {
+  setError("Password must be 8~20 characters long and include both letters and numbers.");
+  return;
+}
+if (password !== confirmPassword) {
+  setError("Passwords do not match.");
+  return;
+}
+// API call
+const resp = await axios.post("/api/auth/login", {
+  invite_code: inviteCode,
+  nickname,
+  password
+});
+localStorage.setItem("access_token", resp.data.access_token);
+navigate("/dashboard");
+```
+
+### Initial Token Grant (Onboarding Reward) 🎁
+
+#### Membership Reward Mechanism
+- Upon first login, CJ AI automatically grants "Congratulations on joining, 200 tokens awarded"
+- Recorded in `/api/rewards`
+  - `reward_type`: "ONBOARD_BONUS"
+  - `reward_value`: "200_TOKEN"
+- Redis Update: `user:{id}:cyber_token_balance += 200`
+
+## 10.2. CJ AI Onboarding Script Examples 💬
+
+### First Greeting and Welcome Message
+- "Hello, {nickname}! Welcome to the code member exclusive app. As a sign-up bonus, we've given you 200 tokens! 🎁"
+- "Try spinning the slot with the tokens you have. The first spin is free!"
+- "If you have any questions while using the app, feel free to ask. I'm here to help. 😊"
+
+## 10.3. UI/UX Key Points 🌈
+
+### 1. Simplified Entry Flow
+- Invitation code input → Nickname/Password → Immediate access to dashboard
+- Optimized user experience by minimizing steps
+
+### 2. Enhanced Psychological Rewards
+- Immediate token grant upon 가입
+- Dopamine release induced by CJ AI welcome message
+
+### 3. Relationship-Centered Onboarding
+- "Familiarity" established through CJ AI's first greeting
+- Continuous conversation encouraged

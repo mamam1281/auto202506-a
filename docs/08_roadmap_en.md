@@ -49,3 +49,57 @@
   - VIP 랭킹
 - 실시간 채팅 시스템
 - 게시판 기능 초기 버전 개발
+
+<!-- English translation below -->
+
+# Project Roadmap (English Translation)
+
+## 8.1. Q2: Initial Stabilization 🚀
+
+### Invite Code System Enhancement 🔐
+- Advanced script for issuing Invite Codes for administrators
+- Strengthened validation logic for invite codes
+  - Expiration date implementation
+  - Duplicate prevention mechanism
+
+### CJ AI Communication Infrastructure 🤖
+- Basic keyword mapping and sentiment response ruleset configuration
+- Deployment of `/api/chat` endpoint
+- Seamless integration with the frontend
+
+### Cyber Token Integration Testing 💰
+- Verification of token acquisition flow from the main site to the app
+- Testing of token usage flow within the app
+- Scheduling of Redis > DB synchronization backup tasks
+
+## 8.2. Q3: Dopamine Loop Optimization 🎢
+
+### UI/UX Improvements 🎨
+- Advanced animations for slots, roulette, and gacha
+- "One More Time" toast repetition logic
+- Animation speed optimization
+
+### AI Model Enhancement 🧠
+- Integration of advanced CJ AI model
+- Testing of external LLM integration
+- Enhancement of sentiment analysis and natural language generation
+  - Application of prompt engineering
+
+### Event System Establishment 🎉
+- Automated weekend event creation scheduler
+- Development of push/banner display logic
+
+## 8.3. Q4: Advanced Analytics and Expansion 📊
+
+### Predictive Model Deployment 🔮
+- Development of LTV/Churn Prediction model
+- Training of predictive model based on XGBoost
+- Visualization of analytics dashboard for administrators
+
+### Community Feature Prototype 🤝
+- Leaderboard improvements
+  - Friend invitation rankings
+  - Weekly rankings
+  - VIP rankings
+- Real-time chat system
+- Initial version development of bulletin board feature

@@ -44,3 +44,50 @@
 ## 기록 및 관리
 - 각 단계별 PR 분리, 영향받는 서비스/라우터/테스트 목록 및 테스트 결과 상세 기록
 - 통합 가이드라인 및 변경 이력 docs/CC_backend_refactor_guideline_ko.md에 지속 반영
+
+# Casino-Club F2P Backend Standardization/Refactoring Guideline (2025)
+
+## Overview
+- This guideline defines the step-by-step standardization, refactoring, testing, and deployment automation process for the Casino-Club (CC) F2P web app backend.
+- All changes must strictly adhere to the design documents such as docs/01_architecture_en.md, domain responsibilities, and data flow standards.
+
+## Step-by-Step Plan
+
+### Phase 1: UserSegment and UserService Integration Refactoring
+- Implement consistent user/segment access methods in UserService, such as get_user_or_none and get_or_create_segment.
+- Unify usage of these methods across existing services and test code.
+- Ensure main test cases (test_user_segments.py, test_rewards.py) pass successfully.
+- Summarize technical documentation and prepare stepwise refactoring/integration criteria and checklists.
+
+### Phase 2: Domain Service Separation and Integration
+- Clarify responsibilities for each domain service, such as adult content, flash offers, rewards, and notifications.
+- Remove redundant/unnecessary logic and apply the single responsibility principle to each service.
+- Write unit tests for each service and add integration tests.
+- Record detailed lists of affected services/routers/tests and document all changes.
+
+### Phase 3: Test and Data Migration Automation
+- Automate data migration using Alembic.
+- Measure test coverage and systematize regression testing.
+- Record main test pass rates, failure cases, and affected modules in detail.
+
+### Phase 4: API Specification/Frontend Integration/CI Pipeline
+- Update API specifications such as openapi.yaml.
+- Provide frontend integration samples and documentation.
+- Build a CI/CD pipeline and automate deployment.
+- Separate PRs for each phase and document affected modules and test results in detail.
+
+## Checklist and Validation Criteria
+- Refer to docs/013_checklist_prompt_ko.md and each domain design document (02~05).
+- All changes must comply with design/architecture/domain responsibilities, and must pass tests and regression validation.
+- After completing each phase, proceed to the next phase, and conduct PRs and documentation in parallel.
+
+## Reference Documents
+- docs/01_architecture_en.md (System Architecture)
+- docs/013_checklist_prompt_ko.md (Checklist)
+- docs/02_data_personalization_en.md, 03_emotion_feedback_en.md, 04_adult_rewards_en.md, 05_corporate_retention_en.md (Domain Design)
+- cc-webapp/backend/app/services/user_service.py (UserService)
+- cc-webapp/backend/tests/ (Tests)
+
+## Record and Management
+- Separate PRs for each phase, and record detailed lists of affected services/routers/tests and test results.
+- Continuously update the integrated guideline and change history in docs/CC_backend_refactor_guideline_ko.md.

@@ -102,3 +102,109 @@
 - "앱에서 확인되지 않은 토큰 150개가 본사에 남아있습니다. 지금 확인하세요!"
 - CJ AI: "본사 사이트에서 '남은 토큰' 다시 확인하고 앱으로 돌아오세요!"
 
+<!-- English translation below -->
+
+# User Journey: From Entry to Engagement (English Translation)
+
+## 6.1. Entry Point 🚪
+
+### Access Restrictions
+- **For pre-authenticated code members only**
+- Access granted only to selected users via invitation codes
+
+### Login Method
+- Nickname + Password 
+- Complete abolition of social login
+
+### Entry Channels 🔍
+
+#### 1. Social Media Ads
+- Target: High-income MZ generation
+- Strict invitation code-based access
+
+#### 2. Friend Invitation Links
+- Invitation codes issued by existing code members
+- Limited and controlled dissemination
+
+### Entry Flowchart
+```
+[Landing Page] → [Enter Invitation Code] → [Register Nickname/Password] → [Enter App (Main Dashboard)]
+```
+
+## 6.2. Journey Phases 🚀
+
+### 1. Anticipation 🌟
+
+#### Entry Flow
+- **User:** Clicks on the invitation link
+- **App:** Displays code entry screen
+  - "Invitation code is required"
+- **User:** Enters valid code and registers nickname/password
+
+#### CJ AI Welcome Message
+- "Welcome, {nickname}! You have {initial_tokens} cyber tokens today."
+
+#### Key Emotional Expectations
+- Sense of belonging (Invitation code → VIP exclusive)
+- Anticipation ("What fun will the tokens bring?")
+
+### 2. Challenge 🎲
+
+#### Mini-game Stages
+- Slot Machine (3 reels, Spin button)
+- Roulette (spin animation)
+- RPS (Rock-Paper-Scissors)
+
+#### Emotional Feedback (Dopamine Loop)
+- CJ AI real-time reactions
+  - GAME_WIN: "Congratulations, {nickname}! You've earned {earned_tokens} tokens! 🎉"
+  - GAME_FAIL: "Don't worry! You'll succeed next time. The streak will increase the odds!"
+
+#### Cyber Token Usage
+- Automatic token deduction per play
+  - Slots: 10 tokens
+  - Roulette: 20 tokens
+- Partial token refund event on failure
+
+### 3. Achievement 🏆
+
+#### Content Unlock by Stage
+- **Stage 1 (200 tokens):** Blurry teaser
+  - CJ AI: "Stage 1 unlocked! Aim for Stage 2."
+
+- **Stage 2 (500 tokens):** Partial exposure
+  - CJ AI: "Wow, {nickname}! Are you ready to be surprised? 🔥"
+
+- **Stage 3 (1,000 tokens):** Full disclosure
+  - CJ AI: "Congratulations! Final unlock complete! Enjoy VIP exclusive content. 🎬"
+
+#### Social/Competitive Triggers
+- Leaderboard: "Current rank of {nickname}: TOP {rank} (Whale group)"
+- CJ AI: "Bonus of +150 tokens for top 1% achievers!"
+
+### 4. Retention & Loop 🔁
+
+#### Daily Check-in
+- CJ AI: "You have 50 cyber tokens waiting for you today! Spin now!"
+- App push: "Your daily bonus will expire! Log in by 12 o'clock to receive it."
+
+#### Limited Events
+- Headquarters site linked events
+  - "Additional 200 tokens just for logging into the headquarters site!"
+- CJ AI: "Visit the headquarters site now to recharge tokens. Limited 2-hour event! ⏰"
+
+#### Weekly Challenge Missions
+- "This week's mission: Play roulette 5 times → Discount unlock coupon for Stage 2"
+- CJ AI: "Completing this mission will reduce the next unlock cost to 400 tokens. Give it a try!"
+
+### 5. Re-Engagement 🔄
+
+#### Long-term Inactivity Response
+- After 7 days of inactivity
+  - CJ AI: "{nickname}, we've missed you. Come back and receive 300 tokens!"
+  - Push notification: "We miss you! Come back now for 300 Cyber Tokens!"
+
+#### Headquarters Site Reminder
+- "150 tokens remain unverified in the app at the headquarters. Check now!"
+- CJ AI: "Check 'remaining tokens' again on the headquarters site and return to the app!"
+

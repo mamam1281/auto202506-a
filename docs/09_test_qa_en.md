@@ -75,3 +75,83 @@
 #### 기대 결과:
 - 감정(emotion) 및 메시지 일관성 검증
 - user_actions에 정상 기록
+
+<!-- English translation below -->
+
+# Test & Quality Assurance Guide (English Translation)
+
+## 9.1. Key Test Scenarios 🎯
+
+### 1. Invite Code & Authentication 🔒
+
+#### Test Cases:
+- **Valid Invite Code Entry**
+  - Verify successful login after nickname/password registration
+- **Invalid Invite Code Entry**
+  - Validate error message display
+- **Duplicate/Weak Password Handling**
+  - Check for errors with duplicate nicknames
+  - Restrictions on weak passwords
+
+#### Expected Results:
+- Valid code: 200 OK + JWT issued → Redirect to /dashboard
+- Invalid code: 400 Bad Request + error message
+- Duplicate nickname: 409 Conflict
+
+### 2. Cyber Token Flow 💰
+
+#### Test Cases:
+- **Token Acquisition Scenario**
+  - Head office site login → Reflect Redis token +100
+  - Slot play (GAME_WIN) → Increase token_delta
+  - Roulette play (GAME_FAIL) → Decrease token_delta
+
+- **Insufficient Token Situation**
+  - Check 402 Insufficient when calling `/api/unlock?desired_stage=1`
+
+#### Expected Results:
+- Accurate aggregation of Redis balance
+- Verification of HTTP response codes and messages
+- Normal recording in DB
+
+### 3. Adult Content Unlock 🔓
+
+#### Test Cases:
+- **Segmented Unlock Test**
+  - "Medium" group: Stage 2 unlock allowed
+  - "Low" group: Stage 2 unlock denied (403 Forbidden)
+  - "Whale" group: Stage 3 unlock verification
+
+- **Flash Offer Scenario**
+  - Check discount price application for Stage 1
+
+#### Expected Results:
+- Normal operation of 권한/레벨 체크 (authority/level check)
+- Verification of Flash Offer price discount
+
+### 4. Gacha Ticket 🎲
+
+#### Test Cases:
+- **Token-based Gacha**
+  - 50 or more tokens: 200 OK + "ticket" or "coin" returned
+  - Less than 50 tokens: 402 Insufficient
+
+- **Result Recording**
+  - Ticket acquisition: reward_type="CONTENT_TICKET"
+  - Coin acquisition: reward_type="COIN"
+
+#### Expected Results:
+- Verification of probability distribution (5%, 20%, 50%, 25%)
+- Normal creation of DB records
+
+### 5. CJ AI Chat 🤖
+
+#### Test Cases:
+- **Context Recognition Test**
+  - "Insufficient tokens" → Recommend head office site, emotion="concern"
+  - "Tell me the probability" → Respond with probability information, emotion="informative"
+  - Check default response in case of failure
+
+#### Expected Results:
+- Verification of consistency in emotion and message
+- Normal recording in user_actions

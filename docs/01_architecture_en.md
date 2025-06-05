@@ -309,3 +309,317 @@ bash
 이 모두를 하나의 통합 시스템으로 설계했습니다.
 
 다음으로는 데이터 파이프라인, 감정 피드백, 어덜트 리워드, 기업 연계(크로스 플랫폼) 문서를 차례대로 개편해 나갑니다.
+
+<!-- English translation below -->
+
+# System Architecture (English Translation)
+
+## 1.1. Project Overview 🚀
+
+### Project Name: CC (Casino-Club)
+
+**Objective:** 
+To expand the established web app into a mobile game-like F2P ecosystem,
+introducing behavioral addiction triggers (variable-ratio rewards, limited-time events, social proof) and 
+dopamine loops (immediate rewards + visual and auditory feedback) mechanisms to
+maximize user engagement and monetization conversion rates.
+
+### Core Goals 🎯
+
+#### 1. Behavioral Addiction Triggering (Strengthening Dopamine Loops)
+
+- "Probability-based reward" systems such as slots, roulette, and gacha
+- Reward distribution based on Variable-Ratio Schedule
+- Creating urgency with Flash Sales / Limited-Time Offers
+- Progression Gate / Battle-Pass structure (Daily/Weekly missions)
+
+#### 2. Emotion-Driven Feedback
+
+- Multi-sensory feedback (visual effects, sound) on win/loss
+- AI character dialogues → immediate "encouragement/praise/reprimand"
+- Emotion-based mission recommendations (Depression→Healing rewards, Willpower→High-risk rewards)
+
+#### 3. Freemium Economy & Monetization
+
+**Two types of currency:**
+- Regular Coins (Free Coins): Earned through gameplay
+- Premium Gems: Actual purchases/Event rewards
+
+**Other features:**
+- Gacha system: "Lucky Boxes" obtainable with Premium Gems
+- Battle-Pass / VIP tiers: Subscription-based paid tiers (monthly)
+
+#### 4. Adult-Content Unlocking
+
+- Progressing through "Adult Content Stages" upon tier advancement or gacha/mission success
+- Partial disclosure (Teaser) → Partial exposure → Full content method
+- "Exclusive VIP Content" for high-spending users (Whales)
+
+#### 5. Data-Driven Personalization
+
+- RFM analysis + LTV prediction → Customer segments (Whale/VIP, Engaged, At-Risk)
+- Adjusting recommended reward probabilities and event timings based on psychological profiles (quizzes/surveys)
+- Real-time behavior logs (Redis, Kafka) → Personalization in the next interaction
+
+## 1.2. High-Level Architecture Diagram
+bash
+복사
+편집
++---------------------------------------------------+
+|                    Frontend                       |
+|  (React.js + Next.js + Tailwind CSS + Framer)     |
+|  • Home Dashboard / Emotion Feed                   |
+|  • SlotMachine, RPS, Roulette, Gacha               |
+|  • Battle-Pass / VIP Page / Shop                   |
+|  • AdultContent Viewer (Teaser → Full Reveal)      |
+|  • Daily/Weekly Mission Hub                        |
+|  • Social/Leaderboard view                            |
+|  • Promotion Pop-ups (Flash Sale, Limited Offer)   |
++---------------------------------------------------+
+                       ↓ (HTTP/WebSocket)
++---------------------------------------------------+
+|                    Backend                        |
+|               (FastAPI + Python)                   |
+|  • Auth & JWT (Login/Logout)                      |
+|  • API endpoints:                                  |
+|      – /api/actions          (Trigger event logging)  |
+|      – /api/rewards          (Reward history inquiry)     |
+|      – /api/feedback         (Emotion messages)          |
+|      – /api/unlock           (Adult content unlock)   |
+|      – /api/user-segments    (Segmented RFM + Psychological)     |
+|      – /api/shop/buy         (Premium currency transactions)   |
+|      – /api/gacha/spin       (Gacha logic)            |
+|      – /api/battlepass       (BattlePass status/rewards)    |
+|      – /api/notification     (Push/SSE notifications)        |
+|  • In-Memory Caching (Redis)                        |
+|      – user:{id}:streak_count                       |
+|      – user:{id}:last_action_ts                     |
+|      – user:{id}:pending_gems                       |
+|  • Event Streaming (Kafka)                           |
+|      – Real-time behavior streaming on user_actions topic         |
+|  • Scheduler (Celery + APScheduler)                  |
+|      – Daily RFM / LTV calculation                           |
+|      – BattlePass reward distribution / Coupon expiration check           |
+|      – Weekly / Monthly retention campaign triggers                |
++---------------------------------------------------+
+                       ↓ (SQLAlchemy ORM)
++---------------------------------------------------+
+|              PostgreSQL  /  Redis                   |
+|  Tables:                                           |
+|   • users                                          |
+|   • user_actions                                   |
+|   • user_segments (RFM + psychometric)             |
+|   • user_rewards                                   |
+|   • adult_content                                  |
+|   • battlepass_status                              |
+|   • gacha_log                                      |
+|   • shop_transactions                              |
+|   • notifications                                  |
+|   • site_visits                                    |
++---------------------------------------------------+
+## 1.3. Component Breakdown
+### 1.3.1. Frontend (React.js + Next.js)
+#### Home Dashboard (Emotion-Driven)
+
+- **EmotionPromptComponent:** "How do you feel today?" popup on login → /api/feedback call
+- **TodayMissionHub:** Recommended missions based on RFM segment + emotional state
+  - Example: "High-Risk & Stress → Play slots 3 times in a row today to receive 1 Premium Gem"
+- **BattlePassProgress:** Current BattlePass tier, remaining time, reward preview
+- **LimitedTimeOfferBanner:** Displays remaining time + Purchase button (using premium currency)
+
+#### Mini-Games Collection
+
+- **SlotMachineComponent**
+  - Variable-Ratio Reward (Adjustment formula: Base probability 5% + streak bonus)
+  - On win: /api/actions POST + /api/rewards GET → Show reward + /api/feedback
+  - On loss: /api/actions POST + /api/feedback
+  - Animation: Shining reel animation + Sound effects
+
+- **RPSGameComponent (Rock-Paper-Scissors)**
+  - Choose between Multi/AI matching
+  - Win/Loss → /api/actions, /api/feedback, Reward logic
+  - Multi-sensory feedback (Vibration, Sound, Screen shake)
+
+- **RouletteComponent**
+  - Wheel spin animation, Random reward segment designation
+  - "Hot" / "Cold" segment display (Probability visualization)
+  - Increased premium gem probability on win
+
+- **Gacha System (Lucky Box)**
+  - **GachaSpinComponent**
+    - Check the number of premium gems the user has
+    - On clicking Spin button, call /api/gacha/spin
+    - Probability distribution based on Loot Table:
+      - Social Proof: Display "X people spun today"
+      - Tiered Drop Rate provision (e.g., Stage 3 Adult Content 1%)
+    - Spin result animation → Provide rewards/clues
+
+#### Shop & BattlePass
+
+- **ShopComponent**
+  - Premium gem top-up (purchase) page
+  - Limited packages (e.g., 100 Gems + 10 Free Spins)
+  - Flash Sale / Time-Limited pop-ups
+
+- **BattlePassComponent**
+  - Distinction between free track + paid track
+  - Level-up conditions: Game play experience (Play XP) or Premium gem usage
+  - Tiered reward preview (Free Coins, Premium Gems, Exclusive Adult Content)
+
+#### Adult-Content Viewer
+
+- **AdultContentStageComponent**
+  - Stage 1 (Teaser): Blurry image / Short clip
+  - Stage 2 (Partial Reveal): Partial removal of upper/lower clothing
+  - Stage 3 (Full Reveal): Complete high-quality adult assets
+- **Unlock Logic:**
+  - Current stage → UI within Story Flow via /api/unlock call
+  - UI: AI character says "Congratulations! Stage 2 is now open. Check it out."
+  - "VIP Exclusive Scene" for high-spending segment (Whales)
+
+#### Notification & Social Features
+
+- **LeaderboardComponent:**
+  - Daily/Weekly Top player rankings
+  - Friend invitation code / Share button
+
+- **NotificationBanner:**
+  - Real-time server push via WebSocket / SSE → "Friend invitation reward acquired"
+  - "Free BattlePass level-up available today" pop-up
+
+#### UI/UX Common
+
+- Tailwind CSS + Framer Motion (Animations)
+- Responsive: Desktop (3 columns) / Mobile (single scroll)
+- Accessibility: ARIA roles, Keyboard navigation
+
+#### Sound Effects:
+
+- Victory: victory.mp3
+- Defeat: failure.mp3
+- Reward: reward.mp3
+- Spin: spin.mp3
+
+### 1.3.2. Backend (FastAPI + Python)
+#### Authentication & Authorization
+
+- JWT-based authentication (Email/Password + OAuth option)
+- Age Verification: Mandatory verification for adult content access
+- 2FA (Optional): Additional security when upgrading VIP tier
+
+#### API Modules
+
+- **User Module (/api/users)**
+  - POST /api/users/signup (Nickname, Email, Password)
+  - POST /api/users/login
+  - POST /api/users/verify-age (Age verification)
+  - GET /api/users/{id}/profile (Points, Tier, BattlePass level, etc.)
+
+- **Action Module (/api/actions)**
+  - POST: { user_id, action_type, value?, metadata? }
+  - Example: action_type = "SLOT_SPIN", value = coins_spent
+  - DB write → Redis update (streak_count, last_action_ts) → Kafka streaming
+
+- **Reward Module (/api/users/{id}/rewards)**
+  - GET: Returns reward history by user (Filter: type, period)
+  - Internal logic: calculateReward(streak_count, user_segment, event_type)
+
+- **Emotion Feedback Module (/api/feedback)**
+  - POST: { user_id, action_type } → Returns immediate feedback message + animation key value
+  - Extension: "Emotion toast" provided even on BattlePass level-up, and purchases
+
+- **Adult Content Module (/api/unlock)**
+  - GET: { user_id } → Returns current stage + conditions for the next stage
+  - POST: { user_id, purchase_type? } (Unlock using premium currency)
+  - Internal: attempt_content_unlock (Review → DB record)
+
+- **Shop & Gacha Module (/api/shop, /api/gacha)**
+  - POST /api/shop/buy: { user_id, item_id, quantity, payment_method }
+  - POST /api/gacha/spin: { user_id, spins = 1~10 } → Returns: reward_detail
+  - Gacha probability table saved in RDB → Periodic A/B testing
+
+- **BattlePass Module (/api/battlepass)**
+  - GET /api/battlepass/status: { user_id } → Current level, reward lock status
+  - POST /api/battlepass/claim: { user_id, tier_id } → Reward distribution
+
+- **Segmentation & Personalization (/api/user-segments)**
+  - GET { user_id } → Returns RFM group, LTV predicted value, recommended reward probability, recommended time zone
+  - Internal: compute_rfm_and_update_segments (APScheduler)
+
+- **Notification Module (/api/notification)**
+  - POST { user_id, message, type, schedule? } → Saved to queue
+  - Celery Worker: Sends Push/SSE/Email at scheduled time
+
+- **Analytics & Reporting (/api/analytics)**
+  - GET /api/analytics/retention: Retention report (D1, D7, D30)
+  - GET /api/analytics/spend: Spending trend report (Daily, Weekly)
+
+#### Real-Time Data Processing
+
+- **Redis:**
+  - user:{id}:streak_count (int)
+  - user:{id}:last_action_ts (timestamp)
+  - user:{id}:pending_gems (int)
+  - battlepass:{user_id}:xp (int)
+
+- **Kafka:**
+  - Topic user_actions → Event streaming such as "SLOT_SPIN", "GACHA_SPIN", "PURCHASE" 
+  - Aggregation to Analytics services (ClickHouse, Druid)
+
+- **Celery + APScheduler:**
+  - Daily 02:00 UTC: Executes compute_rfm_and_update_segments (RFM recalculation)
+  - Hourly: "Inactive users → Reminder push (DAILY_INACTIVE)"
+  - Weekly: Sends "Bonus XP coupon" to BattlePass underachievers
+  - Event-based: Immediate "Level-Up Reward" Push when a user reaches a specific rank
+
+### 1.3.3. Database (PostgreSQL)
+- **users**
+  - id (PK), nickname, email, password_hash, created_at
+  - vip_tier (int), battlepass_level (int), total_spent (int)
+
+- **user_actions**
+  - id (PK), user_id (FK), action_type (string), value (float), timestamp (datetime)
+  - Example: ("SLOT_SPIN", 100 coins), ("GACHA_SPIN", 1 gem)
+
+- **user_segments**
+  - id (PK), user_id (FK, unique), rfm_group (string: Whale/Medium/Low),
+  - ltv_score (float), risk_profile (string: High/Moderate/Low)
+  - last_updated (datetime)
+
+- **user_rewards**
+  - id (PK), user_id (FK), reward_type (string: COIN, GEM, CONTENT_UNLOCK, XP),
+  - reward_value (string/JSON: amount or content_id), awarded_at (datetime), trigger_action_id (FK optional)
+
+- **adult_content**
+  - id (PK), stage (int: 1~3), name (string), description,
+  - thumbnail_url, media_url, required_segment_level (int), premium_only (boolean)
+
+- **gacha_log**
+  - id (PK), user_id, spin_count, result_type, result_value, timestamp
+
+- **shop_transactions**
+  - id (PK), user_id, item_id, quantity, price_in_gems, payment_method, timestamp
+
+- **battlepass_status**
+  - id (PK), user_id, current_level (int), xp_accumulated (int), last_claimed_tier (int)
+
+- **notifications**
+  - id (PK), user_id, message, is_sent (bool), send_time (datetime), created_at (datetime)
+
+- **site_visits**
+  - id (PK), user_id, source (string), visit_timestamp (datetime)
+
+
+
+# 01_architecture_en.md (Revised Summary)
+위 설계에서는 행위중독 트리거와 모바일게임식 과금 메커니즘을 핵심 축으로 삼아,
+
+- F2P 이코노미(Free Coins vs. Premium Gems)
+- 가챠/배틀패스/한정 이벤트
+- 도파민 루프 강화용 심리적 보상(멀티센서리, AI 대사)
+- 뛰어난 데이터 개인화(RFM + LTV + 심리 프로파일링)
+- 성인 콘텐츠 언락을 자연스러운 Progression으로 확장
+
+이 모두를 하나의 통합 시스템으로 설계했습니다.
+
+다음으로는 데이터 파이프라인, 감정 피드백, 어덜트 리워드, 기업 연계(크로스 플랫폼) 문서를 차례대로 개편해 나갑니다.

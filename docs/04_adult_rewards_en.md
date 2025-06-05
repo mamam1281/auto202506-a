@@ -289,3 +289,227 @@ Front-End UX:
 앱 내 소비(콘텐츠 언락 & 가챠) → 본사 사이트 재방문 → 토큰 획득 → 앱 내 소비 …
 
 이러한 순환 구조를 통해 본사 사이트 리텐션 상승과 앱 내 과금 전환율 극대화를 동시에 달성
+
+# 🔞 Adult Content & Token-Driven Reward System (English Translation)
+
+## 4.1. Overview 🎯
+
+### Objective
+
+Use adult content unlock as a psychological reward to stimulate dopamine release.
+
+Set cyber tokens as F2P currency that can only be obtained on the corporate site.
+
+Unlock adult content by spending cyber tokens in in-app games (slots/roulette/gacha).
+
+If tokens are insufficient, guide users to the corporate site → strengthen the retention loop between "corporate site ↔ app".
+
+### Key Elements 🌟
+
+#### Stages (Stepwise Unlock)
+
+- **Stage 1 (Teaser):**
+  - Blurred image
+  - Consumes 200 cyber tokens
+- **Stage 2 (Partial Reveal):**
+  - Partial nudity (upper body)
+  - Consumes 500 cyber tokens
+- **Stage 3 (Full Reveal):**
+  - Full adult content unlock
+  - Consumes 1,000 cyber tokens
+
+#### Variable-Ratio Reward
+
+- Low probability (0.5%–2%) to obtain an "adult content unlock ticket" from gacha pulls
+- When a ticket is obtained, attempt to unlock a specific stage (different probabilities for Stage 1~3)
+
+#### Limited-Time Offers
+
+- Weekend event: "This weekend, 24-hour limited → Stage 1 unlock costs 150 tokens"
+- Induce urgency (Scarcity)
+
+#### Integration Flow
+
+```
+User (App) ──> Slot/Roulette/Gacha ─(Token Spend)─> Unlock Attempt ─> Reward on Success
+                                               │
+                                               └─ On Failure: "Try Again" → Small token spend
+```
+
+## 4.2. Data Model & DB Tables
+
+### 4.2.1. adult_content Table (PostgreSQL)
+
+| Column                 | Type          | Description                                                      |
+|------------------------|---------------|------------------------------------------------------------------|
+| id                     | SERIAL (PK)   | Unique ID                                                        |
+| stage                  | INTEGER       | Stage number (1, 2, 3)                                           |
+| name                   | VARCHAR(100)  | e.g., "Stage 1: Teaser"                                          |
+| description            | VARCHAR(255)  | Description per stage                                            |
+| thumbnail_url          | VARCHAR(255)  | Blurred thumbnail URL                                            |
+| media_url              | VARCHAR(255)  | Full-resolution image/video URL                                  |
+| required_segment_level | INTEGER       | Minimum segment level required (Whale=3, High Engaged=2, Medium=1)|
+| base_token_cost        | INTEGER       | Base token cost (Stage 1=200, Stage 2=500, Stage 3=1000)         |
+| flash_offer_cost       | INTEGER       | Token cost for limited event (optional)                          |
+
+### 4.2.2. user_rewards Table
+
+| Column            | Type          | Description                                                      |
+|-------------------|---------------|------------------------------------------------------------------|
+| id                | SERIAL (PK)   | Unique ID                                                        |
+| user_id           | INTEGER       | FK: users.id                                                     |
+| reward_type       | VARCHAR(50)   | "CONTENT_UNLOCK", "TOKEN_TICKET", "COIN", "BADGE", etc.         |
+| reward_value      | VARCHAR(255)  | e.g., "Stage1", "TicketStage2", "50_COIN"                      |
+| awarded_at        | TIMESTAMP     | Time awarded                                                     |
+| trigger_action_id | INTEGER (Nullable) | Linked user_actions.id for unlock attempt (optional)         |
+
+## 4.3. Unlock Logic (FastAPI)
+
+### 4.3.1. Basic Unlock Endpoint
+
+```python
+from fastapi import FastAPI, HTTPException, Depends
+from sqlalchemy.orm import Session
+from .database import get_db, get_redis
+from .models import User, AdultContent, UserReward
+from datetime import datetime
+
+app = FastAPI()
+
+@app.post("/api/unlock", response_model=dict)
+def unlock_adult_content(user_id: int, desired_stage: int, db=Depends(get_db), redis=Depends(get_redis)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # 1. 요구되는 세그먼트 레벨 확인
+    content = db.query(AdultContent).filter(AdultContent.stage == desired_stage).first()
+    if not content:
+        raise HTTPException(status_code=404, detail="Content stage not found")
+
+    user_segment = user.segment.rfm_group
+    seg_level_map = {"Low":1, "Medium":2, "High Engaged":2, "Whale":3}
+    user_level = seg_level_map.get(user_segment, 0)
+    if user_level < content.required_segment_level:
+        raise HTTPException(status_code=403, detail="Segment level too low")
+
+    # 2. 토큰 잔고 확인
+    token_balance = int(redis.get(f"user:{user_id}:cyber_token_balance") or 0)
+    cost = content.base_token_cost
+    # Flash Offer 적용 여부(파라미터 추가 가능)
+    # cost = content.flash_offer_cost if is_flash_offer_active(desired_stage) else cost
+
+    if token_balance < cost:
+        raise HTTPException(status_code=402, detail="Insufficient cyber tokens")
+
+    # 3. 토큰 차감
+    redis.decrby(f"user:{user_id}:cyber_token_balance", cost)
+
+    # 4. 언락 Reward 기록
+    new_reward = UserReward(
+      user_id=user_id,
+      reward_type="CONTENT_UNLOCK",
+      reward_value=f"Stage{desired_stage}",
+      awarded_at=datetime.utcnow(),
+      trigger_action_id=None
+    )
+    db.add(new_reward)
+    db.commit()
+
+    # 5. 응답
+    return {
+      "stage": desired_stage,
+      "media_url": content.media_url,
+      "remaining_tokens": int(redis.get(f"user:{user_id}:cyber_token_balance")),
+      "message": f"Stage {desired_stage} 언락 성공! 남은 토큰: {int(redis.get(f'user:{user_id}:cyber_token_balance'))}"
+    }
+```
+
+Key changes:
+
+- Client specifies the stage to unlock via the desired_stage parameter (1, 2, 3)
+- Check segment level
+- Check and deduct cyber token balance
+- If tokens are insufficient, return HTTP 402 error (guide to in-app purchase or corporate site)
+
+## 4.4. Gacha / Ticket 시스템
+
+### 4.4.1. Gacha Pull 로직 (/api/gacha)
+
+```python
+from fastapi import APIRouter, Depends, HTTPException
+from .database import get_db, get_redis
+from .models import User, UserReward
+import random
+from datetime import datetime
+
+router = APIRouter()
+
+# 가챠 확률 테이블 (예시)
+gacha_table = [
+    {"weight": 5,  "result": {"type":"CONTENT_TICKET","stage":3}},
+    {"weight": 20, "result": {"type":"CONTENT_TICKET","stage":2}},
+    {"weight": 50, "result": {"type":"CONTENT_TICKET","stage":1}},
+    {"weight": 25, "result": {"type":"COIN","amount":100}}
+]
+
+@router.post("/api/gacha", response_model=dict)
+def spin_gacha(user_id: int, db=Depends(get_db), redis=Depends(get_redis)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # 1. 토큰 차감(예: 가챠 50토큰)
+    token_balance = int(redis.get(f"user:{user_id}:cyber_token_balance") or 0)
+    if token_balance < 50:
+        raise HTTPException(status_code=402, detail="Insufficient cyber tokens for gacha")
+
+    redis.decrby(f"user:{user_id}:cyber_token_balance", 50)
+
+    # 2. 가챠 확률 랜덤 선택
+    total_weight = sum(entry["weight"] for entry in gacha_table)
+    rand = random.uniform(0, total_weight)
+    for entry in gacha_table:
+        if rand < entry["weight"]:
+            result = entry["result"]
+            break
+        rand -= entry["weight"]
+
+    # 3. 결과 처리
+    if result["type"] == "CONTENT_TICKET":
+        # 티켓 보상 기록 (stage 별 티켓)
+        new_reward = UserReward(
+            user_id=user_id,
+            reward_type="CONTENT_TICKET",
+            reward_value=f"TicketStage{result['stage']}",
+            awarded_at=datetime.utcnow(),
+            trigger_action_id=None
+        )
+        db.add(new_reward)
+        db.commit()
+        return {
+            "result": "ticket",
+            "stage": result["stage"],
+            "message": f"Stage {result['stage']} 티켓 획득! 토큰 남음: {int(redis.get(f'user:{user_id}:cyber_token_balance'))}"
+        }
+    else:
+        # 코인 보상 기록
+        amount = result["amount"]
+        new_reward = UserReward(
+            user_id=user_id,
+            reward_type="COIN",
+            reward_value=str(amount),
+            awarded_at=datetime.utcnow(),
+            trigger_action_id=None
+        )
+        db.add(new_reward)
+        db.commit()
+        # 토큰 대신 코인(게임 내 메인 화폐) 지급 로직
+        return {
+            "result": "coin",
+            "amount": amount,
+            "message": f"{amount} 코인 획득! 토큰 남음: {int(redis.get(f'user:{user_id}:cyber_token_balance'))}"
+        }
+```
+
+This cyclical structure maximizes both corporate site retention and in-app monetization conversion.
