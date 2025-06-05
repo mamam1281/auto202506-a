@@ -61,4 +61,3 @@ def test_log_site_visit_interaction(
     assert db_site_visit.user_id == user.id
     assert db_site_visit.source == test_source
     assert db_site_visit.visit_timestamp == returned_site_visit.visit_timestamp # Timestamps should match
-```

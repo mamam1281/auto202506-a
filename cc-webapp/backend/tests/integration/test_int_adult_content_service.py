@@ -207,4 +207,3 @@ def test_unlock_content_stage_already_unlocked_explicitly(
     # Assert Database State: User token balance should be unchanged
     db_session.refresh(user)
     assert user.cyber_token_balance == initial_token_balance
-```

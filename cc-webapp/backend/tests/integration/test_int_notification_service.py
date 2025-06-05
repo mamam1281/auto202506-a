@@ -2,6 +2,7 @@ import pytest
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
 import time # For ensuring distinct created_at times if needed
+from unittest.mock import patch  # Added patch import
 
 # Models
 from app.models import User, Notification
@@ -139,4 +140,3 @@ def test_get_oldest_pending_notification_multiple_get_oldest(
     # Act & Assert - Third call (should be None)
     retrieved_notif3 = notification_service.get_oldest_pending_notification(user_id=user.id)
     assert retrieved_notif3 is None
-```

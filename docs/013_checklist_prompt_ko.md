@@ -836,12 +836,7 @@ Swagger UI (`/docs`)에서:
 
 ```python
 # 파일 수정 전 체크리스트:
-Before modifying backend files, confirm alignment with:
-[ ] System architecture from 01_architecture_en.md
-[ ] Data flow patterns from 02_data_personalization_en.md
-[ ] Feedback system from 03_emotion_feedback_en.md
-[ ] Adult content logic from 04_adult_rewards_en.md
-[ ] Corporate integration from 05_corporate_retention_en.md
+
 
 # 파일 구조 체크:
 [ ] File exists in correct location
