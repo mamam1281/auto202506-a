@@ -112,4 +112,3 @@ class TestAgeVerificationService(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(argv=['first-arg-is-ignored'], exit=False) # Added for better execution in some envs
-```

@@ -156,5 +156,3 @@ class VIPContentService:
         self._log_vip_access(user_id, content_id_for_log, feature_name, final_cost)
 
         return {"status": f"{feature_name} accessed/purchased by VIP", "final_cost": final_cost, "original_cost": base_cost}
-
-```
