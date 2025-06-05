@@ -154,3 +154,22 @@ def transfer_tokens(
     to_balance = add_tokens(to_user_id, amount, db=db)
     from_balance = get_balance(from_user_id, db=db)
     return from_balance, to_balance
+
+
+class TokenService:
+    """Class wrapper providing a service-style interface for token operations."""
+
+    def __init__(self, db: Session | None = None):
+        self.db = db
+
+    def add_tokens(self, user_id: int, amount: int) -> int:
+        return add_tokens(user_id, amount, db=self.db)
+
+    def deduct_tokens(self, user_id: int, amount: int) -> int:
+        return deduct_tokens(user_id, amount, db=self.db)
+
+    def get_balance(self, user_id: int) -> int:
+        return get_balance(user_id, db=self.db)
+
+    def transfer_tokens(self, from_user_id: int, to_user_id: int, amount: int) -> tuple[int, int]:
+        return transfer_tokens(from_user_id, to_user_id, amount, db=self.db)
