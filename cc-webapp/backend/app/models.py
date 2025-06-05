@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Boolean # Added Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.dialects.postgresql import JSONB # Added for AgeVerificationRecord
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.types import JSON
 from datetime import datetime
 
 Base = declarative_base()
@@ -153,7 +154,7 @@ class AgeVerificationRecord(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     verification_method = Column(String(50)) # "document", "phone", "ipin"
     verified_at = Column(DateTime, default=datetime.utcnow)
-    verification_data = Column(JSONB) # Encrypted verification data
+    verification_data = Column(JSON)  # Encrypted verification data
     is_valid = Column(Boolean, default=True)
 
     user = relationship("User", back_populates="age_verification_records")

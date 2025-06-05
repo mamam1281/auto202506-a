@@ -227,4 +227,3 @@ class FlashOfferService:
     # Progressive discounts and urgency notifications are complex features
     # that would typically involve more components (background tasks, notification service)
     # and are outside the scope of this initial service implementation.
-```
