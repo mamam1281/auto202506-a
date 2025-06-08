@@ -39,7 +39,7 @@ class FlashOfferBase(BaseModel):
     is_purchased: bool = False
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class FlashOffer(FlashOfferBase):
     id: int
@@ -55,7 +55,7 @@ class VIPAccessLogBase(BaseModel):
     tokens_spent: Optional[int] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class VIPAccessLog(VIPAccessLogBase):
     id: int
@@ -70,7 +70,7 @@ class AgeVerificationRecordBase(BaseModel):
     # as it's sensitive. Specific schemas can include it if needed.
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AgeVerificationRecord(AgeVerificationRecordBase):
     id: int

@@ -27,7 +27,7 @@ class GachaPullResponseItem(BaseModel):
     class Config:
         # Pydantic V2 uses from_attributes=True. For V1, orm_mode=True.
         # Assuming Pydantic V1 for consistency with other models if not specified otherwise.
-        orm_mode = True # Or from_attributes = True for Pydantic V2
+        from_attributes = True # Or from_attributes = True for Pydantic V2
                         # This is not strictly needed here as we are creating from a dict,
                         # but good practice if the source dict could be an ORM model.
 

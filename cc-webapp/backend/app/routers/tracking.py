@@ -25,7 +25,7 @@ class SiteVisitResponse(BaseModel):
     visit_timestamp: datetime
 
     class Config:
-        from_attributes = True # Pydantic V2 (formerly orm_mode = True)
+        from_attributes = True # Pydantic V2 (formerly from_attributes = True)
 
 # Dependency provider for TrackingService
 def get_tracking_service(db: Session = Depends(get_db)):

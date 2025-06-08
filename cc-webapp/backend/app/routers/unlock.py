@@ -30,7 +30,7 @@ class UnlockResponse(BaseModel):
     # message: str | None = None # Optional: for any accompanying message
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # --- Helper Functions ---
 def get_segment_level(rfm_group: str | None) -> int:
