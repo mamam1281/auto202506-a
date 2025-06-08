@@ -52,7 +52,7 @@ class UserMe(BaseModel):
     cyber_token_balance: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
