@@ -6,9 +6,17 @@ from sqlalchemy import and_
 from app.models import FlashOffer, User, UserReward
 from app.database import SessionLocal  # 올바른 import
 from app.services.token_service import TokenService
+from enum import Enum
 import logging
 
 logger = logging.getLogger(__name__)
+
+class FlashOfferTrigger(Enum):
+    """Enumerates reasons a flash offer may be created."""
+
+    GAME_FAILURE = "GAME_FAILURE"
+    STAGE_UNLOCK = "STAGE_UNLOCK"
+    VIP_UPGRADE = "VIP_UPGRADE"
 
 class FlashOfferService:
     def __init__(self, token_service: TokenService):
