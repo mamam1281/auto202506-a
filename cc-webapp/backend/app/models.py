@@ -79,6 +79,7 @@ class UserReward(Base):
     reward_type = Column(String(50), nullable=False)
     reward_value = Column(String(255), nullable=False)
     awarded_at = Column(DateTime, default=datetime.utcnow)
+    trigger_action_id = Column(Integer, ForeignKey("user_actions.id"), nullable=True)
     source_description = Column(Text, nullable=True)  # Add missing column
 
     # Relationship
