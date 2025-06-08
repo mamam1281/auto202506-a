@@ -274,3 +274,48 @@ pytest tests/ --tb=no -q
 - 2순위 해결: 4개 감소 (89% → 93%)
 - **총 10개 해결시 93% 달성!** 🎉
 
+---
+
+## 🌐 **프론트엔드 개발 전략 업데이트 (OpenAI/Codex 최적화)**
+
+### **🆕 프론트엔드 접근 방식 변경**
+```
+❌ 이슈: create-react-app 완전 설치 불가
+✅ 솔루션: OpenAI/Codex 환경에 최적화된 가벼운 접근 방식
+```
+
+### **새로운 프론트엔드 아키텍처**
+```bash
+# 경량화된 기술 스택
+- React 18 (기본 모듈)
+- Axios (API 통신)
+- esbuild (번들링)
+- servor (개발 서버)
+```
+
+**구현 전략**:
+- ✅ CRA 대신 최소 파일 구조 수동 설정
+- ✅ 중첩 의존성 최소화 (node_modules 경량화)
+- ✅ react-scripts 의존성 제거
+- ✅ 직접 HTML 엔트리포인트 제공
+
+**이점**:
+- 더 빠른 설치 및 초기화
+- OpenAI/Codex 환경에서 더 안정적인 동작
+- 불필요한 의존성 최소화
+- 더 명확한 제어와 이해도
+
+### **개선된 설정 명령어**
+```bash
+# 기본 패키지 설치
+cd cc-webapp-frontend
+npm init -y
+npm install react react-dom axios
+npm install --save-dev esbuild servor
+
+# 개발 서버 실행
+npx servor src index.html --browse
+```
+
+**다음 단계**: 기본 구조 설정 및 첫 페이지 구현
+

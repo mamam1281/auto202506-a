@@ -119,3 +119,66 @@ npx create-react-app cc-webapp-frontend
 **목표**: 3주 내 MVP 프론트엔드 완성
 
 **다음 단계**: React 앱 생성 → 핵심 컴포넌트 → API 연동 → UX 플로우
+
+🚀 Phase 1: React 앱 생성 - 업무 분석
+현재 상황 파악
+백엔드: 83% 완료 (API, DB, 서비스 완성)
+프론트엔드: 15% 완료 ❌ 심각한 지연
+React 앱: 아직 생성되지 않음 🚨
+Phase 1의 정확한 업무
+1. React 프로젝트 생성
+# 프론트엔드 디렉토리로 이동
+cd C:\Users\c\2026\auto202506-a
+
+# React 앱 생성
+npx create-react-app cc-webapp-frontend
+cd cc-webapp-frontend
+
+
+# 핵심 컴포넌트 디렉토리 생성
+mkdir -p src/components/Auth
+mkdir -p src/components/Dashboard  
+mkdir -p src/components/Games
+mkdir -p src/components/AdultContent
+mkdir -p src/hooks
+mkdir -p src/services
+mkdir -p src/store
+mkdir -p src/styles
+
+
+# API 통신용
+npm install axios
+
+# 상태 관리
+npm install @reduxjs/toolkit react-redux
+
+# 라우팅
+npm install react-router-dom
+
+# UI 라이브러리 (선택)
+npm install @mui/material @emotion/react @emotion/styled
+
+이후 requirement.txt 파일에 업로드 시킬것
+
+// src/services/api.js - API 기본 설정
+import axios from 'axios';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+
+export const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+🎯 Phase 1 완료 기준
+✅ 완료 체크리스트
+<input disabled="" type="checkbox"> React 앱 생성 완료
+<input disabled="" type="checkbox"> npm start 정상 실행
+<input disabled="" type="checkbox"> 기본 디렉토리 구조 생성
+<input disabled="" type="checkbox"> 필수 의존성 설치
+<input disabled="" type="checkbox"> API 기본 설정 완료
+🚀 다음 단계 준비
+Phase 2: 핵심 UI 컴포넌트 개발
+InviteCodeInput, Dashboard, SlotMachine 등
