@@ -1,3 +1,4 @@
+
 # AI Assistant Test Guide
 
 이 문서는 AI가 테스트 진행 상황을 빠르게 파악하고 다음 단계를 정리하기 위한 요약 가이드입니다.
@@ -29,3 +30,4 @@ pytest -q
 1. Rewards 서비스 DB 스키마 불일치 해결
 2. Notification 서비스 mock 데이터 점검
 3. Unlock/AdultContent 서비스 의존성 정리
+=======

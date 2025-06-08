@@ -11,6 +11,7 @@
 - [x] 모델 속성 동기화 완료
 - [x] UserReward 호환성 문제 해결
 
+
 🚨 **현재 긴급 문제: 다른 서비스 테스트 다수 실패**
 ```
 16 failed, 83 passed, 1 skipped, 12 warnings
@@ -34,17 +35,22 @@
 - [x] 불필요한 amount, created_at 파라미터 제거
 - [x] 최소 필수 속성만 사용하여 안정성 확보
 
-🚨 남은 실패 테스트 우선순위 (업데이트)
+🚨 남은 실패 테스트 우선순위 (최신 업데이트)
 
-🔥 **긴급 (지금 당장 해결)**
-- [ ] **pytest 컬렉션 오류 해결** - tests/integration/test_int_flash_offer_service.py
-- [ ] 경고 메시지 13개 정리
-- [ ] 테스트 실행 환경 복구
+🎉 **완료된 작업들**
+- [x] ~~pytest 컬렉션 오류 해결~~ ✅
+- [x] ~~Migration 문제 (trigger_action_id 추가)~~ ✅  
+- [x] ~~테스트 Setup 오류 해결~~ ✅
+- [x] ~~Migration 실행 및 DB 동기화~~ ✅
+- [x] ~~Pydantic V2 경고 해결~~ ✅
 
-🔥 높음 (즉시 해결 필요)
-- [ ] Migration 문제: 'trigger_action_id' is an invalid keyword argument for UserReward
-- [ ] 스키마 불일치: DB 컬럼 누락 문제
-- [ ] 의존성 문제: Import 오류 및 모듈 누락
+🔥 **다음 우선순위 (실제 데이터 기반 + 최신 업데이트)**
+- [x] ~~전체 테스트 현황 파악~~ ✅ **78% 통과율 확인**
+- [x] **Pydantic V2 추가 수정 완료** ✅ **GachaPullResponseItem, tracking router**
+- [ ] **Pydantic V2 수정 효과 확인** (경고 메시지 감소 측정)
+- [ ] **21개 실패 테스트 Service별 분류 (재분석)**
+- [ ] **Top 3 실패 Service에 FlashOffer 패턴 적용**
+- [ ] **13개 경고 메시지 완전 제거**
 
 🟡 중간 (단계적 해결)
 - [ ] Mock 객체 구조: 테스트 파라미터 불일치
@@ -58,26 +64,80 @@
 Phase 1: Migration & Schema 완전 해결 🔄
 Phase 2: 나머지 Service 테스트 수정 🔄
 Phase 3: 통합 테스트 최종 검증 🔄
-📝 **긴급 해결 프롬프트 가이드**
+📝 **긴급 해결 프롬프트 가이드 (업데이트)**
 
-## 🔥 1단계: pytest 컬렉션 오류 해결
+## ✅ ~~1단계: pytest 컬렉션 오류 해결~~ (완료)
+
+## 🔥 **1-B단계: 테스트 Setup 오류 해결 (신규)**
 
 ### 프롬프트:
 ```
-pytest에서 "ERROR tests/integration/test_int_flash_offer_service.py" 컬렉션 오류가 발생합니다. 
+FlashOffer 통합 테스트에서 Setup 단계에서 오류가 발생합니다.
 
-다음을 확인하고 수정해주세요:
-1. tests/integration/test_int_flash_offer_service.py 파일의 import 구문 검증
-2. 누락된 모듈이나 잘못된 경로 수정
-3. 파일 내 구문 오류 (syntax error) 체크
-4. 의존성 모듈들의 존재 여부 확인
+다음 서비스들의 초기화 문제를 해결해주세요:
 
-추가로 pytest -v tests/integration/test_int_flash_offer_service.py::test_method_name 형태로 개별 테스트 실행 가능한지도 확인해주세요.
+1. **Fixture 의존성 순서 확인**:
+   - db_session fixture가 올바르게 설정되었는지 확인
+   - 각 서비스 fixture들이 db_session에 의존하는지 검증
+   - conftest.py에서 fixture 순서와 scope 설정 점검
 
-현재 프로젝트 구조:
-- backend/src/services/
-- backend/tests/integration/
-- backend/tests/unit/
+2. **서비스 초기화 문제 해결**:
+   - TokenService 초기화 파라미터 확인
+   - AgeVerificationService 의존성 체크
+   - RewardService 설정 검증
+   - AdultContentService 초기화 검증
+
+3. **데이터베이스 연결 문제**:
+   - 테스트 DB 연결 상태 확인
+   - Migration 상태 검증
+   - 테스트용 테이블 생성 확인
+
+4. **Mock 설정 검토**:
+   - 외부 의존성들이 올바르게 Mock 처리되었는지 확인
+   - 환경변수 설정 검증
+
+에러 발생 위치:
+- tests/integration/test_int_flash_offer_service.py
+- Setup 단계에서 서비스 객체 생성 실패
+
+현재 성공한 부분:
+✅ FlashOfferTrigger enum 추가 완료
+✅ 파일 컴파일 및 import 성공
+```
+
+## 🔥 **1-C단계: Pydantic V2 경고 해결**
+
+### 프롬프트:
+```
+Pydantic V2 호환성 경고를 해결해주세요:
+
+경고 메시지:
+"Valid config keys have changed in V2: 'orm_mode' has been renamed to 'from_attributes'"
+
+해결 방법:
+1. **모든 Pydantic 모델 검토**:
+   - models/ 폴더의 모든 파일 검사
+   - schemas/ 폴더의 모든 파일 검사
+
+2. **Config 클래스 업데이트**:
+   ```python
+   # 기존 (V1)
+   class Config:
+       orm_mode = True
+   
+   # 변경 (V2)
+   class Config:
+       from_attributes = True
+   ```
+
+3. **일괄 변경 명령어**:
+   ```bash
+   find . -name "*.py" -exec sed -i 's/orm_mode = True/from_attributes = True/g' {} \;
+   ```
+
+4. **검증**:
+   - 모든 Pydantic 모델이 올바르게 작동하는지 확인
+   - 경고 메시지가 사라지는지 검증
 ```
 
 ## 🔥 2단계: Migration 문제 해결
@@ -345,15 +405,25 @@ volumes:
 - [ ] 기존 테스트 영향도 확인
 3. 테스트 실행 표준 절차
 📊 성과 지표 및 목표
+**🎉 달성된 목표**
+- [x] ~~pytest 컬렉션 오류 완전 해결~~ ✅
+- [x] ~~Migration 파일 생성 및 적용~~ ✅
+- [x] ~~테스트 Setup 오류 해결~~ ✅
+- [x] ~~Migration 실행 및 DB 동기화~~ ✅
+- [x] ~~기본 테스트 실행 환경 복구~~ ✅
+- [x] ~~Pydantic V2 경고 해결~~ ✅
+- [x] ~~FlashOffer 통합 테스트 완전 통과~~ ✅
+
 **즉시 목표 (오늘 내)**
-- [ ] pytest 컬렉션 오류 완전 해결
-- [ ] 경고 메시지 13개 → 0개 감소
-- [ ] 기본 테스트 실행 환경 복구
+- [ ] **실패 테스트 21개 Service별 분류 완료**
+- [ ] **Top 3 실패 Service 식별**
+- [ ] **첫 번째 Service 수정 시작 (FlashOffer 패턴 적용)**
 
 **단기 목표 (3일 내)**
-- [ ] Migration 문제 완전 해결
-- [ ] 스키마 불일치 해결
-- [ ] 목표: 95% 이상 통과율 달성
+- [ ] FlashOffer 성공 패턴을 상위 3개 Service에 적용
+- [ ] 전체 테스트 통과율 78% → 85% 달성
+- [ ] 경고 메시지 13개 → 0개 완전 제거
+
 중기 목표 (1주일 내)
 - [ ] 모든 Service 테스트 통과
 - [ ] Mock 구조 표준화 완료
@@ -382,15 +452,26 @@ volumes:
 - [ ] 커버리지 기준 충족
 - [ ] 성능 테스트 통과
 📚 참고 자료 및 문서
-프로젝트 핵심 문서
-- [ ] 01_architecture_en.md - 시스템 아키텍처
+**🥇 AI 작업용 핵심 기준 문서**
+- [x] **`docs/15_ai_assistant_test_guide.md`** - AI 전용 실시간 가이드 (최우선)
+- [x] **`docs/14_test_tracking_service_analysis.md`** - 본 문서 (전체 현황)
+
+**🥈 기술 참조 문서**  
 - [ ] docs/03_data_model.md - DB 스키마 참조
+- [ ] docs/13_erd_overview.md - ERD 구조
+- [ ] docs/01_architecture_en.md - 시스템 아키텍처
+
+**🥉 개발 가이드 문서**
 - [ ] docs/04_API & Logic Flow.md - API 플로우
 - [ ] docs/06_test_cases.md - 테스트 케이스
-기술 가이드
 - [ ] docs/09_solid_principles_kr.md - SOLID 원칙
-- [ ] docs/13_erd_overview.md - ERD 구조
 - [ ] docs/21_security_authentication.md - 보안 가이드
+
+**⚠️ AI 작업시 문서 우선순위**:
+1. `docs/15_ai_assistant_test_guide.md` (매번 확인)
+2. `docs/14_test_tracking_service_analysis.md` (전체 상황)  
+3. `docs/03_data_model.md` + `docs/13_erd_overview.md` (Migration시)
+
 🏆 최종 성공 기준
 ✅ 테스트 통과 기준
 📊 수치 목표
@@ -400,3 +481,4 @@ volumes:
 🎯 현재 진행 상황: FlashOfferService 완료 ✅ → 다음: Migration 문제 해결 🔄
 
 "FlashOfferService 성공 패턴을 다른 Service에 적용하여 빠른 해결 가능"
+
