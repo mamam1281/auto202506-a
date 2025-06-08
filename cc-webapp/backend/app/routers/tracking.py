@@ -25,6 +25,7 @@ class SiteVisitResponse(BaseModel):
     visit_timestamp: datetime
 
     class Config:
+
         # Pydantic V2 uses ``from_attributes`` for ORM integration.
         from_attributes = True
 

@@ -20,6 +20,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Add trigger_action_id column if missing."""
+
     bind = op.get_bind()
     inspector = sa.inspect(bind)
     columns = [c["name"] for c in inspector.get_columns("user_rewards")]
@@ -36,6 +37,7 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     """Remove trigger_action_id column."""
+
     bind = op.get_bind()
     inspector = sa.inspect(bind)
     columns = [c["name"] for c in inspector.get_columns("user_rewards")]
