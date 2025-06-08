@@ -16,3 +16,14 @@ export const apiService = {
   put: (url, data) => api.put(url, data).then(response => response.data),
   delete: (url) => api.delete(url).then(response => response.data),
 };
+
+import axios from 'axios';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+
+export const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
