@@ -18,7 +18,8 @@ engine = create_engine(
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create tables in the in-memory database before any tests run
+# Drop and recreate tables to ensure schema is up to date
+Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 def override_get_db() -> Generator[Session, None, None]:
