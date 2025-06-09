@@ -17,11 +17,11 @@ class SupportedEmotion(Enum):
     SADNESS = "SADNESS"
     SURPRISE = "SURPRISE"
     NEUTRAL = "NEUTRAL"
+    EXCITED = "EXCITED"
 
     @classmethod
     def get_display_label(cls, emotion: SupportedEmotion, lang: SupportedLanguage) -> str:
-        labels: Dict[SupportedLanguage, Dict[SupportedEmotion, str]] = {
-            SupportedLanguage.ENGLISH: {
+        labels: Dict[SupportedLanguage, Dict[SupportedEmotion, str]] = {            SupportedLanguage.ENGLISH: {
                 SupportedEmotion.ANGER: "Anger",
                 SupportedEmotion.FEAR: "Fear",
                 SupportedEmotion.JOY: "Joy",
@@ -29,8 +29,8 @@ class SupportedEmotion(Enum):
                 SupportedEmotion.SADNESS: "Sadness",
                 SupportedEmotion.SURPRISE: "Surprise",
                 SupportedEmotion.NEUTRAL: "Neutral",
-            },
-            SupportedLanguage.KOREAN: {
+                SupportedEmotion.EXCITED: "Excited",
+            },SupportedLanguage.KOREAN: {
                 SupportedEmotion.ANGER: "분노",
                 SupportedEmotion.FEAR: "두려움",
                 SupportedEmotion.JOY: "기쁨",
@@ -38,6 +38,7 @@ class SupportedEmotion(Enum):
                 SupportedEmotion.SADNESS: "슬픔",
                 SupportedEmotion.SURPRISE: "놀람",
                 SupportedEmotion.NEUTRAL: "중립",
+                SupportedEmotion.EXCITED: "흥분",
             }
         }
         try:
@@ -47,8 +48,8 @@ class SupportedEmotion(Enum):
 
 class EmotionResult(BaseModel):
     emotion: SupportedEmotion = Field(..., description="The detected emotion type.")
-    score: float = Field(..., description="The raw score, ge=-1.0, le=1.0.")
-    confidence: float = Field(..., description="Confidence level, ge=0.0, le=1.0.")
+    score: float = Field(..., ge=-1.0, le=1.0, description="The raw score, between -1.0 and 1.0.")
+    confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence level, between 0.0 and 1.0.")
     language: SupportedLanguage = Field(..., description="Language of the input text.")
     raw_output: Optional[Dict[str, Any]] = Field(default=None, description="Optional raw model output.")
 
@@ -61,9 +62,7 @@ class EmotionResult(BaseModel):
                 return SupportedEmotion[value.upper()]
             except KeyError:
                 raise ValueError(f"Invalid emotion type: {value}")
-        raise ValueError(f"Invalid emotion type: {value}")
-
-    @validator('language', pre=True)
+        raise ValueError(f"Invalid emotion type: {value}")    @validator('language', pre=True)
     def _validate_language(cls, value: Any) -> SupportedLanguage:
         if isinstance(value, SupportedLanguage):
             return value
@@ -77,9 +76,9 @@ class EmotionResult(BaseModel):
                 raise ValueError(f"Invalid language code: {value}")
         raise ValueError(f"Invalid language code: {value}")
 
-    @classmethod
-    def is_confident(cls, confidence_score: float, threshold: float) -> bool:
-        return confidence_score >= threshold
+    def is_confident(self, threshold: float = 0.7) -> bool:
+        """Check if the emotion detection is confident above threshold"""
+        return self.confidence >= threshold
 
     @classmethod
     def to_language(

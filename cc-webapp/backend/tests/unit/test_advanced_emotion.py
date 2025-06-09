@@ -84,18 +84,16 @@ class TestEmotionModelsAdvanced:
         """Test emotion model validation with invalid data"""
         from app.emotion_models import EmotionResult, SupportedEmotion, SupportedLanguage
         from pydantic import ValidationError
-        
-        # Test invalid score range
-        with pytest.raises(ValidationError, match="score.*between 0 and 1"):
+          # Test invalid score range
+        with pytest.raises(ValidationError, match="Input should be less than or equal to 1"):
             EmotionResult(
                 emotion=SupportedEmotion.EXCITED,
                 score=1.5,  # Invalid: > 1
                 confidence=0.8,
                 language=SupportedLanguage.KOREAN
             )
-        
-        # Test invalid confidence range
-        with pytest.raises(ValidationError, match="confidence.*between 0 and 1"):
+          # Test invalid confidence range
+        with pytest.raises(ValidationError, match="Input should be greater than or equal to 0"):
             EmotionResult(
                 emotion=SupportedEmotion.EXCITED,
                 score=0.8,

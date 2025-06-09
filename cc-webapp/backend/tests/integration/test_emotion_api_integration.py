@@ -40,8 +40,8 @@ class TestEmotionAPIIntegration:
         with patch('app.routers.ai.get_current_user') as mock_auth:
             mock_auth.return_value = {"user_id": 1, "nickname": "test_user"}
             
-            # When: POST to /ai/analyze
-            response = client.post("/ai/analyze", json=payload, headers=auth_headers)
+            # When: POST to /api/ai/analyze
+            response = client.post("/api/ai/analyze", json=payload, headers=auth_headers)
             
             # Then: Success response with emotion data
             assert response.status_code == 200
@@ -65,7 +65,7 @@ class TestEmotionAPIIntegration:
                 ]
                 
                 # When: Request personalized recommendations
-                response = client.get("/recommend/personalized?user_id=1", headers=auth_headers)
+                response = client.get("/api/recommend/personalized?user_id=1", headers=auth_headers)
                 
                 # Then: Recommendations reflect emotional state
                 assert response.status_code == 200
@@ -98,7 +98,7 @@ class TestEmotionAPIIntegration:
             mock_auth.return_value = {"user_id": 1}
             
             # When: Generate feedback
-            response = client.post("/feedback/generate", json=payload, headers=auth_headers)
+            response = client.post("/api/feedback/generate", json=payload, headers=auth_headers)
             
             # Then: Appropriate feedback generated
             assert response.status_code == 200
@@ -137,7 +137,7 @@ class TestConcurrentEmotionAnalysis:
             start_time = time.time()
             
             async def make_request(payload):
-                return client.post("/ai/analyze", json=payload, headers=auth_headers)
+                return client.post("/api/ai/analyze", json=payload, headers=auth_headers)
             
             tasks = [make_request(payload) for payload in payloads]
             responses = await asyncio.gather(*tasks, return_exceptions=True)
@@ -171,7 +171,7 @@ class TestErrorHandlingIntegration:
             
             for payload in invalid_payloads:
                 # When: Send invalid request
-                response = client.post("/ai/analyze", json=payload, headers=auth_headers)
+                response = client.post("/api/ai/analyze", json=payload, headers=auth_headers)
                 
                 # Then: Appropriate error response
                 assert response.status_code in [400, 422]  # Bad Request or Validation Error
@@ -197,7 +197,7 @@ class TestErrorHandlingIntegration:
                 mock_llm.side_effect = Exception("LLM service unavailable")
                 
                 # When: LLM fallback fails
-                response = client.post("/ai/analyze", json=payload, headers=auth_headers)
+                response = client.post("/api/ai/analyze", json=payload, headers=auth_headers)
                 
                 # Then: Graceful degradation
                 assert response.status_code == 200  # Should still return response
@@ -224,7 +224,7 @@ class TestDataConsistencyIntegration:
             
             with patch('app.database.session') as mock_session:
                 # When: Emotion analysis performed
-                response = client.post("/ai/analyze", json=payload, headers=auth_headers)
+                response = client.post("/api/ai/analyze", json=payload, headers=auth_headers)
                 
                 # Then: Result logged to database
                 assert response.status_code == 200
@@ -246,8 +246,8 @@ class TestDataConsistencyIntegration:
             
             with patch('app.services.cj_ai_service.redis_client') as mock_redis:
                 # When: Multiple requests for same analysis
-                response1 = client.post("/ai/analyze", json=payload, headers=auth_headers)
-                response2 = client.post("/ai/analyze", json=payload, headers=auth_headers)
+                response1 = client.post("/api/ai/analyze", json=payload, headers=auth_headers)
+                response2 = client.post("/api/ai/analyze", json=payload, headers=auth_headers)
                 
                 # Then: Redis operations performed
                 assert response1.status_code == 200

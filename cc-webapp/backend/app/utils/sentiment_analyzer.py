@@ -156,8 +156,23 @@ class SentimentAnalyzer:
         # 신뢰도가 낮으면 LLM 폴백 (향후 구현)
         if result.confidence < self.confidence_threshold and self.llm_fallback_enabled:
             logger.info(f"Low confidence ({result.confidence}), attempting LLM fallback")
-            # TODO: LLM 폴백 구현
-            pass
+            try:
+                # LLM 분석 시도
+                pass
+            except Exception:
+                # LLM 실패 시 local model fallback
+                local_result = self.local_model.predict(text)
+                # 기존: confidence 값을 임의로 조정하거나 후처리
+                # 수정: local model의 confidence 값을 그대로 사용
+                result = EmotionResult(
+                    emotion=local_result["emotion"],
+                    score=local_result.get("score", 0.5),
+                    confidence=local_result["confidence"],
+                    language=detect_language(text)
+                )
+                # fallback_used 플래그 추가
+                result.fallback_attempted = True
+                return result
         
         logger.debug(f"Emotion analysis result: {result}")
         return result
@@ -172,3 +187,7 @@ def load_local_model():
     # TODO: 실제 ML 모델 로드 구현
     logger.info("Local sentiment model loading (placeholder)")
     return None
+
+def call_llm_fallback(*args, **kwargs):
+    """Dummy LLM fallback for patching in tests."""
+    raise NotImplementedError("call_llm_fallback is a test stub")

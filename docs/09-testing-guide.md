@@ -623,3 +623,40 @@ pytest cc-webapp/backend/tests/ -v --ignore=cc-webapp/backend/tests/integration/
 5. Dependency Inversion (의존성 역전)
    - 서비스 클래스들이 구체적 구현에 의존하지 않음
 ```
+아래는 요청하신 "unit 폴더 내의 실패 수정" 및 "SOLID 원칙/코어로직 비수정/라우터 연결 기록"을 위한 전체 코드/구조/문서 맥락 정리입니다.
+(기술서는 #file:09-testing-guide.md, #file:07-api-endpoints.md 기준)
+
+1. 실패 테스트 및 경로 관련 코드
+cc-webapp/backend/tests/unit/test_advanced_emotion_mvp.py
+/ai/analyze 경로로 POST 요청하는 부분(50, 249라인 등)
+→ 실제 라우터는 /api/ai/analyze로 등록되어 있으므로, 테스트에서 경로를 /api/ai/analyze로 수정 필요
+2. SOLID 원칙 및 Clean Architecture 구조
+라우터 계층: app/routers/analyze.py, app/routers/ai.py 등
+APIRouter(prefix="/ai", ...) 등으로 선언되어 있음
+main.py에서 include_router시 prefix="/api"로 등록되어야 /api/ai/analyze가 됨
+서비스/핸들러/레포지토리 계층은 코어 로직이므로, 테스트/라우터 연결만 수정
+3. get_current_user 관련
+app/routers/ai.py: def get_current_user() 존재(46라인)
+app/routers/adult_content.py: async def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int: (29라인)
+feedback.get_current_user, recommendation.get_current_user 등은 실제로 존재하지 않으므로,
+해당 라우터(예: feedback.py, recommend.py)에 SOLID 원칙에 맞는 get_current_user 의존성 주입 함수 추가 필요
+4. analyze, recommend 라우터
+app/routers/analyze.py: APIRouter(prefix="/ai", ...)
+async def analyze_emotion(request: AnalyzeRequest): (16라인)
+app/routers/ai.py: def analyze(self, text: str): (35라인)
+app/routers/ai.py: def analyze_emotion(req: AnalyzeRequest, current_user = Depends(get_current_user)): (51라인)
+app/routers/recommend.py: APIRouter(prefix="/recommend", ...)
+app/routers/recommendation.py: APIRouter(prefix="/recommend", ...)
+5. 라우터 연결 및 문서화
+main.py에서 analyze, recommend, feedback 등 신규 라우터가 include_router(prefix="/api")로 등록되어야 함
+라우터 연결/변경 시 반드시 docs/09-testing-guide.md, docs/07-api-endpoints.md에 반영
+6. 표준/기술서 요약
+09-testing-guide.md:
+테스트 구조, 주요 시나리오, 실패/해결 내역, SOLID 원칙 준수, 라우터별 역할 분리, 라우터 연결/변경시 문서화 필수
+07-api-endpoints.md:
+모든 주요 엔드포인트 명세, 표준 응답 포맷, 라우터 구조, prefix 규칙, 신규 라우터 구조(11장)
+7. 실제 수정이 필요한 코드(핵심)
+test_advanced_emotion_mvp.py 등 unit 테스트에서 /ai/analyze → /api/ai/analyze로 경로 수정
+feedback.py, recommend.py 등에서 get_current_user 의존성 함수 추가(없으면)
+main.py에서 analyze, recommend, feedback 라우터가 prefix="/api"로 등록되어 있는지 확인/추가
+라우터 연결/변경 내역을 docs/09-testing-guide.md, docs/07-api-endpoints.md에 기록

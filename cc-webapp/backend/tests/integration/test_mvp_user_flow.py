@@ -26,7 +26,7 @@ class TestBasicUserJourney:
         """완전한 사용자 플로우 - 성공 케이스"""
         
         # 1. 로그인
-        login_response = client.post("/auth/login", json={
+        login_response = client.post("/api/auth/login", json={
             "nickname": "testuser",
             "password": "password"
         })
@@ -42,7 +42,7 @@ class TestBasicUserJourney:
             # balance_response = client.get("/tokens/balance", headers=headers)
             
             # 3. 게임 플레이
-            game_response = client.post("/games/slot-spin", 
+            game_response = client.post("/api/games/slot-spin", 
                                        json={"bet_amount": 10, "user_id": 1}, 
                                        headers=headers)
             
@@ -55,7 +55,7 @@ class TestBasicUserJourney:
         with patch('app.services.token_service.get_balance') as mock_balance:
             mock_balance.return_value = 5  # 5토큰만 있음
             
-            login_response = client.post("/auth/login", json={
+            login_response = client.post("/api/auth/login", json={
                 "nickname": "poor_user",
                 "password": "test123"
             })
@@ -65,7 +65,7 @@ class TestBasicUserJourney:
                 headers = {"Authorization": f"Bearer {token}"}
                 
                 # 10토큰 게임 시도
-                game_response = client.post("/games/slot-spin", 
+                game_response = client.post("/api/games/slot-spin", 
                                            json={"bet_amount": 10, "user_id": 1}, 
                                            headers=headers)
                 
@@ -91,7 +91,7 @@ class TestConcurrentUsers:
             # 5명 사용자 동시 로그인 시뮬레이션
             users = []
             for i in range(5):
-                login_response = client.post("/auth/login", json={
+                login_response = client.post("/api/auth/login", json={
                     "nickname": f"user_{i}",
                     "password": "test123"
                 })
@@ -102,7 +102,7 @@ class TestConcurrentUsers:
             successful_games = 0
             for user in users:
                 headers = {"Authorization": f"Bearer {user['token']}"}
-                game_response = client.post("/games/slot-spin",
+                game_response = client.post("/api/games/slot-spin",
                                            json={"bet_amount": 10, "user_id": user["id"]},
                                            headers=headers)
                 if game_response.status_code == 200:
@@ -118,7 +118,7 @@ class TestErrorRecovery:
         
         bad_requests = [
             # 잘못된 JSON
-            {"method": "POST", "url": "/auth/login", "json": {}},
+            {"method": "POST", "url": "/api/auth/login", "json": {}},
             
             # 없는 엔드포인트
             {"method": "GET", "url": "/nonexistent/endpoint"},
@@ -127,7 +127,7 @@ class TestErrorRecovery:
             {"method": "GET", "url": "/tokens/balance", 
              "headers": {"Authorization": "Bearer invalid_token"}},
               # 잘못된 게임 요청
-            {"method": "POST", "url": "/games/slot-spin", 
+            {"method": "POST", "url": "/api/games/slot-spin", 
              "json": {"bet_amount": -10}},  # 음수 베팅
         ]
         
@@ -156,7 +156,7 @@ class TestMinimalPerformance:
         
         start_time = time.time()
         
-        response = client.post("/auth/login", json={
+        response = client.post("/api/auth/login", json={
             "nickname": "testuser",
             "password": "password"
         })
@@ -170,7 +170,7 @@ class TestMinimalPerformance:
     def test_game_response_time_acceptable(self, client):
         """게임 응답 시간이 허용 가능한지"""
         # 로그인
-        login_response = client.post("/auth/login", json={
+        login_response = client.post("/api/auth/login", json={
             "nickname": "testuser",
             "password": "password"
         })
@@ -179,7 +179,7 @@ class TestMinimalPerformance:
             headers = {"Authorization": f"Bearer {token}"}
             start_time = time.time()
             # 게임 플레이
-            game_response = client.post("/games/slot-spin",
+            game_response = client.post("/api/games/slot-spin",
                                        json={"bet_amount": 10, "user_id": 1},
                                        headers=headers)
             end_time = time.time()

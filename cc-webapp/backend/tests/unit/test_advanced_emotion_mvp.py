@@ -28,8 +28,7 @@ class TestEmotionAnalysisMVP:
             from app.utils.sentiment_analyzer import SentimentAnalyzer
             analyzer = SentimentAnalyzer()
             result = analyzer.analyze(text)
-            
-            # Then: Should return a valid emotion
+              # Then: Should return a valid emotion
             assert result.emotion in ["excited", "happy", "positive", "neutral"]
             assert 0.5 <= result.confidence <= 1.0  # Reasonable range
     
@@ -47,7 +46,7 @@ class TestEmotionAnalysisMVP:
             mock_auth.return_value = {"user_id": 1}
             
             # When: Call API
-            response = client.post("/ai/analyze", json=payload)
+            response = client.post("/api/ai/analyze", json=payload)
             
             # Then: Should get some response (not necessarily perfect)
             assert response.status_code in [200, 400, 422]  # Any valid HTTP response
@@ -238,15 +237,14 @@ class TestErrorHandlingMVP:
         from app.main import app
         
         client = TestClient(app)
-        
-        # Given: Request missing required fields
+          # Given: Request missing required fields
         bad_payload = {"user_id": 1}  # Missing 'text'
         
         with patch('app.routers.ai.get_current_user') as mock_auth:
             mock_auth.return_value = {"user_id": 1}
             
             # When: Send bad request
-            response = client.post("/ai/analyze", json=bad_payload)
+            response = client.post("/api/ai/analyze", json=bad_payload)
             
             # Then: Should return 400 or 422 (validation error)
             assert response.status_code in [400, 422]
