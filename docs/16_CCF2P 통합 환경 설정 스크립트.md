@@ -1,4 +1,4 @@
-📋 Codex Playground용 자동 설정 스크립트 (run.sh)#!/usr/bin/env bash
+#!/usr/bin/env bash
 # filepath: run.sh
 # Casino-Club F2P 프로젝트 Codex Playground 자동 설정
 # 백엔드(Python FastAPI) + 프론트엔드(React) 통합 실행
@@ -78,10 +78,9 @@ fi
 echo "🎨 프론트엔드 환경 설정 중..."
 cd "$WORKDIR/cc-webapp-frontend"
 
-# package.json 확인 및 생성
-if [ ! -f "package.json" ]; then
-    echo "📦 package.json을 생성합니다..."
-    cat > package.json << EOF
+# package.json 확인 및 재생성
+echo "📦 package.json을 확인/생성합니다..."
+cat > package.json << 'EOF'
 {
   "name": "cc-webapp-frontend",
   "version": "0.1.0",
@@ -100,27 +99,23 @@ if [ ! -f "package.json" ]; then
     "vite": "^5.1.0"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000 --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --port 3000 --host 0.0.0.0",
     "start": "vite --port 3000 --host 0.0.0.0"
   }
 }
 EOF
-fi
 
-# 프론트엔드 의존성 설치
-echo "📥 프론트엔드 의존성 설치 중..."
-if [ -f "package-lock.json" ]; then
-    npm ci
-else
-    npm install
-fi
+# 기존 node_modules 정리 후 재설치
+echo "📥 프론트엔드 의존성 재설치 중..."
+rm -rf node_modules package-lock.json
+npm install
 
 # Vite 설정 파일 생성
 if [ ! -f "vite.config.js" ]; then
     echo "⚙️ Vite 설정 파일을 생성합니다..."
-    cat > vite.config.js << EOF
+    cat > vite.config.js << 'EOF'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -146,10 +141,10 @@ EOF
 fi
 
 # 기본 HTML 및 React 파일 생성
+mkdir -p src
 if [ ! -f "index.html" ]; then
     echo "📄 기본 HTML 파일을 생성합니다..."
-    mkdir -p src
-    cat > index.html << EOF
+    cat > index.html << 'EOF'
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -163,8 +158,10 @@ if [ ! -f "index.html" ]; then
 </body>
 </html>
 EOF
+fi
 
-    cat > src/main.jsx << EOF
+if [ ! -f "src/main.jsx" ]; then
+    cat > src/main.jsx << 'EOF'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
@@ -175,8 +172,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>,
 )
 EOF
+fi
 
-    cat > src/App.jsx << EOF
+if [ ! -f "src/App.jsx" ]; then
+    cat > src/App.jsx << 'EOF'
 import React from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { CssBaseline, Container, Typography, Paper, Box } from '@mui/material'
@@ -219,20 +218,12 @@ fi
 # 프론트엔드 환경 변수 설정
 if [ ! -f ".env" ]; then
     echo "🔐 프론트엔드 환경 변수 설정..."
-    cat > .env << EOF
+    cat > .env << 'EOF'
 # Casino-Club F2P Frontend Environment
 VITE_API_BASE_URL=http://localhost:8000
 VITE_API_TIMEOUT=10000
 VITE_DEFAULT_THEME=dark
-VITE_PORT=3000
-VITE_HOST=0.0.0.0
 EOF
-fi
-
-# 프론트엔드 빌드 (선택사항)
-if [ "$BUILD_FRONTEND" = "true" ]; then
-    echo "🔨 프론트엔드 빌드 중..."
-    npm run build
 fi
 
 # === 5. 서비스 시작 ===

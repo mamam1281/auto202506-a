@@ -9,16 +9,18 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.11",
-    "react-router-dom": "^6.23.0"
+    "react-router-dom": "^6.23.0",
+    "react-redux": "^9.1.0",
+    "@reduxjs/toolkit": "^2.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.1.0"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000 --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview",
-    "start": "vite"
+    "preview": "vite preview --port 3000 --host 0.0.0.0",
+    "start": "vite --port 3000 --host 0.0.0.0"
   }
 }
