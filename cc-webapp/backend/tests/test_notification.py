@@ -113,6 +113,7 @@ def test_get_one_pending_notification(db_session: Session):
 
     # Verify in DB that this notification is now marked as sent
     # db_session might be stale after the endpoint call if endpoint committed. Use a new session or refresh.
+    db_session.expire_all()
     updated_notif_db = db_session.query(Notification).filter(Notification.message == oldest_pending_message_text).one()
     assert updated_notif_db.is_sent is True
     assert updated_notif_db.sent_at is not None
@@ -120,6 +121,7 @@ def test_get_one_pending_notification(db_session: Session):
     # Verify the other pending notification is still pending
     if len(pending_notifs_in_db) > 1:
         second_oldest_message_text = pending_notifs_in_db[1].message
+        db_session.expire_all()
         still_pending_notif_db = db_session.query(Notification).filter(Notification.message == second_oldest_message_text).one()
         assert still_pending_notif_db.is_sent is False
         assert still_pending_notif_db.sent_at is None

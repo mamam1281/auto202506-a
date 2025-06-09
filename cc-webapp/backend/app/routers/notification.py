@@ -2,18 +2,23 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from typing import Optional # Added Optional
+from typing import Optional
 from datetime import datetime
 
 from .. import models
 from ..database import get_db
-from ..services.notification_service import NotificationService # Added NotificationService
+from ..services.notification_service import NotificationService
+from ..services.user_service import UserService
 
 router = APIRouter()
 
 # Dependency provider for NotificationService
 def get_notification_service(db: Session = Depends(get_db)):
     return NotificationService(db=db)
+
+# Dependency provider for UserService
+def get_user_service(db: Session = Depends(get_db)):
+    return UserService(db)
 
 # Pydantic model for the pending notification response
 class PendingNotificationResponse(BaseModel):
@@ -33,12 +38,18 @@ class PendingNotificationResponse(BaseModel):
 )
 async def get_pending_notification(
     user_id: int = Path(..., title="The ID of the user to check for pending notifications", ge=1),
-    service: NotificationService = Depends(get_notification_service)
+    service: NotificationService = Depends(get_notification_service),
+    user_service: UserService = Depends(get_user_service)
 ):
     """
     Retrieves the oldest pending notification for a user, marks it as sent,
     and returns its details. If no pending notifications, returns empty object or specific fields as None.
     """
+    try:
+        user_service.get_user_or_error(user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
     notification = service.get_oldest_pending_notification(user_id=user_id)
 
     if not notification:

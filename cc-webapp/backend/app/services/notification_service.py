@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy.orm import Session
@@ -29,7 +29,7 @@ class NotificationService:
 
             if notification:
                 notification.is_sent = True
-                notification.sent_at = datetime.utcnow()
+                notification.sent_at = datetime.utcnow().replace(tzinfo=timezone.utc)
                 self.db.commit()
                 self.db.refresh(notification)
                 return notification
@@ -53,7 +53,7 @@ class NotificationService:
             user_id=user_id,
             message=message,
             is_sent=False,
-            created_at=datetime.utcnow(),
+            created_at=datetime.utcnow().replace(tzinfo=timezone.utc),
         )
 
         try:
