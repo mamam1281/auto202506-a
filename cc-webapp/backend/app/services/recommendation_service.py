@@ -8,6 +8,21 @@ from app.emotion_models import SupportedEmotion
 
 logger = logging.getLogger(__name__)
 
+class FinalRecommendation:
+    """최종 추천 결과를 담는 클래스"""
+    
+    def __init__(self, game_type: str, confidence: float, reason: str):
+        self.game_type = game_type
+        self.confidence = confidence
+        self.reason = reason
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "game_type": self.game_type,
+            "confidence": self.confidence,
+            "reason": self.reason
+        }
+
 class RecommendationService:
     """
     사용자 특성 및 감정에 기반한 추천 서비스

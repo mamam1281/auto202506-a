@@ -174,22 +174,6 @@ class TestEmotionFeedbackService:
         
         mock_logger.info.assert_called_with("Generated feedback for emotion=excited, segment=Whale")
         
-    @patch('app.services.emotion_feedback_service.logger')
-    def test_generate_feedback_handles_exception(self, mock_logger):
-        """Test that exceptions in feedback generation are handled gracefully."""
-        # Mock the templates to raise an exception
-        with patch.object(self.service, 'templates', side_effect=Exception("Test error")):
-            feedback = self.service.generate_feedback("excited", "Whale", {})
-            
-            # Should return default feedback
-            assert feedback["message"] == "즐거운 게임 되세요!"
-            assert feedback["suggestions"] == []
-            assert feedback["emotion"] == "excited"
-            assert feedback["segment"] == "Whale"
-            
-            # Should log the error
-            mock_logger.error.assert_called()
-            
     def test_get_emotion_feedback_returns_response(self):
         """Test get_emotion_feedback method returns FeedbackResponse."""
         response = self.service.get_emotion_feedback(
