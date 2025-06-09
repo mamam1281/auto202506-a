@@ -1,95 +1,95 @@
-# 🖥️ 기술 구현 및 API 가이드
+# 🖥️ Technical Implementation & API Guide
 
-## 개요
-자동화 시스템의 기술 구현과 API 엔드포인트를 종합적으로 안내합니다.
+## Overview
+Comprehensive guide to system's technical implementation and API endpoints.
 
-## 1. 시스템 아키텍처
+## 1. System Architecture
 
 ### Frontend (React/Next.js)
-- **기술 스택**: React 18 + Next.js + Redux Toolkit + Tailwind CSS
-- **실시간 통신**: WebSocket을 통한 CJ AI 채팅
-- **상태 관리**: Redux + React Query
+- **Tech Stack**: React 18 + Next.js + Redux Toolkit + Tailwind CSS
+- **Real-time Communication**: WebSocket for CJ AI Chat
+- **State Management**: Redux + React Query
 
 ### Backend (FastAPI)
-- **기술 스택**: FastAPI + SQLAlchemy + Redis + WebSocket
-- **인증**: JWT + bcrypt + 초대 코드 시스템
-- **게임 엔진**: 모듈화된 확률 기반 시스템
+- **Tech Stack**: FastAPI + SQLAlchemy + Redis + WebSocket
+- **Authentication**: JWT + bcrypt + Invite Code System
+- **Game Engine**: Modularized Probability-based System
 
-## 2. 주요 API 엔드포인트
+## 2. Main API Endpoints
 
-### 인증 관리
+### Authentication Management
 ```
-POST /auth/login          - 초대 코드 기반 로그인
-POST /auth/register       - 사용자 등록
-POST /auth/refresh        - 토큰 갱신
-```
-
-### 게임 서비스
-```
-POST /games/slot/spin     - 슬롯 머신 스핀
-POST /games/roulette/spin - 룰렛 스핀  
-POST /games/gacha/pull    - 가챠 뽑기
-GET  /games/history       - 게임 이력 조회
-GET  /games/probability   - 확률 정보 조회
+POST /auth/login          - Invite code-based login
+POST /auth/register       - User registration
+POST /auth/refresh        - Token refresh
 ```
 
-### AI 상담 서비스
+### Game Service
 ```
-WS   /chat/ws/{user_id}   - WebSocket 채팅 연결
-POST /ai/analyze          - 감정 분석 요청
-GET  /ai/templates        - 응답 템플릿 조회
-```
-
-### 사용자 세그먼트
-```
-GET  /segments/user       - 사용자 세그먼트 조회
-PUT  /segments/adjust     - 세그먼트 조정
+POST /games/slot/spin     - Slot machine spin
+POST /games/roulette/spin - Roulette spin  
+POST /games/gacha/pull    - Gacha pull
+GET  /games/history       - Game history query
+GET  /games/probability   - Probability info query
 ```
 
-### 토큰 관리
+### AI Consultation Service
 ```
-GET  /tokens/balance      - 토큰 잔고 조회
-POST /tokens/sync         - 본사 사이트 토큰 동기화
+WS   /chat/ws/{user_id}   - WebSocket chat connection
+POST /ai/analyze          - Emotion analysis request
+GET  /ai/templates        - Response template query
 ```
 
-## 3. 게임 서비스 구현
+### User Segment
+```
+GET  /segments/user       - User segment query
+PUT  /segments/adjust     - Segment adjustment
+```
 
-### 슬롯 머신 로직
-- **기본 확률**: 15% 승률
-- **세그먼트 보너스**: Whale(+10%), Medium(+5%), Low(0%)
-- **스트릭 시스템**: 연속 실패 시 확률 증가, 7회 시 강제 승리
-- **비용**: 10 토큰
+### Token Management
+```
+GET  /tokens/balance      - Token balance query
+POST /tokens/sync         - Head office site token synchronization
+```
 
-### 룰렛 시스템
-- **베팅 타입**: 숫자(35배), 색상(2배), 홀짝(2배)
-- **하우스 엣지**: 세그먼트별 차등 적용
-- **최소 베팅**: 10 토큰
+## 3. Game Service Implementation
 
-### 가챠 시스템
-- **등급별 확률**: Legendary(5%), Epic(20%), Rare(50%), Common(25%)
-- **Pity System**: 90회 보장 시스템
-- **중복 방지**: 보유 아이템 확률 50% 감소
+### Slot Machine Logic
+- **Base Probability**: 15% win rate
+- **Segment Bonus**: Whale(+10%), Medium(+5%), Low(0%)
+- **Streak System**: Probability increase on consecutive failures, forced win on 7th failure
+- **Cost**: 10 tokens
 
-## 4. 인증 및 보안
+### Roulette System
+- **Betting Types**: Number(35x), Color(2x), Odd/Even(2x)
+- **House Edge**: Differentiated by segment
+- **Minimum Bet**: 10 tokens
 
-### JWT 토큰 관리
-- **만료 시간**: 24시간
-- **자동 갱신**: 만료 1시간 전 자동 갱신
-- **보안 헤더**: Bearer Token 방식
+### Gacha System
+- **Grade-based Probability**: Legendary(5%), Epic(20%), Rare(50%), Common(25%)
+- **Pity System**: Guaranteed within 90 pulls
+- **Duplication Prevention**: 50% reduced probability for owned items
 
-### 초대 코드 시스템
-- **형식**: 6자리 영문/숫자 조합
-- **검증**: 실시간 유효성 확인
-- **예시**: ABC123, DEF456, GHI789
+## 4. Authentication and Security
 
-### 비밀번호 정책
-- **길이**: 8-20자
-- **구성**: 영문 + 숫자 필수
-- **검증**: 실시간 정책 확인
+### JWT Token Management
+- **Expiration Time**: 24 hours
+- **Automatic Renewal**: Renewed automatically 1 hour before expiration
+- **Security Header**: Bearer Token method
 
-## 5. 실시간 채팅 시스템
+### Invite Code System
+- **Format**: 6-character alphanumeric combination
+- **Validation**: Real-time validity check
+- **Examples**: ABC123, DEF456, GHI789
 
-### WebSocket 연결
+### Password Policy
+- **Length**: 8-20 characters
+- **Composition**: Must include letters and numbers
+- **Validation**: Real-time policy check
+
+## 5. Real-time Chat System
+
+### WebSocket Connection
 ```javascript
 const ws = new WebSocket(`ws://localhost:8000/chat/ws/${userId}`);
 
@@ -99,14 +99,14 @@ ws.onmessage = (event) => {
 };
 ```
 
-### CJ AI 감정 분석
-- **감정 인식**: frustrated, excited, curious, tired
-- **응답 생성**: 상황별 맞춤 응답
-- **액션 제안**: 토큰 부족 시 본사 사이트 리다이렉트
+### CJ AI Emotion Analysis
+- **Emotion Recognition**: frustrated, excited, curious, tired
+- **Response Generation**: Customized responses based on situation
+- **Action Suggestion**: Redirect to head office site when tokens are insufficient
 
-## 6. 응답 형식
+## 6. Response Format
 
-### 표준 응답
+### Standard Response
 ```json
 {
   "success": true,
@@ -116,7 +116,7 @@ ws.onmessage = (event) => {
 }
 ```
 
-### 게임 결과 응답
+### Game Result Response
 ```json
 {
   "success": true,
@@ -124,52 +124,52 @@ ws.onmessage = (event) => {
   "symbols": ["🍒", "🍒", "🍒"],
   "reward": 100,
   "streak": 0,
-  "message": "축하합니다! 100 토큰 획득!"
+  "message": "Congratulations! You've won 100 tokens!"
 }
 ```
 
-### 에러 응답
+### Error Response
 ```json
 {
   "success": false,
   "error_code": "INSUFFICIENT_TOKENS",
-  "message": "토큰이 부족합니다.",
+  "message": "Insufficient tokens.",
   "required_tokens": 10,
   "current_tokens": 5
 }
 ```
 
-## 7. 상태 코드
+## 7. Status Codes
 
-- `200` - 성공
-- `400` - 잘못된 요청
-- `401` - 인증 실패  
-- `402` - 토큰 부족
-- `403` - 권한 없음
-- `404` - 리소스 없음
-- `409` - 중복 데이터
-- `500` - 서버 오류
+- `200` - Success
+- `400` - Bad Request
+- `401` - Authentication Failed  
+- `402` - Insufficient Tokens
+- `403` - Forbidden
+- `404` - Not Found
+- `409` - Conflict
+- `500` - Internal Server Error
 
-## 8. 요청 제한
+## 8. Request Limits
 
-- **일반 API**: 분당 100회
-- **게임 API**: 분당 30회
-- **채팅 API**: 제한 없음
-- **인증 API**: 분당 10회
+- **General API**: 100 requests per minute
+- **Game API**: 30 requests per minute
+- **Chat API**: No limit
+- **Authentication API**: 10 requests per minute
 
-## 9. 개발 환경 설정
+## 9. Development Environment Setup
 
-### 로컬 개발
+### Local Development
 ```bash
-# Backend 실행
+# Run Backend
 uvicorn app.main:app --reload --port 8000
 
-# Frontend 실행  
+# Run Frontend  
 npm run dev
 
-# WebSocket 테스트
+# Test WebSocket
 wscat -c ws://localhost:8000/chat/ws/1
 ```
 
-### 환경변수 설정
-환경별 설정은 [환경 설정 가이드](./13-environment-config.md) 참조
+### Environment Variable Setup
+For environment-specific settings, refer to the [Environment Configuration Guide](./13-environment-config.md)

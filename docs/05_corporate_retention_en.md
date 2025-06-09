@@ -2,6 +2,53 @@
 
 ## 5.1. 목표 🎯
 
+05_corporate_retention_en.md
+🤝 Corporate Site Retention & Cross-Platform Reward System
+5.1. Objective
+Build a strong retention loop between the app and the corporate site
+
+Use "cyber tokens" as the main cross-platform reward
+
+Maximize cross-participation, cross-revenue, and dopamine triggers at each transition
+
+5.2. Integrated Workflow
+App → Corporate Site
+
+Trigger: Low in-app tokens, flash offer ending, etc.
+
+Show deep link: https://corporate-site.com/login?userId={user_id}&source=app_shortage
+
+On landing: Quizzes/events grant 100–500 tokens; instant reward for login
+
+Corporate Site → App
+
+After reward on site (event, purchase): “Go to app for 300 tokens/free gacha.”
+
+On app entry: Show animation, bonus gacha, push notification
+
+5.3. Reward/Token Flow
+Corporate site visits = 100–500 tokens instantly (updated in Redis, app push)
+
+Purchases on site grant more tokens + app coupons
+
+All tracked via site_visits, site_rewards, user_rewards
+
+5.4. Analytics & Triggers
+Scheduled batch jobs for reminder, token updates, etc.
+
+Track inflow/outflow rates, retention loops
+
+5.5. Dopamine Triggers Table
+Trigger	Detail	Effect
+Variable-Ratio Reward	Slot/gacha/roulette uncertainty	↑ Dopamine/repeat
+Limited-Time Offer	Site events with countdown	Scarcity/Immediate Act
+Social Proof	Leaderboard in app	Competition/Spending
+Free Gacha Ticket	Free in-app gacha for site activity	App return
+
+
+
+
+
 ### 주요 목적
 
 본사 사이트(Corporate Site)와 앱 간의 강력한 리텐션 사이클을 구축
