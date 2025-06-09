@@ -5,10 +5,10 @@ from app.schemas import VIPInfoResponse, VIPExclusiveContentItem # Ensure these 
 from app.services.age_verification_service import AgeVerificationService
 from app.services.adult_content_service import AdultContentService, ContentStageEnum, STAGE_DETAILS # For content access and stage defs
 from datetime import datetime
-from typing import List, Optional, Dict # Added Dict
+from typing import List, Optional, Dict, Any # Added Dict and Any
 
 # Define VIP Tiers (could be more dynamic, e.g., from DB config)
-VIP_TIERS: Dict[str, Dict[str, any]] = {
+VIP_TIERS: Dict[str, Dict[str, Any]] = {
     "Whale": {"tier_name": "Ultimate VIP", "discount_percentage": 0.15, "min_segment_order": STAGE_DETAILS[ContentStageEnum.VIP]["order"]},
     # Add other VIP tiers if they are distinct from RFM groups
     # min_segment_order indicates the access level this VIP tier inherently grants
@@ -20,17 +20,26 @@ class VIPContentService:
         self.age_verification_service = age_verification_service
         self.adult_content_service = adult_content_service # To leverage content fetching and access logic
 
-    def _get_user_vip_details(self, user_id: int) -> Optional[Dict[str, any]]:
+    def _get_user_vip_details(self, user_id: int) -> Optional[Dict[str, Any]]:
         # This method assumes UserSegment.rfm_group is the source of VIP status.
         user_segment = self.db.query(UserSegment).filter(UserSegment.user_id == user_id).first()
-        if user_segment and user_segment.rfm_group in VIP_TIERS:
+        if not user_segment:
+            return None
+            
+        # Safely check if rfm_group exists and convert to string
+        try:
+            rfm_group = str(getattr(user_segment.rfm_group, 'value', user_segment.rfm_group))
+        except (AttributeError, TypeError):
+            return None
+
+        if rfm_group in VIP_TIERS:
             # Additionally, ensure the user's segment actually grants VIP level access
             # This check might be redundant if VIP_TIERS is strictly for 'Whale' which implies VIP access order.
             # user_segment_order = self.adult_content_service._get_user_segment_max_order(user_id)
             # required_vip_order = VIP_TIERS[user_segment.rfm_group].get("min_segment_order", STAGE_DETAILS[ContentStageEnum.VIP]["order"])
             # if user_segment_order >= required_vip_order:
             #     return VIP_TIERS[user_segment.rfm_group]
-            return VIP_TIERS[user_segment.rfm_group] # Simplified: if rfm_group in VIP_TIERS, they are VIP.
+            return VIP_TIERS.get(rfm_group)
         return None
 
     def get_vip_info(self, user_id: int) -> Optional[VIPInfoResponse]:

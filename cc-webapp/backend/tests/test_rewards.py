@@ -18,7 +18,8 @@ engine = create_engine(
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create tables in the in-memory database before any tests run
+# Drop and recreate tables to ensure schema is up to date
+Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 def override_get_db() -> Generator[Session, None, None]:
@@ -30,7 +31,13 @@ def override_get_db() -> Generator[Session, None, None]:
         if db:
             db.close()
 
-app.dependency_overrides[get_db] = override_get_db
+@pytest.fixture(autouse=True)
+def override_dependency() -> Generator[None, None, None]:
+    original = app.dependency_overrides.copy()
+    app.dependency_overrides[get_db] = override_get_db
+    yield
+    app.dependency_overrides = original
+
 client = TestClient(app)
 
 # --- Fixture for Test Data Setup & Teardown ---

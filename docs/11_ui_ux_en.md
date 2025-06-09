@@ -1,6 +1,39 @@
 # 🎨 UI/UX 디자인 시스템 문서
 
 ## 서론 🌟
+🎨 UI/UX Design System
+Principles
+F2P game-like monetization with cyber tokens
+
+Dopamine loop: instant feedback, variable reward, scarcity/urgency
+
+VIP onboarding (invite code only), strong sense of exclusivity
+
+Emotional journey: anticipation → challenge → achievement → retention
+
+Key Screens
+Onboarding: Invite code input (VIP, dark theme, animation)
+
+Dashboard: Token balance, CJ AI chat bubble, mission cards
+
+Game: Slots/roulette/RPS, with microinteractions and animation
+
+Unlock Panel: Horizontal swipe cards for stage unlock, unlock animation
+
+Gacha: Large pull button, ticket/coin animations
+
+Visual Identity
+Dark mode, neon accents (#4F46E5, #F59E0B), clean layout, Inter font
+
+Animations and sound for reward/failure/notification
+
+Accessibility: WCAG 4.5:1 contrast, sound/motion toggle
+
+Prototype Flow
+Invite → login → dashboard → game/feedback → unlock/gacha
+
+Always return to main dashboard; guide users between app and site via CTA
+
 
 이 UI/UX는 "사이버 토큰"을 축으로 한 F2P 모바일게임식 과금 구조와 
 "도파민 루프"(즉각 피드백 + 변수 보상 + 한정성) 트리거를 극대화하며, 

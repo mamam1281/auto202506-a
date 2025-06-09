@@ -214,6 +214,18 @@ bash
   - POST: { user_id, action_type } → 즉각 피드백 메시지 + 애니메이션 키 값 리턴
   - 확장: 전투패스 레벨업, 과금 시에도 "감정 토스트" 제공
 
+- **Advanced AI Analysis Module (/ai)** 🆕
+  - POST /ai/analyze: Advanced emotion analysis with context
+  - GET /ai/templates: Response template query
+
+- **Recommendation Module (/recommend)** 🆕
+  - GET /recommend/personalized: AI-powered game recommendations
+  - POST /recommend/feedback: User recommendation feedback
+
+- **Feedback Generation Module (/feedback)** 🆕
+  - POST /feedback/generate: Emotion-based personalized feedback
+  - GET /feedback/templates: Available feedback templates
+
 - **Adult Content Module (/api/unlock)**
   - GET: { user_id } → 현재 스테이지 + 다음 단계 조건 리턴
   - POST: { user_id, purchase_type? } (프리미엄 재화 사용 언락)
@@ -510,49 +522,61 @@ bash
 #### API Modules
 
 - **User Module (/api/users)**
-  - POST /api/users/signup (Nickname, Email, Password)
+  - POST /api/users/signup (닉네임, 이메일, 비밀번호)
   - POST /api/users/login
-  - POST /api/users/verify-age (Age verification)
-  - GET /api/users/{id}/profile (Points, Tier, BattlePass level, etc.)
+  - POST /api/users/verify-age (나이 검증)
+  - GET /api/users/{id}/profile (포인트, 티어, 배틀패스 레벨 등)
 
 - **Action Module (/api/actions)**
   - POST: { user_id, action_type, value?, metadata? }
-  - Example: action_type = "SLOT_SPIN", value = coins_spent
-  - DB write → Redis update (streak_count, last_action_ts) → Kafka streaming
+  - 예: action_type = "SLOT_SPIN", value = coins_spent
+  - DB 쓰기 → Redis 업데이트 (streak_count, last_action_ts) → Kafka 송출
 
 - **Reward Module (/api/users/{id}/rewards)**
-  - GET: Returns reward history by user (Filter: type, period)
+  - GET: 유저별 보상 이력 리턴 (필터: type, 기간)
   - Internal logic: calculateReward(streak_count, user_segment, event_type)
 
 - **Emotion Feedback Module (/api/feedback)**
-  - POST: { user_id, action_type } → Returns immediate feedback message + animation key value
-  - Extension: "Emotion toast" provided even on BattlePass level-up, and purchases
+  - POST: { user_id, action_type } → 즉각 피드백 메시지 + 애니메이션 키 값 리턴
+  - 확장: 전투패스 레벨업, 과금 시에도 "감정 토스트" 제공
+
+- **Advanced AI Analysis Module (/ai)** 🆕
+  - POST /ai/analyze: Advanced emotion analysis with context
+  - GET /ai/templates: Response template query
+
+- **Recommendation Module (/recommend)** 🆕
+  - GET /recommend/personalized: AI-powered game recommendations
+  - POST /recommend/feedback: User recommendation feedback
+
+- **Feedback Generation Module (/feedback)** 🆕
+  - POST /feedback/generate: Emotion-based personalized feedback
+  - GET /feedback/templates: Available feedback templates
 
 - **Adult Content Module (/api/unlock)**
-  - GET: { user_id } → Returns current stage + conditions for the next stage
-  - POST: { user_id, purchase_type? } (Unlock using premium currency)
-  - Internal: attempt_content_unlock (Review → DB record)
+  - GET: { user_id } → 현재 스테이지 + 다음 단계 조건 리턴
+  - POST: { user_id, purchase_type? } (프리미엄 재화 사용 언락)
+  - 내부: attempt_content_unlock (심사 → DB 기록)
 
 - **Shop & Gacha Module (/api/shop, /api/gacha)**
   - POST /api/shop/buy: { user_id, item_id, quantity, payment_method }
-  - POST /api/gacha/spin: { user_id, spins = 1~10 } → Returns: reward_detail
-  - Gacha probability table saved in RDB → Periodic A/B testing
+  - POST /api/gacha/spin: { user_id, spins = 1~10 } → 리턴: reward_detail
+  - 가챠 확률 테이블 RDB 저장 → 주기적 A/B 테스트
 
 - **BattlePass Module (/api/battlepass)**
-  - GET /api/battlepass/status: { user_id } → Current level, reward lock status
-  - POST /api/battlepass/claim: { user_id, tier_id } → Reward distribution
+  - GET /api/battlepass/status: { user_id } → 현재 레벨, 보상 잠금 상태
+  - POST /api/battlepass/claim: { user_id, tier_id } → 보상 지급
 
 - **Segmentation & Personalization (/api/user-segments)**
-  - GET { user_id } → Returns RFM group, LTV predicted value, recommended reward probability, recommended time zone
+  - GET { user_id } → RFM 그룹, LTV 예측값, 추천 보상 확률, 추천 시간대 리턴
   - Internal: compute_rfm_and_update_segments (APScheduler)
 
 - **Notification Module (/api/notification)**
-  - POST { user_id, message, type, schedule? } → Saved to queue
-  - Celery Worker: Sends Push/SSE/Email at scheduled time
+  - POST { user_id, message, type, schedule? } → 큐에 저장
+  - Celery Worker: 예약된 시각에 Push/SSE/Email 전송
 
 - **Analytics & Reporting (/api/analytics)**
-  - GET /api/analytics/retention: Retention report (D1, D7, D30)
-  - GET /api/analytics/spend: Spending trend report (Daily, Weekly)
+  - GET /api/analytics/retention: 리텐션 레포트 (D1, D7, D30)
+  - GET /api/analytics/spend: 과금 트렌드 리포트 (일별, 주별)
 
 #### Real-Time Data Processing
 
@@ -563,14 +587,14 @@ bash
   - battlepass:{user_id}:xp (int)
 
 - **Kafka:**
-  - Topic user_actions → Event streaming such as "SLOT_SPIN", "GACHA_SPIN", "PURCHASE" 
-  - Aggregation to Analytics services (ClickHouse, Druid)
+  - Topic user_actions → "SLOT_SPIN", "GACHA_SPIN", "PURCHASE" 등 이벤트 스트리밍
+  - Analytics 서비스 (ClickHouse, Druid)로 집계
 
 - **Celery + APScheduler:**
-  - Daily 02:00 UTC: Executes compute_rfm_and_update_segments (RFM recalculation)
-  - Hourly: "Inactive users → Reminder push (DAILY_INACTIVE)"
-  - Weekly: Sends "Bonus XP coupon" to BattlePass underachievers
-  - Event-based: Immediate "Level-Up Reward" Push when a user reaches a specific rank
+  - Daily 02:00 UTC: compute_rfm_and_update_segments 실행 (RFM 재계산)
+  - Hourly: "미접속 유저 → 리마인더 푸시(DAILY_INACTIVE)"
+  - Weekly: BattlePass 미달성자 대상 "보너스 XP 쿠폰 발송"
+  - 이벤트 기반: 유저가 특정 랭크 도달 시 즉시 "Level-Up Reward" Push
 
 ### 1.3.3. Database (PostgreSQL)
 - **users**
@@ -579,7 +603,7 @@ bash
 
 - **user_actions**
   - id (PK), user_id (FK), action_type (string), value (float), timestamp (datetime)
-  - Example: ("SLOT_SPIN", 100 coins), ("GACHA_SPIN", 1 gem)
+  - 예: ("SLOT_SPIN", 100 coins), ("GACHA_SPIN", 1 gem)
 
 - **user_segments**
   - id (PK), user_id (FK, unique), rfm_group (string: Whale/Medium/Low),

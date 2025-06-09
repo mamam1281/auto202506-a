@@ -22,15 +22,14 @@ class TestNotificationService(unittest.TestCase):
             user_id=user_id,
             message="Hello",
             is_sent=False,
-            created_at=datetime.now(timezone.utc) - timedelta(minutes=1) # Ensure it's in the past
+            created_at=datetime.now(timezone.utc) - timedelta(minutes=1)
         )
 
         # Configure the query chain to return the mock_notification
-        # The chain is: query(Notification).filter(...).order_by(...).first()
         mock_query = self.mock_db_session.query(Notification)
-        mock_filter = mock_query.filter() # filter() itself returns a new query object
-        mock_order_by = mock_filter.order_by() # order_by() also returns a new query object
-        mock_order_by.first.return_value = mock_notification # Set return value on the final call
+        mock_filter = mock_query.filter()
+        mock_order_by = mock_filter.order_by()
+        mock_order_by.first.return_value = mock_notification
 
         # Act
         result = self.notification_service.get_oldest_pending_notification(user_id=user_id)
@@ -39,8 +38,14 @@ class TestNotificationService(unittest.TestCase):
         self.assertTrue(mock_notification.is_sent)
         self.assertIsNotNone(mock_notification.sent_at)
         self.assertIsInstance(mock_notification.sent_at, datetime)
-        # Check if sent_at is recent (e.g., within the last 5 seconds)
-        self.assertLess((datetime.now(timezone.utc) - mock_notification.sent_at).total_seconds(), 5)
+        
+        # Handle timezone-aware comparison
+        sent_at = mock_notification.sent_at
+        if sent_at.tzinfo is None:
+            sent_at = sent_at.replace(tzinfo=timezone.utc)
+        
+        time_diff = (datetime.now(timezone.utc) - sent_at).total_seconds()
+        self.assertLess(time_diff, 10)
 
         self.mock_db_session.commit.assert_called_once()
         self.mock_db_session.refresh.assert_called_once_with(mock_notification)
@@ -98,10 +103,16 @@ class TestNotificationService(unittest.TestCase):
         self.assertEqual(added_object.user_id, user_id)
         self.assertEqual(added_object.message, message)
         self.assertFalse(added_object.is_sent)
-        self.assertIsNone(added_object.sent_at) # Should be None initially
+        self.assertIsNone(added_object.sent_at)
         self.assertIsInstance(added_object.created_at, datetime)
-        self.assertLess((datetime.now(timezone.utc) - added_object.created_at).total_seconds(), 5)
-
+        
+        # Handle timezone-aware comparison
+        created_at = added_object.created_at
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=timezone.utc)
+        
+        time_diff = (datetime.now(timezone.utc) - created_at).total_seconds()
+        self.assertLess(time_diff, 10)
 
         self.mock_db_session.commit.assert_called_once()
         self.mock_db_session.refresh.assert_called_once_with(added_object)

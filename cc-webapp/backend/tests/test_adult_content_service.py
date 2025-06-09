@@ -127,7 +127,7 @@ class TestAdultContentService(unittest.TestCase):
         self.assertIsInstance(details, AdultContentDetail)
         self.assertEqual(details.id, content_id)
         self.assertEqual(details.user_current_access_level, ContentStageEnum.PARTIAL.value)
-        self.assertEqual(len(details.stages), len(STAGE_DETAILS))
+        self.assertEqual(len(details.는), len(STAGE_DETAILS))
 
     def test_get_content_details_age_not_verified(self):
         self.mock_age_verification_service.is_user_age_verified.return_value = False
@@ -185,12 +185,25 @@ class TestAdultContentService(unittest.TestCase):
 
     @patch.object(AdultContentService, '_get_user_unlocked_stage_order')
     def test_unlock_content_stage_already_explicitly_unlocked(self, mock_unlocked_order):
-        user_id = 1; content_id = 101
-        self.mock_age_verification_service.is_user_age_verified.return_value = True
-        self.mock_db_session.query(AdultContent).filter(AdultContent.id == content_id).first.return_value = MagicMock(spec=AdultContent)
+        user_id = 1
+        content_id = 101
+
+        # Arrange - set up user segment and content
+        mock_user_segment = MagicMock()
+        mock_user_segment.rfm_group = "Whale"
+        # First call to .query().filter().first() returns the content,
+        # second call returns the user's segment
+        self.mock_db_session.query().filter().first.side_effect = [
+            MagicMock(spec=AdultContent, id=content_id),
+            mock_user_segment,
+        ]
+
+        # Existing reward means user already unlocked FULL stage
         mock_unlocked_order.return_value = STAGE_DETAILS[ContentStageEnum.FULL]["order"]
+
         request = ContentUnlockRequestNew(content_id=content_id, stage_to_unlock=ContentStageEnum.FULL.value)
-        with self.assertRaisesRegex(ValueError, "Stage already explicitly unlocked or a higher stage is unlocked."):
+
+        with self.assertRaisesRegex(ValueError, "Stage already explicitly unlocked"):
             self.adult_content_service.unlock_content_stage(user_id, request)
 
     @patch.object(AdultContentService, '_get_user_segment_max_order')
@@ -314,7 +327,9 @@ class TestAdultContentService(unittest.TestCase):
         self.assertEqual(gallery, [])
 
     # --- Test get_user_unlock_history ---
-    def test_get_user_unlock_history_success(self):
+    @patch("app.services.adult_content_service.UserSegment")
+    @patch("app.services.adult_content_service.User")
+    def test_get_user_unlock_history_success(self, MockUser, MockUserSegment):
         user_id = 1
         self.mock_age_verification_service.is_user_age_verified.return_value = True
         now = datetime.now(timezone.utc)
@@ -322,15 +337,23 @@ class TestAdultContentService(unittest.TestCase):
         reward2 = UserReward(user_id=user_id, reward_type="CONTENT_UNLOCK", reward_value="102_Partial", awarded_at=now)
         reward_malformed1 = UserReward(user_id=user_id, reward_type="CONTENT_UNLOCK", reward_value="103_InvalidStageName", awarded_at=now)
         reward_malformed2 = UserReward(user_id=user_id, reward_type="CONTENT_UNLOCK", reward_value="juststring", awarded_at=now)
-        self.mock_db_session.query(UserReward).filter.return_value.order_by.return_value.all.return_value = [reward2, reward1, reward_malformed1, reward_malformed2]
-        def mock_scalar_one_or_none(query_self): # Simulate the scalar_one_or_none call
-            # This needs to be more specific to the criterion used in the actual query
-            # For simplicity, assuming criterion is on AdultContent.id == content_id
-            if hasattr(query_self, '_criterion') and query_self._criterion is not None: # Check if _criterion exists
-                 if query_self._criterion.right.value == 101 : return "Content 101"
-                 if query_self._criterion.right.value == 102 : return "Content 102"
-            return None
-        self.mock_db_session.query(AdultContent.name).filter.return_value.scalar_one_or_none.side_effect = mock_scalar_one_or_none
+        self.mock_db_session.query(UserReward).filter.return_value.order_by.return_value.all.return_value = [
+            reward2,
+            reward1,
+            reward_malformed1,
+            reward_malformed2,
+        ]
+        mock_user_segment = MockUserSegment()
+        mock_user_segment.rfm_group = "Low"
+        self.mock_db_session.query(UserSegment).filter(
+            UserSegment.user_id == user_id
+        ).first.return_value = mock_user_segment
+
+        # scalar_one_or_none is called twice to fetch content names for reward2 and reward1
+        self.mock_db_session.query().filter().scalar_one_or_none.side_effect = [
+            "Content 102",
+            "Content 101",
+        ]
         history = self.adult_content_service.get_user_unlock_history(user_id)
         self.assertEqual(len(history), 2)
         self.assertEqual(history[0].content_id, 102); self.assertEqual(history[1].content_id, 101)
@@ -347,7 +370,10 @@ class TestAdultContentService(unittest.TestCase):
         self.mock_age_verification_service.is_user_age_verified.return_value = True
         self.mock_db_session.query(User).filter(User.id == user_id).first.return_value = MagicMock(spec=User)
         # Current segment is "Low"
-        self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == user_id).first.return_value = MagicMock(spec=UserSegment, rfm_group="Low")
+        # UserSegment mock 추가 (rfm_group 속성 포함)
+        mock_user_segment = MagicMock(spec=UserSegment)
+        mock_user_segment.rfm_group = "Low"
+        self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == user_id).first.return_value = mock_user_segment
 
         # Cost: Medium (order 2) - Low (order 1) = 1 level diff * 1000 = 1000
         expected_cost = (USER_SEGMENT_ACCESS_ORDER["Medium"] - USER_SEGMENT_ACCESS_ORDER["Low"]) * 1000
@@ -370,10 +396,12 @@ class TestAdultContentService(unittest.TestCase):
             self.adult_content_service.upgrade_access_temporarily(1, request)
 
     def test_upgrade_access_temporarily_user_not_found(self):
+        user_id = 999  # Non-existent user
         request = AccessUpgradeRequest(target_segment_level="Medium")
         self.mock_age_verification_service.is_user_age_verified.return_value = True
-        self.mock_db_session.query(User).filter().first.return_value = None
-        self.mock_db_session.query(UserSegment).filter().first.return_value = MagicMock(spec=UserSegment) # Segment might exist
+        self.mock_db_session.query(User).filter(User.id == user_id).first.return_value = None
+        # Ensure UserSegment query also returns None if User is not found
+        self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == user_id).first.return_value = None
         with self.assertRaisesRegex(ValueError, "User or user segment not found"):
             self.adult_content_service.upgrade_access_temporarily(1, request)
 

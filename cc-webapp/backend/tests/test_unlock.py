@@ -11,16 +11,15 @@ from app.main import app
 from app.database import get_db  # Original get_db dependency to override
 
 # --- Test Database Setup ---
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_unlock.db" # In-memory SQLite for tests
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test_unlock.db"  # SQLite DB file for tests
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False} # Needed for SQLite
+    connect_args={"check_same_thread": False},
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create tables in the in-memory database before any tests run
-# This should ideally run once, but for simplicity here, it's module-level.
-# For more robust test separation, consider pytest fixtures for table creation/dropping.
+# Ensure schema is fresh for each test run
+Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 
@@ -37,7 +36,13 @@ def override_get_db() -> Generator[Session, None, None]:
             db.close()
 
 # Apply the dependency override to the FastAPI app instance
-app.dependency_overrides[get_db] = override_get_db
+# Override FastAPI dependency for this test module and restore after each test
+@pytest.fixture(autouse=True)
+def override_dependency() -> Generator[None, None, None]:
+    original = app.dependency_overrides.copy()
+    app.dependency_overrides[get_db] = override_get_db
+    yield
+    app.dependency_overrides = original
 
 client = TestClient(app)
 

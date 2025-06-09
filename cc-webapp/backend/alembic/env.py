@@ -31,7 +31,7 @@ if config.config_file_name is not None:
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-db_url = os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/cc_db")
+db_url = os.getenv("DATABASE_URL", "sqlite:///dev.db")
 
 
 def run_migrations_offline() -> None:

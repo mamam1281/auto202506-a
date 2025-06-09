@@ -89,8 +89,9 @@ async def get_user_rewards(
         models.UserReward.awarded_at.desc() # Order by most recent
     ).offset(offset).limit(page_size).all()
 
-    # FastAPI will handle the conversion of rewards_query_result (list of UserReward SQLAlchemy objects)
-    # to a list of RewardItem Pydantic objects because of `response_model` and `orm_mode=True` in RewardItem.
+    # FastAPI will handle the conversion of rewards_query_result (list of UserReward
+    # SQLAlchemy objects) to a list of RewardItem Pydantic objects because of the
+    # defined response_model configuration.
 
     return PaginatedRewardsResponse(
         rewards=rewards_query_result,

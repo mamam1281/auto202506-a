@@ -30,25 +30,26 @@ from pydantic import BaseModel  # For request/response models
 from typing import Optional
 
 from app.routers import (
-    actions,
-    gacha,
-    games,  # ✅ 이미 등록됨!
-    rewards,
-    unlock,
-    notification,
-    user_segments,
-    feedback,
-    adult_content,
-    corporate,
-    users,
-    doc_titles,
-    # Routers for new services
-    tracking, # Added for TrackingService
-
     auth,
+    games,
+    segments,
     chat,
-
-
+    feedback,
+    ai,
+    analyze,
+    recommend,
+    rewards,   # 추가
+    unlock,    # 추가
+    user_segments, # 추가
+    gacha,  # 추가
+    notification,  # 추가
+    tracking,  # 추가
+    personalization,  # 추가
+    adult_content,  # 추가
+    actions,  # 추가
+    corporate,  # 추가
+    users,  # 추가
+    recommendation  # 추가된 임포트
 )
 
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---
@@ -131,27 +132,26 @@ app.add_middleware(
 )
 
 # Register API routers
-app.include_router(actions.router, prefix="/api")
-app.include_router(gacha.router, prefix="/api")
-app.include_router(games.router, prefix="/api")  # ✅ 이미 포함됨!
-app.include_router(rewards.router, prefix="/api")
-app.include_router(unlock.router, prefix="/api")
-app.include_router(notification.router, prefix="/api")
-app.include_router(user_segments.router, prefix="/api")
-app.include_router(feedback.router, prefix="/api")
-app.include_router(adult_content.router, prefix="/api")
-app.include_router(corporate.router, prefix="/api")
-app.include_router(users.router, prefix="/api")
-app.include_router(doc_titles.router, prefix="/api")
-
-# Router for TrackingService
-app.include_router(tracking.router, prefix="/api") # This will make routes like /api/tracking/site-visit
-
 app.include_router(auth.router, prefix="/api")
-app.include_router(chat.router)
-
-
-app.include_router(auth.router, prefix="/api")   # ✅ 이미 포함됨!
+app.include_router(games.router, prefix="/api")
+app.include_router(segments.router, prefix="/api") 
+app.include_router(chat.router, prefix="/api")
+app.include_router(feedback.router, prefix="/api")
+app.include_router(ai.router, prefix="/api")  # 🆕 Added AI router
+app.include_router(analyze.router, prefix="/api")  # 🆕 Added analyze router  
+app.include_router(recommend.router, prefix="/api")  # 🆕 Added recommend router
+app.include_router(rewards.router, prefix="/api")  # 추가
+app.include_router(unlock.router, prefix="/api")   # 추가
+app.include_router(user_segments.router, prefix="/api") # 추가
+app.include_router(gacha.router, prefix="/api")  # 추가
+app.include_router(notification.router, prefix="/api")  # 추가
+app.include_router(tracking.router, prefix="/api")  # 추가
+app.include_router(personalization.router, prefix="/api")  # 추가
+app.include_router(adult_content.router, prefix="/api")  # 추가
+app.include_router(actions.router, prefix="/api")  # 추가
+app.include_router(corporate.router, prefix="/api")  # 추가
+app.include_router(users.router, prefix="/api")  # 추가
+app.include_router(recommendation.router, prefix="/api")  # 추가된 라우터 등록
 
 
 # Request/Response Models

@@ -2,6 +2,96 @@
 
 ## 4.1. 개요 🎯
 
+04_adult_rewards_en.md
+🔞 Adult Content & Token-Driven Reward System
+4.1. Overview
+Use adult content unlock as a psychological reward (dopamine loop).
+
+Cyber tokens are F2P-only currency, obtainable exclusively from the corporate site.
+
+Unlock adult content by spending cyber tokens via in-app games (slots/roulette/gacha).
+
+If tokens run out, users are directed to the corporate site, strengthening retention loops.
+
+Key Elements
+Unlock Stages:
+
+Stage 1 (Teaser): Blurred image (200 tokens)
+
+Stage 2 (Partial Reveal): Upper body partial nudity (500 tokens)
+
+Stage 3 (Full Reveal): Full adult content (1,000 tokens)
+
+Variable-Ratio Reward:
+
+Gacha pull yields "content unlock ticket" at low probability (0.5–2%)
+
+Limited-Time Offers:
+
+Example: Weekend 24h event → Stage 1 unlock costs 150 tokens
+
+4.2. Data Model & DB Table
+adult_content (PostgreSQL)
+
+Column	Type	Description
+id	SERIAL (PK)	Unique ID
+stage	INTEGER	Stage number (1,2,3)
+name	VARCHAR	Ex: "Stage 1: Teaser"
+description	VARCHAR	Stage description
+thumbnail_url	VARCHAR	Blurred thumbnail URL
+media_url	VARCHAR	Full image/video URL
+required_segment_level	INTEGER	User segment level (Whale=3, etc.)
+base_token_cost	INTEGER	Tokens to unlock (200/500/1000)
+flash_offer_cost	INTEGER	Discounted token amount (for events)
+
+user_rewards
+
+Column	Type	Description
+id	SERIAL (PK)	Unique ID
+user_id	INTEGER	FK: users.id
+reward_type	VARCHAR(50)	Ex: "CONTENT_UNLOCK", "TOKEN_TICKET"
+reward_value	VARCHAR(255)	Ex: "Stage1", "TicketStage2"
+awarded_at	TIMESTAMP	When awarded
+trigger_action_id	INTEGER	FK: user_actions.id (optional)
+
+4.3. Unlock Logic (FastAPI)
+Endpoint: POST /api/unlock
+
+Parameters: user_id, desired_stage
+
+Flow:
+
+Check user and segment level.
+
+Check token balance (deduct on unlock).
+
+If not enough tokens, HTTP 402.
+
+Record unlock in user_rewards.
+
+Return: Unlocked media URL, tokens left, success message.
+
+4.4. Gacha / Ticket System
+Endpoint: POST /api/gacha
+
+Spend 50 tokens for a random chance at ticket or coins.
+
+"CONTENT_TICKET" for Stage 1/2/3 possible at different weights.
+
+4.5. Flash Offer API
+Endpoint: GET /api/flash_offer
+
+Returns: Discounted unlock cost, time remaining
+
+4.6. Token Conversion & Corporate Integration
+Earn tokens from the corporate site (quizzes, events, purchases)
+
+Spend tokens in the app for unlocks or gacha
+
+Insufficient tokens → direct user to main site for more
+
+
+
 ### 목표
 
 성인 콘텐츠 언락을 심리적 보상으로 사용하여 도파민 분비를 자극

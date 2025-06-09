@@ -6,6 +6,12 @@ from datetime import datetime
 
 # Schemas for existing functionality (keeping them for now)
 
+class FeedbackResponse(BaseModel):
+    success: bool
+    message: str
+    recommendation: str
+    reward_suggestion: Optional[str] = None
+
 class ContentUnlockRequest(BaseModel): # This might be superseded or augmented by new AdultContent schemas
     user_id: int # Assuming this might be part of old system, new ones might get user from auth
     stage: int
@@ -39,7 +45,7 @@ class FlashOfferBase(BaseModel):
     is_purchased: bool = False
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class FlashOffer(FlashOfferBase):
     id: int
@@ -55,7 +61,7 @@ class VIPAccessLogBase(BaseModel):
     tokens_spent: Optional[int] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class VIPAccessLog(VIPAccessLogBase):
     id: int
@@ -70,7 +76,7 @@ class AgeVerificationRecordBase(BaseModel):
     # as it's sensitive. Specific schemas can include it if needed.
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AgeVerificationRecord(AgeVerificationRecordBase):
     id: int
