@@ -5,3 +5,4 @@ axios
 @mui/material
 @emotion/react
 @emotion/styled
+sqlalchemy

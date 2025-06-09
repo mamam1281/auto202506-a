@@ -18,8 +18,12 @@
    - ✅ **테스트 경로 수정** - PR #26으로 안정성 향상
    - ✅ **로그인 테스트 통과** - testuser 단축키 추가
 
-2. **게임 로직 시스템** (기존)  
-   - ✅ games.py 라우터 실제 존재 확인
+2. **게임 로직 시스템** (슬롯/룰렛/가챠)  
+   - ✅ games.py 라우터 구현 (슬롯, 룰렛, 가챠 API)
+   - [ ] 게임 서비스(Service/Repository) 계층 분리
+   - [ ] 게임 단위 테스트(test_games.py, test_slot_service.py 등) 작성 및 통과
+   - [ ] 게임 통합 테스트(test_int_games_service.py 등) 작성 및 통과
+   - [ ] 테스트 커버리지 90% 이상 달성
 
 3. **🆕 CJ AI 시스템** ✨ (새로 완성)
    - ✅ **chat.py**: WebSocket 기반 실시간 채팅
@@ -161,8 +165,12 @@
    - ✅ **Test path fixed** - Improved stability with PR #26
    - ✅ **Login test passed** - testuser shortcut added
 
-2. **Game Logic System** (Existing)
-   - ✅ Confirmed existence of games.py router
+2. **Game Logic System** (슬롯/룰렛/가챠)  
+   - ✅ games.py 라우터 구현 (슬롯, 룰렛, 가챠 API)
+   - [ ] 게임 서비스(Service/Repository) 계층 분리
+   - [ ] 게임 단위 테스트(test_games.py, test_slot_service.py 등) 작성 및 통과
+   - [ ] 게임 통합 테스트(test_int_games_service.py 등) 작성 및 통과
+   - [ ] 테스트 커버리지 90% 이상 달성
 
 3. **🆕 CJ AI System** ✨ (Newly Completed)
    - ✅ **chat.py**: WebSocket-based real-time chat

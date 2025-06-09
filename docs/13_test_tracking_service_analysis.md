@@ -319,3 +319,37 @@ npx servor src index.html --browse
 
 **다음 단계**: 기본 구조 설정 및 첫 페이지 구현
 
+20250609 - 10:20
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-8.4.0, pluggy-1.6.0
+rootdir: c:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a
+plugins: anyio-4.9.0, asyncio-1.0.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 77 items
+
+cc-webapp\backend\tests\integration\test_int_adult_content_service.py s. [  2%]
+                                                                         [  2%]
+cc-webapp\backend\tests\integration\test_int_flash_offer_service.py ..   [  5%]
+cc-webapp\backend\tests\integration\test_int_notification_service.py ... [  9%]
+                                                                         [  9%]
+cc-webapp\backend\tests\integration\test_int_tracking_service.py .       [ 10%]
+cc-webapp\backend\tests\test_adult_content_service.py .................. [ 33%]
+...............                                                          [ 53%]
+cc-webapp\backend\tests\test_age_verification_service.py .......         [ 62%]
+cc-webapp\backend\tests\test_flash_offer_service.py .......              [ 71%]
+cc-webapp\backend\tests\test_notification_service.py .....               [ 77%]
+cc-webapp\backend\tests\test_reward_service.py ...                       [ 81%]
+cc-webapp\backend\tests\test_tracking_service.py ..                      [ 84%]
+cc-webapp\backend\tests\test_vip_content_service.py ............         [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\pydantic\_internal\_config.py:323
+.venv\Lib\site-packages\pydantic\_internal\_config.py:323
+.venv\Lib\site-packages\pydantic\_internal\_config.py:323
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\pydantic\_internal\_config.py:323: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 76 passed, 1 skipped, 3 warnings in 1.50s ==================
+Finished running tests!
+
