@@ -21,8 +21,9 @@ redis_client = None
 if redis is not None:
     try:
         redis_client = redis.Redis.from_url(REDIS_URL, decode_responses=True)
-        redis_client.ping()
-        logger.info("Connected to Redis at %s", REDIS_URL)
+        if redis_client:
+            redis_client.ping()
+            logger.info("Connected to Redis at %s", REDIS_URL)
     except Exception as exc:  # noqa: BLE001
         logger.exception("Redis unavailable: %s. Falling back to in-memory cache", exc)
         redis_client = None
@@ -100,7 +101,7 @@ class GameRepository:
                 .filter(models.UserSegment.user_id == user_id)
                 .first()
             )
-            return seg.rfm_group if seg and seg.rfm_group else "Low"
+            return "Low" if seg is None else (str(seg.rfm_group) if seg.rfm_group is not None else "Low")
         except SQLAlchemyError as exc:
             logger.error("Error fetching user segment: %s", exc)
             db.rollback()
@@ -118,5 +119,3 @@ class GameRepository:
             logger.error("Failed to record action: %s", exc)
             db.rollback()
             raise
-
-
