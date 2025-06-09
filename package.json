@@ -20,5 +20,21 @@
     "build": "vite build",
     "preview": "vite preview --port 3000 --host 0.0.0.0",
     "start": "vite --port 3000 --host 0.0.0.0"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mamam1281/auto202506-a.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mamam1281/auto202506-a/issues"
+  },
+  "homepage": "https://github.com/mamam1281/auto202506-a#readme",
+  "description": ""
 }
