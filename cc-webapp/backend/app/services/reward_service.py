@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError # Import SQLAlchemyError
@@ -19,7 +19,7 @@ class RewardService:
         awarded_at: datetime = None,
     ) -> models.UserReward:
         if awarded_at is None:
-            awarded_at = datetime.utcnow()
+            awarded_at = datetime.now(timezone.utc)
 
         reward_value = f"{content_id}_{stage_name}"
 
