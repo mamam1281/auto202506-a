@@ -1,7 +1,25 @@
+"""
+Pytest configuration for MVP tests
+"""
+
 import pytest
+import os
+import sys
+from unittest.mock import Mock
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session as SQLAlchemySession # Renamed to avoid conflict
 from typing import Generator
+
+# Add the app directory to Python path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+# Set test environment
+os.environ.update({
+    "TESTING": "true",
+    "DATABASE_URL": "sqlite:///./test.db",
+    "REDIS_URL": "redis://localhost:6379/1",
+    "LOG_LEVEL": "DEBUG"
+})
 
 # Assuming your models' Base is accessible from app.models
 # Adjust the import path if your Base is defined elsewhere
@@ -59,3 +77,41 @@ def setup_test_database():
     
     # Cleanup
     Base.metadata.drop_all(bind=engine)
+
+@pytest.fixture
+def mock_database():
+    """Mock database for tests"""
+    mock_db = Mock()
+    mock_db.add = Mock()
+    mock_db.commit = Mock()
+    mock_db.query = Mock()
+    return mock_db
+
+@pytest.fixture
+def sample_user():
+    """Sample user data for tests"""
+    return {
+        "user_id": 1,
+        "nickname": "test_user",
+        "tokens": 100,
+        "segment": "Medium"
+    }
+
+@pytest.fixture
+def sample_emotions():
+    """Sample emotion data for tests"""
+    return [
+        {"emotion": "excited", "confidence": 0.9},
+        {"emotion": "frustrated", "confidence": 0.8},
+        {"emotion": "curious", "confidence": 0.7},
+        {"emotion": "neutral", "confidence": 0.6}
+    ]
+
+# Configure pytest markers
+def pytest_configure(config):
+    config.addinivalue_line("markers", "mvp: MVP level tests")
+    config.addinivalue_line("markers", "emotion: Emotion analysis tests")
+    config.addinivalue_line("markers", "game: Game service tests")
+    config.addinivalue_line("markers", "auth: Authentication tests")
+    config.addinivalue_line("markers", "integration: Integration tests")
+    config.addinivalue_line("markers", "slow: Slow running tests")

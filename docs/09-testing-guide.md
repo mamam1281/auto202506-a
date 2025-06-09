@@ -278,19 +278,68 @@ def test_llm_fallback_feedback():
 
 ## 6. Integration Testing Commands
 
-### 6.1. Full System Test
+### 6.1. MVP Test Execution (Updated Path)
 ```bash
-# Run all emotion analysis tests
-pytest tests/unit/test_advanced_emotion.py -v
+# Navigate to correct test directory
+cd cc-webapp/backend
 
-# Test specific emotion scenarios
-pytest -k "emotion" -v
+# Run MVP level tests only
+pytest -m mvp -v
 
-# Test with environment overrides
-SENTIMENT_MODEL_PATH=/models/sentiment_v2.bin pytest tests/unit/test_advanced_emotion.py::test_sentiment_analyzer_local_model -v
+# Run all new emotion tests
+pytest -m emotion -v
+
+# Run specific test file
+pytest tests/test_emotion_mvp.py -v
+
+# Run with discovery check
+pytest tests/ -v --collect-only
+
+# Run all tests with coverage
+pytest tests/ -v --cov=app
 ```
 
-### 6.2. API Endpoint Testing
+### 6.2. Test Location and Structure
+```
+cc-webapp/backend/
+├── tests/
+│   ├── conftest.py              # Test configuration
+│   ├── test_emotion_mvp.py      # MVP emotion tests
+│   ├── test_user_segment_service.py  # Existing tests
+│   ├── test_game_service.py     # Existing tests
+│   └── test_cj_ai_service.py    # Existing tests
+├── pytest.ini                  # Pytest configuration
+└── app/                         # Application code
+```
+
+### 6.3. Test Discovery Debugging
+```bash
+# Check if pytest can find test files
+pytest --collect-only
+
+# Verbose test discovery
+pytest --collect-only -q
+
+# Check specific directory
+pytest tests/unit/ --collect-only
+
+# Run with maximum verbosity
+pytest tests/unit/test_emotion_mvp.py -vvv
+```
+
+### 6.4. Test File Verification
+```bash
+# Verify test file syntax
+python -m py_compile tests/unit/test_emotion_mvp.py
+
+# Run single test
+pytest tests/unit/test_emotion_mvp.py::test_pytest_discovers_this_file -v
+
+# Check imports
+python -c "import tests.unit.test_emotion_mvp; print('Import successful')"
+```
+
+### 6.5. API Endpoint Testing
 ```bash
 # Test emotion analysis endpoint
 curl -X POST "http://localhost:8000/ai/analyze" \
@@ -309,7 +358,7 @@ curl -X POST "http://localhost:8000/feedback/generate" \
   -d '{"user_id": 1, "emotion": "excited", "segment": "Medium"}'
 ```
 
-### 6.3. Database Integration Test
+### 6.6. Database Integration Test
 ```bash
 # Test database migrations
 alembic upgrade head
@@ -321,7 +370,7 @@ psql -d test_db -c "SELECT * FROM user_emotion_logs LIMIT 5;"
 psql -d test_db -c "SELECT * FROM recommendation_history WHERE accepted = true;"
 ```
 
-### 6.4. Redis Integration Test
+### 6.7. Redis Integration Test
 ```bash
 # Test Redis emotion caching
 redis-cli GET "emotion:user:1:latest"
@@ -355,4 +404,28 @@ pytest tests/unit/test_advanced_emotion.py --profile
 
 # Check for memory leaks
 valgrind python -m pytest tests/unit/test_advanced_emotion.py
+```
+
+## 8. Quick Problem Solving 🚀
+
+### 8.1. Missing Dependencies Fix
+```bash
+# Install missing test dependencies
+pip install httpx pytest-asyncio
+
+# If still failing, run MVP tests only
+pytest tests/test_emotion_mvp.py -v
+
+# Skip problematic tests temporarily
+pytest tests/ -v -k "not (auth or chat_ws or gacha_router)"
+```
+
+### 8.2. Test Environment Setup
+```bash
+# Set test environment variables
+export TESTING=true
+export DATABASE_URL=sqlite:///./test.db
+
+# Run tests without external services
+pytest tests/test_emotion_mvp.py -v --tb=short
 ```
