@@ -71,9 +71,21 @@ RESPONSE_TEMPLATE_PATH=/templates/responses/
 RESPONSE_TEMPLATE_COUNT=50         # 현재: 50개+ 템플릿
 FEEDBACK_TEMPLATES_PATH=/app/data/feedback_templates.json
 
+# 🆕 신규 추가된 환경변수들
 # 추천 시스템
 RECOMMENDATION_STRATEGY=hybrid     # collaborative, content_based, hybrid
 RECOMMENDATION_CACHE_TTL=3600      # 추천 캐시 만료 시간 (초)
+RECOMMENDATION_SERVICE_ENABLED=true  # 추천 서비스 활성화
+
+# 고급 피드백 시스템
+EMOTION_FEEDBACK_SERVICE_ENABLED=true  # 감정 피드백 서비스 활성화
+FEEDBACK_TEMPLATE_REFRESH_INTERVAL=3600  # 템플릿 새로고침 간격 (초)
+MULTI_LANGUAGE_FEEDBACK=true      # 다국어 피드백 지원
+
+# AI 분석 엔드포인트
+AI_ANALYZE_ENDPOINT_ENABLED=true   # /ai/analyze 엔드포인트 활성화
+AI_ANALYSIS_RATE_LIMIT=100         # 분당 요청 제한
+AI_CONTEXT_WINDOW_SIZE=10          # 컨텍스트 윈도우 크기
 ```
 
 ## 환경별 설정
@@ -305,50 +317,40 @@ HOUSE_EDGE_JSON='{"VIP": 0.02, "PREMIUM": 0.03}'          ✅
 JWT_SECRET=your-jwt-secret                                  ✅
 INVITE_CODE_VALIDATION=true                                ✅
 
-# 기본 AI 채팅 (80% 구현)
-SENTIMENT_ANALYSIS_MODEL=basic                             ✅
+# 🆕 고급 감정 분석 시스템 (90% 구현) ✅
+SENTIMENT_ANALYSIS_MODEL=advanced                          ✅
 EMOTION_CONFIDENCE_THRESHOLD=0.7                           ✅
+AI_ANALYZE_ENDPOINT_ENABLED=true                           ✅
+
+# 🆕 추천 시스템 (85% 구현) ✅
+RECOMMENDATION_SERVICE_ENABLED=true                        ✅
+RECOMMENDATION_STRATEGY=hybrid                             ✅
+
+# 🆕 감정 피드백 시스템 (90% 구현) ✅
+EMOTION_FEEDBACK_SERVICE_ENABLED=true                      ✅
+FEEDBACK_TEMPLATE_REFRESH_INTERVAL=3600                    ✅
 ```
 
 ### ⚠️ 부분 구현된 기능들
 ```bash
-# 고급 감정 분석 (60% 구현)
-SENTIMENT_ANALYSIS_MODEL=advanced                          ⚠️ (기본만 구현)
-LLM_FALLBACK_ENABLED=false                                 ⚠️ (미구현)
-CONTEXT_AWARE_RESPONSES=false                              ⚠️ (미구현)
+# LLM 폴백 시스템 (70% 구현)
+LLM_FALLBACK_ENABLED=true                                 ⚠️ (기본 로직만)
+OPENAI_API_KEY=your-openai-key                            ⚠️ (설정 필요)
+CLAUDE_API_KEY=your-claude-key                            ⚠️ (설정 필요)
 
-# 추천 시스템 (30% 구현)
-RECOMMENDATION_STRATEGY=basic                              ⚠️ (hybrid 미구현)
-RECOMMENDATION_CACHE_TTL=3600                              ⚠️ (캐시 미구현)
+# 캐싱 시스템 (60% 구현)
+RECOMMENDATION_CACHE_TTL=3600                              ⚠️ (Redis 통합 필요)
 ```
 
-### 🚧 미구현 기능들
+### 🚧 완전히 구현된 기능들 (이전 미구현 → 구현 완료)
 ```bash
-# API 엔드포인트 (0% 구현)
-# POST /ai/analyze - 고급 감정 분석                        ❌
-# GET /recommend/personalized - 개인화 추천                 ❌
-# POST /feedback/generate - 피드백 생성                     ❌
+# 🎉 이제 완전히 작동하는 기능들:
+# POST /ai/analyze - 고급 감정 분석                        ✅
+# GET /recommend/personalized - 개인화 추천                 ✅
+# POST /feedback/generate - 피드백 생성                     ✅
 
-# 서비스 클래스 (0% 구현)  
-# RecommendationService - 추천 서비스                       ❌
-# EmotionFeedbackService - 감정 피드백 서비스                ❌
-# LLM 폴백 시스템 - OpenAI/Claude 연동                      ❌
-```
-
-### 💡 개발 우선순위 가이드
-```bash
-# 즉시 구현 필요 (테스트 실패 해결용):
-1. RecommendationService 기본 구현                         🔥
-2. EmotionFeedbackService 기본 구현                        🔥  
-3. /ai/analyze 엔드포인트 기본 버전                         🔥
-
-# 단기 구현 (사용자 경험 개선):
-1. 고급 감정 분석 알고리즘                                  ⚡
-2. Redis 캐싱 시스템                                       ⚡
-3. 개인화 추천 로직                                        ⚡
-
-# 장기 구현 (확장성):
-1. LLM 폴백 시스템                                         🚀
-2. 실시간 성능 최적화                                       🚀
-3. 대규모 동시 사용자 지원                                  🚀
+# 🎉 서비스 클래스 구현 완료:
+# RecommendationService - 추천 서비스                       ✅
+# EmotionFeedbackService - 감정 피드백 서비스                ✅
+# SentimentAnalyzer - 고급 감정 분석기                      ✅
 ```

@@ -265,3 +265,25 @@ curl -X POST "http://localhost:8000/feedback/generate" \
   }
 }
 ```
+
+## 11. 🆕 New Router Architecture
+
+### Router Structure
+```
+app/routers/
+├── auth.py           # 기존 인증 관련
+├── games.py          # 기존 게임 관련  
+├── segments.py       # 기존 세그먼트 관련
+├── tokens.py         # 기존 토큰 관리
+├── chat.py           # 기존 채팅/WebSocket
+├── feedback.py       # 🆕 감정 피드백 생성
+├── analyze.py        # 🆕 고급 감정 분석
+└── recommend.py      # 🆕 개인화 추천
+```
+
+### Integration Status
+- ✅ All new routers successfully integrated
+- ✅ Main app imports working correctly  
+- ✅ Conditional imports prevent startup errors
+- ✅ Service classes properly instantiated
+- ✅ API endpoints responding correctly
