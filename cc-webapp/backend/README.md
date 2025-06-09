@@ -46,6 +46,7 @@ This method is suitable for developing and testing the backend in isolation.
     *   Set up environment variables:
         *   Copy `.env.example` to `.env` within the `cc-webapp/backend` directory.
         *   Update variables in this `.env` file to point to your manually managed PostgreSQL, Redis, and Kafka instances.
+        *   `SEGMENT_PROB_ADJUST_JSON` 및 `HOUSE_EDGE_JSON` 값을 지정하여 사용자 세그먼트별 확률 조정과 하우스 엣지를 설정할 수 있습니다.
     *   Apply database migrations manually:
         ```bash
         alembic upgrade head
