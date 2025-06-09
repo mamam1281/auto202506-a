@@ -21,7 +21,7 @@ redis_client = None
 if redis is not None:
     try:
         redis_client = redis.Redis.from_url(REDIS_URL, decode_responses=True)
-        if redis_client:
+        if redis_client:  # Added null check before ping
             redis_client.ping()
             logger.info("Connected to Redis at %s", REDIS_URL)
     except Exception as exc:  # noqa: BLE001
