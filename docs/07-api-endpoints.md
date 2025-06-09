@@ -64,6 +64,11 @@ POST /tokens/sync         - Head office site token synchronization
 - **Betting Types**: Number(35x), Color(2x), Odd/Even(2x)
 - **House Edge**: Differentiated by segment
 - **Minimum Bet**: 10 tokens
+- **New Features**:
+  - Streak Management: Win/loss tracking
+  - Jackpot System: Progressive jackpot for number bets
+  - Comprehensive Logging: Detailed bet and result tracking
+  - Error Handling: Enhanced token validation
 
 ### Gacha System
 - **Grade-based Probability**: Legendary(5%), Epic(20%), Rare(50%), Common(25%)

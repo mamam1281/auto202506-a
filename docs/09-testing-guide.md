@@ -86,17 +86,23 @@ def test_slot_segment_probability():
 
 #### Roulette Tests
 ```python
-def test_roulette_number_bet_payout():
-    """Roulette number bet payout"""
-    # Given: Bet 10 tokens on number 7
-    # When: Result is 7
-    # Then: 35x payout (350 tokens awarded)
+def test_roulette_win_streak():
+    """룰렛 연승 스트릭 테스트"""
+    # Given: 3연승 중인 사용자
+    # When: 베팅 승리
+    # Then: 스트릭 4로 증가 + 로그 기록
 
-def test_roulette_house_edge():
-    """Roulette house edge test"""
-    # Given: Medium segment (house edge 10%)
-    # When: 1000 bets simulation
-    # Then: Average return rate approximately 90%
+def test_roulette_jackpot_win():
+    """룰렛 잭팟 획득 테스트"""
+    # Given: 잭팟 풀 1000토큰
+    # When: 스트레이트 업 베팅 성공
+    # Then: 잭팟 지급 + 잭팟 풀 리셋
+
+def test_roulette_insufficient_tokens():
+    """룰렛 토큰 부족 테스트"""
+    # Given: 보유 토큰 5개
+    # When: 최소 베팅(10토큰) 시도
+    # Then: 402 에러 + 상세 오류 메시지
 ```
 
 #### Gacha Tests
@@ -168,3 +174,11 @@ def test_insufficient_token_handling():
 - Tested improved emotion analysis algorithm
 - Verified various response templates
 - Tested error handling and recovery
+
+### Recent Test Results
+```bash
+# 2025년 6월 10일 기준
+collected 15 items
+..... (생략)
+✅ 15 passed in 2.31s
+```

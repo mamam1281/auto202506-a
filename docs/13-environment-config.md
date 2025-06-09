@@ -36,10 +36,14 @@ HOUSE_EDGE_JSON='{"VIP": 0.02, "PREMIUM": 0.03, "STANDARD": 0.05}'
 
 ### 게임 서비스
 ```bash
-# 확률 테이블 (JSON 형식)
-GAME_PROBABILITY_TABLE='{"SLOT": 0.95, "ROULETTE": 0.97, "BLACKJACK": 0.99}'
+# 룰렛 서비스 환경변수 추가
+ROULETTE_LOG_LEVEL=DEBUG          # 룰렛 로깅 레벨
+ROULETTE_JACKPOT_INITIAL=1000     # 초기 잭팟 금액
+ROULETTE_STREAK_BONUS=true        # 연승 보너스 활성화
+ROULETTE_MAX_STREAK=10            # 최대 연승 제한
 
-# 보안 설정
+# 기존 설정
+GAME_PROBABILITY_TABLE='{"SLOT": 0.95, "ROULETTE": 0.97, "BLACKJACK": 0.99}'
 GAME_SECURITY_ENABLED=true
 PROBABILITY_MANIPULATION_CHECK=true
 ```
