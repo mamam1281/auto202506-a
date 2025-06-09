@@ -35,8 +35,9 @@
 - **04_adult_rewards_en.md**: 콘텐츠 언락 및 보상 구조
 - **06_user_journey_en.md**: 유저 여정 및 온보딩 흐름
 - **09_test_qa_en.md**: 테스트 및 품질 보증 기준, 주요 시나리오
-- **12_game_dev_full_checklist_ko.md**: 전체 개발 체크리스트 및 최신 진행 현황, 게임 기능별 구현/테스트 현황
+- **12_game_dev_full_checklist_ko.md**: 전체 개발 체크리스트 및 최신 진행 현황, 게임 기능별 구현 테스트 현황
 - **15_ai_assistant_test_guide.md**: 본 테스트 가이드 및 Codex 의뢰 프롬프트
+- **17_game.md**: 게임 서비스 계층 구조 및 핵심 모듈/기능 설계
 - **21_security_authentication.md**: 인증/보안 설계 기준
 
 ---
@@ -58,8 +59,8 @@
 
 #### 1. 핵심 모듈/아키텍처
 - [x] **games.py (Router)**: 모든 게임 관련 API 엔드포인트 구현
-- [] **game_service.py (Service)**: 게임 비즈니스 로직(확률, RTP, 스트릭, 잭팟 등) 진행중
-- [] **game_repository.py (Repository)**: DB/Redis 연동 및 데이터 저장/조회 책임 분리 진행중
+- [x] **game_service.py (Service)**: 게임 비즈니스 로직(확률, RTP, 스트릭, 잭팟 등) 진행중
+- [x] **game_repository.py (Repository)**: DB/Redis 연동 및 데이터 저장/조회 책임 분리 진행중
 - [x] **Clean Architecture 계층 구조**: Router → Service → Repository → DB/Redis 구조 준수
 
 #### 2. 주요 게임/시스템 기능
@@ -267,7 +268,7 @@
 
 
 테스트기준 명확성 
-Casino-Club F2P 프로젝트의 백엔드(파이썬) 게임 서비스 모듈에 대해 다음 기준을 반드시 충족하는 테스트 코드를 작성해줘.
+F2P 프로젝트의 백엔드(파이썬) 게임 서비스 모듈에 대해 다음 기준을 반드시 충족하는 테스트 코드를 작성해줘.
 
 - pytest 기반의 단위/통합 테스트를 games.py, game_service.py, game_repository.py에 대해 각각 작성
 - 슬롯, 룰렛, 가챠 기능별로 성공/실패/예외 상황을 모두 커버
@@ -317,5 +318,135 @@ Casino-Club F2P 프로젝트의 백엔드(파이썬) 게임 서비스 모듈에 
 - 신규 서비스(예: AI/추천/개인화, 미션/퀘스트, 통계/감사 등) 추가 시 기존 구조와의 일관성 유지
 - 변경 시 전체 계층 영향도 및 테스트 코드 동기화 필수
 
-> **상세한 코드 리뷰/구현/테스트 요청은 파일명, 함수명, 라인 등 구체적으로 지정해주시면 추가 분석/개선 가능합니다.**
+핵심 문서 (설계 및 가이드라인)
+아키텍처 이해
 
+01_architecture_en.md - 전체 시스템 설계
+CC_backend_refactor_guideline_ko.md - 백엔드 리팩토링 가이드라인
+기술 구현 세부사항
+
+07_technical_implementation_en.md - 백엔드 기술 구현 상세
+security_authentication_en.md - 인증 및 보안 구현
+게임 로직 관련
+
+03_emotion_feedback_en.md - 감정 피드백 시스템
+02_data_personalization_en.md - 사용자 세그먼트 및 개인화
+테스트 및 QA
+
+09_test_qa_en.md - 테스트 시나리오 및 기대 결과
+13_test_tracking_service_analysis.md - 트래킹 서비스 분석
+구현해야 할 핵심 파일들
+레포지토리 계층
+
+game_repository.py
+Redis/DB 이중화로 상태값 관리
+스트릭, 가챠 카운트/히스토리 추적
+사용자 세그먼트 연동
+서비스 계층
+
+game_service.py - 통합 게임 서비스
+slot_service.py - 슬롯 머신 로직
+roulette_service.py - 룰렛 로직
+gacha_service.py - 가챠 시스템
+user_segment_service.py - 사용자 세그먼트
+라우터 계층
+
+games.py - 게임 관련 API 엔드포인트
+테스트 코드
+
+test_slot_service.py
+test_roulette_service.py
+test_gacha_service.py
+tests/integration/test_int_*.py - 통합 테스트
+현재 존재하는 관련 파일들
+이미 프로젝트에 존재하는 파일들로, 구현 시 참고해야 할 파일들입니다:
+
+models.py - 데이터베이스 모델 정의
+schemas.py - Pydantic 스키마
+probability.py - 확률 계산 유틸리티
+reward_utils.py - 보상 시스템 유틸리티
+segment_utils.py - 세그먼트 유틸리티
+emotion_utils.py - 감정 피드백 유틸리티
+emotion_keywords.json - 감정 키워드 데이터
+구현 우선순위
+game_repository.py - DB/Redis 상태 관리 구현
+개별 게임 서비스 (slot_service.py, roulette_service.py, gacha_service.py)
+통합 game_service.py - 각 게임 서비스 연결
+games.py 라우터 - API 엔드포인트 정의
+테스트 코드 구현
+
+
+1. main.py 파일 분석 결과:
+
+   - FastAPI 애플리케이션 설정 및 초기화
+   - Sentry, Prometheus 모니터링 통합
+   - CORS 설정
+   - 모든 라우터 등록
+   - 스케줄러 초기화
+   - 기본적인 헬스 체크 엔드포인트 구현
+
+2. 개선 필요 사항:
+
+   - 더 체계적인 라우터 등록 방식 필요
+   - 환경 변수 검증 추가 필요
+   - 테스트 코드 추가 필요
+   - 문서화 보완 필요
+   - 보안 강화 필요 (예: 헬스 체크 엔드포인트 보호)
+
+3. 다음으로 test_tracking_service.py 파일을 읽어보겠음
+
+Cline wants to read this file:
+
+cc-webapp/backend/tests/test_tracking_service.py‎
+
+**Checkpoint
+
+Compare
+
+Restore
+
+API Request$0.0135
+
+1. test_tracking_service.py 파일 분석 결과:
+
+   - TrackingService에 대한 단위 테스트 구현
+   - Mock을 사용한 데이터베이스 연동 테스트
+   - 성공 및 실패 케이스 테스트
+   - 타임스탬프 검증 로직 포함
+
+2. 개선 필요 사항:
+
+   - 더 다양한 테스트 케이스 추가 필요
+   - 에지 케이스 테스트 추가 필요
+   - 문서화 보완 필요
+   - 테스트 커버리지 향상 필요
+
+3. 다음으로 test_adult_content_service.py 파일을 읽어보겠음
+
+Cline wants to read this file:
+
+cc-webapp/backend/tests/test_adult_content_service.py‎
+
+**Checkpoint
+
+Compare
+
+Restore
+
+API Request$0.0239
+
+1. test_adult_content_service.py 파일 분석 결과:
+
+   - AdultContentService에 대한 포괄적인 단위 테스트 구현
+   - Mock을 사용한 종속성 테스트
+   - 성공, 실패, 에지 케이스 테스트 포함
+   - 데이터베이스 연동 테스트
+
+2. 개선 필요 사항:
+
+   - 더 다양한 테스트 케이스 추가 필요
+   - 성능 테스트 추가 필요
+   - 문서화 보완 필요
+   - 테스트 커버리지 향상 필요
+
+3.
