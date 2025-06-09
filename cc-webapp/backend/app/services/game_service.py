@@ -1,11 +1,14 @@
-import random
-from typing import List, Optional
+from typing import Optional
+
 from sqlalchemy.orm import Session
 
-from .token_service import deduct_tokens, add_tokens, get_balance
 from ..repositories.game_repository import GameRepository
 from .user_segment_service import UserSegmentService
 from .. import models
+from .slot_service import SlotService, SlotSpinResult
+from .roulette_service import RouletteService, RouletteSpinResult
+from .gacha_service import GachaService, GachaPullResult
+
 
 class SlotSpinResult:
     def __init__(self, result: str, reward: int, balance: int, streak: int, animation: Optional[str]):
@@ -16,23 +19,9 @@ class SlotSpinResult:
         self.animation = animation
 
 
-class RouletteSpinResult:
-    def __init__(self, number: int, result: str, payout: int, balance: int, animation: Optional[str]):
-        self.winning_number = number
-        self.result = result
-        self.tokens_change = payout
-        self.balance = balance
-        self.animation = animation
-
-
-class GachaPullResult:
-    def __init__(self, results: List[str], balance: int, cost: int):
-        self.results = results
-        self.tokens_change = -cost
-        self.balance = balance
-
 
 class GameService:
+
     def __init__(
         self,
         repository: GameRepository | None = None,
@@ -106,56 +95,31 @@ class GameService:
             if number != 0 and (number % 2 == 0) == (value == "even"):
                 payout = int(bet * (1 - house_edge))
 
-        if payout:
-            result = "win"
-            animation = "win"
-            add_tokens(user_id, payout, db)
 
-        balance = get_balance(user_id, db)
-        self.repo.record_action(db, user_id, "ROULETTE_SPIN", -bet)
-        return RouletteSpinResult(number, result, payout - bet, balance, animation)
+    def __init__(self, repository: "GameRepository | None" = None):
+        self.repo = repository or GameRepository()
+        self.slot_service = SlotService(self.repo)
+        self.roulette_service = RouletteService(self.repo)
+        self.gacha_service = GachaService(self.repo)
+
+
+
+    def slot_spin(self, user_id: int, db: Session) -> SlotSpinResult:
+        """슬롯 게임 스핀을 실행."""
+        return self.slot_service.spin(user_id, db)
+
+    def roulette_spin(
+        self,
+        user_id: int,
+        bet: int,
+        bet_type: str,
+        value: Optional[str],
+        db: Session,
+    ) -> RouletteSpinResult:
+        """룰렛 게임 스핀 실행."""
+        return self.roulette_service.spin(user_id, bet, bet_type, value, db)
 
     def gacha_pull(self, user_id: int, count: int, db: Session) -> GachaPullResult:
-        pulls = 10 if count >= 10 else 1
-        cost = 450 if pulls == 10 else 50
-        deduct_tokens(user_id, cost, db)
-
-        results: List[str] = []
-        current_count = self.repo.get_gacha_count(user_id)
-        history = self.repo.get_gacha_history(user_id)
-
-        rarity_table = [
-            ("Legendary", 0.005),
-            ("Epic", 0.045),
-            ("Rare", 0.25),
-            ("Common", 0.70),
-        ]
-
-        for _ in range(pulls):
-            current_count += 1
-            pity = current_count >= 90
-            rnd = random.random()
-            cumulative = 0.0
-            rarity = "Common"
-            for name, prob in rarity_table:
-                adj_prob = prob
-                if history and name in history:
-                    adj_prob *= 0.5
-                cumulative += adj_prob
-                if rnd <= cumulative:
-                    rarity = name
-                    break
-            if pity and rarity not in {"Epic", "Legendary"}:
-                rarity = "Epic"
-                current_count = 0
-            results.append(rarity)
-            history.insert(0, rarity)
-            history = history[:10]
-
-        self.repo.set_gacha_count(user_id, current_count)
-        self.repo.set_gacha_history(user_id, history)
-
-        balance = get_balance(user_id, db)
-        self.repo.record_action(db, user_id, "GACHA_PULL", -cost)
-        return GachaPullResult(results, balance, cost)
+        """가챠 뽑기 실행."""
+        return self.gacha_service.pull(user_id, count, db)
 
