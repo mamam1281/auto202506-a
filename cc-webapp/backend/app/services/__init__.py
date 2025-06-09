@@ -2,6 +2,9 @@ from .reward_service import RewardService
 from .notification_service import NotificationService  # Added
 from .tracking_service import TrackingService  # Added
 from .game_service import GameService
+from .slot_service import SlotService
+from .roulette_service import RouletteService
+from .gacha_service import GachaService
 
 # Optionally, make other services available for easier import if structured this way
 # from .user_service import UserService
@@ -25,6 +28,9 @@ __all__ = [
     "NotificationService", # Added
     "TrackingService", # Added
     "GameService",
+    "SlotService",
+    "RouletteService",
+    "GachaService",
     # "UserService",
     # "AuthService",
     # "TokenService",
