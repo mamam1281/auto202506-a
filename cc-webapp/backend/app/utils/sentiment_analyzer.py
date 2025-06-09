@@ -5,26 +5,11 @@ import re
 import json
 import logging
 from typing import Dict, List, Optional, Tuple
-from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from app.emotion_models import EmotionResult, SupportedEmotion, SupportedLanguage
 
 logger = logging.getLogger(__name__)
-
-class SupportedEmotion(Enum):
-    """지원하는 감정 유형"""
-    EXCITED = "excited"
-    FRUSTRATED = "frustrated"
-    CURIOUS = "curious"
-    TIRED = "tired"
-    ANGRY = "angry"
-    SAD = "sad"
-    NEUTRAL = "neutral"
-
-class SupportedLanguage(Enum):
-    """지원하는 언어"""
-    KOREAN = "korean"
-    ENGLISH = "english"
 
 def preprocess_text(text: str) -> str:
     """텍스트 전처리"""
@@ -39,54 +24,41 @@ def preprocess_text(text: str) -> str:
     
     return text.strip()
 
-@dataclass
-class EmotionResult:
-    """감정 분석 결과"""
-    emotion: str
-    score: float
-    confidence: float
-    language: str
-    
-    def is_confident(self) -> bool:
-        """신뢰도가 높은 결과인지 확인"""
-        return self.confidence >= 0.7
-
-def detect_language(text: str) -> str:
+def detect_language(text: str) -> SupportedLanguage:
     """언어 감지"""
     # 한글이 포함되어 있으면 한국어로 판단
     if re.search(r'[가-힣]', text):
-        return SupportedLanguage.KOREAN.value
+        return SupportedLanguage.KOREAN
     else:
-        return SupportedLanguage.ENGLISH.value
+        return SupportedLanguage.ENGLISH
 
 def analyze_emotion_basic(text: str) -> EmotionResult:
     """기본 감정 분석 (키워드 기반)"""
     language = detect_language(text)
     text_lower = text.lower()
-    
-    # 감정별 키워드 정의
+      # 감정별 키워드 정의
     emotion_keywords = {
         SupportedEmotion.EXCITED: {
             'korean': ['기뻐', '좋아', '최고', '대박', '환상', '완전', '진짜', '와'],
             'english': ['great', 'awesome', 'amazing', 'fantastic', 'wonderful', 'excellent', 'love', 'best']
         },
-        SupportedEmotion.FRUSTRATED: {
+        SupportedEmotion.ANGER: {  # 이전 FRUSTRATED에 해당
             'korean': ['짜증', '답답', '화나', '빡쳐', '열받', '싫어', '최악'],
             'english': ['annoying', 'frustrated', 'angry', 'hate', 'worst', 'terrible', 'awful']
         },
-        SupportedEmotion.CURIOUS: {
+        SupportedEmotion.JOY: {  # 이전 CURIOUS에 해당
             'korean': ['궁금', '어떻게', '왜', '뭐야', '신기', '재밌'],
             'english': ['curious', 'interesting', 'wonder', 'how', 'why', 'what']
         },
-        SupportedEmotion.TIRED: {
+        SupportedEmotion.NEUTRAL: {  # 이전 TIRED에 해당
             'korean': ['피곤', '졸려', '지쳐', '힘들', '못하겠'],
             'english': ['tired', 'exhausted', 'sleepy', 'worn out', 'cant anymore']
         },
-        SupportedEmotion.ANGRY: {
+        SupportedEmotion.ANGER: {  # 중복 제거
             'korean': ['화나', '빡쳐', '열받', '미쳐', '죽이고싶'],
             'english': ['angry', 'mad', 'furious', 'pissed', 'rage']
         },
-        SupportedEmotion.SAD: {
+        SupportedEmotion.SADNESS: {
             'korean': ['슬퍼', '우울', '눈물', '속상', '마음아파'],
             'english': ['sad', 'depressed', 'cry', 'tears', 'heartbroken']
         }
@@ -97,23 +69,24 @@ def analyze_emotion_basic(text: str) -> EmotionResult:
     
     for emotion, keywords in emotion_keywords.items():
         score = 0
-        lang_keywords = keywords.get(language, [])
+        lang_key = 'korean' if language == SupportedLanguage.KOREAN else 'english'
+        lang_keywords = keywords.get(lang_key, [])
         
         for keyword in lang_keywords:
             if keyword in text_lower:
                 score += 1
         
-        if score > 0:
+        if score > 0 and len(lang_keywords) > 0:
             emotion_scores[emotion] = score / len(lang_keywords)
     
     # 가장 높은 점수의 감정 선택
     if emotion_scores:
-        best_emotion = max(emotion_scores, key=emotion_scores.get)
+        best_emotion = max(emotion_scores, key=lambda k: emotion_scores[k])
         score = emotion_scores[best_emotion]
         confidence = min(score * 2, 1.0)  # 신뢰도 계산
         
         return EmotionResult(
-            emotion=best_emotion.value,
+            emotion=best_emotion,
             score=score,
             confidence=confidence,
             language=language
@@ -121,7 +94,7 @@ def analyze_emotion_basic(text: str) -> EmotionResult:
     else:
         # 매칭되는 키워드가 없으면 중립
         return EmotionResult(
-            emotion=SupportedEmotion.NEUTRAL.value,
+            emotion=SupportedEmotion.NEUTRAL,
             score=0.5,
             confidence=0.6,
             language=language
@@ -131,9 +104,14 @@ class SentimentAnalyzer:
     """감정 분석기 클래스"""
     
     def __init__(self):
+        try:
+            self.model = load_local_model()
+        except Exception as e:
+            self.model = None
+            logger.warning("SentimentAnalyzer: local model could not be loaded.")
+        
         self.confidence_threshold = float(os.getenv('EMOTION_CONFIDENCE_THRESHOLD', '0.7'))
         self.llm_fallback_enabled = os.getenv('LLM_FALLBACK_ENABLED', 'false').lower() == 'true'
-        self.model = None  # 모델 속성 추가
         self.fallback_mode = self.llm_fallback_enabled  # 폴백 모드 속성 추가
         logger.info(f"SentimentAnalyzer initialized with threshold: {self.confidence_threshold}")
     
@@ -141,10 +119,10 @@ class SentimentAnalyzer:
         """텍스트에서 감정 분석"""
         if not text or not text.strip():
             return EmotionResult(
-                emotion=SupportedEmotion.NEUTRAL.value,
+                emotion=SupportedEmotion.NEUTRAL,
                 score=0.0,
                 confidence=1.0,
-                language=SupportedLanguage.KOREAN.value
+                language=SupportedLanguage.KOREAN
             )
         
         # 텍스트 전처리
@@ -152,27 +130,47 @@ class SentimentAnalyzer:
         
         # 기본 감정 분석
         result = analyze_emotion_basic(processed_text)
-        
-        # 신뢰도가 낮으면 LLM 폴백 (향후 구현)
+          # 신뢰도가 낮으면 LLM 폴백 (향후 구현)
         if result.confidence < self.confidence_threshold and self.llm_fallback_enabled:
             logger.info(f"Low confidence ({result.confidence}), attempting LLM fallback")
             try:
                 # LLM 분석 시도
-                pass
-            except Exception:
-                # LLM 실패 시 local model fallback
-                local_result = self.local_model.predict(text)
-                # 기존: confidence 값을 임의로 조정하거나 후처리
-                # 수정: local model의 confidence 값을 그대로 사용
-                result = EmotionResult(
-                    emotion=local_result["emotion"],
-                    score=local_result.get("score", 0.5),
-                    confidence=local_result["confidence"],
-                    language=detect_language(text)
-                )
-                # fallback_used 플래그 추가
-                result.fallback_attempted = True
+                result = call_llm_fallback(text)
                 return result
+            except Exception:
+                if self.model and hasattr(self.model, 'predict'):
+                    # 로컬 모델로 폴백
+                    local_result = self.model.predict(text)
+                    
+                    # 모델 결과가 dict인 경우 Pydantic 모델로 변환
+                    if isinstance(local_result, dict):
+                        # fallback_attempted 설정이 없으면 추가
+                        if 'fallback_attempted' not in local_result:
+                            local_result['fallback_attempted'] = True
+                        local_result = EmotionResult(**local_result)
+                    # EmotionResult 객체인 경우 fallback_attempted 직접 설정
+                    elif isinstance(local_result, EmotionResult):
+                        local_result.fallback_attempted = True
+                    # 다른 타입인 경우 새 EmotionResult 생성
+                    else:
+                        return EmotionResult(
+                            emotion=SupportedEmotion.NEUTRAL,
+                            score=0.5,
+                            confidence=0.6,
+                            language=SupportedLanguage.KOREAN,
+                            fallback_attempted=True
+                        )
+                    
+                    return local_result
+                else:
+                    # No model available, return neutral fallback
+                    return EmotionResult(
+                        emotion=SupportedEmotion.NEUTRAL,
+                        score=0.5,
+                        confidence=0.6,
+                        language=SupportedLanguage.KOREAN,
+                        fallback_attempted=True
+                    )
         
         logger.debug(f"Emotion analysis result: {result}")
         return result

@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 from ..emotion_models import EmotionResult, SupportedEmotion, SupportedLanguage
 from ..services.emotion_feedback_service import EmotionFeedbackService, FeedbackResponse
+from ..auth.jwt import get_current_user
 import logging
 
 logger = logging.getLogger(__name__)
@@ -52,3 +53,49 @@ async def get_emotion_based_feedback_endpoint(
 
     if not feedback: logger.warning("No feedback generated for context.")
     return feedback
+
+@router.post("/generate")
+async def generate_feedback(
+    request: Dict[str, Any],
+    current_user = Depends(get_current_user),
+    service: EmotionFeedbackService = Depends(get_emotion_feedback_service)
+):
+    """
+    사용자 감정에 기반한 피드백 생성
+    
+    Args:
+        request: 피드백 요청 데이터
+            - user_id: 사용자 ID
+            - emotion: 감정 상태
+            - segment: 사용자 세그먼트
+            - context: 추가 컨텍스트 정보
+    
+    Returns:
+        피드백 응답 객체
+    """
+    try:
+        user_id = request.get("user_id")
+        emotion = request.get("emotion")
+        segment = request.get("segment", "Medium")
+        context = request.get("context", {})
+        
+        # 필수 필드 검증
+        if not user_id or not emotion:
+            raise HTTPException(status_code=400, detail="Missing required fields")
+        
+        # 현재 사용자 권한 확인
+        if user_id != current_user["user_id"]:
+            raise HTTPException(status_code=403, detail="Not authorized to access this resource")
+        
+        # 피드백 생성
+        feedback = service.generate_feedback(emotion, segment, context)
+        
+        return {
+            "success": True,
+            "data": feedback
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"Failed to generate feedback: {str(e)}"
+        }

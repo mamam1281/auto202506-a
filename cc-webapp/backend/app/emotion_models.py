@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 class SupportedLanguage(Enum):
     ENGLISH = "EN"
@@ -18,6 +18,9 @@ class SupportedEmotion(Enum):
     SURPRISE = "SURPRISE"
     NEUTRAL = "NEUTRAL"
     EXCITED = "EXCITED"
+    FRUSTRATED = "FRUSTRATED"
+    CURIOUS = "CURIOUS"
+    TIRED = "TIRED"
 
     @classmethod
     def get_display_label(cls, emotion: SupportedEmotion, lang: SupportedLanguage) -> str:
@@ -30,6 +33,9 @@ class SupportedEmotion(Enum):
                 SupportedEmotion.SURPRISE: "Surprise",
                 SupportedEmotion.NEUTRAL: "Neutral",
                 SupportedEmotion.EXCITED: "Excited",
+                SupportedEmotion.FRUSTRATED: "Frustrated",
+                SupportedEmotion.CURIOUS: "Curious",
+                SupportedEmotion.TIRED: "Tired",
             },SupportedLanguage.KOREAN: {
                 SupportedEmotion.ANGER: "분노",
                 SupportedEmotion.FEAR: "두려움",
@@ -39,6 +45,9 @@ class SupportedEmotion(Enum):
                 SupportedEmotion.SURPRISE: "놀람",
                 SupportedEmotion.NEUTRAL: "중립",
                 SupportedEmotion.EXCITED: "흥분",
+                SupportedEmotion.FRUSTRATED: "좌절",
+                SupportedEmotion.CURIOUS: "호기심",
+                SupportedEmotion.TIRED: "피곤",
             }
         }
         try:
@@ -52,8 +61,10 @@ class EmotionResult(BaseModel):
     confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence level, between 0.0 and 1.0.")
     language: SupportedLanguage = Field(..., description="Language of the input text.")
     raw_output: Optional[Dict[str, Any]] = Field(default=None, description="Optional raw model output.")
+    fallback_attempted: Optional[bool] = Field(default=None, description="LLM 폴백 시도 여부")
 
-    @validator('emotion', pre=True)
+    @field_validator('emotion', mode='before')
+    @classmethod
     def _validate_emotion(cls, value: Any) -> SupportedEmotion:
         if isinstance(value, SupportedEmotion):
             return value
@@ -62,7 +73,10 @@ class EmotionResult(BaseModel):
                 return SupportedEmotion[value.upper()]
             except KeyError:
                 raise ValueError(f"Invalid emotion type: {value}")
-        raise ValueError(f"Invalid emotion type: {value}")    @validator('language', pre=True)
+        raise ValueError(f"Invalid emotion type: {value}")
+
+    @field_validator('language', mode='before')
+    @classmethod
     def _validate_language(cls, value: Any) -> SupportedLanguage:
         if isinstance(value, SupportedLanguage):
             return value
@@ -97,12 +111,12 @@ class EmotionResult(BaseModel):
 # Example Usage:
 if __name__ == "__main__":
     joy_en_text_result = EmotionResult(
-        emotion="JOY", score=0.8, confidence=0.95, language="EN"
+        emotion=SupportedEmotion.JOY, score=0.8, confidence=0.95, language=SupportedLanguage.ENGLISH
     )
     print(f"Original (EN text): {joy_en_text_result.get_display_emotion()}, Lang: {joy_en_text_result.language.value}")
 
     joy_for_ko_display = EmotionResult.to_language(joy_en_text_result, SupportedLanguage.KOREAN)
     print(f"For KO Display: {joy_for_ko_display.get_display_emotion()}, Lang: {joy_for_ko_display.language.value}")
 
-    sad_ko_text_result = EmotionResult(emotion="SADNESS", score=-0.7, confidence=0.88, language="KO")
+    sad_ko_text_result = EmotionResult(emotion=SupportedEmotion.SADNESS, score=-0.7, confidence=0.88, language=SupportedLanguage.KOREAN)
     print(f"Original (KO text): {sad_ko_text_result.get_display_emotion()}, Lang: {sad_ko_text_result.language.value}")

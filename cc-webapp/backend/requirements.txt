@@ -26,6 +26,8 @@ flower==2.0.1
 # 로깅 및 모니터링
 structlog==23.2.0
 python-json-logger==2.0.7
+prometheus-fastapi-instrumentator==6.1.0
+sentry-sdk[fastapi]==1.39.1
 
 # HTTP 클라이언트
 httpx

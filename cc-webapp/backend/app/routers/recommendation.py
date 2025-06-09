@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, Body
+from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field, validator # Ensure all are imported
 
 from ..emotion_models import EmotionResult, SupportedEmotion, SupportedLanguage
 from ..services.recommendation_service import RecommendationService, FinalRecommendation
+from ..auth.jwt import get_current_user
 import logging
 
 logger = logging.getLogger(__name__)
@@ -75,3 +76,39 @@ async def get_personalized_recommendations_endpoint(
         logger.info(f"No recommendations generated for user {request_data.user_id}.")
 
     return recommendations
+
+
+@router.get("/personalized")
+async def get_personalized_recommendations(
+    user_id: int = Query(..., description="사용자 ID"),
+    emotion: Optional[str] = Query(None, description="현재 감정 상태"),
+    current_user = Depends(get_current_user),
+    service: RecommendationService = Depends(get_recommendation_service)
+):
+    """
+    개인화된 게임 추천을 제공합니다
+    
+    Args:
+        user_id: 사용자 ID
+        emotion: 현재 감정 상태 (옵션)
+    
+    Returns:
+        추천 게임 목록
+    """
+    try:
+        # 현재 사용자 권한 확인
+        if user_id != current_user["user_id"]:
+            raise HTTPException(status_code=403, detail="Not authorized to access this resource")
+        
+        # 추천 서비스 호출
+        recommendations = service.get_personalized_recommendations(user_id, emotion)
+        
+        return {
+            "success": True,
+            "data": recommendations
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"Failed to get recommendations: {str(e)}"
+        }
