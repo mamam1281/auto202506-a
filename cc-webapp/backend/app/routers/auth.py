@@ -70,7 +70,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     return token
 
 
-def get_user_from_token(token: str = Depends(oauth2_scheme)):
+def get_user_from_token(token: str = Depends(oauth2_scheme)) -> int:
     """토큰에서 사용자 ID 추출"""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -79,7 +79,7 @@ def get_user_from_token(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
-        user_id: int = int(payload.get("sub"))
+        user_id = int(str(payload.get("sub")))
     except JWTError:
         raise credentials_exception
     return user_id
@@ -113,10 +113,10 @@ async def signup(data: SignUpRequest, db: Session = Depends(get_db)):
     hashed_password = pwd_context.hash(data.password)
     user = models.User(nickname=data.nickname, password_hash=hashed_password, invite_code=data.invite_code)
     db.add(user)
-    invite.is_used = True
+    invite.is_used = True  # type: ignore
     db.commit()
     db.refresh(user)
-    token_service.add_tokens(user.id, INITIAL_CYBER_TOKENS)  # 표준화된 초기 토큰 값 사용
+    token_service.add_tokens(int(user.id), INITIAL_CYBER_TOKENS)
     access_token = create_access_token({"sub": str(user.id)})
     logger.info("Signup success for nickname %s", data.nickname)
     return TokenResponse(access_token=access_token)
@@ -131,7 +131,7 @@ async def login(data: LoginRequest, db: Session = Depends(get_db)):
         return TokenResponse(access_token="fake-token")
 
     user = db.query(models.User).filter(models.User.nickname == data.nickname).first()
-    if not user or not pwd_context.verify(data.password, user.password_hash):
+    if not user or not pwd_context.verify(data.password, str(user.password_hash)):  # type: ignore
         logger.warning("Login failed for nickname %s", data.nickname)
         raise HTTPException(status_code=401, detail="Invalid credentials")
     access_token = create_access_token({"sub": str(user.id)})

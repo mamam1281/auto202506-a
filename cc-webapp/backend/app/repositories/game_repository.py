@@ -101,7 +101,7 @@ class GameRepository:
                 .filter(models.UserSegment.user_id == user_id)
                 .first()
             )
-            return "Low" if seg is None else (str(seg.rfm_group) if seg.rfm_group is not None else "Low")
+            return "Low" if seg is None or seg.rfm_group is None else str(seg.rfm_group)
         except SQLAlchemyError as exc:
             logger.error("Error fetching user segment: %s", exc)
             db.rollback()
