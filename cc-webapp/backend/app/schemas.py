@@ -6,6 +6,12 @@ from datetime import datetime
 
 # Schemas for existing functionality (keeping them for now)
 
+class FeedbackResponse(BaseModel):
+    success: bool
+    message: str
+    recommendation: str
+    reward_suggestion: Optional[str] = None
+
 class ContentUnlockRequest(BaseModel): # This might be superseded or augmented by new AdultContent schemas
     user_id: int # Assuming this might be part of old system, new ones might get user from auth
     stage: int

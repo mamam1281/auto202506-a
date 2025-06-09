@@ -116,7 +116,7 @@ async def signup(data: SignUpRequest, db: Session = Depends(get_db)):
     invite.is_used = True  # type: ignore
     db.commit()
     db.refresh(user)
-    token_service.add_tokens(int(user.id), INITIAL_CYBER_TOKENS)
+    token_service.add_tokens(int(user.id), INITIAL_CYBER_TOKENS)  # type: ignore[arg-type]
     access_token = create_access_token({"sub": str(user.id)})
     logger.info("Signup success for nickname %s", data.nickname)
     return TokenResponse(access_token=access_token)

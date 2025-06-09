@@ -3,8 +3,9 @@ from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field
 
 from ..emotion_models import EmotionResult, SupportedEmotion, SupportedLanguage
-from ..services.emotion_feedback_service import EmotionFeedbackService, FeedbackResponse
-from ..auth.jwt import get_current_user
+from ..schemas import FeedbackResponse
+from ..services.emotion_feedback_service import EmotionFeedbackService 
+from ..routers.auth import get_user_from_token as get_current_user
 import logging
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ async def get_emotion_based_feedback_endpoint(
         raise HTTPException(status_code=400, detail=f"Invalid emotion_result_data: {e}")
 
     try:
-        feedback = await feedback_service.get_emotion_feedback(
+        feedback = feedback_service.get_emotion_feedback(
             emotion_result=parsed_emotion_result, user_segment=request_data.user_segment,
             mission_type=request_data.mission_type, context_text=request_data.context_text
         )

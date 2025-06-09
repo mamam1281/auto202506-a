@@ -127,7 +127,7 @@ class TestAdultContentService(unittest.TestCase):
         self.assertIsInstance(details, AdultContentDetail)
         self.assertEqual(details.id, content_id)
         self.assertEqual(details.user_current_access_level, ContentStageEnum.PARTIAL.value)
-        self.assertEqual(len(details.stages), len(STAGE_DETAILS))
+        self.assertEqual(len(details.는), len(STAGE_DETAILS))
 
     def test_get_content_details_age_not_verified(self):
         self.mock_age_verification_service.is_user_age_verified.return_value = False

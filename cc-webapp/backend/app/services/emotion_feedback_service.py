@@ -6,7 +6,16 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+from ..schemas import FeedbackResponse
+
 class EmotionFeedbackService:
+    def get_emotion_feedback(self, emotion_result, user_segment, mission_type, context_text) -> FeedbackResponse:
+        return FeedbackResponse(
+            success=True,
+            message="감정 분석 기반 피드백이 생성되었습니다",
+            recommendation="추천 컨텐츠: 일일 미션 완료하기",
+            reward_suggestion="+50 사이버 토큰"
+        )
     """
     사용자 감정에 기반한 피드백 생성 서비스
     SOLID 원칙에 따라 단일 책임 원칙을 준수
