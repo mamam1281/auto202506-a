@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from .token_service import deduct_tokens, add_tokens, get_balance
 from ..repositories.game_repository import GameRepository
+from .user_segment_service import UserSegmentService
 from .. import models
 
 class SlotSpinResult:
@@ -32,20 +33,23 @@ class GachaPullResult:
 
 
 class GameService:
-    def __init__(self, repository: GameRepository | None = None):
+    def __init__(
+        self,
+        repository: GameRepository | None = None,
+        segment_service: UserSegmentService | None = None,
+    ) -> None:
         self.repo = repository or GameRepository()
+        self.segment_service = segment_service
 
     def slot_spin(self, user_id: int, db: Session) -> SlotSpinResult:
         deduct_tokens(user_id, 2, db)
 
-        segment = self.repo.get_user_segment(db, user_id)
+        segment_service = self.segment_service or UserSegmentService(db)
+        segment = segment_service.get_segment_label(user_id)
         streak = self.repo.get_streak(user_id)
 
-        win_prob = 0.10 + min(streak * 0.01, 0.05)
-        if segment == "Whale":
-            win_prob += 0.02
-        elif segment == "Low":
-            win_prob -= 0.02
+        base_prob = 0.10 + min(streak * 0.01, 0.05)
+        win_prob = segment_service.adjust_probability(base_prob, segment)
         jackpot_prob = 0.01
 
         spin = random.random()
@@ -82,9 +86,9 @@ class GameService:
         bet = max(1, min(bet, 50))
         deduct_tokens(user_id, bet, db)
 
-        segment = self.repo.get_user_segment(db, user_id)
-        edge_map = {"Whale": 0.05, "Medium": 0.10, "Low": 0.15}
-        house_edge = edge_map.get(segment, 0.10)
+        segment_service = self.segment_service or UserSegmentService(db)
+        segment = segment_service.get_segment_label(user_id)
+        house_edge = segment_service.get_house_edge(segment)
 
         number = random.randint(0, 36)
         payout = 0
