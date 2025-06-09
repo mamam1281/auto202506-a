@@ -392,27 +392,6 @@ games.py 라우터 - API 엔드포인트 정의
    - 테스트 코드 추가 필요
    - 문서화 보완 필요
    - 보안 강화 필요 (예: 헬스 체크 엔드포인트 보호)
-src/services/cj_ai_service.py
-고도화된 감정 분석 및 외부 LLM fallback (OpenAI/Claude/Mistral 연동)
-src/models/emotion_models.py
-감정/정서 결과를 위한 데이터 클래스, Pydantic 모델, 멀티랭귀지/스코어 포함
-src/utils/sentiment_analyzer.py
-고급 감정 분석 유틸리티, 문장 전처리, 모델 추론, confidence 체크 등
-src/services/recommendation_service.py
-개인화 추천 엔진 (협업+콘텐츠+감정 융합), 실시간 추천 API 포함
-src/services/emotion_feedback_service.py
-감정 기반 다중 템플릿(50+), 상황별 반응, LLM fallback
-테스트/검증
-tests/unit/test_advanced_emotion.py
-유닛 테스트, 모킹 포함(LLM, Redis 등), 엣지케이스/통합 경로 모두
-DB/모델
-models (SQLAlchemy + Alembic migration)
-UserEmotionLog, RecommendationHistory 등 감정/추천 이력 모델
-API 명세
-OpenAPI 3.0/3.1 Spec
-FastAPI 기반의 모든 신규 엔드포인트에 대한 명세(docstring 또는 별도 YAML/JSON)
-환경설정
-.env(.example)/settings.py
-SENTIMENT_MODEL_PATH, REDIS_URL, CONFIDENCE_THRESHOLD 등 환경변수 포함
-ㄴ 20250609 13:00:00 구글쥴스 요청함  
+
+ 
 

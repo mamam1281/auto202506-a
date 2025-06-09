@@ -1,72 +1,119 @@
-from fastapi import APIRouter, Depends, HTTPException, Body
-from typing import Optional, Dict, Any
-import logging # Ensure logging is imported
+"""
+MVP AI Router - 최소 감정 분석 API
+"""
 
-# Assuming EmotionResult is the Pydantic model from emotion_models.py
-from ..emotion_models import EmotionResult, BaseModel # BaseModel might be needed for AIAnalysisRequest
-from pydantic import Field # Field is used in AIAnalysisRequest
+import logging
+from typing import Dict, Optional
 
-# Services and other dependencies
-from ..services.cj_ai_service import CJAIService
+from fastapi import APIRouter, HTTPException, Depends
+from pydantic import BaseModel
 
-# --- Start of Dummy/Placeholder Dependencies for Subtask ---
-class DummyRedisForRouter:
-    def get(self, name): logging.debug(f"DummyRedis GET: {name}"); return None
-    def set(self, name, value, ex=None): logging.debug(f"DummyRedis SET: {name} VAL: {value[:100]}...")
-    def publish(self, channel, message): logging.debug(f"DummyRedis PUBLISH: {channel} MSG: {message}")
+from app.services.cj_ai_service import CJAIService
+from app.services.recommendation_service import RecommendationService
+from app.services.emotion_feedback_service import EmotionFeedbackService
+from app.utils.sentiment_analyzer import get_emotion_analysis
 
-class DummyWebsocketManagerForRouter:
-    async def broadcast(self, message: dict): logging.debug(f"DummyWebsocketManager BROADCAST: {message}")
-# --- End of Dummy/Placeholder Dependencies ---
+logger = logging.getLogger(__name__)
 
-class AIAnalysisRequest(BaseModel):
+router = APIRouter()
+
+# Request/Response models
+class EmotionAnalysisRequest(BaseModel):
     user_id: int
-    text: str = Field(..., min_length=1)
-    context: Optional[Dict[str, Any]] = None
+    text: str
+    context: Optional[Dict] = None
 
-router = APIRouter(prefix="/ai", tags=["AI Analysis"])
-logger = logging.getLogger(__name__) # Module-level logger for the router
+class EmotionAnalysisResponse(BaseModel):
+    success: bool
+    data: Dict
+    message: str = "Success"
 
-# Dependency function (placeholder for real DI)
-async def get_cj_ai_service_dependency():
+class FeedbackRequest(BaseModel):
+    user_id: int
+    emotion: str
+    segment: str = "Medium"
+    context: Optional[Dict] = None
+
+@router.post("/analyze", response_model=EmotionAnalysisResponse)
+async def analyze_emotion(request: EmotionAnalysisRequest):
+    """MVP 감정 분석 엔드포인트"""
     try:
-        # from ..services.cj_ai_service import CJAIService # Already imported above
-        dummy_redis = DummyRedisForRouter()
-        dummy_ws_manager = DummyWebsocketManagerForRouter()
-        # Configure logging at least to INFO for messages from CJAIService to appear if it also uses logging
-        # logging.basicConfig(level=logging.INFO) # Avoid reconfiguring if already set globally
-        return CJAIService(redis_client=dummy_redis, websocket_manager=dummy_ws_manager)
-    except ImportError:
-        logger.error("Failed to import CJAIService for router dependency.")
-        return None
-    except Exception as e:
-        logger.error(f"Error creating CJAIService dependency: {e}", exc_info=True)
-        return None
-
-@router.post("/analyze", response_model=Optional[EmotionResult],
-             summary="Analyze User Text for Emotion",
-             description="Receives user text, performs emotion analysis, logs the result, and broadcasts it via WebSocket.")
-async def analyze_text_emotion(
-    request_data: AIAnalysisRequest = Body(...),
-    cj_service: Optional[CJAIService] = Depends(get_cj_ai_service_dependency)
-):
-    if not cj_service:
-        logger.error("AI Service dependency failed, service is unavailable.")
-        raise HTTPException(status_code=503, detail="AI Service is unavailable due to an internal configuration error.")
-
-    try:
-        emotion_result = await cj_service.analyze_user_text(
-            user_id=request_data.user_id,
-            text=request_data.text,
-            session_context=request_data.context
+        # 기본 감정 분석
+        emotion_result = get_emotion_analysis(request.text, request.context)
+        
+        response_data = {
+            "emotion": emotion_result.emotion,
+            "score": emotion_result.score,
+            "confidence": emotion_result.confidence,
+            "language": emotion_result.language,
+            "user_id": request.user_id
+        }
+        
+        logger.info(f"Emotion analysis completed for user {request.user_id}: {emotion_result.emotion}")
+        
+        return EmotionAnalysisResponse(
+            success=True,
+            data=response_data
         )
+        
     except Exception as e:
-        logger.exception(f"Unhandled error during AI analysis router call for user {request_data.user_id}")
-        raise HTTPException(status_code=500, detail="An unexpected error occurred during AI analysis.")
+        logger.error(f"Emotion analysis failed: {e}")
+        raise HTTPException(status_code=500, detail="Emotion analysis failed")
 
-    if not emotion_result:
-        # Log this specific case in the router as well for traceability
-        logger.warning(f"Emotion analysis for user {request_data.user_id} text '{request_data.text[:50]}...' yielded no result from service.")
-        raise HTTPException(status_code=400, detail="Failed to analyze emotion. Input might be invalid or analysis yielded no conclusive result.")
+@router.get("/recommend/personalized")
+async def get_personalized_recommendations(user_id: int, emotion: Optional[str] = None):
+    """MVP 개인화 추천 엔드포인트"""
+    try:
+        service = RecommendationService()
+        recommendations = service.get_personalized_recommendations(user_id, emotion)
+        
+        return {
+            "success": True,
+            "data": {
+                "recommendations": recommendations,
+                "user_id": user_id
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Recommendation failed: {e}")
+        raise HTTPException(status_code=500, detail="Recommendation failed")
 
-    return emotion_result
+@router.post("/feedback/generate")
+async def generate_feedback(request: FeedbackRequest):
+    """MVP 피드백 생성 엔드포인트"""
+    try:
+        service = EmotionFeedbackService()
+        feedback = service.generate_feedback(request.emotion, request.segment, request.context)
+        animation_meta = service.get_animation_meta(request.emotion)
+        
+        return {
+            "success": True,
+            "data": {
+                "feedback": feedback,
+                "animation_meta": animation_meta,
+                "user_id": request.user_id,
+                "emotion": request.emotion,
+                "segment": request.segment
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Feedback generation failed: {e}")
+        raise HTTPException(status_code=500, detail="Feedback generation failed")
+
+@router.get("/templates")
+async def get_response_templates():
+    """응답 템플릿 조회"""
+    try:
+        service = EmotionFeedbackService()
+        return {
+            "success": True,
+            "data": {
+                "templates": service.feedback_templates,
+                "total_count": len(service.feedback_templates)
+            }
+        }
+    except Exception as e:
+        logger.error(f"Template retrieval failed: {e}")
+        raise HTTPException(status_code=500, detail="Template retrieval failed")

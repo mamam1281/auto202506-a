@@ -47,8 +47,7 @@ from app.routers import (
 
     auth,
     chat,
-
-
+    ai  # MVP AI router 추가
 )
 
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---

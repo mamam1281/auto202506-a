@@ -287,19 +287,68 @@ ML_FRAUD_MODEL_PATH=/models/fraud_detection.bin
 SUSPICIOUS_PATTERN_ALERTS=false    # 의심 패턴 알림
 ```
 
-## 📋 우선순위별 구현 계획
+## 📊 현재 구현 상태 (June 9, 2025)
 
-### 우선순위 1 (즉시 구현 필요)
-1. **CJ AI 감정 분석 고도화** - 사용자 경험 핵심
-2. **게임 보안 강화** - 확률 조작 방지 시스템
-3. **실시간 알림 시스템** - 사용자 참여도 향상
+### ✅ 완전히 구현된 기능들
+```bash
+# 기본 게임 시스템 (100% 구현)
+GAME_PROBABILITY_TABLE='{"SLOT": 0.95, "ROULETTE": 0.97}'  ✅
+GAME_SECURITY_ENABLED=true                                  ✅
+SLOT_FORCED_WIN_STREAK=7                                   ✅
+ROULETTE_JACKPOT_ENABLED=true                              ✅
 
-### 우선순위 2 (단기 구현)
-1. **결제 시스템** - 수익 모델 핵심
-2. **관리자 패널** - 운영 효율성
-3. **고급 분석 시스템** - 데이터 기반 의사결정
+# 사용자 세그먼트 시스템 (100% 구현)  
+SEGMENT_PROB_ADJUST_JSON='{"VIP": 0.15, "PREMIUM": 0.1}'   ✅
+HOUSE_EDGE_JSON='{"VIP": 0.02, "PREMIUM": 0.03}'          ✅
 
-### 우선순위 3 (중장기 구현)
-1. **모바일 앱** - 사용자 접근성
-2. **토너먼트/길드 시스템** - 사용자 유지
-3. **소셜 기능** - 바이럴 효과
+# 기본 인증 시스템 (100% 구현)
+JWT_SECRET=your-jwt-secret                                  ✅
+INVITE_CODE_VALIDATION=true                                ✅
+
+# 기본 AI 채팅 (80% 구현)
+SENTIMENT_ANALYSIS_MODEL=basic                             ✅
+EMOTION_CONFIDENCE_THRESHOLD=0.7                           ✅
+```
+
+### ⚠️ 부분 구현된 기능들
+```bash
+# 고급 감정 분석 (60% 구현)
+SENTIMENT_ANALYSIS_MODEL=advanced                          ⚠️ (기본만 구현)
+LLM_FALLBACK_ENABLED=false                                 ⚠️ (미구현)
+CONTEXT_AWARE_RESPONSES=false                              ⚠️ (미구현)
+
+# 추천 시스템 (30% 구현)
+RECOMMENDATION_STRATEGY=basic                              ⚠️ (hybrid 미구현)
+RECOMMENDATION_CACHE_TTL=3600                              ⚠️ (캐시 미구현)
+```
+
+### 🚧 미구현 기능들
+```bash
+# API 엔드포인트 (0% 구현)
+# POST /ai/analyze - 고급 감정 분석                        ❌
+# GET /recommend/personalized - 개인화 추천                 ❌
+# POST /feedback/generate - 피드백 생성                     ❌
+
+# 서비스 클래스 (0% 구현)  
+# RecommendationService - 추천 서비스                       ❌
+# EmotionFeedbackService - 감정 피드백 서비스                ❌
+# LLM 폴백 시스템 - OpenAI/Claude 연동                      ❌
+```
+
+### 💡 개발 우선순위 가이드
+```bash
+# 즉시 구현 필요 (테스트 실패 해결용):
+1. RecommendationService 기본 구현                         🔥
+2. EmotionFeedbackService 기본 구현                        🔥  
+3. /ai/analyze 엔드포인트 기본 버전                         🔥
+
+# 단기 구현 (사용자 경험 개선):
+1. 고급 감정 분석 알고리즘                                  ⚡
+2. Redis 캐싱 시스템                                       ⚡
+3. 개인화 추천 로직                                        ⚡
+
+# 장기 구현 (확장성):
+1. LLM 폴백 시스템                                         🚀
+2. 실시간 성능 최적화                                       🚀
+3. 대규모 동시 사용자 지원                                  🚀
+```

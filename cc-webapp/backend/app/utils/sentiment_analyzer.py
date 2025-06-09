@@ -4,172 +4,171 @@ import os
 import re
 import json
 import logging
-from typing import Tuple, Optional, Dict, Any
+from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
 
-try:
-    from langdetect import detect, LangDetectException
-except ImportError:
-    detect = None
-    LangDetectException = None # type: ignore
-
-from ..emotion_models import EmotionResult, SupportedEmotion, SupportedLanguage
-
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-SENTIMENT_MODEL_PATH = os.getenv("SENTIMENT_MODEL_PATH", "path/to/dummy_model.bin")
-EMOTION_CONFIDENCE_THRESHOLD = float(os.getenv("EMOTION_CONFIDENCE_THRESHOLD", "0.6"))
-CONTEXT_AWARE_RESPONSES = os.getenv("CONTEXT_AWARE_RESPONSES", "true").lower() == "true"
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
-MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+class SupportedEmotion(Enum):
+    """지원하는 감정 유형"""
+    EXCITED = "excited"
+    FRUSTRATED = "frustrated"
+    CURIOUS = "curious"
+    TIRED = "tired"
+    ANGRY = "angry"
+    SAD = "sad"
+    NEUTRAL = "neutral"
 
-def clean_text(text: str) -> str:
-    if not isinstance(text, str):
-        logger.warning(f"clean_text received non-string input: {type(text)}. Returning empty string.")
+class SupportedLanguage(Enum):
+    """지원하는 언어"""
+    KOREAN = "korean"
+    ENGLISH = "english"
+
+def preprocess_text(text: str) -> str:
+    """텍스트 전처리"""
+    if not text:
         return ""
-    text = text.lower().strip()
-    text = re.sub(r'[^\w\s'-]', '', text)
+    
+    # 특수문자 제거 (한글, 영문, 숫자, 공백, 하이픈, 어포스트로피 제외)
+    text = re.sub(r'[^\w\s\'-]', '', text)
+    
+    # 연속된 공백을 하나로 줄임
     text = re.sub(r'\s+', ' ', text)
-    return text
+    
+    return text.strip()
 
-def detect_language_robust(text: str) -> SupportedLanguage:
-    if not text or not isinstance(text, str) or text.isspace():
-        logger.warning("detect_language received empty/invalid text, defaulting to English.")
-        return SupportedLanguage.ENGLISH
+@dataclass
+class EmotionResult:
+    """감정 분석 결과"""
+    emotion: str
+    score: float
+    confidence: float
+    language: str
+    
+    def is_confident(self) -> bool:
+        """신뢰도가 높은 결과인지 확인"""
+        return self.confidence >= 0.7
 
-    korean_chars = re.compile(r"[가-힣]")
-    primary_guess = SupportedLanguage.KOREAN if korean_chars.search(text) else SupportedLanguage.ENGLISH
-
-    if detect and LangDetectException:
-        try:
-            lang_code = detect(text)
-            if lang_code == "ko": return SupportedLanguage.KOREAN
-            if lang_code == "en": return SupportedLanguage.ENGLISH
-            logger.warning(f"Langdetect unmapped code '{lang_code}'. Using heuristic: {primary_guess.value}")
-            return primary_guess
-        except LangDetectException as e:
-            logger.warning(f"Langdetect failed: {e}. Falling back to heuristic: {primary_guess.value}")
-            return primary_guess
+def detect_language(text: str) -> str:
+    """언어 감지"""
+    # 한글이 포함되어 있으면 한국어로 판단
+    if re.search(r'[가-힣]', text):
+        return SupportedLanguage.KOREAN.value
     else:
-        logger.info("langdetect not available/imported. Using heuristic.")
-        return primary_guess
+        return SupportedLanguage.ENGLISH.value
 
-def analyze_sentiment_local(text: str, lang: SupportedLanguage) -> Tuple[SupportedEmotion, float]:
-    logger.info(f"Local sentiment analysis (dummy) for lang '{lang.value}': '{text}'")
-    if lang == SupportedLanguage.KOREAN:
-        return (SupportedEmotion.SADNESS, 0.75) if "슬픔" in text else (SupportedEmotion.NEUTRAL, 0.5)
-    else:
-        if "happy" in text or "joy" in text: return SupportedEmotion.JOY, 0.8
-        if "sad" in text or "cry" in text: return SupportedEmotion.SADNESS, 0.85
-        return SupportedEmotion.NEUTRAL, 0.4
-
-def analyze_sentiment_llm(
-    text: str, lang: SupportedLanguage, provider: str = "openai", context: Optional[Dict[str, Any]] = None
-) -> Tuple[Optional[SupportedEmotion], float, Dict[str, Any]]:
-    logger.info(f"LLM sentiment analysis (dummy) via {provider} for lang '{lang.value}': '{text}'")
-    llm_metadata = {"provider": provider, "model": "dummy_model", "prompt_len": len(text), "cost_sim": 0.001}
-
-    key_missing = False
-    if provider == "openai" and not OPENAI_API_KEY: key_missing = True
-    elif provider == "claude" and not CLAUDE_API_KEY: key_missing = True
-    elif provider == "mistral" and not MISTRAL_API_KEY: key_missing = True
-
-    if key_missing:
-        logger.error(f"{provider.capitalize()} API key missing.")
-        return None, 0.0, llm_metadata
-
-    emotion, conf = SupportedEmotion.NEUTRAL, 0.6
-    if "exciting" in text or "놀라운" in text: emotion, conf = SupportedEmotion.SURPRISE, 0.9
-    elif "angry" in text or "화나" in text: emotion, conf = SupportedEmotion.ANGER, 0.7
-
-    llm_metadata["sim_output"] = {"emotion": emotion.value, "confidence": conf}
-    if CONTEXT_AWARE_RESPONSES and context:
-        logger.info(f"LLM (dummy) context: {json.dumps(context, indent=2, ensure_ascii=False)}")
-        llm_metadata["context_provided"] = True
-    return emotion, conf, llm_metadata
-
-def get_emotion_analysis(
-    text: str, session_context: Optional[Dict[str, Any]] = None
-) -> Optional[EmotionResult]:
-    if not text or not isinstance(text, str) or text.isspace():
-        logger.warning("get_emotion_analysis: empty/invalid text.")
-        return None
-
-    cleaned_text = clean_text(text)
-    if not cleaned_text:
-        logger.warning("get_emotion_analysis: text empty after cleaning.")
-        return None
-
-    detected_lang = detect_language_robust(cleaned_text)
-    logger.info(f"Analyzing (lang: {detected_lang.value}): "{cleaned_text}"")
-
-    local_emotion, local_conf = analyze_sentiment_local(cleaned_text, detected_lang)
-    source = "local_model"
-    llm_log = None
-    final_emotion, final_conf = local_emotion, local_conf
-
-    if local_conf < EMOTION_CONFIDENCE_THRESHOLD:
-        logger.info(f"Local conf ({local_conf:.2f}) < threshold. Trying LLM.")
-        providers = ["openai", "claude", "mistral"]
-        chosen_provider = next((p for p in providers if (p == "openai" and OPENAI_API_KEY) or \
-                                                       (p == "claude" and CLAUDE_API_KEY) or \
-                                                       (p == "mistral" and MISTRAL_API_KEY)), None)
-        if chosen_provider:
-            llm_emo, llm_c, llm_att_log = analyze_sentiment_llm(
-                cleaned_text, detected_lang, provider=chosen_provider,
-                context=session_context if CONTEXT_AWARE_RESPONSES else None
-            )
-            llm_log = llm_att_log
-            if llm_emo and llm_c > local_conf:
-                logger.info(f"LLM ({chosen_provider}) better. Using LLM result.")
-                final_emotion, final_conf = llm_emo, llm_c
-                source = f"llm_{chosen_provider}"
-            else:
-                logger.info(f"LLM ({chosen_provider}) no better or failed. Using local.")
-        else:
-            logger.warning("No LLM provider with API key. Using local.")
-    else:
-        logger.info("Local model confidence sufficient.")
-
-    score = final_conf if final_emotion not in [SupportedEmotion.ANGER, SupportedEmotion.FEAR, SupportedEmotion.SADNESS] else -final_conf
-
-    return EmotionResult(
-        emotion=final_emotion,
-        score=score,
-        confidence=final_conf,
-        language=detected_lang,
-        raw_output={
-            "source": source,
-            "local_details": {"e": local_emotion.value, "c": local_conf} if source != "local_model" else None,
-            "llm_details": llm_log
+def analyze_emotion_basic(text: str) -> EmotionResult:
+    """기본 감정 분석 (키워드 기반)"""
+    language = detect_language(text)
+    text_lower = text.lower()
+    
+    # 감정별 키워드 정의
+    emotion_keywords = {
+        SupportedEmotion.EXCITED: {
+            'korean': ['기뻐', '좋아', '최고', '대박', '환상', '완전', '진짜', '와'],
+            'english': ['great', 'awesome', 'amazing', 'fantastic', 'wonderful', 'excellent', 'love', 'best']
+        },
+        SupportedEmotion.FRUSTRATED: {
+            'korean': ['짜증', '답답', '화나', '빡쳐', '열받', '싫어', '최악'],
+            'english': ['annoying', 'frustrated', 'angry', 'hate', 'worst', 'terrible', 'awful']
+        },
+        SupportedEmotion.CURIOUS: {
+            'korean': ['궁금', '어떻게', '왜', '뭐야', '신기', '재밌'],
+            'english': ['curious', 'interesting', 'wonder', 'how', 'why', 'what']
+        },
+        SupportedEmotion.TIRED: {
+            'korean': ['피곤', '졸려', '지쳐', '힘들', '못하겠'],
+            'english': ['tired', 'exhausted', 'sleepy', 'worn out', 'cant anymore']
+        },
+        SupportedEmotion.ANGRY: {
+            'korean': ['화나', '빡쳐', '열받', '미쳐', '죽이고싶'],
+            'english': ['angry', 'mad', 'furious', 'pissed', 'rage']
+        },
+        SupportedEmotion.SAD: {
+            'korean': ['슬퍼', '우울', '눈물', '속상', '마음아파'],
+            'english': ['sad', 'depressed', 'cry', 'tears', 'heartbroken']
         }
-    )
+    }
+    
+    # 키워드 매칭으로 감정 점수 계산
+    emotion_scores = {}
+    
+    for emotion, keywords in emotion_keywords.items():
+        score = 0
+        lang_keywords = keywords.get(language, [])
+        
+        for keyword in lang_keywords:
+            if keyword in text_lower:
+                score += 1
+        
+        if score > 0:
+            emotion_scores[emotion] = score / len(lang_keywords)
+    
+    # 가장 높은 점수의 감정 선택
+    if emotion_scores:
+        best_emotion = max(emotion_scores, key=emotion_scores.get)
+        score = emotion_scores[best_emotion]
+        confidence = min(score * 2, 1.0)  # 신뢰도 계산
+        
+        return EmotionResult(
+            emotion=best_emotion.value,
+            score=score,
+            confidence=confidence,
+            language=language
+        )
+    else:
+        # 매칭되는 키워드가 없으면 중립
+        return EmotionResult(
+            emotion=SupportedEmotion.NEUTRAL.value,
+            score=0.5,
+            confidence=0.6,
+            language=language
+        )
 
-if __name__ == "__main__":
-    print("\n--- Testing Sentiment Analyzer Utility ---")
-    if detect: print(f"Langdetect: '안녕하세요' -> {detect('안녕하세요')}, 'Hello world' -> {detect('Hello world')}")
-    else: print("Langdetect not installed or import failed.")
+class SentimentAnalyzer:
+    """감정 분석기 클래스"""
+    
+    def __init__(self):
+        self.confidence_threshold = float(os.getenv('EMOTION_CONFIDENCE_THRESHOLD', '0.7'))
+        self.llm_fallback_enabled = os.getenv('LLM_FALLBACK_ENABLED', 'false').lower() == 'true'
+        self.model = None  # 모델 속성 추가
+        self.fallback_mode = self.llm_fallback_enabled  # 폴백 모드 속성 추가
+        logger.info(f"SentimentAnalyzer initialized with threshold: {self.confidence_threshold}")
+    
+    def analyze(self, text: str) -> EmotionResult:
+        """텍스트에서 감정 분석"""
+        if not text or not text.strip():
+            return EmotionResult(
+                emotion=SupportedEmotion.NEUTRAL.value,
+                score=0.0,
+                confidence=1.0,
+                language=SupportedLanguage.KOREAN.value
+            )
+        
+        # 텍스트 전처리
+        processed_text = preprocess_text(text)
+        
+        # 기본 감정 분석
+        result = analyze_emotion_basic(processed_text)
+        
+        # 신뢰도가 낮으면 LLM 폴백 (향후 구현)
+        if result.confidence < self.confidence_threshold and self.llm_fallback_enabled:
+            logger.info(f"Low confidence ({result.confidence}), attempting LLM fallback")
+            # TODO: LLM 폴백 구현
+            pass
+        
+        logger.debug(f"Emotion analysis result: {result}")
+        return result
 
-    texts = [
-        ("I am feeling very happy and joyful today!", None),
-        ("이건 정말 슬픈 소식이야.", None),
-        ("This is neutral.", None),
-        ("I'm so angry I could scream!", {"user_history": "lost last 3 games"}),
-        ("정말 놀라운 결과입니다!", {"user_segment": "VIP"}),
-        ("", None), (None, None)
-    ]
-    # Simulate API keys for testing fallback
-    OPENAI_API_KEY = "dummy_openai_key"
-    EMOTION_CONFIDENCE_THRESHOLD = 0.7 # To encourage LLM fallback
+def get_emotion_analysis(text: str, context: Optional[Dict] = None) -> EmotionResult:
+    """감정 분석 함수 (편의용)"""
+    analyzer = SentimentAnalyzer()
+    return analyzer.analyze(text)
 
-    for text, ctx in texts:
-        print(f"\nAnalyzing: '{text}' (Context: {ctx is not None})")
-        result = get_emotion_analysis(text, ctx)
-        if result:
-            print(f"  Emotion: {result.emotion.name} ({result.get_display_emotion()})")
-            print(f"  Score: {result.score:.2f}, Confidence: {result.confidence:.2f}")
-            print(f"  Lang: {result.language.value}, Source: {json.dumps(result.raw_output, indent=2, ensure_ascii=False)}")
-        else:
-            print("  Analysis failed or text invalid.")
-    print("\n--- End of Test ---")
+def load_local_model():
+    """로컬 모델 로드 (향후 구현)"""
+    # TODO: 실제 ML 모델 로드 구현
+    logger.info("Local sentiment model loading (placeholder)")
+    return None

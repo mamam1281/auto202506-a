@@ -49,65 +49,11 @@ QUIZ_COMPLETE	Curiosity/Engagement	+200 토큰(본사 사이트 퀴즈) + 리스
 Note: 각 상황별로 “애니메이션+사운드+토큰 증감” 패키지가 한 세트로 묶여, 유저의 감정 상태(도파민 분비)와 직결되도록 설계.
 
 3.3. FastAPI Endpoint Integration
-3.3.1. Emotion Feedback 엔드포인트
-python
-복사
-편집
-from fastapi import FastAPI, HTTPException, Depends
-from .database import get_db, get_redis
-from .schemas import FeedbackRequest, FeedbackResponse
-from .models import User
-from datetime import datetime
-import random
 
-app = FastAPI()
+#### 3.3.1. Enhanced Emotion Feedback Endpoints
 
-# Emotion Matrix 정의 (사이버 토큰 변화량, 감정 메시지, 애니메이션 태그, 사운드 태그 포함)
-emotion_matrix = {
-    "GAME_WIN": {
-      "emotion": "happiness",
-      "message": "🎉 대박! {earned_tokens} 토큰 획득! 고스피드 플레이 계속!",
-      "token_delta": lambda streak: random.randint(10, 50) + min(streak*2, 20),
-      "animation": "confetti",
-      "sound": "victory.mp3"
-    },
-    "GAME_FAIL": {
-      "emotion": "frustration",
-      "message": "😓 아쉽네요… 하지만 곧 보상을 다시 받을 수 있어요!",
-      "token_delta": -2,
-      "animation": "shake_sad",
-      "sound": "encourage.mp3"
-    },
-    "GAME_RETRY": {
-      "emotion": "determination",
-      "message": "🔥 한 번 더? 이번엔 확률이 15% 상승했어요!",
-      "token_delta": -1,
-      "animation": "flash",
-      "sound": "beat.mp3"
-    },
-    "DAILY_INACTIVE": {
-      "emotion": "concern",
-      "message": "⌛ 오랜만이네요! 본사 사이트 로그인만 해도 100토큰 드려요!",
-      "token_delta": 0,  # 실제 토큰은 본사 사이트 연동 시 지급
-      "animation": "token_rain",
-      "sound": "ring.mp3"
-    },
-    "REWARD_CLAIM": {
-      "emotion": "satisfaction",
-      "message": "👏 보상 획득! {item_name} 언락 완료. 다음 보상까지 {next_threshold}토큰 남음",
-      "token_delta": 0,  # 이미 지급된 보상
-      "animation": "unlock",
-      "sound": "cheer.mp3"
-    },
-    "QUIZ_COMPLETE": {
-      "emotion": "curiosity",
-      "message": "🧠 퀴즈 완료! 당신은 {risk_profile}형 플레이어군요. 맞춤 리워드를 추천해드릴게요!",
-      "token_delta": 200,
-      "animation": "quiz_success",
-      "sound": "think.mp3"
-    }
-}
-
+```python
+# Original emotion feedback endpoint
 @app.post("/api/feedback", response_model=FeedbackResponse)
 def get_feedback(req: FeedbackRequest, db=Depends(get_db), redis=Depends(get_redis)):
     user = db.query(User).filter(User.id == req.user_id).first()
@@ -148,32 +94,112 @@ def get_feedback(req: FeedbackRequest, db=Depends(get_db), redis=Depends(get_red
         "sound": entry["sound"],
         "token_delta": token_change
     }
-FeedbackResponse 스키마 예시:
+# 🆕 Advanced AI Analysis Endpoint
+@app.post("/ai/analyze", response_model=EmotionAnalysisResponse)
+def analyze_emotion(req: AnalyzeRequest, db=Depends(get_db)):
+    """Advanced emotion analysis with context awareness"""
+    analyzer = SentimentAnalyzer()
+    result = analyzer.analyze(req.text)
+    
+    return {
+        "emotion": result.emotion,
+        "score": result.score,
+        "confidence": result.confidence,
+        "language": result.language,
+        "context_aware": bool(req.context)
+    }
 
-python
-복사
-편집
-from pydantic import BaseModel
-from typing import Optional
+# 🆕 Personalized Feedback Generation
+@app.post("/feedback/generate", response_model=PersonalizedFeedbackResponse)
+def generate_feedback(req: FeedbackGenerationRequest, db=Depends(get_db)):
+    """Generate emotion-based personalized feedback"""
+    service = EmotionFeedbackService()
+    feedback = service.generate_feedback(
+        emotion=req.emotion,
+        segment=req.segment,
+        context=req.context
+    )
+    
+    return {
+        "success": True,
+        "data": {
+            "feedback": feedback["message"],
+            "template_id": feedback["template_id"],
+            "animation_meta": feedback["animation_meta"]
+        }
+    }
 
-class FeedbackRequest(BaseModel):
-    user_id: int
-    action_type: str
-    metadata: dict = {}
+# 🆕 Personalized Recommendations
+@app.get("/recommend/personalized", response_model=RecommendationResponse)
+def get_personalized_recommendations(
+    user_id: int = Query(...),
+    emotion: Optional[str] = Query(None),
+    segment: Optional[str] = Query(None)
+):
+    """Get AI-powered personalized game recommendations"""
+    service = RecommendationService()
+    recommendations = service.get_personalized_recommendations(
+        user_id=user_id,
+        emotion=emotion,
+        segment=segment
+    )
+    
+    return {
+        "success": True,
+        "data": {
+            "recommendations": [
+                {
+                    "game_type": rec.game_type,
+                    "confidence": rec.confidence,
+                    "reason": rec.reason,
+                    "metadata": rec.metadata
+                }
+                for rec in recommendations
+            ]
+        }
+    }
+```
 
-class FeedbackResponse(BaseModel):
-    emotion: str              # happiness, frustration, determination 등
-    message: str              # 사용자에게 보여줄 텍스트
-    animation: Optional[str]  # confetti, shake_sad 등
-    sound: Optional[str]      # victory.mp3, encourage.mp3 등
-    token_delta: int          # +/- 변화된 토큰 수량
-적용 흐름:
+#### 3.3.2. Enhanced Frontend Integration
 
-유저가 슬롯·룰렛·퀴즈 등 주요 행동을 완료
-
-프론트에서 /api/feedback 호출 → 위 로직 실행
-
-응답으로 받은 animation/sound → 즉시 재생, token_delta 정보로 토큰 UI 갱신
+```jsx
+// Enhanced SlotMachine component with new endpoints
+const spin = async () => {
+    // 1) Game logic
+    const isWin = Math.random() < (0.10 + Math.min(streakCount * 0.01, 0.30));
+    
+    // 2) Advanced emotion analysis
+    const emotionData = await fetch('/ai/analyze', {
+        method: 'POST',
+        body: JSON.stringify({
+            user_id: userId,
+            text: isWin ? "슬롯에서 이겼어요!" : "아쉽게 졌네요...",
+            context: { game_type: "slot", result: isWin ? "win" : "loss" }
+        })
+    }).then(r => r.json());
+    
+    // 3) Get personalized feedback
+    const feedbackData = await fetch('/feedback/generate', {
+        method: 'POST',
+        body: JSON.stringify({
+            user_id: userId,
+            emotion: emotionData.data.emotion,
+            segment: userSegment,
+            context: { game_type: "slot", result: isWin ? "win" : "loss" }
+        })
+    }).then(r => r.json());
+    
+    // 4) Apply feedback (animation + sound + UI update)
+    applyEmotionFeedback(feedbackData.data);
+    
+    // 5) Get next game recommendation
+    const recommendations = await fetch(`/recommend/personalized?user_id=${userId}&emotion=${emotionData.data.emotion}&segment=${userSegment}`)
+        .then(r => r.json());
+    
+    // 6) Show recommendation UI
+    showGameRecommendations(recommendations.data.recommendations);
+};
+```
 
 3.4. Frontend Integration (React 예시)
 3.4.1. useEmotionFeedback Hook
@@ -372,65 +398,11 @@ QUIZ_COMPLETE	Curiosity/Engagement	+200 토큰(본사 사이트 퀴즈) + 리스
 Note: Each situation is designed as a set of "Animation + Sound + Token Change" packages, directly linked to the user's emotional state (dopamine secretion).
 
 3.3. FastAPI Endpoint Integration
-3.3.1. Emotion Feedback Endpoint
-python
-Copy
-Edit
-from fastapi import FastAPI, HTTPException, Depends
-from .database import get_db, get_redis
-from .schemas import FeedbackRequest, FeedbackResponse
-from .models import User
-from datetime import datetime
-import random
 
-app = FastAPI()
+#### 3.3.1. Enhanced Emotion Feedback Endpoints
 
-# Define Emotion Matrix (including changes in cyber token, emotional message, animation tag, sound tag)
-emotion_matrix = {
-    "GAME_WIN": {
-      "emotion": "happiness",
-      "message": "🎉 대박! {earned_tokens} 토큰 획득! 고스피드 플레이 계속!",
-      "token_delta": lambda streak: random.randint(10, 50) + min(streak*2, 20),
-      "animation": "confetti",
-      "sound": "victory.mp3"
-    },
-    "GAME_FAIL": {
-      "emotion": "frustration",
-      "message": "😓 아쉽네요… 하지만 곧 보상을 다시 받을 수 있어요!",
-      "token_delta": -2,
-      "animation": "shake_sad",
-      "sound": "encourage.mp3"
-    },
-    "GAME_RETRY": {
-      "emotion": "determination",
-      "message": "🔥 한 번 더? 이번엔 확률이 15% 상승했어요!",
-      "token_delta": -1,
-      "animation": "flash",
-      "sound": "beat.mp3"
-    },
-    "DAILY_INACTIVE": {
-      "emotion": "concern",
-      "message": "⌛ 오랜만이네요! 본사 사이트 로그인만 해도 100토큰 드려요!",
-      "token_delta": 0,  # Actual tokens granted when linked with the headquarters site
-      "animation": "token_rain",
-      "sound": "ring.mp3"
-    },
-    "REWARD_CLAIM": {
-      "emotion": "satisfaction",
-      "message": "👏 보상 획득! {item_name} 언락 완료. 다음 보상까지 {next_threshold}토큰 남음",
-      "token_delta": 0,  # Already granted rewards
-      "animation": "unlock",
-      "sound": "cheer.mp3"
-    },
-    "QUIZ_COMPLETE": {
-      "emotion": "curiosity",
-      "message": "🧠 퀴즈 완료! 당신은 {risk_profile}형 플레이어군요. 맞춤 리워드를 추천해드릴게요!",
-      "token_delta": 200,
-      "animation": "quiz_success",
-      "sound": "think.mp3"
-    }
-}
-
+```python
+# Original emotion feedback endpoint
 @app.post("/api/feedback", response_model=FeedbackResponse)
 def get_feedback(req: FeedbackRequest, db=Depends(get_db), redis=Depends(get_redis)):
     user = db.query(User).filter(User.id == req.user_id).first()
@@ -471,7 +443,35 @@ def get_feedback(req: FeedbackRequest, db=Depends(get_db), redis=Depends(get_red
         "sound": entry["sound"],
         "token_delta": token_change
     }
-Example of FeedbackResponse schema:
+# 🆕 Advanced AI Analysis Endpoint
+@app.post("/ai/analyze", response_model=EmotionAnalysisResponse)
+def analyze_emotion(req: AnalyzeRequest, db=Depends(get_db)):
+    """Advanced emotion analysis with context awareness"""
+    analyzer = SentimentAnalyzer()
+    result = analyzer.analyze(req.text)
+    
+    return {
+        "emotion": result.emotion,
+        "score": result.score,
+        "confidence": result.confidence,
+        "language": result.language,
+        "context_aware": bool(req.context)
+    }
+
+# 🆕 Personalized Feedback Generation
+@app.post("/feedback/generate", response_model=PersonalizedFeedbackResponse)
+def generate_feedback(req: FeedbackGenerationRequest, db=Depends(get_db)):
+    """Generate emotion-based personalized feedback"""
+    service = EmotionFeedbackService()
+    feedback = service.generate_feedback(
+        emotion=req.emotion,
+        segment=req.segment,
+        context=req.context
+    )
+    
+    return {
+        "success": True,
+        "data": {
 
 python
 Copy
