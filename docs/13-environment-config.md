@@ -50,13 +50,30 @@ PROBABILITY_MANIPULATION_CHECK=true
 
 ### AI 상담 서비스
 ```bash
-# 감정 분석 모델 설정
+# 고급 감정 분석 시스템 (신규 추가)
+SENTIMENT_ANALYSIS_MODEL=advanced  # 기본값: basic
 SENTIMENT_MODEL_PATH=/models/sentiment_v2.bin
-SENTIMENT_THRESHOLD=0.7
+EMOTION_CONFIDENCE_THRESHOLD=0.7   # 감정 판단 신뢰도 임계값
+CONTEXT_AWARE_RESPONSES=true       # 컨텍스트 인식 응답
 
-# 응답 템플릿 설정
+# 다중 언어 지원
+SUPPORTED_LANGUAGES='["korean", "english"]'
+DEFAULT_LANGUAGE=korean
+
+# LLM 폴백 설정
+LLM_FALLBACK_ENABLED=true
+OPENAI_API_KEY=your-openai-key
+CLAUDE_API_KEY=your-claude-key
+LLM_FALLBACK_MODEL=gpt-3.5-turbo
+
+# 응답 템플릿 설정 (확장됨)
 RESPONSE_TEMPLATE_PATH=/templates/responses/
-DEFAULT_LANGUAGE=ko
+RESPONSE_TEMPLATE_COUNT=50         # 현재: 50개+ 템플릿
+FEEDBACK_TEMPLATES_PATH=/app/data/feedback_templates.json
+
+# 추천 시스템
+RECOMMENDATION_STRATEGY=hybrid     # collaborative, content_based, hybrid
+RECOMMENDATION_CACHE_TTL=3600      # 추천 캐시 만료 시간 (초)
 ```
 
 ## 환경별 설정

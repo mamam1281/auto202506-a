@@ -40,6 +40,14 @@ POST /ai/analyze          - Emotion analysis request
 GET  /ai/templates        - Response template query
 ```
 
+### Advanced Emotion Analysis (New) 🤖✨
+```
+POST /ai/analyze          - Advanced emotion analysis with context
+POST /recommend/personalized - AI-powered game recommendations  
+POST /feedback/generate   - Emotion-based personalized feedback
+GET  /emotion/history     - User emotion analysis history
+```
+
 ### User Segment
 ```
 GET  /segments/user       - User segment query
@@ -105,9 +113,18 @@ ws.onmessage = (event) => {
 ```
 
 ### CJ AI Emotion Analysis
-- **Emotion Recognition**: frustrated, excited, curious, tired
-- **Response Generation**: Customized responses based on situation
-- **Action Suggestion**: Redirect to head office site when tokens are insufficient
+- **Emotion Recognition**: frustrated, excited, curious, tired, angry, sad, neutral
+- **Multi-language Support**: Korean, English with automatic language detection
+- **Confidence Scoring**: 0.0-1.0 confidence levels with LLM fallback
+- **Context Awareness**: Previous chat history and game session analysis
+- **Response Generation**: 50+ categorized feedback templates
+- **Real-time Updates**: WebSocket push notifications for instant feedback
+
+### Advanced Features
+- **LLM Fallback**: OpenAI/Claude integration when local model confidence < threshold
+- **Recommendation Engine**: Hybrid collaborative + content-based filtering
+- **Template System**: Emotion + segment + context-aware response generation
+- **Performance Monitoring**: Redis-based usage tracking and caching
 
 ## 6. Response Format
 
@@ -178,3 +195,73 @@ wscat -c ws://localhost:8000/chat/ws/1
 
 ### Environment Variable Setup
 For environment-specific settings, refer to the [Environment Configuration Guide](./13-environment-config.md)
+
+## 10. Advanced Emotion API Testing
+
+### Manual API Testing
+```bash
+# 1. Test emotion analysis
+curl -X POST "http://localhost:8000/ai/analyze" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <jwt_token>" \
+  -d '{
+    "user_id": 1,
+    "text": "슬롯에서 대박났어! 정말 기뻐요!",
+    "context": {
+      "recent_games": ["slot"],
+      "win_streak": 3,
+      "session_duration": 1800
+    }
+  }'
+
+# Expected Response:
+{
+  "success": true,
+  "data": {
+    "emotion": "excited",
+    "score": 0.85,
+    "confidence": 0.92,
+    "language": "korean",
+    "context_aware": true
+  }
+}
+
+# 2. Test personalized recommendations
+curl -X GET "http://localhost:8000/recommend/personalized?user_id=1" \
+  -H "Authorization: Bearer <jwt_token>"
+
+# Expected Response:
+{
+  "success": true,
+  "data": {
+    "recommendations": [
+      {
+        "game_type": "roulette",
+        "confidence": 0.78,
+        "reason": "Based on your excited mood and recent slot wins"
+      }
+    ]
+  }
+}
+
+# 3. Test emotion feedback generation
+curl -X POST "http://localhost:8000/feedback/generate" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <jwt_token>" \
+  -d '{
+    "user_id": 1,
+    "emotion": "excited",
+    "segment": "Medium",
+    "context": {"game_type": "slot", "result": "win"}
+  }'
+
+# Expected Response:
+{
+  "success": true,
+  "data": {
+    "feedback": "축하합니다! 이 기세를 몰아 룰렛도 도전해보세요! 🎉",
+    "template_id": "excited_win_medium",
+    "animation_meta": {"type": "celebration", "duration": 3000}
+  }
+}
+```

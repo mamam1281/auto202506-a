@@ -175,10 +175,184 @@ def test_insufficient_token_handling():
 - Verified various response templates
 - Tested error handling and recovery
 
-### Recent Test Results
+## 5. Advanced Emotion Analysis System Tests 🤖✨
+
+### 5.1. Emotion Models Validation
+```python
+def test_emotion_result_creation():
+    """Emotion result model validation"""
+    # Given: Valid emotion data
+    emotion = EmotionResult(
+        emotion=SupportedEmotion.EXCITED,
+        score=0.8,
+        confidence=0.9,
+        language=SupportedLanguage.KOREAN
+    )
+    # Then: Model created successfully
+    assert emotion.emotion == "excited"
+    assert emotion.is_confident() == True
+
+def test_multi_language_emotion_detection():
+    """Multi-language emotion detection"""
+    # Given: Korean and English text
+    korean_text = "정말 기뻐요!"
+    english_text = "I'm so happy!"
+    # When: Emotion analysis executed
+    # Then: Both detect EXCITED emotion with high confidence
+```
+
+### 5.2. Sentiment Analyzer Tests
+```python
+def test_sentiment_analyzer_local_model():
+    """Local sentiment model test"""
+    # Given: Configured local model
+    analyzer = SentimentAnalyzer()
+    # When: Analyze text "I love this game!"
+    result = analyzer.analyze("I love this game!")
+    # Then: Returns positive emotion with confidence
+
+def test_sentiment_analyzer_llm_fallback():
+    """LLM fallback when confidence is low"""
+    # Given: Ambiguous text with low confidence
+    # When: Local model confidence < 0.7
+    # Then: Fallback to external LLM (OpenAI/Claude)
+    # And: Log fallback usage for cost tracking
+```
+
+### 5.3. CJ AI Service Integration Tests
+```python 
+def test_ai_analyze_endpoint():
+    """POST /ai/analyze endpoint test"""
+    # Given: Valid user message
+    payload = {
+        "user_id": 1,
+        "text": "슬롯에서 대박났어!",
+        "context": {"recent_games": ["slot"]}
+    }
+    # When: POST to /ai/analyze
+    response = client.post("/ai/analyze", json=payload)
+    # Then: 200 OK + emotion analysis result
+
+def test_ai_websocket_push():
+    """Real-time emotion feedback via WebSocket"""
+    # Given: Active WebSocket connection
+    # When: Emotion analysis completed
+    # Then: Real-time feedback pushed to client
+```
+
+### 5.4. Recommendation Service Tests
+```python
+def test_personalized_recommendation():
+    """Personalized game recommendation"""
+    # Given: User with emotion history
+    # When: GET /recommend/personalized
+    # Then: Returns game recommendations based on emotion + history
+
+def test_recommendation_strategy_selection():
+    """Recommendation strategy selection"""
+    # Given: Different user segments (Whale, Medium, Low)
+    # When: Request recommendations
+    # Then: Different strategies applied (collaborative vs content-based)
+```
+
+### 5.5. Emotion Feedback Service Tests
+```python
+def test_feedback_template_selection():
+    """Emotion-based feedback template selection"""
+    # Given: User emotion "frustrated" + segment "Medium"
+    # When: Request feedback
+    # Then: Appropriate encouraging template selected
+
+def test_multi_language_feedback():
+    """Multi-language feedback generation"""
+    # Given: Korean user with "excited" emotion
+    # When: Generate feedback
+    # Then: Korean feedback template used
+
+def test_llm_fallback_feedback():
+    """LLM fallback when no template matches"""
+    # Given: Rare emotion combination
+    # When: No matching template found
+    # Then: LLM generates contextual feedback
+```
+
+## 6. Integration Testing Commands
+
+### 6.1. Full System Test
 ```bash
-# 2025년 6월 10일 기준
-collected 15 items
-..... (생략)
-✅ 15 passed in 2.31s
+# Run all emotion analysis tests
+pytest tests/unit/test_advanced_emotion.py -v
+
+# Test specific emotion scenarios
+pytest -k "emotion" -v
+
+# Test with environment overrides
+SENTIMENT_MODEL_PATH=/models/sentiment_v2.bin pytest tests/unit/test_advanced_emotion.py::test_sentiment_analyzer_local_model -v
+```
+
+### 6.2. API Endpoint Testing
+```bash
+# Test emotion analysis endpoint
+curl -X POST "http://localhost:8000/ai/analyze" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{"user_id": 1, "text": "정말 기뻐요!", "context": {}}'
+
+# Test recommendation endpoint
+curl -X GET "http://localhost:8000/recommend/personalized?user_id=1" \
+  -H "Authorization: Bearer <token>"
+
+# Test feedback endpoint
+curl -X POST "http://localhost:8000/feedback/generate" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{"user_id": 1, "emotion": "excited", "segment": "Medium"}'
+```
+
+### 6.3. Database Integration Test
+```bash
+# Test database migrations
+alembic upgrade head
+
+# Verify emotion log table
+psql -d test_db -c "SELECT * FROM user_emotion_logs LIMIT 5;"
+
+# Test recommendation history
+psql -d test_db -c "SELECT * FROM recommendation_history WHERE accepted = true;"
+```
+
+### 6.4. Redis Integration Test
+```bash
+# Test Redis emotion caching
+redis-cli GET "emotion:user:1:latest"
+
+# Test LLM usage logging
+redis-cli HGETALL "llm_usage:daily:$(date +%Y%m%d)"
+```
+
+## 7. Performance Testing
+
+### 7.1. Load Testing
+```python
+def test_emotion_analysis_performance():
+    """Emotion analysis performance test"""
+    # Given: 100 concurrent emotion analysis requests
+    # When: All requests processed
+    # Then: Average response time < 500ms
+    # And: No memory leaks or errors
+
+def test_recommendation_cache_efficiency():
+    """Recommendation caching efficiency"""
+    # Given: Repeated recommendation requests
+    # When: Cache hit ratio measured
+    # Then: Cache hit ratio > 80%
+```
+
+### 7.2. Memory and Resource Testing
+```bash
+# Monitor memory usage during tests
+pytest tests/unit/test_advanced_emotion.py --profile
+
+# Check for memory leaks
+valgrind python -m pytest tests/unit/test_advanced_emotion.py
 ```
