@@ -50,3 +50,4 @@ aiosqlite==0.19.0
 
 # 타임존 처리
 pytz==2023.3
+langdetect

@@ -4,9 +4,12 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
 import json
+import logging # Added
 import os
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any # 'Any' added
+
+from ..utils.sentiment_analyzer import get_emotion_analysis, EmotionResult, SupportedEmotion # Added
 
 
 class EmotionState(Enum):
@@ -94,30 +97,41 @@ class CJAIService:
         await self.check_admin_intervention(context)
         return response
 
-    async def analyze_emotion(
-        self, message: str, game_context: Dict
-    ) -> Tuple[EmotionState, int]:
-        text = message.lower()
-        score = 0
-        for level, words in self.emotion_keywords.get("positive_keywords", {}).items():
-            for w in words:
-                if w in text:
-                    score += {"low": 1, "medium": 3, "high": 5}[level]
-        for level, words in self.emotion_keywords.get("negative_keywords", {}).items():
-            for w in words:
-                if w in text:
-                    score -= {"low": 1, "medium": 3, "high": 5}[level]
-        if score >= 6:
-            state = EmotionState.VERY_POSITIVE
-        elif score >= 1:
-            state = EmotionState.POSITIVE
-        elif score <= -6:
-            state = EmotionState.VERY_NEGATIVE
-        elif score <= -1:
-            state = EmotionState.NEGATIVE
+    async def analyze_user_text(self, user_id: int, text: str, session_context: Optional[Dict[str, Any]] = None) -> Optional[EmotionResult]:
+        # Ensure logger is available, e.g., self.logger or module-level logger
+        # For simplicity, using module-level logger here.
+        logger = logging.getLogger(__name__) # Ensure logger is defined
+
+        if not self.redis or not self.ws_manager:
+            logger.error("CJAIService: Redis client or WebSocket manager not initialized.")
+            return None
+        try:
+            emotion_result_obj: Optional[EmotionResult] = get_emotion_analysis(text, session_context)
+        except Exception as e:
+            logger.exception(f"CJAIService: Error calling get_emotion_analysis for user {user_id}: {e}")
+            return None
+
+        if emotion_result_obj:
+            try:
+                redis_key = f"emotion_log:{user_id}:{datetime.utcnow().isoformat()}"
+                self.redis.set(redis_key, emotion_result_obj.model_dump_json(), ex=3600 * 24 * 7)
+
+                ws_payload = {
+                    "type": "emotion_update", "user_id": user_id,
+                    "emotion": emotion_result_obj.emotion.value,
+                    "display_label": emotion_result_obj.get_display_emotion(),
+                    "confidence": emotion_result_obj.confidence,
+                    "language": emotion_result_obj.language.value
+                }
+                # Assuming self.ws_manager.broadcast exists and is awaitable
+                await self.ws_manager.broadcast(ws_payload)
+                logger.info(f"CJAIService: Emotion analysis for user {user_id} logged and broadcasted.")
+            except Exception as e:
+                logger.exception(f"CJAIService: Error logging to Redis or broadcasting for user {user_id}: {e}")
+            return emotion_result_obj
         else:
-            state = EmotionState.NEUTRAL
-        return state, score
+            logger.warning(f"CJAIService: Emotion analysis returned no result for user {user_id}, text: '{text[:50]}...'")
+            return None
 
     async def generate_response(self, context: ConversationContext) -> str:
         emotion = context.current_emotion
