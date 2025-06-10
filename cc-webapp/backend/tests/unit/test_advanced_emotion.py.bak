@@ -213,13 +213,14 @@ class TestSentimentAnalyzerRobustness:
             mock_model = Mock()
             mock_model.predict.return_value = {"emotion": "neutral", "confidence": 0.6, "fallback_attempted": True}  # Include fallback flag
             mock_load.return_value = mock_model
-    
+
             analyzer = SentimentAnalyzer()
-    
+
             # Should fall back to local model result when LLM fails
             result = analyzer.analyze("Ambiguous text")
-    
-            assert result.emotion == "neutral"
+
+            # Enum 값을 문자열로 변환하여 비교
+            assert str(result.emotion).lower() == "neutral"
             assert result.confidence == 0.6
             # Should have fallback_used flag
             assert result.fallback_attempted == True

@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 import random
 
-from .token_service import deduct_tokens, add_tokens, get_balance
+from .token_service import TokenService
 from ..repositories.game_repository import GameRepository
 
 
@@ -19,13 +19,16 @@ class SlotSpinResult:
 class SlotService:
     """슬롯 머신 로직을 담당하는 서비스 계층."""
 
-    def __init__(self, repository: GameRepository | None = None) -> None:
+    def __init__(self, repository: GameRepository | None = None, token_service: TokenService | None = None, db: Optional[Session] = None) -> None:
         self.repo = repository or GameRepository()
+        self.token_service = token_service or TokenService(db or None, self.repo)
 
     def spin(self, user_id: int, db: Session) -> SlotSpinResult:
         """슬롯 스핀을 실행하고 결과를 반환."""
         # 토큰 차감. 부족하면 ValueError 발생
-        deduct_tokens(user_id, 2, db)
+        deducted_tokens = self.token_service.deduct_tokens(user_id, 2)
+        if deducted_tokens is None:
+            raise ValueError("토큰이 부족합니다.")
 
         segment = self.repo.get_user_segment(db, user_id)
         streak = self.repo.get_streak(user_id)
@@ -62,9 +65,9 @@ class SlotService:
             streak += 1
 
         if reward:
-            add_tokens(user_id, reward, db)
+            self.token_service.add_tokens(user_id, reward)
 
         self.repo.set_streak(user_id, streak)
-        balance = get_balance(user_id, db)
+        balance = self.token_service.get_token_balance(user_id)
         self.repo.record_action(db, user_id, "SLOT_SPIN", -2)
         return SlotSpinResult(result, reward - 2, balance, streak, animation)

@@ -5,13 +5,15 @@ from fastapi.testclient import TestClient
 from unittest.mock import patch, Mock
 from app.main import app
 
-client = TestClient(app)
-
+@pytest.fixture
+def client():
+    with TestClient(app) as c:
+        yield c
 
 class TestEndToEndUserFlows:
     """End-to-end integration tests for complete user scenarios."""
     
-    def test_complete_user_gaming_session(self):
+    def test_complete_user_gaming_session(self, client):
         """Test complete user gaming session from login to logout."""
         # 1. Health check
         health_response = client.get("/health")
@@ -33,7 +35,7 @@ class TestEndToEndUserFlows:
             # Should not fail, regardless of implementation status
             assert segments_response.status_code in [200, 404, 501]
             
-    def test_game_flow_with_tokens(self):
+    def test_game_flow_with_tokens(self, client):
         """Test gaming flow involving token transactions."""
         # Mock authentication
         with patch('app.routers.games.get_current_user', return_value={"user_id": 1}):
@@ -57,7 +59,7 @@ class TestEndToEndUserFlows:
                 # Should not fail regardless of implementation
                 assert slot_response.status_code in [200, 404, 422, 501]
                 
-    def test_feedback_and_ai_integration(self):
+    def test_feedback_and_ai_integration(self, client):
         """Test feedback system integration with AI services."""
         # 1. Generate emotion-based feedback
         feedback_payload = {
@@ -91,7 +93,7 @@ class TestEndToEndUserFlows:
             })
             assert ai_response.status_code in [200, 404, 422, 501]
             
-    def test_gacha_and_rewards_flow(self):
+    def test_gacha_and_rewards_flow(self, client):
         """Test gacha pulling and rewards system."""
         with patch('app.routers.gacha.get_current_user', return_value={"user_id": 1}):
             # 1. Check gacha availability
@@ -118,7 +120,7 @@ class TestEndToEndUserFlows:
             rewards_response = client.get("/api/rewards/")
             assert rewards_response.status_code in [200, 404, 501]
             
-    def test_user_segments_and_personalization(self):
+    def test_user_segments_and_personalization(self, client):
         """Test user segmentation and personalization features."""
         with patch('app.routers.user_segments.get_current_user', return_value={"user_id": 1}):
             # 1. Get user segment
@@ -136,7 +138,7 @@ class TestEndToEndUserFlows:
             personalization_response = client.get("/api/personalization/recommendations")
             assert personalization_response.status_code in [200, 404, 501]
             
-    def test_notification_and_tracking_system(self):
+    def test_notification_and_tracking_system(self, client):
         """Test notification delivery and user tracking."""
         with patch('app.routers.notification.get_current_user', return_value={"user_id": 1}):
             # 1. Get notifications
@@ -156,7 +158,7 @@ class TestEndToEndUserFlows:
             })
             assert tracking_response.status_code in [200, 404, 422, 501]
             
-    def test_adult_content_verification_flow(self):
+    def test_adult_content_verification_flow(self, client):
         """Test adult content access and age verification."""
         with patch('app.routers.adult_content.get_current_user', return_value={"user_id": 1}):
             # 1. Check age verification status
@@ -174,7 +176,7 @@ class TestEndToEndUserFlows:
             })
             assert unlock_response.status_code in [200, 400, 403, 404, 422, 501]
             
-    def test_corporate_features_integration(self):
+    def test_corporate_features_integration(self, client):
         """Test corporate and enterprise features."""
         # 1. Get corporate dashboard data
         with patch('app.routers.corporate.get_current_user', return_value={"user_id": 1, "role": "admin"}):
@@ -188,7 +190,7 @@ class TestEndToEndUserFlows:
             })
             assert report_response.status_code in [200, 403, 404, 422, 501]
             
-    def test_error_handling_across_services(self):
+    def test_error_handling_across_services(self, client):
         """Test error handling consistency across all services."""
         # Test invalid requests to various endpoints
         endpoints_to_test = [
@@ -209,7 +211,7 @@ class TestEndToEndUserFlows:
             assert response.status_code != 500, f"Endpoint {endpoint} returned 500"
             assert response.status_code in [200, 400, 401, 403, 404, 422, 501, 503]
             
-    def test_authentication_flow_across_endpoints(self):
+    def test_authentication_flow_across_endpoints(self, client):
         """Test authentication requirements across protected endpoints."""
         protected_endpoints = [
             "/api/games/",
@@ -230,7 +232,7 @@ class TestEndToEndUserFlows:
             assert response.status_code in [401, 403, 404, 422, 501], \
                 f"Endpoint {endpoint} should require auth or be not implemented"
                 
-    def test_data_consistency_across_services(self):
+    def test_data_consistency_across_services(self, client):
         """Test data consistency when multiple services interact."""
         user_id = 1
         
@@ -257,7 +259,7 @@ class TestEndToEndUserFlows:
                         # without throwing exceptions
                         pass
                         
-    def test_performance_under_load(self):
+    def test_performance_under_load(self, client):
         """Test system performance under simulated load."""
         import concurrent.futures
         import time
@@ -281,7 +283,7 @@ class TestEndToEndUserFlows:
         avg_response_time = sum(response_times) / len(response_times)
         assert avg_response_time < 1.0, f"Average response time too high: {avg_response_time}s"
         
-    def test_openapi_documentation_completeness(self):
+    def test_openapi_documentation_completeness(self, client):
         """Test that OpenAPI documentation is complete and valid."""
         response = client.get("/openapi.json")
         assert response.status_code == 200

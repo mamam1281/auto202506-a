@@ -75,17 +75,31 @@ else:
 # --- End Sentry Initialization Placeholder ---
 
 
+
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup logic
+    if os.getenv("DISABLE_SCHEDULER") != "1":
+        print("FastAPI startup event: Initializing job scheduler...")
+        start_scheduler()
+    yield
+    # Shutdown logic
+    print("FastAPI shutdown event: Shutting down scheduler...")
+    if scheduler.running:
+        scheduler.shutdown(wait=False)
+
 app = FastAPI(
+    lifespan=lifespan,
     title="Casino Club API",
     description="API for interactive mini-games and token-based reward system",
     version="0.1.0",
-    docs_url="/docs",  # Swagger UI 경로
-    redoc_url="/redoc",  # ReDoc 문서 경로
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
-# Prometheus Instrumentation - ADDED SECTION
-# This should ideally be done after app creation and before other middlewares/routers if possible,
-# or at least before routers that you want to be instrumented by default.
+# Prometheus Instrumentation
 if Instrumentator:
     instrumentator = Instrumentator(
         should_group_status_codes=True,
@@ -97,24 +111,6 @@ if Instrumentator:
     instrumentator.expose(
         app, include_in_schema=False, endpoint="/metrics", tags=["monitoring"]
     )
-
-
-@app.on_event("startup")
-async def startup_event():
-    if os.getenv("DISABLE_SCHEDULER") == "1":
-        print("Scheduler disabled in environment.")
-        return
-    print("FastAPI startup event: Initializing job scheduler...")
-    start_scheduler()
-    print("FastAPI startup event: Job scheduler initialization process started.")
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    print("FastAPI shutdown event: Shutting down scheduler...")
-    if scheduler.running:
-        scheduler.shutdown(wait=False)  # wait=False for async scheduler
-    print("FastAPI shutdown event: Scheduler shut down.")
 
 
 # Configure CORS

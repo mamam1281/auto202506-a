@@ -1,10 +1,13 @@
+import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 
-client = TestClient(app)
+@pytest.fixture
+def client():
+    with TestClient(app) as c:
+        yield c
 
-
-def test_login_success():
+def test_login_success(client):
     response = client.post(
         "/api/auth/login",
         json={"nickname": "testuser", "password": "password", "invite_code": "INVITE"},
@@ -14,8 +17,7 @@ def test_login_success():
     assert data["access_token"] == "fake-token"
     assert data["token_type"] == "bearer"
 
-
-def test_login_failure():
+def test_login_failure(client):
     response = client.post(
         "/api/auth/login",
         json={"nickname": "bad", "password": "wrong", "invite_code": "INVITE"},

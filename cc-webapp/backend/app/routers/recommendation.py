@@ -4,8 +4,9 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field, validator # Ensure all are imported
 
 from ..emotion_models import EmotionResult, SupportedEmotion, SupportedLanguage
-from ..services.recommendation_service import RecommendationService, FinalRecommendation
-from ..auth.jwt import get_current_user
+from ..services.recommendation_service import RecommendationService
+from app.schemas import FinalRecommendation
+from app.auth.jwt import get_current_user
 import logging
 
 logger = logging.getLogger(__name__)
@@ -16,6 +17,9 @@ def get_db_dummy():
         logger.debug("Dummy DB session created for recommendation router.")
         yield None
     finally: logger.debug("Dummy DB session closed for recommendation router.")
+
+def get_recommendation_service(db: Session = Depends(get_db_dummy)) -> RecommendationService:
+    return RecommendationService(db=db)
 
 class PersonalizedRecommendationRequest(BaseModel):
     user_id: int

@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:13-alpine # Using alpine for smaller size
+    image: postgres:13-alpine
     container_name: cc_postgres_db
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-cc_user} # Default user if not set in .env
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cc_password} # Default password
-      POSTGRES_DB: ${POSTGRES_DB:-cc_webapp_db} # Default DB name
+      POSTGRES_USER: ${POSTGRES_USER:-cc_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cc_password}
+      POSTGRES_DB: ${POSTGRES_DB:-cc_webapp_db}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432" # Allow overriding port from .env
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
@@ -17,136 +17,19 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 5s # Give it some time to start up before first healthcheck
-
-  redis:
-    image: redis:6-alpine # Using alpine for smaller size
-    container_name: cc_redis
-    ports:
-      - "${REDIS_PORT:-6379}:6379" # Allow overriding port
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.1 # Using confluentinc images
-    container_name: cc_zookeeper
-    ports:
-      - "2181:2181" # Default Zookeeper port
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    healthcheck:
-      test: ["CMD-SHELL", "echo 'ruok' | nc localhost 2181 | grep imok"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s # Zookeeper might take a bit longer to start
-
-  kafka:
-    image: confluentinc/cp-kafka:7.0.1
-    container_name: cc_kafka
-    ports:
-      # Port for host machine access to Kafka broker (e.g., for development tools)
-      - "${KAFKA_HOST_PORT:-9093}:9093"
-    depends_on:
-      zookeeper:
-        condition: service_healthy # Wait for Zookeeper to be healthy
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      # Listener for inter-container communication (e.g., backend to Kafka)
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:${KAFKA_HOST_PORT:-9093}
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # Required for single-node Kafka setup
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      # Confluent specific settings (may not be needed if using non-Confluent Kafka tools/clients extensively)
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-    healthcheck:
-      # kafka-topics might not be available or configured this way in all Kafka images.
-      # A more universal check might involve trying to produce/consume a message or checking broker health via an API if available.
-      # For Confluent images, kafka-is-broker-ready is a good tool.
-      test: ["CMD-SHELL", "cub kafka-ready -b kafka:29092 1 20 || /usr/bin/kafka-broker-api-versions --bootstrap-server kafka:29092 || exit 1"]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-      start_period: 15s # Kafka can take time to start after Zookeeper is ready
 
   backend:
     build:
       context: ./cc-webapp/backend
       dockerfile: Dockerfile
-    container_name: cc_backend
     environment:
-      # These override defaults in the backend Dockerfile
       DATABASE_URL: "postgresql://${POSTGRES_USER:-cc_user}:${POSTGRES_PASSWORD:-cc_password}@db:5432/${POSTGRES_DB:-cc_webapp_db}"
-      REDIS_URL: "redis://redis:6379/0"
-      KAFKA_BROKER: "kafka:29092" # Backend connects to Kafka's internal listener
-      JWT_SECRET: ${JWT_SECRET:-a_very_secure_default_secret_for_development_only}
-      PYTHONUNBUFFERED: 1
+      JWT_SECRET: ${JWT_SECRET:-dev_secret}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    ports:
-      - "${BACKEND_PORT:-8000}:8000"
-    volumes:
-      # Mount local backend code into container for development hot-reloading.
-      # For production, remove this to use code baked into the image.
-      - ./cc-webapp/backend/app:/app/app
-    # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload # Uncomment for dev hot-reload
-    healthcheck:
-      # Curl the /health endpoint. -f makes curl fail silently on HTTP errors.
-      # || exit 1 ensures that if curl fails, the healthcheck command itself exits with a non-zero status.
-      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
-      interval: 30s # How often to run the check
-      timeout: 10s  # How long to wait for a response
-      retries: 3    # How many times to retry before marking as unhealthy
-      start_period: 60s # Grace period for container to start up before first healthcheck
-
-  frontend:
-    build:
-      context: ./frontend # Path relative to docker-compose.yml
-      dockerfile: Dockerfile
-    container_name: cc_frontend
-    ports:
-      - "${FRONTEND_PORT:-3000}:3000"
-    depends_on:
-      - backend # Frontend might make API calls to backend during its runtime or build (if SSR/SSG to itself)
-    environment:
-      # NEXT_PUBLIC_API_URL: "http://localhost:8000/api" # For client-side calls, localhost works if ports are mapped.
-      # For server-side calls from Next.js to backend (e.g. in API routes or getServerSideProps):
-      # INTERNAL_API_URL: "http://backend:8000/api"
-      NODE_ENV: development # Set to 'production' for production builds/runs from image
-    volumes:
-      # Mount local frontend code into container for development hot-reloading.
-      # For production, remove this.
-      - ./frontend:/app
-      # Prevent local node_modules from overwriting container's node_modules (especially if OS differs)
-      - /app/node_modules
-      # Preserve .next folder in container, prevent local one from interfering if any
-      - /app/.next
-    # command: npm run dev # Uncomment for dev hot-reload
 
 volumes:
   db_data:
-    driver: local # Default, can be omitted
-  # Add other named volumes if needed (e.g., for Kafka data, Zookeeper data if persistence is desired beyond container life)
-  # kafka_data:
-  # zookeeper_data:
-  # zookeeper_log:
-
-# Networks can be defined for more complex scenarios, but Docker Compose creates a default network.
-# networks:
-#   cc_webapp_net:
-#     driver: bridge

@@ -1,6 +1,6 @@
 """Pydantic models for cc-webapp."""
 
-from pydantic import BaseModel, Json
+from pydantic import BaseModel, Json, Field
 from typing import List, Optional, Any
 from datetime import datetime
 
@@ -12,6 +12,9 @@ class FeedbackResponse(BaseModel):
     recommendation: str
     reward_suggestion: Optional[str] = None
 
+class TokenData(BaseModel):
+    username: str = Field(...)
+    exp: datetime
 class ContentUnlockRequest(BaseModel): # This might be superseded or augmented by new AdultContent schemas
     user_id: int # Assuming this might be part of old system, new ones might get user from auth
     stage: int
@@ -214,3 +217,9 @@ class AgeVerificationResponse(BaseModel):
     status: str  # "verified", "pending", "failed", "not_required"
     verified_at: Optional[datetime] = None
     message: Optional[str] = None # e.g., reason for failure or success message
+
+class FinalRecommendation(BaseModel):
+    content_id: int
+    title: str
+    reason: str
+    match_score: float = Field(..., ge=0, le=1)

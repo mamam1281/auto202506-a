@@ -1,88 +1,93 @@
-from __future__ import annotations
+"""Personalization service for user recommendations and caching."""
 
-from datetime import datetime, timedelta
-from typing import Dict, List
 import json
+import logging
+from typing import Dict, List
 
-from sqlalchemy import func
 from sqlalchemy.orm import Session
-import redis
 
-from app import models
-from .rfm_service import RFMScore
-from .token_service import get_balance
+from app.repositories.game_repository import GameRepository
+
+logger = logging.getLogger(__name__)
 
 
 class PersonalizationService:
-    """Generate game recommendations and user profile."""
+    """Service for managing personalized user recommendations."""
 
-    def __init__(self, db: Session, redis_client: redis.Redis):
+    def __init__(self, db: Session, repository: GameRepository):
+        """
+        Initialize personalization service with database session and game repository.
+
+        Args:
+            db (Session): SQLAlchemy database session
+            repository (GameRepository): Game data repository
+        """
         self.db = db
-        self.redis = redis_client
-
-    async def game_recommendations(self, score: RFMScore) -> List[Dict]:
-        user_id = score.user_id
-        balance = get_balance(user_id, self.db)
-
-        last_20 = (
-            self.db.query(models.UserAction.action_type, models.UserAction.value)
-            .filter(
-                models.UserAction.user_id == user_id,
-                models.UserAction.action_type.in_(
-                    ["GAME_PLAY", "GAME_WIN", "GAME_FAIL"]
-                ),
-            )
-            .order_by(models.UserAction.timestamp.desc())
-            .limit(20)
-            .all()
-        )
-        wins = sum(1 for a in last_20 if a.action_type == "GAME_WIN")
-        plays = sum(1 for a in last_20 if a.action_type == "GAME_PLAY")
-        win_rate = wins / plays if plays else 0
-
-        game_type = "slot"
-        if balance < 50:
-            game_type = "slot"
-        elif balance < 200:
-            game_type = "roulette"
-        else:
-            game_type = "gacha"
-
-        reason = ""
-        if score.segment == "Whale":
-            reason = "high-value user"
-        elif score.segment == "Low":
-            reason = "low engagement"
-
-        rec = {
-            "game_type": game_type,
-            "recommended_bet": min(max(int(balance * 0.1), 1), 100),
-            "win_probability": win_rate,
-            "expected_return": win_rate * balance * 0.1,
-            "reason": reason,
-        }
-        return [rec]
-
-    async def user_profile(self, score: RFMScore, ltv: Dict[str, float], churn: str) -> Dict:
-        last_action = (
-            self.db.query(func.max(models.UserAction.timestamp))
-            .filter(models.UserAction.user_id == score.user_id)
-            .scalar()
-        )
-        return {
-            "user_id": score.user_id,
-            "segment": score.segment,
-            "rfm_scores": {
-                "recency": score.recency_score,
-                "frequency": score.frequency_score,
-                "monetary": score.monetary_score,
-            },
-            "ltv_prediction": ltv,
-            "churn_risk": churn,
-            "last_activity": last_action,
-        }
+        self.repository = repository
 
     async def cache_recommendations(self, user_id: int, recs: List[Dict]) -> None:
-        if not self.redis:
-            return
-        self.redis.setex(f"recommendations:{user_id}", 3600, json.dumps(recs))
+        """
+        Cache recommendations for a user.
+
+        Args:
+            user_id (int): User's unique identifier
+            recs (List[Dict]): List of recommendation dictionaries
+        """
+        try:
+            # Store recommendations in user's game repository
+            self.repository.set_gacha_history(user_id, [json.dumps(rec) for rec in recs])
+        except Exception as exc:
+            logger.error(f"Failed to cache recommendations for user {user_id}: {exc}")
+
+    async def get_recommendations(self, user_id: int) -> List[Dict]:
+        """
+        Retrieve cached recommendations for a user.
+
+        Args:
+            user_id (int): User's unique identifier
+
+        Returns:
+            List[Dict]: Cached recommendations or empty list if not found
+        """
+        try:
+            cached_history = self.repository.get_gacha_history(user_id)
+            if cached_history:
+                return [json.loads(rec) for rec in cached_history]
+            return []
+        except Exception as exc:
+            logger.error(f"Failed to retrieve recommendations for user {user_id}: {exc}")
+            return []
+
+    async def generate_recommendations(self, user_id: int) -> List[Dict]:
+        """
+        Generate personalized recommendations for a user.
+
+        Args:
+            user_id (int): User's unique identifier
+
+        Returns:
+            List[Dict]: Generated recommendations
+        """
+        try:
+            # Implement recommendation generation logic
+            # This is a placeholder implementation
+            recommendations = [
+                {
+                    "type": "game",
+                    "id": "roulette",
+                    "score": 0.8,
+                    "reason": "High engagement history"
+                },
+                {
+                    "type": "content",
+                    "id": "adult_content",
+                    "score": 0.6,
+                    "reason": "Potential interest based on past interactions"
+                }
+            ]
+
+            await self.cache_recommendations(user_id, recommendations)
+            return recommendations
+        except Exception as exc:
+            logger.error(f"Recommendation generation failed for user {user_id}: {exc}")
+            return []

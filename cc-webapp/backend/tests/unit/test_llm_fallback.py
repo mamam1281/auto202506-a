@@ -29,8 +29,8 @@ class TestSentimentAnalyzer:
         with patch.dict(os.environ, {'LLM_FALLBACK_ENABLED': 'true'}):
             with patch('app.utils.sentiment_analyzer.analyze_emotion_basic', return_value=low_confidence_result):
                 with patch('app.utils.sentiment_analyzer.load_local_model') as mock_load:
-                # Create a proper mock EmotionResult with all expected attributes
-                mock_result = EmotionResult(
+                    # Create a proper mock EmotionResult with all expected attributes
+                    mock_result = EmotionResult(
                     emotion=SupportedEmotion.NEUTRAL,
                     score=0.5,
                     confidence=0.6,

@@ -127,7 +127,7 @@ class TestAdultContentService(unittest.TestCase):
         self.assertIsInstance(details, AdultContentDetail)
         self.assertEqual(details.id, content_id)
         self.assertEqual(details.user_current_access_level, ContentStageEnum.PARTIAL.value)
-        self.assertEqual(len(details.는), len(STAGE_DETAILS))
+        self.assertEqual(len(details.stages), len(STAGE_DETAILS))
 
     def test_get_content_details_age_not_verified(self):
         self.mock_age_verification_service.is_user_age_verified.return_value = False
@@ -370,7 +370,7 @@ class TestAdultContentService(unittest.TestCase):
         self.mock_age_verification_service.is_user_age_verified.return_value = True
         self.mock_db_session.query(User).filter(User.id == user_id).first.return_value = MagicMock(spec=User)
         # Current segment is "Low"
-        # UserSegment mock 추가 (rfm_group 속성 포함)
+        # UserSegment mock 추�? (rfm_group ?�성 ?�함)
         mock_user_segment = MagicMock(spec=UserSegment)
         mock_user_segment.rfm_group = "Low"
         self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == user_id).first.return_value = mock_user_segment
@@ -433,3 +433,4 @@ class TestAdultContentService(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+

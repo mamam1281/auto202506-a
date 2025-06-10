@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 import random
 import logging
 
-from .token_service import deduct_tokens, add_tokens, get_balance
+from .token_service import TokenService
 from ..repositories.game_repository import GameRepository
 
 logger = logging.getLogger(__name__)
@@ -26,8 +26,9 @@ class RouletteSpinResult:
 class RouletteService:
     """룰렛 게임 로직을 담당하는 서비스."""
 
-    def __init__(self, repository: GameRepository | None = None) -> None:
+    def __init__(self, repository: GameRepository | None = None, token_service: TokenService | None = None, db: Optional[Session] = None) -> None:
         self.repo = repository or GameRepository()
+        self.token_service = token_service or TokenService(db or None, self.repo)
 
     def spin(
         self,
@@ -66,11 +67,10 @@ class RouletteService:
         bet = max(1, min(bet, 50))
         logger.info("룰렛 스핀 시작 user=%s bet=%s type=%s value=%s", user_id, bet, bet_type, value)
 
-        try:
-            deduct_tokens(user_id, bet, db)
-        except ValueError as exc:
-            logger.warning("토큰 차감 실패: %s", exc)
-            raise
+        deducted_tokens = self.token_service.deduct_tokens(user_id, bet)
+        if deducted_tokens is None:
+            logger.warning("토큰 차감 실패: 토큰 부족")
+            raise ValueError("토큰이 부족합니다.")
 
         segment = self.repo.get_user_segment(db, user_id)
         edge_map = {"Whale": 0.05, "Medium": 0.10, "Low": 0.15}
@@ -102,12 +102,12 @@ class RouletteService:
         if payout:
             result = "win" if animation != "jackpot" else "jackpot"
             animation = animation if animation != "lose" else "win"
-            add_tokens(user_id, payout, db)
+            self.token_service.add_tokens(user_id, payout)
             streak = 0
         else:
             streak += 1
 
-        balance = get_balance(user_id, db)
+        balance = self.token_service.get_token_balance(user_id)
         self.repo.set_streak(user_id, streak)
         self.repo.record_action(db, user_id, "ROULETTE_SPIN", -bet)
 

@@ -6,13 +6,15 @@ from unittest.mock import patch, Mock, MagicMock
 from app.main import app
 from app.schemas import FeedbackResponse
 
-client = TestClient(app)
-
+@pytest.fixture
+def client():
+    with TestClient(app) as c:
+        yield c
 
 class TestFeedbackRouterIntegration:
     """Integration tests for feedback router endpoints."""
     
-    def test_emotion_based_feedback_valid_request(self):
+    def test_emotion_based_feedback_valid_request(self, client):
         """Test emotion-based feedback endpoint with valid request."""
         payload = {
             "emotion_result_data": {
@@ -45,7 +47,7 @@ class TestFeedbackRouterIntegration:
             assert data["recommendation"] == "Test recommendation"
             assert data["reward_suggestion"] == "+100 tokens"
     
-    def test_emotion_based_feedback_service_unavailable(self):
+    def test_emotion_based_feedback_service_unavailable(self, client):
         """Test emotion-based feedback when service is unavailable."""
         payload = {
             "emotion_result_data": {
@@ -60,7 +62,7 @@ class TestFeedbackRouterIntegration:
             assert response.status_code == 503
             assert "Feedback service unavailable" in response.json()["detail"]
     
-    def test_emotion_based_feedback_invalid_emotion_data(self):
+    def test_emotion_based_feedback_invalid_emotion_data(self, client):
         """Test emotion-based feedback with invalid emotion result data."""
         payload = {
             "emotion_result_data": {
@@ -77,7 +79,7 @@ class TestFeedbackRouterIntegration:
             assert response.status_code == 400
             assert "Invalid emotion_result_data" in response.json()["detail"]
     
-    def test_emotion_based_feedback_service_exception(self):
+    def test_emotion_based_feedback_service_exception(self, client):
         """Test emotion-based feedback when service raises exception."""
         payload = {
             "emotion_result_data": {
@@ -96,7 +98,7 @@ class TestFeedbackRouterIntegration:
             assert response.status_code == 500
             assert "Failed to generate feedback" in response.json()["detail"]
     
-    def test_emotion_based_feedback_missing_required_fields(self):
+    def test_emotion_based_feedback_missing_required_fields(self, client):
         """Test emotion-based feedback with missing required fields."""
         payload = {}
         
@@ -104,7 +106,7 @@ class TestFeedbackRouterIntegration:
         
         assert response.status_code == 422  # Validation error
     
-    def test_emotion_based_feedback_no_feedback_generated(self):
+    def test_emotion_based_feedback_no_feedback_generated(self, client):
         """Test emotion-based feedback when no feedback is generated."""
         payload = {
             "emotion_result_data": {
@@ -124,7 +126,7 @@ class TestFeedbackRouterIntegration:
             assert response.json() is None
     
     @patch('app.routers.feedback.get_current_user')
-    def test_generate_feedback_valid_request(self, mock_get_user):
+    def test_generate_feedback_valid_request(self, mock_get_user, client):
         """Test generate feedback endpoint with valid request."""
         mock_get_user.return_value = {"user_id": 1}
         
@@ -151,7 +153,7 @@ class TestFeedbackRouterIntegration:
             assert "data" in data
     
     @patch('app.routers.feedback.get_current_user')
-    def test_generate_feedback_missing_required_fields(self, mock_get_user):
+    def test_generate_feedback_missing_required_fields(self, mock_get_user, client):
         """Test generate feedback with missing required fields."""
         mock_get_user.return_value = {"user_id": 1}
         
@@ -169,7 +171,7 @@ class TestFeedbackRouterIntegration:
             assert "Missing required fields" in response.json()["detail"]
     
     @patch('app.routers.feedback.get_current_user')
-    def test_generate_feedback_unauthorized_user(self, mock_get_user):
+    def test_generate_feedback_unauthorized_user(self, mock_get_user, client):
         """Test generate feedback with unauthorized user."""
         mock_get_user.return_value = {"user_id": 2}  # Different user
         
@@ -187,7 +189,7 @@ class TestFeedbackRouterIntegration:
             assert "Not authorized" in response.json()["detail"]
     
     @patch('app.routers.feedback.get_current_user')
-    def test_generate_feedback_service_exception(self, mock_get_user):
+    def test_generate_feedback_service_exception(self, mock_get_user, client):
         """Test generate feedback when service raises exception."""
         mock_get_user.return_value = {"user_id": 1}
         
@@ -209,7 +211,7 @@ class TestFeedbackRouterIntegration:
             assert "Failed to generate feedback" in data["error"]
     
     @patch('app.routers.feedback.get_current_user')
-    def test_generate_feedback_default_values(self, mock_get_user):
+    def test_generate_feedback_default_values(self, mock_get_user, client):
         """Test generate feedback with default values."""
         mock_get_user.return_value = {"user_id": 1}
         
@@ -230,7 +232,7 @@ class TestFeedbackRouterIntegration:
             # Verify defaults were used
             mock_service.generate_feedback.assert_called_with("happy", "Medium", {})
     
-    def test_feedback_router_openapi_documentation(self):
+    def test_feedback_router_openapi_documentation(self, client):
         """Test that feedback endpoints are documented in OpenAPI."""
         response = client.get("/openapi.json")
         
@@ -246,7 +248,7 @@ class TestFeedbackRouterIntegration:
         assert "post" in paths["/api/feedback/emotion_based"]
         assert "post" in paths["/api/feedback/generate"]
     
-    def test_feedback_router_tags(self):
+    def test_feedback_router_tags(self, client):
         """Test that feedback endpoints have correct tags."""
         response = client.get("/openapi.json")
         openapi_spec = response.json()
@@ -257,7 +259,7 @@ class TestFeedbackRouterIntegration:
         assert "Feedback" in emotion_based_spec["tags"]
         assert "Feedback" in generate_spec["tags"]
     
-    def test_multiple_concurrent_requests(self):
+    def test_multiple_concurrent_requests(self, client):
         """Test handling multiple concurrent requests."""
         import concurrent.futures
         import threading

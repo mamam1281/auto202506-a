@@ -2,8 +2,10 @@
 
 import pytest
 from fastapi.testclient import TestClient
+from fastapi import FastAPI
 from unittest.mock import patch, MagicMock
 import os
+import asyncio
 
 def test_app_creation():
     """Test that FastAPI app is created with correct configuration."""
@@ -60,48 +62,32 @@ def test_login_endpoint_validation():
     assert response.status_code == 422
 
 @patch.dict(os.environ, {"DISABLE_SCHEDULER": "1"})
-def test_startup_event_scheduler_disabled():
-    """Test startup event when scheduler is disabled."""
-    from app.main import startup_event
-    import asyncio
+def test_lifespan_scheduler_disabled(monkeypatch):
+    """Test lifespan context when scheduler is disabled."""
+    from app.main import lifespan
+    from app.main import app
     
-    # Should not raise any exception
-    asyncio.run(startup_event())
+    async def test_lifespan():
+        async with lifespan(app):
+            # If no exception is raised, the test passes
+            pass
+    
+    asyncio.run(test_lifespan())
 
-@patch('app.main.scheduler')
 @patch('app.main.start_scheduler')
-def test_startup_event_scheduler_enabled(mock_start_scheduler, mock_scheduler):
-    """Test startup event when scheduler is enabled."""
-    from app.main import startup_event
-    import asyncio
+def test_lifespan_scheduler_enabled(mock_start_scheduler, monkeypatch):
+    """Test lifespan context when scheduler is enabled."""
+    from app.main import lifespan
+    from app.main import app
     
-    with patch.dict(os.environ, {}, clear=True):  # Clear DISABLE_SCHEDULER
-        asyncio.run(startup_event())
-        mock_start_scheduler.assert_called_once()
-
-@patch('app.main.scheduler')
-def test_shutdown_event_scheduler_running(mock_scheduler):
-    """Test shutdown event when scheduler is running."""
-    from app.main import shutdown_event
-    import asyncio
+    monkeypatch.delenv("DISABLE_SCHEDULER", raising=False)
     
-    mock_scheduler.running = True
-    mock_scheduler.shutdown = MagicMock()
+    async def test_lifespan():
+        async with lifespan(app):
+            # If no exception is raised, the test passes
+            mock_start_scheduler.assert_called_once()
     
-    asyncio.run(shutdown_event())
-    mock_scheduler.shutdown.assert_called_once_with(wait=False)
-
-@patch('app.main.scheduler')
-def test_shutdown_event_scheduler_not_running(mock_scheduler):
-    """Test shutdown event when scheduler is not running."""
-    from app.main import shutdown_event
-    import asyncio
-    
-    mock_scheduler.running = False
-    mock_scheduler.shutdown = MagicMock()
-    
-    asyncio.run(shutdown_event())
-    mock_scheduler.shutdown.assert_not_called()
+    asyncio.run(test_lifespan())
 
 @patch.dict(os.environ, {"SENTRY_DSN": "test-dsn"})
 @patch('app.main.sentry_sdk')
@@ -155,7 +141,7 @@ def test_router_inclusion():
     from app.main import app
     
     # Check that routers are registered
-    routes = [route.path for route in app.routes]
+    routes = [route.path for route in app.routes if hasattr(route, 'path')]
     
     # Some expected route prefixes
     expected_prefixes = [

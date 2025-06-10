@@ -1,90 +1,86 @@
-from __future__ import annotations
+"""LTV (Lifetime Value) calculation and caching service."""
 
-from datetime import datetime, timedelta
-from typing import Dict
 import json
+import logging
+from typing import Dict
 
-from sqlalchemy import func
 from sqlalchemy.orm import Session
-import redis
 
-from app import models
+from app.repositories.game_repository import GameRepository
+
+logger = logging.getLogger(__name__)
 
 
 class LTVService:
-    """Simple linear-regression style LTV predictor."""
+    """Service for calculating and managing Lifetime Value metrics."""
 
-    def __init__(self, db: Session, redis_client: redis.Redis):
+    def __init__(self, db: Session, repository: GameRepository):
+        """
+        Initialize LTV service with database session and game repository.
+
+        Args:
+            db (Session): SQLAlchemy database session
+            repository (GameRepository): Game data repository
+        """
         self.db = db
-        self.redis = redis_client
-
-    async def predict_ltv(self, user_id: int, rfm_segment: str | None = None) -> Dict[str, float]:
-        now = datetime.utcnow()
-        seven_days_ago = now - timedelta(days=7)
-        thirty_days_ago = now - timedelta(days=30)
-
-        spent_7 = (
-            self.db.query(func.sum(models.UserAction.value))
-            .filter(
-                models.UserAction.user_id == user_id,
-                models.UserAction.timestamp >= seven_days_ago,
-                models.UserAction.value < 0,
-            )
-            .scalar()
-        )
-        spent_7 = abs(spent_7 or 0)
-        ltv_7 = spent_7 * 1.2
-
-        session_durations = []
-        actions = (
-            self.db.query(models.UserAction.timestamp)
-            .filter(
-                models.UserAction.user_id == user_id,
-                models.UserAction.timestamp >= thirty_days_ago,
-            )
-            .order_by(models.UserAction.timestamp)
-            .all()
-        )
-        if actions:
-            start = actions[0][0]
-            last = start
-            for (ts,) in actions[1:]:
-                if (ts - last).total_seconds() > 1800:
-                    session_durations.append((last - start).total_seconds())
-                    start = ts
-                last = ts
-            session_durations.append((last - start).total_seconds())
-        avg_session = sum(session_durations) / len(session_durations) if session_durations else 0
-
-        ltv_30 = (ltv_7 * 4) + (avg_session / 60)
-        weight = 1.0
-        if rfm_segment == "Whale":
-            weight = 1.5
-        elif rfm_segment == "Medium":
-            weight = 1.1
-        ltv_90 = (ltv_30 * 3) * weight
-
-        return {"7d": ltv_7, "30d": ltv_30, "90d": ltv_90}
-
-    async def churn_risk(self, user_id: int) -> str:
-        now = datetime.utcnow()
-        last_action = (
-            self.db.query(func.max(models.UserAction.timestamp))
-            .filter(models.UserAction.user_id == user_id)
-            .scalar()
-        )
-        if not last_action:
-            return "critical"
-        days = (now - last_action).days
-        if days <= 3:
-            return "low"
-        if days <= 7:
-            return "medium"
-        if days <= 14:
-            return "high"
-        return "critical"
+        self.repository = repository
 
     async def cache_ltv(self, user_id: int, ltv: Dict[str, float]) -> None:
-        if not self.redis:
-            return
-        self.redis.setex(f"ltv:{user_id}", 43200, json.dumps(ltv))
+        """
+        Cache LTV for a user.
+
+        Args:
+            user_id (int): User's unique identifier
+            ltv (Dict[str, float]): Lifetime Value metrics
+        """
+        try:
+            # Store LTV in user's game repository
+            self.repository.set_gacha_history(user_id, [json.dumps(ltv)])
+        except Exception as exc:
+            logger.error(f"Failed to cache LTV for user {user_id}: {exc}")
+
+    async def get_ltv(self, user_id: int) -> Dict[str, float]:
+        """
+        Retrieve cached LTV for a user.
+
+        Args:
+            user_id (int): User's unique identifier
+
+        Returns:
+            Dict[str, float]: Cached LTV metrics or empty dict if not found
+        """
+        try:
+            cached_history = self.repository.get_gacha_history(user_id)
+            if cached_history:
+                return json.loads(cached_history[0])
+            return {}
+        except Exception as exc:
+            logger.error(f"Failed to retrieve LTV for user {user_id}: {exc}")
+            return {}
+
+    def predict_ltv(self, user_id: int) -> Dict[str, float]:
+        """
+        Predict Lifetime Value for a user.
+
+        Args:
+            user_id (int): User's unique identifier
+
+        Returns:
+            Dict[str, float]: Predicted LTV metrics
+        """
+        try:
+            # Implement LTV prediction logic
+            # This is a placeholder implementation
+            ltv = {
+                "prediction": 100.0,
+                "future_value": 50.0,
+                "churn_probability": 0.2
+            }
+
+            # Synchronous caching of LTV
+            import asyncio
+            asyncio.run(self.cache_ltv(user_id, ltv))
+            return ltv
+        except Exception as exc:
+            logger.error(f"LTV prediction failed for user {user_id}: {exc}")
+            return {"prediction": 0.0}

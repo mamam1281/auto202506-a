@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 from sqlalchemy.orm import Session
 import random
 import os
 import json
 import logging
 
-from .token_service import deduct_tokens, get_balance
+from .token_service import TokenService
 from ..repositories.game_repository import GameRepository
 
 
@@ -30,8 +30,9 @@ class GachaService:
         ("Common", 0.70),
     ]
 
-    def __init__(self, repository: GameRepository | None = None) -> None:
+    def __init__(self, repository: GameRepository | None = None, token_service: TokenService | None = None, db: Optional[Session] = None) -> None:
         self.repo = repository or GameRepository()
+        self.token_service = token_service or TokenService(db or None, self.repo)
         self.logger = logging.getLogger(__name__)
         self.rarity_table = self._load_rarity_table()
         self.reward_pool = self._load_reward_pool()
@@ -75,7 +76,10 @@ class GachaService:
         pulls = 10 if count >= 10 else 1
         cost = 450 if pulls == 10 else 50
         self.logger.info("Deducting %s tokens from user %s", cost, user_id)
-        deduct_tokens(user_id, cost, db)
+        
+        deducted_tokens = self.token_service.deduct_tokens(user_id, cost)
+        if deducted_tokens is None:
+            raise ValueError("토큰이 부족합니다.")
 
         results: List[str] = []
         current_count = self.repo.get_gacha_count(user_id)
@@ -113,7 +117,7 @@ class GachaService:
         self.repo.set_gacha_count(user_id, current_count)
         self.repo.set_gacha_history(user_id, history)
 
-        balance = get_balance(user_id, db)
+        balance = self.token_service.get_token_balance(user_id)
         self.repo.record_action(db, user_id, "GACHA_PULL", -cost)
         self.logger.debug(
             "User %s gacha results %s, balance %s", user_id, results, balance

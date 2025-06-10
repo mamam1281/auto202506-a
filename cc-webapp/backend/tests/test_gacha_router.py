@@ -1,16 +1,18 @@
 """가챠 라우터 테스트 모듈."""
 
+import pytest
 from unittest.mock import MagicMock
 from fastapi.testclient import TestClient
 from app.main import app
 from app.services.gacha_service import GachaPullResult
 from app.routers import gacha as gacha_router
 
+@pytest.fixture
+def client():
+    with TestClient(app) as c:
+        yield c
 
-client = TestClient(app)
-
-
-def test_pull_gacha_uses_service(monkeypatch):
+def test_pull_gacha_uses_service(client, monkeypatch):
     """서비스 의존성 주입이 제대로 동작하는지 확인."""
 
     service_mock = MagicMock()
@@ -39,4 +41,3 @@ def test_pull_gacha_uses_service(monkeypatch):
     assert response.status_code == 200
     assert response.json()["type"] == "Legendary"
     service_mock.pull.assert_called_once()
-
