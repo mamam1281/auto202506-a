@@ -637,5 +637,16 @@ SlotService / RouletteService / GachaService
 2. **게임 서비스 테스트 커버리지 50% 이상 달성**
 3. **모든 테스트 통과 상태 유지** (99+ tests)
 4. **DB 연동 안전성 및 성능 보장**
+5. **테스트 환경 구성 문제 해결 및 안정화** (`Client.__init__()` 오류 수정)
 
-완료 후 `python -m pytest --cov=app --cov-report=term` 명령어로 검증 가능합니다.
+완료 후 아래 명령어로 검증 및 기록:
+```bash
+# 전체 테스트 실행
+python -m pytest -v
+
+# 커버리지 확인
+python -m pytest --cov=app --cov-report=term
+
+# 특정 게임 서비스만 커버리지 확인
+python -m pytest --cov=app.services.game_service --cov=app.services.slot_service --cov=app.services.roulette_service --cov=app.services.gacha_service --cov-report=term-missing
+```
