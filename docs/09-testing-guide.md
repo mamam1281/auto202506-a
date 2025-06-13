@@ -8,7 +8,7 @@ Comprehensive guide to test strategy, execution methods, and quality management.
 ### Test Pass Rate Dashboard
 ```bash
 # As of June 14, 2025 - FINAL UPDATE - 100% PASS RATE ACHIEVED! 🎉
-============ 99 passed, 32 warnings in 1.07s =============
+============ 99 passed, 32 warnings in 1.12s =============
 ```
 
 ### Performance Metrics
@@ -37,12 +37,21 @@ Comprehensive guide to test strategy, execution methods, and quality management.
 # - User Segments: 5개 테스트
 # - 기타 핵심 서비스들
 
-# 2. 낮은 가치 테스트 제거 ✅
-# - 복잡한 통합 테스트들 (DB 의존성 높음)
-# - 게임 기능 테스트들 (부차적 기능)
-# - AI 서비스 테스트들 (복잡한 외부 의존성)
-# - WebSocket 테스트들 (불완전한 구현)
-# - Flash Offer 테스트들 (임시 비활성화된 기능)
+# 2. 낮은 가치 테스트 제거 ✅ (154개 테스트 → 99개 테스트)
+# 제거된 테스트 파일들:
+# - test_emotion_integrated.py (복잡한 감정 통합 테스트)
+# - test_gacha_service_integrated.py (게임 통합 테스트)
+# - test_e2e_integration.py (E2E 통합 테스트)
+# - test_feedback_router_integration.py (라우터 통합 테스트)
+# - test_chat_ws.py (WebSocket 테스트)
+# - test_flash_offer_service.py (Flash Offer 서비스 테스트)
+# - test_game_service_enhanced.py (게임 서비스 확장 테스트)
+# - test_slot_service.py (슬롯 게임 테스트)
+# - test_roulette_service.py (룰렛 게임 테스트)
+# - test_cj_ai_service.py (AI 서비스 테스트)
+# - test_rewards.py (리워드 시스템 테스트)
+# - test_unlock.py (언락 시스템 테스트)
+# - integration/ 디렉토리 전체 (복잡한 통합 테스트들)
 
 # 3. 테스트 품질 개선 ✅
 # - 스키마 호환성 100% 확보
