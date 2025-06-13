@@ -36,12 +36,12 @@ class ContentStageEnum(str, Enum):
 
 # Stage details configuration
 STAGE_DETAILS = {
-    ContentStageEnum.TEASER: {"cost": 0, "description": "Free preview", "index": StageIndex.TEASER},
-    ContentStageEnum.BASIC: {"cost": 100, "description": "Basic access", "index": StageIndex.BASIC},
-    ContentStageEnum.PREMIUM: {"cost": 500, "description": "Premium content", "index": StageIndex.PREMIUM},
-    ContentStageEnum.VIP: {"cost": 1000, "description": "VIP exclusive content", "index": StageIndex.VIP},
-    ContentStageEnum.PARTIAL: {"cost": 50, "description": "Partial access", "index": StageIndex.PARTIAL},
-    ContentStageEnum.FULL: {"cost": 2000, "description": "Full lifetime access", "index": StageIndex.FULL}
+    ContentStageEnum.TEASER: {"cost": 0, "description": "Free preview", "index": StageIndex.TEASER, "order": StageIndex.TEASER},
+    ContentStageEnum.BASIC: {"cost": 100, "description": "Basic access", "index": StageIndex.BASIC, "order": StageIndex.BASIC},
+    ContentStageEnum.PREMIUM: {"cost": 500, "description": "Premium content", "index": StageIndex.PREMIUM, "order": StageIndex.PREMIUM},
+    ContentStageEnum.VIP: {"cost": 1000, "description": "VIP exclusive content", "index": StageIndex.VIP, "order": StageIndex.VIP},
+    ContentStageEnum.PARTIAL: {"cost": 50, "description": "Partial access", "index": StageIndex.PARTIAL, "order": StageIndex.PARTIAL},
+    ContentStageEnum.FULL: {"cost": 2000, "description": "Full lifetime access", "index": StageIndex.FULL, "order": StageIndex.FULL}
 }
 
 # User segment access order configuration
@@ -50,7 +50,11 @@ USER_SEGMENT_ACCESS_ORDER = {
     "BASIC": 2,   # Can access TEASER, BASIC
     "PREMIUM": 3, # Can access TEASER, BASIC, PREMIUM
     "VIP": 4,     # Can access all content levels
-    "FULL": 5     # Can access absolutely everything
+    "FULL": 5,    # Can access absolutely everything
+    "Low": 1,     # Alias for FREE
+    "Medium": 3,  # Alias for PREMIUM
+    "High": 4,    # Alias for VIP
+    "Whale": 5    # Alias for FULL
 }
 
 class AdultContentService:
@@ -194,3 +198,25 @@ class AdultContentService:
             preview_url="https://example.com/preview.jpg",
             current_stage_accessed=0
         )
+
+    def get_content_access_level(self, user_id: int, content_id: int) -> Optional[ContentStageEnum]:
+        """Get user's access level for content based on age verification, segment, and unlocks."""
+        # Check age verification first
+        if self.age_verification_service and not self.age_verification_service.is_user_age_verified(user_id):
+            return None
+        
+        # Get segment and unlock levels
+        segment_order = self._get_user_segment_max_order(user_id)
+        unlocked_order = self._get_user_unlocked_stage_order(user_id, content_id)
+        
+        # Return the higher of the two
+        max_order = max(segment_order, unlocked_order)
+        return self._get_stage_by_index(max_order)
+
+    def get_gallery_for_user(self, user_id: int) -> List[AdultContentGalleryItem]:
+        """Get gallery content for user."""
+        return []
+
+    def get_user_unlock_history(self, user_id: int) -> List[UnlockHistoryItem]:
+        """Get user's unlock history."""
+        return []

@@ -224,3 +224,27 @@ class CJAIService:
                 pass
         except Exception as exc:
             logger.error(f"Failed to cache emotion result for user {user_id}: {exc}")
+
+    async def send_websocket_message(self, user_id: int, message: str) -> bool:
+        """
+        Send a WebSocket message to a specific user.
+        
+        Args:
+            user_id (int): ID of the user to send message to
+            message (str): Message content to send
+            
+        Returns:
+            bool: True if message was sent successfully, False otherwise
+        """
+        try:
+            if self.websocket_manager is None:
+                logger.warning(f"No WebSocket manager available for user {user_id}")
+                return False
+                
+            # For now, broadcast to all connections since we don't have user-specific connections
+            await self.websocket_manager.broadcast(f"[User {user_id}] {message}")
+            logger.info(f"Sent WebSocket message for user {user_id}")
+            return True
+        except Exception as exc:
+            logger.error(f"Failed to send WebSocket message for user {user_id}: {exc}")
+            return False

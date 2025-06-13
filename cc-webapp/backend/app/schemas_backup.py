@@ -76,7 +76,13 @@ class AdultContentStageBase(BaseModel):
     description: str
     is_unlocked: bool = False
 
-# Removed duplicate AdultContentGalleryItem - using the one at the end of file
+class AdultContentGalleryItem(BaseModel):
+    id: int
+    title: str
+    preview_url: str
+    type: str
+    unlock_level: int
+    is_locked: bool
     name: Optional[str] = None
     thumbnail_url: Optional[str] = None
     highest_unlocked_stage: Optional[int] = None
@@ -101,7 +107,7 @@ class ContentStageInfo(BaseModel):
 
 class ContentUnlockRequestNew(BaseModel):
     content_id: int
-    stage_to_unlock: Optional[Union[int, str]] = None
+    stage_to_unlock: Optional[int] = None
     user_proof: Optional[Dict] = None
 
 class ContentUnlockResponse(BaseModel):
@@ -116,14 +122,11 @@ class ContentUnlockResponse(BaseModel):
 class UnlockHistoryItem(BaseModel):
     id: int
     content_id: int
-    content_name: str
-    unlocked_at: str
-    stage_required: str
-
-
-class UnlockHistoryResponse(BaseModel):
-    history: List[UnlockHistoryItem]
-
+    unlocked_at: datetime
+    status: str
+    content_name: Optional[str] = None
+    unlocked_stage: Optional[int] = None
+    tokens_spent: Optional[int] = None
 
 class AccessUpgradeRequest(BaseModel):
     current_level: int
@@ -166,83 +169,3 @@ class FinalRecommendation(BaseModel):
     confidence: float
     reasons: List[str]
     rewards: Optional[Dict] = None
-
-# Authentication related schemas
-class TokenData(BaseModel):
-    user_id: Optional[int] = None
-
-class AgeVerificationRequest(BaseModel):
-    user_id: int
-    verification_method: str
-    document_type: Optional[str] = None
-    phone_number: Optional[str] = None
-
-# Flash Offer related schemas
-class FlashOfferPurchaseResponse(BaseModel):
-    success: bool
-    offer_id: Optional[int] = None
-    tokens_purchased: Optional[int] = None
-    cost: Optional[float] = None
-    message: str
-
-class FlashOfferResponseItem(BaseModel):
-    id: int
-    title: str
-    description: str
-    tokens: int
-    original_price: float
-    discounted_price: float
-    discount_percentage: int
-    expires_at: datetime
-    is_available: bool = True
-
-# VIP Content related schemas  
-class VIPInfoResponse(BaseModel):
-    user_id: int
-    vip_tier: str  # 테스트에서 사용하는 필드명
-    tier: str
-    benefits: List[str]
-    content_access: List[str]
-    next_tier_requirements: Optional[Dict] = None
-
-class VIPExclusiveContentItem(BaseModel):
-    id: int
-    name: str  # 테스트에서 사용하는 필드명
-    title: str
-    description: str
-    content_type: str
-    thumbnail_url: Optional[str] = None  # 테스트에서 사용하는 필드명
-    preview_url: Optional[str] = None
-    full_content_url: Optional[str] = None
-    tier_required: str
-
-class AdultContentGalleryItem(BaseModel):
-    id: int
-    name: str  # 테스트에서 사용하는 필드명
-    title: str
-    description: str
-    thumbnail_url: str  # 테스트에서 사용하는 필드명
-    preview_url: str
-    content_type: str
-    stage_required: str
-    highest_unlocked_stage: Optional[str] = None  # 테스트에서 사용하는 필드명
-    is_unlocked: bool = False
-
-
-class AdultContentGalleryResponse(BaseModel):
-    items: List[AdultContentGalleryItem]
-
-
-class ActiveFlashOffersResponse(BaseModel):
-    offers: List[FlashOfferResponseItem]
-
-
-class FlashOfferActionResponse(BaseModel):
-    success: bool
-    message: str
-    offer_id: Optional[int] = None
-
-
-class FlashOfferPurchaseRequest(BaseModel):
-    offer_id: int
-    user_id: int

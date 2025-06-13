@@ -9,106 +9,51 @@ from ..auth.jwt import get_current_user
 from ..models import User, Game
 from ..schemas import GameCreate, GameUpdate, GameResponse
 
+def get_game_service() -> GameService:
+    """Dependency factory for GameService."""
+    return GameService()
+
 router = APIRouter(
     prefix="/api/games",
     tags=["games"],
     responses={401: {"description": "Unauthorized"}}
 )
 
-@router.get("/", response_model=List[GameResponse])
-async def list_games(
-    skip: int = 0,
-    limit: int = 10,
+@router.post("/slot/spin")
+async def spin_slot(
     current_user: User = Depends(get_current_user),
-    game_service: GameService = Depends()
-) -> List[GameResponse]:
-    """List available games with pagination."""
-    try:
-        games = game_service.get_games(skip=skip, limit=limit)
-        return [GameResponse.from_orm(game) for game in games]
-    except Exception as e:
-        logging.error(f"Error listing games: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-@router.get("/{game_id}", response_model=GameResponse)
-async def get_game(
-    game_id: int,
-    current_user: User = Depends(get_current_user),
-    game_service: GameService = Depends()
-) -> GameResponse:
-    """Get specific game details."""
-    try:
-        game = game_service.get_game_by_id(game_id)
-        if not game:
-            raise HTTPException(status_code=404, detail="Game not found")
-        return GameResponse.from_orm(game)
-    except HTTPException:
-        raise
-    except Exception as e:
-        logging.error(f"Error fetching game {game_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-@router.post("/play/{game_id}")
-async def play_game(
-    game_id: int,
-    bet_amount: Optional[int] = None,
-    current_user: User = Depends(get_current_user),
-    game_service: GameService = Depends()
+    game_service: GameService = Depends(get_game_service)
 ) -> dict:
-    """Play a game with optional betting."""
+    """Spin the slot machine."""
     try:
-        result = game_service.play_game(
-            user_id=current_user.id,
-            game_id=game_id,
-            bet_amount=bet_amount
-        )
-        return result
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        # GameService의 slot_spin 메서드는 DB 세션이 필요하므로 임시로 None 처리
+        return {"message": "Slot spin endpoint - not implemented yet"}
     except Exception as e:
-        logging.error(f"Error playing game {game_id}: {str(e)}")
+        logging.error(f"Error spinning slot for user {current_user.id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-@router.get("/history/{user_id}", response_model=List[dict])
-async def get_game_history(
-    user_id: int,
-    skip: int = 0,
-    limit: int = 10,
+@router.post("/roulette/spin")
+async def spin_roulette(
     current_user: User = Depends(get_current_user),
-    game_service: GameService = Depends()
-) -> List[dict]:
-    """Get user's game history."""
-    if current_user.id != user_id:
-        raise HTTPException(
-            status_code=403,
-            detail="Not authorized to view this user's history"
-        )
-    
-    try:
-        history = game_service.get_user_game_history(
-            user_id=user_id,
-            skip=skip,
-            limit=limit
-        )
-        return history
-    except Exception as e:
-        logging.error(f"Error fetching game history for user {user_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-@router.get("/stats/{game_id}")
-async def get_game_stats(
-    game_id: int,
-    current_user: User = Depends(get_current_user),
-    game_service: GameService = Depends()
+    game_service: GameService = Depends(get_game_service)
 ) -> dict:
-    """Get game statistics."""
+    """Spin the roulette wheel."""
     try:
-        stats = game_service.get_game_stats(game_id)
-        if not stats:
-            raise HTTPException(status_code=404, detail="Game stats not found")
-        return stats
-    except HTTPException:
-        raise
+        # GameService의 roulette_spin 메서드는 DB 세션이 필요하므로 임시로 None 처리
+        return {"message": "Roulette spin endpoint - not implemented yet"}
     except Exception as e:
-        logging.error(f"Error fetching game stats for {game_id}: {str(e)}")
+        logging.error(f"Error spinning roulette for user {current_user.id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@router.post("/gacha/pull")
+async def pull_gacha(
+    current_user: User = Depends(get_current_user),
+    game_service: GameService = Depends(get_game_service)
+) -> dict:
+    """Pull from gacha."""
+    try:
+        # GameService의 gacha_pull 메서드는 DB 세션이 필요하므로 임시로 None 처리
+        return {"message": "Gacha pull endpoint - not implemented yet"}
+    except Exception as e:
+        logging.error(f"Error pulling gacha for user {current_user.id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")

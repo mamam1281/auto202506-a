@@ -766,3 +766,155 @@ pytest tests/ -v --ignore=tests/test_main.py --ignore=tests/test_auth.py
 ```
 
 **예상 완료 시점**: 다음 작업 세션에서 90%+ 통과율 + 전체 테스트 수 복구 달성 가능! 🚀
+get_content_access_level 테스트 3개는 통과 ✅
+async 메서드 문제: get_content_details, get_content_preview 등이 코루틴 객체를 반환하는데 await가 누락됨
+누락된 메서드들: get_gallery_for_user, get_user_unlock_history 등
+스키마 검증 오류: ContentUnlockRequestNew, AccessUpgradeRequest 스키마의 필드 타입 불일치
+키 에러: USER_SEGMENT_ACCESS_ORDER에서 "Low", "Medium" 등의 키가 없음
+
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\pydantic\_internal\_config.py:268
+.venv\Lib\site-packages\pydantic\_internal\_config.py:268
+.venv\Lib\site-packages\pydantic\_internal\_config.py:268
+.venv\Lib\site-packages\pydantic\_internal\_config.py:268
+.venv\Lib\site-packages\pydantic\_internal\_config.py:268
+.venv\Lib\site-packages\pydantic\_internal\_config.py:268
+.venv\Lib\site-packages\pydantic\_internal\_config.py:268
+.venv\Lib\site-packages\pydantic\_internal\_config.py:268
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\pydantic\_internal\_config.py:268: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+cc-webapp\backend\app\routers\recommendation.py:30
+  c:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend\app\routers\recommendation.py:30: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    @validator('current_emotion_data', pre=True, always=True) # always=True if it can be default
+
+cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_content_details_success
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\sqlalchemy\sql\traversals.py:479: RuntimeWarning: coroutine 'AdultContentService.get_content_details' was never awaited
+    return (anon_map(), anon_map())
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+cc-webapp/backend/tests/test_auth.py: 2 warnings
+cc-webapp/backend/tests/test_auth_logging.py: 1 warning
+cc-webapp/backend/tests/test_gacha_router.py: 1 warning
+cc-webapp/backend/tests/test_main.py: 6 warnings
+cc-webapp/backend/tests/test_notification.py: 5 warnings
+cc-webapp/backend/tests/test_rewards.py: 7 warnings
+cc-webapp/backend/tests/test_unlock.py: 4 warnings
+cc-webapp/backend/tests/test_user_segments.py: 5 warnings
+cc-webapp/backend/tests/integration/test_emotion_api_integration.py: 8 warnings
+cc-webapp/backend/tests/integration/test_mvp_user_flow.py: 6 warnings
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\httpx\_client.py:690: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+    warnings.warn(message, DeprecationWarning)
+
+cc-webapp/backend/tests/test_main.py::test_app_openapi_schema
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\fastapi\openapi\utils.py:207: UserWarning: Duplicate Operation ID analyze_emotion_api_ai_analyze_post for function analyze_emotion at c:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend\app\routers\analyze.py
+    warnings.warn(message, stacklevel=1)
+
+cc-webapp/backend/tests/test_main.py::test_app_openapi_schema
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\fastapi\openapi\utils.py:207: UserWarning: Duplicate Operation ID get_personalized_recommendations_api_recommend_personalized_get for function get_personalized_recommendations at c:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend\app\routers\recommendation.py
+    warnings.warn(message, stacklevel=1)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_content_details_age_not_verified
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_content_details_content_not_found
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_content_details_success
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_content_preview_age_not_verified
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_content_preview_content_not_found
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_content_preview_success
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_gallery_for_user_success
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_user_segment_max_order_no_segment
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_user_segment_max_order_segment_no_rfm_group
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_user_segment_max_order_valid_segment
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_user_unlock_history_success
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_user_unlocked_stage_order_has_unlocks
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_get_user_unlocked_stage_order_no_unlocks
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_unlock_content_stage_age_verification_fails
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_unlock_content_stage_already_accessible_by_segment_allows_purchase
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_unlock_content_stage_already_explicitly_unlocked
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_unlock_content_stage_content_not_found
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_unlock_content_stage_insufficient_tokens
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_unlock_content_stage_invalid_stage_name
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_unlock_content_stage_reward_service_fails
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_unlock_content_stage_success
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_upgrade_access_temporarily_age_fails
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_upgrade_access_temporarily_already_at_or_above_target
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_upgrade_access_temporarily_insufficient_tokens
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_upgrade_access_temporarily_invalid_target_segment
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_upgrade_access_temporarily_success_simulated
+FAILED cc-webapp/backend/tests/test_adult_content_service.py::TestAdultContentService::test_upgrade_access_temporarily_user_not_found
+FAILED cc-webapp/backend/tests/test_age_verification_service.py::TestAgeVerificationService::test_get_verification_status_user_has_valid_record
+FAILED cc-webapp/backend/tests/test_age_verification_service.py::TestAgeVerificationService::test_get_verification_status_user_no_valid_record
+FAILED cc-webapp/backend/tests/test_age_verification_service.py::TestAgeVerificationService::test_is_user_age_verified_false
+FAILED cc-webapp/backend/tests/test_age_verification_service.py::TestAgeVerificationService::test_is_user_age_verified_true
+FAILED cc-webapp/backend/tests/test_age_verification_service.py::TestAgeVerificationService::test_record_verification_user_exists_document_method
+FAILED cc-webapp/backend/tests/test_age_verification_service.py::TestAgeVerificationService::test_record_verification_user_exists_phone_method
+FAILED cc-webapp/backend/tests/test_age_verification_service.py::TestAgeVerificationService::test_record_verification_user_not_found
+FAILED cc-webapp/backend/tests/test_emotion_feedback_service.py::TestEmotionFeedbackService::test_get_emotion_feedback_returns_response
+FAILED cc-webapp/backend/tests/test_flash_offer_service.py::TestFlashOfferService::test_process_flash_purchase_insufficient_tokens
+FAILED cc-webapp/backend/tests/test_flash_offer_service.py::TestFlashOfferService::test_process_flash_purchase_offer_not_found
+FAILED cc-webapp/backend/tests/test_flash_offer_service.py::TestFlashOfferService::test_process_flash_purchase_success
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_init_with_default_parameters
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_init_with_custom_parameters
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_repository_access
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_segment_service_integration
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_service_without_segment_service
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_game_statistics_tracking
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_error_handling_in_game_operations
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_service_state_consistency
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_multiple_game_types_support
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_concurrent_game_sessions
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_game_configuration_loading
+FAILED cc-webapp/backend/tests/test_game_service_enhanced.py::TestGameService::test_user_preferences_integration
+FAILED cc-webapp/backend/tests/test_main.py::test_sentry_initialization_success
+FAILED cc-webapp/backend/tests/test_main.py::test_router_inclusion - Assertio...
+FAILED cc-webapp/backend/tests/test_roulette_service.py::TestRouletteService::test_spin_insufficient_tokens
+FAILED cc-webapp/backend/tests/test_roulette_service.py::TestRouletteService::test_spin_jackpot
+FAILED cc-webapp/backend/tests/test_roulette_service.py::TestRouletteService::test_spin_lose_increments_streak
+FAILED cc-webapp/backend/tests/test_roulette_service.py::TestRouletteService::test_spin_win_number
+FAILED cc-webapp/backend/tests/test_slot_service.py::TestSlotService::test_spin_insufficient_tokens
+FAILED cc-webapp/backend/tests/test_slot_service.py::TestSlotService::test_spin_jackpot
+FAILED cc-webapp/backend/tests/test_slot_service.py::TestSlotService::test_spin_lose
+FAILED cc-webapp/backend/tests/test_vip_content_service.py::TestVIPContentService::test_get_vip_exclusive_content_is_vip
+FAILED cc-webapp/backend/tests/integration/test_emotion_api_integration.py::TestEmotionAPIIntegration::test_complete_emotion_analysis_flow
+FAILED cc-webapp/backend/tests/integration/test_emotion_api_integration.py::TestEmotionAPIIntegration::test_recommendation_based_on_emotion
+FAILED cc-webapp/backend/tests/integration/test_emotion_api_integration.py::TestEmotionAPIIntegration::test_feedback_generation_pipeline
+FAILED cc-webapp/backend/tests/integration/test_emotion_api_integration.py::TestConcurrentEmotionAnalysis::test_concurrent_emotion_requests
+FAILED cc-webapp/backend/tests/integration/test_emotion_api_integration.py::TestErrorHandlingIntegration::test_invalid_emotion_analysis_request
+FAILED cc-webapp/backend/tests/integration/test_emotion_api_integration.py::TestErrorHandlingIntegration::test_llm_fallback_error_handling
+FAILED cc-webapp/backend/tests/integration/test_emotion_api_integration.py::TestDataConsistencyIntegration::test_emotion_log_database_consistency
+FAILED cc-webapp/backend/tests/integration/test_emotion_api_integration.py::TestDataConsistencyIntegration::test_redis_cache_consistency
+FAILED cc-webapp/backend/tests/integration/test_mvp_user_flow.py::TestBasicUserJourney::test_complete_user_flow_happy_path
+FAILED cc-webapp/backend/tests/integration/test_mvp_user_flow.py::TestBasicUserJourney::test_user_with_insufficient_tokens
+FAILED cc-webapp/backend/tests/integration/test_mvp_user_flow.py::TestConcurrentUsers::test_5_users_can_play_simultaneously
+FAILED cc-webapp/backend/tests/integration/test_mvp_user_flow.py::TestMinimalPerformance::test_login_response_time_reasonable
+FAILED cc-webapp/backend/tests/integration/test_mvp_user_flow.py::TestMinimalPerformance::test_game_response_time_acceptable
+ERROR cc-webapp/backend/tests/test_chat_ws.py::test_chat_websocket_success - ...
+ERROR cc-webapp/backend/tests/test_chat_ws.py::test_chat_websocket_invalid_token
+ERROR cc-webapp/backend/tests/test_chat_ws.py::test_chat_websocket_bad_message
+ERROR cc-webapp/backend/tests/test_notification.py::test_get_one_pending_notification
+ERROR cc-webapp/backend/tests/test_notification.py::test_get_all_pending_notifications_sequentially
+ERROR cc-webapp/backend/tests/test_notification.py::test_get_pending_notifications_none_pending
+ERROR cc-webapp/backend/tests/test_notification.py::test_get_pending_notifications_user_not_found
+ERROR cc-webapp/backend/tests/test_notification.py::test_notification_not_re_sent_after_processing
+ERROR cc-webapp/backend/tests/test_rewards.py::test_get_rewards_first_page - ...
+ERROR cc-webapp/backend/tests/test_rewards.py::test_get_rewards_second_page
+ERROR cc-webapp/backend/tests/test_rewards.py::test_get_rewards_last_page_partial
+ERROR cc-webapp/backend/tests/test_rewards.py::test_get_rewards_page_out_of_bounds
+ERROR cc-webapp/backend/tests/test_rewards.py::test_get_rewards_no_rewards - ...
+ERROR cc-webapp/backend/tests/test_rewards.py::test_get_rewards_user_not_found
+ERROR cc-webapp/backend/tests/test_rewards.py::test_get_rewards_default_pagination
+ERROR cc-webapp/backend/tests/test_unlock.py::test_unlock_stages_sequentially
+ERROR cc-webapp/backend/tests/test_unlock.py::test_unlock_insufficient_segment
+ERROR cc-webapp/backend/tests/test_unlock.py::test_unlock_user_not_found - Va...
+ERROR cc-webapp/backend/tests/test_unlock.py::test_unlock_content_stage_not_found
+ERROR cc-webapp/backend/tests/services/test_cj_ai_service.py::test_analyze_and_respond
+ERROR cc-webapp/backend/tests/services/test_cj_ai_service.py::test_store_interaction
+ERROR cc-webapp/backend/tests/services/test_cj_ai_service.py::test_get_user_emotion_history
+ERROR cc-webapp/backend/tests/services/test_cj_ai_service.py::test_get_user_emotion_history_no_redis
+ERROR cc-webapp/backend/tests/services/test_cj_ai_service.py::test_send_websocket_message
+ERROR cc-webapp/backend/tests/services/test_cj_ai_service.py::test_send_websocket_message_no_manager
+============ 73 failed, 96 passed, 57 warnings, 25 errors in 5.57s ============
+Finished running tests!

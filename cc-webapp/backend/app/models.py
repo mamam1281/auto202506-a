@@ -50,7 +50,7 @@ class UserSegment(Base):
     name = Column(String(50), nullable=True)  # Add missing column
 
     # Relationship
-    user = relationship("User", back_populates="segment")
+    user = relationship("User", back_populates="segment", uselist=False) # One-to-one
 
 class SiteVisit(Base):
     __tablename__ = "site_visits"
@@ -194,6 +194,20 @@ class TokenTransfer(Base):
 
     from_user = relationship("User", foreign_keys=[from_user_id])
     to_user = relationship("User", foreign_keys=[to_user_id])
+
+
+class Game(Base):
+    __tablename__ = "games"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    game_type = Column(String(50), nullable=False)  # slot, roulette, gacha
+    bet_amount = Column(Integer, default=0)
+    result = Column(String(255), nullable=True)
+    payout = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User")
 
 
 # In User model, add the other side of the relationship if you want two-way population

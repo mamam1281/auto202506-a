@@ -25,17 +25,22 @@ class AgeVerificationService:
         # For this example, we assume the request directly translates to a record.
         # In a real system, 'is_valid' might be set by an asynchronous process or callback
         # after actual verification (e.g. by a third-party service).
-        # Here, we'll just record it as pending or directly valid based on input/logic.
-
-        # Simple logic: if method is "document", assume it needs manual review (is_valid=False initially)
+        # Here, we'll just record it as pending or directly valid based on input/logic.        # Simple logic: if method is "document", assume it needs manual review (is_valid=False initially)
         # Otherwise, for "phone", "ipin", assume it's auto-validated (is_valid=True) for this example.
-        is_valid_initial = verification_request.method not in ["document"]
+        is_valid_initial = verification_request.verification_method not in ["document"]
+
+        # Build verification data based on available fields
+        verification_data = {}
+        if verification_request.document_type:
+            verification_data["document_type"] = verification_request.document_type
+        if verification_request.phone_number:
+            verification_data["phone_number"] = verification_request.phone_number
 
         db_record = AgeVerificationRecord(
             user_id=user_id,
-            verification_method=verification_request.method,
+            verification_method=verification_request.verification_method,
             verified_at=datetime.utcnow(), # Or this could be None until actually verified
-            verification_data=verification_request.verification_data, # Stored as JSON
+            verification_data=verification_data, # Stored as JSON
             is_valid=is_valid_initial # Example: default to True, or set based on method
         )
         self.db.add(db_record)

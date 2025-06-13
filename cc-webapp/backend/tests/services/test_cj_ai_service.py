@@ -31,9 +31,10 @@ from app.utils.sentiment_analyzer import EmotionResult
 
 @pytest.fixture
 def ai_service():
-    mock_redis = AsyncMock()
     mock_websocket = AsyncMock()
-    service = CJAIService(redis_client=mock_redis, websocket_manager=mock_websocket)
+    service = CJAIService(websocket_manager=mock_websocket)
+    # Add redis_client as an attribute for test compatibility
+    service.redis_client = AsyncMock()
     return service
 
 @pytest.mark.asyncio

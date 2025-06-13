@@ -13,13 +13,12 @@ class TestAgeVerificationService(unittest.TestCase):
         self.age_verification_service = AgeVerificationService(db=self.mock_db_session)
 
         # Mock User for successful user query
-        self.mock_user = User(id=1, email="test@example.com")
-
-        # Default verification request
+        self.mock_user = User(id=1, email="test@example.com")        # Default verification request
         self.verification_data_json = {"document_id": "12345", "country": "US"}
         self.verification_request = AgeVerificationRequest(
-            method="document",
-            verification_data=self.verification_data_json
+            user_id=1,
+            verification_method="document",
+            document_type="passport"
         )
 
     def test_record_verification_user_exists_document_method(self):
@@ -52,8 +51,9 @@ class TestAgeVerificationService(unittest.TestCase):
     def test_record_verification_user_exists_phone_method(self):
         self.mock_db_session.query(User).filter(User.id == 1).first.return_value = self.mock_user
         phone_verification_request = AgeVerificationRequest(
-            method="phone",
-            verification_data={"phone_number": "+1234567890"}
+            user_id=1,
+            verification_method="phone",
+            phone_number="+1234567890"
         )
 
         mock_now = datetime(2023, 1, 1, 12, 0, 0)
