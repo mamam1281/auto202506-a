@@ -25,7 +25,3 @@ class FlashOfferService:
     def get_active_flash_offers(self, *args, **kwargs) -> list:
         """Placeholder method."""
         return []
-    
-    def reject_or_expire_flash_offer(self, *args, **kwargs) -> bool:
-        """Placeholder method."""
-        return False

@@ -68,13 +68,41 @@ class TestVIPContentService(unittest.TestCase):
 
     def test_get_vip_exclusive_content_is_vip(self):
         # User is VIP
-        self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == self.vip_user_id).first.return_value = self.mock_vip_segment
-
-        # Mock adult_content_service.get_gallery_for_user to return some items
+        self.mock_db_session.query(UserSegment).filter(UserSegment.user_id == self.vip_user_id).first.return_value = self.mock_vip_segment        # Mock adult_content_service.get_gallery_for_user to return some items
         mock_gallery_items = [
-            AdultContentGalleryItem(id=101, name="VIP Content 1", thumbnail_url="vip1.jpg", highest_unlocked_stage=ContentStageEnum.VIP.value),
-            AdultContentGalleryItem(id=102, name="Regular Content", thumbnail_url="reg1.jpg", highest_unlocked_stage=ContentStageEnum.FULL.value),
-            AdultContentGalleryItem(id=103, name="VIP Content 2", thumbnail_url="vip2.jpg", highest_unlocked_stage=ContentStageEnum.VIP.value),
+            AdultContentGalleryItem(
+                id=101, 
+                name="VIP Content 1", 
+                title="VIP Content 1",
+                description="VIP exclusive content",
+                thumbnail_url="vip1.jpg", 
+                preview_url="vip1_preview.jpg",
+                content_type="video",
+                stage_required="VIP",
+                highest_unlocked_stage=ContentStageEnum.VIP.value
+            ),
+            AdultContentGalleryItem(
+                id=102, 
+                name="Regular Content", 
+                title="Regular Content",
+                description="Regular content",
+                thumbnail_url="reg1.jpg", 
+                preview_url="reg1_preview.jpg",
+                content_type="image",
+                stage_required="BASIC",
+                highest_unlocked_stage=ContentStageEnum.FULL.value
+            ),
+            AdultContentGalleryItem(
+                id=103, 
+                name="VIP Content 2", 
+                title="VIP Content 2",
+                description="Another VIP exclusive content",
+                thumbnail_url="vip2.jpg", 
+                preview_url="vip2_preview.jpg",
+                content_type="video",
+                stage_required="VIP",
+                highest_unlocked_stage=ContentStageEnum.VIP.value
+            ),
         ]
         self.mock_adult_content_service.get_gallery_for_user.return_value = mock_gallery_items
 

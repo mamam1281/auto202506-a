@@ -180,14 +180,14 @@ class TestEmotionFeedbackService:
             emotion_result=Mock(),
             user_segment="GENERAL",
             mission_type="GENERAL",
-            context_text="test context"
-        )
-        
+            context_text="test context"        )
         assert isinstance(response, FeedbackResponse)
         assert response.success is True
         assert response.message == "감정 분석 기반 피드백이 생성되었습니다"
-        assert response.recommendation == "추천 컨텐츠: 일일 미션 완료하기"
-        assert response.reward_suggestion == "+50 사이버 토큰"
+        assert isinstance(response.recommendation, dict)
+        assert response.recommendation["type"] == "mission"
+        assert isinstance(response.reward_suggestion, dict)
+        assert response.reward_suggestion["token"] == 50
         
     def test_service_with_different_contexts(self):
         """Test service behavior with different context inputs."""

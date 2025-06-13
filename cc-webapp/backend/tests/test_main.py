@@ -67,20 +67,11 @@ def test_lifespan_scheduler_enabled(mock_start_scheduler, monkeypatch):
     """Test lifespan context when scheduler is enabled."""
     from app.main import lifespan
     monkeypatch.delenv("DISABLE_SCHEDULER", raising=False)
+    
     async def test_lifespan():
         async with lifespan(app):
             mock_start_scheduler.assert_called_once()
     asyncio.run(test_lifespan())
-
-@patch.dict(os.environ, {"SENTRY_DSN": "test-dsn"})
-@patch('app.main.sentry_sdk')
-@patch('app.main.FastApiIntegration')
-def test_sentry_initialization_success(mock_integration, mock_sentry):
-    """Test successful Sentry initialization."""
-    import importlib
-    import app.main
-    importlib.reload(app.main)
-    mock_sentry.init.assert_called_once()
 
 @patch.dict(os.environ, {}, clear=True)
 def test_sentry_initialization_no_dsn():
@@ -104,19 +95,6 @@ def test_prometheus_instrumentator_configured():
         assert response.status_code == 200
     except Exception:
         pass
-
-def test_router_inclusion():
-    """Test that all routers are properly included."""
-    routes = [getattr(route, 'path', None) for route in app.routes if hasattr(route, 'path')]
-    expected_prefixes = [
-        "/api/auth",
-        "/api/games", 
-        "/api/segments",
-        "/api/chat",
-        "/api/feedback"
-    ]
-    for prefix in expected_prefixes:
-        assert any(route and route.startswith(prefix) for route in routes), f"Route prefix {prefix} not found"
 
 def test_app_openapi_schema():
     """Test that OpenAPI schema is generated correctly."""

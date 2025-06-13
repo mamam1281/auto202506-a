@@ -13,8 +13,11 @@ class EmotionFeedbackService:
         return FeedbackResponse(
             success=True,
             message="감정 분석 기반 피드백이 생성되었습니다",
-            recommendation="추천 컨텐츠: 일일 미션 완료하기",
-            reward_suggestion="+50 사이버 토큰"
+            suggestions=["일일 미션 완료하기", "추천 게임 플레이"],
+            emotion="positive",
+            segment=user_segment if user_segment else "default",
+            recommendation={"type": "mission", "description": "일일 미션 완료하기"},
+            reward_suggestion={"token": 50, "description": "사이버 토큰"}
         )
     """
     사용자 감정에 기반한 피드백 생성 서비스
