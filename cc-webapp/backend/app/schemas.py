@@ -1,225 +1,171 @@
-"""Pydantic models for cc-webapp."""
+"""Pydantic schemas for FastAPI request/response models."""
 
-from pydantic import BaseModel, Json, Field
-from typing import List, Optional, Any
+from pydantic import BaseModel, Field, validator
+from typing import Optional, List, Dict, Union
+from enum import Enum
 from datetime import datetime
 
-# Schemas for existing functionality (keeping them for now)
+# Game related schemas
+class GameType(str, Enum):
+    SLOT = "slot"
+    ROULETTE = "roulette"
+    GACHA = "gacha"
+    POKER = "poker"
+    BLACKJACK = "blackjack"
 
-class FeedbackResponse(BaseModel):
-    success: bool
-    message: str
-    recommendation: str
-    reward_suggestion: Optional[str] = None
-
-class TokenData(BaseModel):
-    username: str = Field(...)
-    exp: datetime
-class ContentUnlockRequest(BaseModel): # This might be superseded or augmented by new AdultContent schemas
-    user_id: int # Assuming this might be part of old system, new ones might get user from auth
-    stage: int
-
-
-class TokenEarnRequest(BaseModel):
-    amount: int
-    activity_type: str
-
-
-class UnlockRequest(BaseModel): # This is likely for the old system, new one is ContentUnlockRequest
-    stage: int
-
-
-class UnlockResponse(BaseModel): # This is likely for the old system, new one is ContentUnlockResponse
-    success: bool
-    stage: int
-    tokens_spent: int
-    content_url: str | None = None
-
-# 1. Base Models for New Tables (for responses and internal use)
-
-# FlashOffer Schemas
-class FlashOfferBase(BaseModel):
-    user_id: int
-    content_id: int
-    original_price: int
-    discounted_price: int
-    discount_rate: float
-    trigger_reason: Optional[str] = None
-    is_purchased: bool = False
-
-    class Config:
-        from_attributes = True
-
-class FlashOffer(FlashOfferBase):
-    id: int
-    created_at: datetime
-    expires_at: datetime
-    purchased_at: Optional[datetime] = None
-
-# VIPAccessLog Schemas
-class VIPAccessLogBase(BaseModel):
-    user_id: int
-    content_id: int
-    access_tier: Optional[str] = None
-    tokens_spent: Optional[int] = None
-
-    class Config:
-        from_attributes = True
-
-class VIPAccessLog(VIPAccessLogBase):
-    id: int
-    accessed_at: datetime
-
-# AgeVerificationRecord Schemas
-class AgeVerificationRecordBase(BaseModel):
-    user_id: int
-    verification_method: Optional[str] = None
-    is_valid: bool = True
-    # verification_data is intentionally omitted from base and default response
-    # as it's sensitive. Specific schemas can include it if needed.
-
-    class Config:
-        from_attributes = True
-
-class AgeVerificationRecord(AgeVerificationRecordBase):
-    id: int
-    verified_at: datetime
-
-
-# 2. Schemas for AdultContentService and adult_content router
-
-# Content Stages & Details
-class ContentStageInfo(BaseModel):
-    stage_name: str  # e.g., "Teaser", "Partial", "Full", "VIP"
-    cost: int
+class GameCreate(BaseModel):
+    name: str
+    type: GameType
     description: Optional[str] = None
-    is_unlocked: bool
+    min_bet: Optional[int] = 0
+    max_bet: Optional[int] = 1000
+    rules: Optional[Dict] = Field(default_factory=dict)
+
+class GameUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    min_bet: Optional[int] = None
+    max_bet: Optional[int] = None
+    rules: Optional[Dict] = None
+    is_active: Optional[bool] = None
+
+class GameResponse(BaseModel):
+    id: int
+    name: str
+    type: GameType
+    description: Optional[str]
+    min_bet: int
+    max_bet: int
+    rules: Dict
+    is_active: bool
+    created_at: datetime
+    updated_at: Optional[datetime]
+
+    class Config:
+        from_attributes = True
+
+class GameHistoryResponse(BaseModel):
+    id: int
+    user_id: int
+    game_id: int
+    bet_amount: Optional[int]
+    result: Dict
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class GameStatsResponse(BaseModel):
+    game_id: int
+    total_plays: int
+    total_wins: int
+    total_losses: int
+    win_rate: float
+    avg_bet: Optional[float]
+    total_payouts: Optional[int]
+    most_active_hour: Optional[int]
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Adult content related schemas
+class AdultContentStageBase(BaseModel):
+    stage_name: str
+    cost: int
+    description: str
+    is_unlocked: bool = False
+
+class AdultContentGalleryItem(BaseModel):
+    id: int
+    title: str
+    preview_url: str
+    type: str
+    unlock_level: int
+    is_locked: bool
+    name: Optional[str] = None
+    thumbnail_url: Optional[str] = None
+    highest_unlocked_stage: Optional[int] = None
 
 class AdultContentDetail(BaseModel):
     id: int
-    name: str
-    description: Optional[str] = None
-    stages: List[ContentStageInfo]
-    user_current_access_level: Optional[str] = None # e.g. "Teaser", "Partial", "Full", "VIP", or null
+    title: str
+    description: str
+    content_url: str
+    type: str
+    unlock_level: int
+    prerequisites: List[str]
+    name: Optional[str] = None
+    stages: List[AdultContentStageBase] = Field(default_factory=list)
+    user_current_access_level: Optional[int] = None
 
-# Gallery
-class AdultContentGalleryItem(BaseModel):
-    id: int
-    name: str
-    thumbnail_url: Optional[str] = None
-    highest_unlocked_stage: Optional[str] = None # e.g., "Teaser", or null
+class ContentStageInfo(BaseModel):
+    stage: int
+    stage_to_unlock: Optional[int] = None
+    requirements: Dict[str, Union[int, str]]
+    rewards: Dict[str, Union[int, str]]
 
-class AdultContentGalleryResponse(BaseModel):
-    items: List[AdultContentGalleryItem]
-
-# Preview
-# Using path params for content_id, so no specific ContentPreviewRequest needed for now.
-class ContentPreviewResponse(BaseModel):
+class ContentUnlockRequestNew(BaseModel):
     content_id: int
-    preview_url: Optional[str] = None # Or could be more complex (blurred data, etc.)
-    current_stage_accessed: Optional[str] = None
-
-# Unlock
-class ContentUnlockRequestNew(BaseModel): # Renamed to avoid conflict if old ContentUnlockRequest is used elsewhere
-    content_id: int
-    stage_to_unlock: str  # e.g. "Teaser", "Partial", "Full", "VIP"
+    stage_to_unlock: Optional[int] = None
+    user_proof: Optional[Dict] = None
 
 class ContentUnlockResponse(BaseModel):
-    status: str # e.g., "success", "failed", "already_unlocked"
-    unlocked_stage: Optional[str] = None
+    success: bool
+    content_url: Optional[str] = None
+    message: str
+    status: str
+    unlocked_stage: Optional[int] = None
     tokens_spent: Optional[int] = None
     remaining_tokens: Optional[int] = None
 
-# Unlock History
 class UnlockHistoryItem(BaseModel):
+    id: int
     content_id: int
-    content_name: str
-    unlocked_stage: str
     unlocked_at: datetime
-    tokens_spent: int
+    status: str
+    content_name: Optional[str] = None
+    unlocked_stage: Optional[int] = None
+    tokens_spent: Optional[int] = None
 
-class UnlockHistoryResponse(BaseModel):
-    history: List[UnlockHistoryItem]
-
-# Access Upgrade
 class AccessUpgradeRequest(BaseModel):
-    target_segment_level: str  # e.g., "Medium", "Whale"
-    duration_days: Optional[int] = None # For temporary upgrades
+    current_level: int
+    requested_level: int
+    payment_token: str
+    target_segment_level: Optional[int] = None
+    duration_days: Optional[int] = 30
 
 class AccessUpgradeResponse(BaseModel):
-    status: str
-    new_segment_level: str
+    success: bool
+    new_level: int
+    message: str
+    status: Optional[str] = None
+    new_segment_level: Optional[int] = None
     tokens_spent: Optional[int] = None
     valid_until: Optional[datetime] = None
 
-
-# 3. Schemas for FlashOfferService
-
-# Flash Offer List & Details
-class FlashOfferResponseItem(BaseModel):
-    offer_id: int
-    content_id: int
-    content_name: Optional[str] = None # Requires join
-    original_price: int
-    discounted_price: int
-    discount_rate: float
-    expires_at: datetime
-    trigger_reason: Optional[str] = None
-    target_stage_name: str # Added field
-
-class ActiveFlashOffersResponse(BaseModel):
-    offers: List[FlashOfferResponseItem]
-
-# Flash Offer Purchase
-class FlashOfferPurchaseRequest(BaseModel):
-    # Assuming offer_id is in path, user_id from auth.
-    # This can be an empty model if no body is needed.
-    pass # Or add specific fields if user needs to send something, e.g., payment_confirmation_token
-
-class FlashOfferPurchaseResponse(BaseModel):
-    status: str # e.g., "success", "failed_insufficient_tokens", "offer_expired"
-    message: str
-    purchased_offer: Optional[FlashOfferResponseItem] = None # Return details of the purchased offer
-
-# Flash Offer Deletion/Rejection
-class FlashOfferActionResponse(BaseModel): # Generic for delete/reject
-    status: str
-    message: str
-
-
-# 4. Schemas for VIPContentService
-
-class VIPInfoResponse(BaseModel):
-    user_id: int
-    vip_tier: Optional[str] = None
-    benefits: List[str] # List of benefit descriptions
-
-class VIPExclusiveContentItem(BaseModel):
+class ContentPreviewResponse(BaseModel):
     id: int
-    name: str
-    thumbnail_url: Optional[str] = None
-    description: Optional[str] = None
-    # Add other VIP specific fields if any, e.g., exclusive_tags
-
-class VIPExclusiveContentResponse(BaseModel):
-    items: List[VIPExclusiveContentItem]
-
-
-# 5. Schemas for AgeVerificationService
-
-class AgeVerificationRequest(BaseModel):
-    # user_id will likely come from authenticated user context, not request body
-    method: str  # "document", "phone", "ipin"
-    verification_data: dict  # use plain dict for tests expecting direct JSON
-
-class AgeVerificationResponse(BaseModel):
-    user_id: int
-    status: str  # "verified", "pending", "failed", "not_required"
-    verified_at: Optional[datetime] = None
-    message: Optional[str] = None # e.g., reason for failure or success message
-
-class FinalRecommendation(BaseModel):
-    content_id: int
     title: str
-    reason: str
-    match_score: float = Field(..., ge=0, le=1)
+    preview_data: Dict
+    unlock_requirements: Dict
+    preview_url: Optional[str] = None
+    current_stage_accessed: Optional[int] = None
+
+# Feedback related schemas
+class FeedbackResponse(BaseModel):
+    message: str
+    suggestions: List[str]
+    emotion: str
+    segment: str
+    success: bool = True
+    recommendation: Optional[Dict] = None
+    reward_suggestion: Optional[Dict] = None
+
+# Recommendation related schemas
+class FinalRecommendation(BaseModel):
+    game_id: int
+    game_name: str
+    confidence: float
+    reasons: List[str]
+    rewards: Optional[Dict] = None
