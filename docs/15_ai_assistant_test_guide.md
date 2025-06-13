@@ -449,6 +449,26 @@ python -m pytest tests/test_game_service.py::TestGameServiceIntegration -v
 - `docs/security_authentication_en.md` - 인증 및 보안 구현 가이드
 - `docs/09-testing-guide.md` - 현재 테스트 상태 및 가이드 (99 tests, 100% pass)
 
+### **현재 서비스 구현 상태**
+
+**게임 서비스 클래스 구조:**
+```
+GameService
+├── 의존성: GameRepository, SlotService, RouletteService, GachaService
+├── 메서드: slot_spin(), roulette_spin(), gacha_pull()
+└── 역할: 각 게임별 서비스로 요청 위임
+
+SlotService / RouletteService / GachaService
+├── 의존성: GameRepository, TokenService
+├── 핵심 메서드: spin()/pull()
+└── 역할: 게임 로직 처리, 확률 계산, 보상 지급
+```
+
+**핵심 종속성:**
+- `TokenService`: 토큰(게임 화폐) 관리
+- `GameRepository`: 게임 데이터 DB 액세스
+- `UserSegmentService`: 사용자 세그먼트 정보로 확률 조정
+
 ### **개발 체크리스트**  
 - `docs/12_game_dev_full_checklist_ko.md` - 전체 개발 진행 현황 (백엔드 98% 완료)
 - `docs/PROJECT_PROGRESS_CHECKLIST.md` - 프로젝트 전체 진행 상황
@@ -458,6 +478,13 @@ python -m pytest tests/test_game_service.py::TestGameServiceIntegration -v
 - **Clean Architecture**: Router → Service → Repository → DB 계층 준수
 - **TDD 원칙**: 테스트 코드와 함께 구현, Mock 최소화
 - **보안 요구사항**: JWT 인증, 서버사이드 검증, Rate limiting 필수
+- **에러 처리**: 모든 예외 상황에 대한 적절한 응답 코드와 메시지 제공
+
+### **테스트 작성 가이드**
+- 단위 테스트: `pytest` 사용, `pytest-mock`으로 의존성 Mock
+- 통합 테스트: 실제 DB 사용, `@pytest.mark.asyncio` 사용
+- 테스트 데이터: `conftest.py`에 fixture 정의
+- 확률 검증: 반복 실행 통계로 검증 (100회 이상 실행)
 
 ### **환경 설정 파일**
 - `cc-webapp/backend/requirements.txt` - Python 의존성
