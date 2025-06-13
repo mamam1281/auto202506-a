@@ -65,6 +65,7 @@ async def spin_slot(
 ### ⚠️ **즉시 처리 필요**
 - **게임 API 3개 엔드포인트**: "not implemented yet" → 실제 DB 연동 로직
 - **게임 서비스 테스트 커버리지**: 35% → 50% 이상 증가
+- **테스트 환경 문제 해결**: Client.__init__() 관련 오류 수정
 
 ### 📊 **현재 테스트 커버리지 상태**
 ```
@@ -75,6 +76,12 @@ Critical gaps:
 - roulette_service.py: 31%
 - gacha_service.py: 34%
 ```
+
+### ⚠️ **테스트 실행 시 발견된 문제점**
+```
+TypeError: Client.__init__() got an unexpected keyword argument 'app'
+```
+이 오류는 FastAPI TestClient 초기화 방식과 관련이 있습니다. FastAPI 테스트 코드 작성 시 주의해야 합니다.
 
 ---
 
@@ -191,6 +198,32 @@ class TestSlotService:
         """확률 공정성 테스트."""
         # 아래 테스트 구현 필요
         pass
+```
+
+**FastAPI 라우터 테스트 구조 (Client 오류 해결):**
+```python
+import pytest
+from fastapi.testclient import TestClient
+from app.main import app  # 앱 인스턴스 직접 가져오기
+
+# TestClient 수정된 초기화 방식
+client = TestClient(app)
+
+def test_slot_spin_endpoint():
+    """슬롯 스핀 엔드포인트 테스트"""
+    # 인증 토큰 모의 설정 (테스트 전용 헬퍼 함수 사용)
+    token = get_test_token()
+    headers = {"Authorization": f"Bearer {token}"}
+    
+    # 요청 실행
+    response = client.post("/api/games/slot/spin", headers=headers)
+    
+    # 응답 검증
+    assert response.status_code == 200
+    data = response.json()
+    assert "result" in data
+    assert "tokens_change" in data
+    # 추가 검증...
 ```
 
 **각 테스트에서 커버해야 할 시나리오:**
@@ -375,6 +408,34 @@ python -m pytest --cov=app.services.game_service --cov=app.services.slot_service
 python -m pytest tests/test_game_service.py::TestGameServiceIntegration -v
 ```
 
+### **FastAPI 테스트 오류 해결 방법**
+TypeError: `Client.__init__() got an unexpected keyword argument 'app'` 오류가 발생한다면:
+
+1. **FastAPI 버전 호환성 확인**
+   ```bash
+   pip show fastapi httpx pytest
+   ```
+
+2. **TestClient 초기화 방식 수정**
+   ```python
+   # Before (문제 발생)
+   client = TestClient(app=app)
+   
+   # After (수정)
+   client = TestClient(app)
+   ```
+
+3. **conftest.py에 공통 픽스처 정의**
+   ```python
+   import pytest
+   from fastapi.testclient import TestClient
+   from app.main import app
+   
+   @pytest.fixture
+   def client():
+       return TestClient(app)
+   ```
+
 ### **최종 검증 체크리스트**
 - [ ] `/api/games/slot/spin` POST 요청 시 실제 게임 결과 반환
 - [ ] `/api/games/roulette/spin` POST 요청 시 룰렛 결과 및 보상 계산  
@@ -388,12 +449,34 @@ python -m pytest tests/test_game_service.py::TestGameServiceIntegration -v
 
 ## 🚀 **작업 진행 순서 (권장)**
 
-1. **현재 상태 확인** (5분)
+1. **현재 상태 확인 및 환경 준비** (10분)
    - `grep -r "not implemented yet" app/routers/games.py`
    - `python -m pytest --cov=app.services.*game* --cov-report=term`
+   - 테스트 환경 문제 확인 및 해결
    - 코드 베이스 파악 및 부족한 부분 식별
 
-2. **DB 세션 의존성 설정** (10분)
+2. **테스트 환경 설정 수정** (15분)
+   - TestClient 초기화 문제 해결
+   - conftest.py 설정 확인 및 수정
+   - 테스트 헬퍼 함수 구현 (토큰 생성 등)
+   ```python
+   # conftest.py 수정 예시
+   import pytest
+   from fastapi.testclient import TestClient
+   from app.main import app
+
+   @pytest.fixture
+   def client():
+       return TestClient(app)
+   
+   @pytest.fixture
+   def auth_headers():
+       # 테스트용 토큰 생성
+       token = "test-token"
+       return {"Authorization": f"Bearer {token}"}
+   ```
+
+3. **DB 세션 의존성 설정** (10분)
    - 게임 라우터에 DB 세션 의존성 추가
    - 필요한 요청 모델 작성 또는 확인
    ```python
@@ -409,27 +492,28 @@ python -m pytest tests/test_game_service.py::TestGameServiceIntegration -v
        # 구현 필요
    ```
 
-3. **슬롯 API 우선 구현** (30분)
+4. **슬롯 API 우선 구현** (30분)
    - 슬롯 서비스 테스트 파일 작성
    - 라우터-서비스 연결 구현
    - 기본 테스트 케이스 추가
 
-4. **룰렛 & 가챠 API 구현** (45분)
+5. **룰렛 & 가챠 API 구현** (40분)
    - 동일한 패턴으로 순차 구현
    - 각각의 비즈니스 로직에 맞는 구현
    - 라우터-서비스 연결 및 에러 처리
 
-5. **테스트 강화** (40분)
+6. **테스트 강화** (40분)
    - 각 서비스별 테스트 파일 작성
    - 다양한 시나리오 및 경계값 테스트
    - 커버리지 50% 달성까지 보완
 
-6. **통합 검증** (20분)
+7. **통합 검증 및 문제 해결** (25분)
    - 엔드-투-엔드 통합 테스트 추가
-   - 전체 테스트 스위트 실행
+   - 테스트 실행 시 발생하는 오류 해결
+   - 전체 테스트 스위트 실행 
    - API 수동 테스트 및 최종 확인
 
-**예상 총 소요 시간: 약 2시간 30분**
+**예상 총 소요 시간: 약 2시간 50분**
 
 ---
 
@@ -468,6 +552,61 @@ SlotService / RouletteService / GachaService
 - `TokenService`: 토큰(게임 화폐) 관리
 - `GameRepository`: 게임 데이터 DB 액세스
 - `UserSegmentService`: 사용자 세그먼트 정보로 확률 조정
+
+### **테스트 환경 해결 가이드**
+테스트 실행 시 오류가 발생하면 다음 단계를 시도하세요:
+
+1. **FastAPI 및 관련 패키지 버전 확인/업데이트**
+   ```bash
+   pip install --upgrade fastapi pytest httpx
+   ```
+
+2. **테스트 의존성 명시적 설치**
+   ```bash
+   pip install pytest-asyncio pytest-cov
+   ```
+
+3. **conftest.py 설정 업데이트**
+   ```python
+   # cc-webapp/backend/tests/conftest.py
+   import pytest
+   from fastapi.testclient import TestClient
+   from sqlalchemy import create_engine
+   from sqlalchemy.orm import sessionmaker, Session
+   
+   from app.main import app
+   from app.database import get_db, Base
+   
+   # 테스트용 인메모리 SQLite DB 설정
+   TEST_SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+   engine = create_engine(TEST_SQLALCHEMY_DATABASE_URL)
+   TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+   
+   @pytest.fixture
+   def db():
+       """테스트용 DB 세션 제공"""
+       Base.metadata.create_all(bind=engine)
+       db = TestingSessionLocal()
+       try:
+           yield db
+       finally:
+           db.close()
+   
+   @pytest.fixture
+   def client():
+       """테스트 클라이언트 제공"""
+       return TestClient(app)
+   ```
+
+4. **TestClient 초기화 방식 확인**
+   ```python
+   # 변경 전
+   from fastapi.testclient import TestClient
+   client = TestClient(app=app)  # 오류 발생
+   
+   # 변경 후
+   client = TestClient(app)  # 올바른 방식
+   ```
 
 ### **개발 체크리스트**  
 - `docs/12_game_dev_full_checklist_ko.md` - 전체 개발 진행 현황 (백엔드 98% 완료)
