@@ -1,7 +1,7 @@
 """Service for handling adult content access and unlocking."""
 
 from typing import List, Optional, Dict, Tuple, Union
-from enum import Enum
+from enum import Enum, auto
 from datetime import datetime, timedelta
 
 from ..schemas import (
@@ -18,11 +18,40 @@ from ..schemas import (
 )
 from ..models import User
 
+class StageIndex(int, Enum):
+    TEASER = 1
+    BASIC = 2
+    PREMIUM = 3
+    VIP = 4
+    PARTIAL = 5
+    FULL = 6
+
 class ContentStageEnum(str, Enum):
     TEASER = "Teaser"
     BASIC = "Basic"
     PREMIUM = "Premium"
     VIP = "VIP"
+    PARTIAL = "Partial"  # For partially unlocked content
+    FULL = "Full"       # For fully unlocked content
+
+# Stage details configuration
+STAGE_DETAILS = {
+    ContentStageEnum.TEASER: {"cost": 0, "description": "Free preview", "index": StageIndex.TEASER},
+    ContentStageEnum.BASIC: {"cost": 100, "description": "Basic access", "index": StageIndex.BASIC},
+    ContentStageEnum.PREMIUM: {"cost": 500, "description": "Premium content", "index": StageIndex.PREMIUM},
+    ContentStageEnum.VIP: {"cost": 1000, "description": "VIP exclusive content", "index": StageIndex.VIP},
+    ContentStageEnum.PARTIAL: {"cost": 50, "description": "Partial access", "index": StageIndex.PARTIAL},
+    ContentStageEnum.FULL: {"cost": 2000, "description": "Full lifetime access", "index": StageIndex.FULL}
+}
+
+# User segment access order configuration
+USER_SEGMENT_ACCESS_ORDER = {
+    "FREE": 1,    # Can access TEASER
+    "BASIC": 2,   # Can access TEASER, BASIC
+    "PREMIUM": 3, # Can access TEASER, BASIC, PREMIUM
+    "VIP": 4,     # Can access all content levels
+    "FULL": 5     # Can access absolutely everything
+}
 
 class AdultContentService:
     def __init__(
@@ -40,59 +69,89 @@ class AdultContentService:
     def _get_user_segment_max_order(self, user_id: int) -> int:
         """Get maximum content order based on user segment."""
         # TODO: Implement actual segment logic
-        return 3  # Mock value
+        return USER_SEGMENT_ACCESS_ORDER["BASIC"]
 
     def _get_user_unlocked_stage_order(self, user_id: int, content_id: int) -> int:
         """Get user's current unlock stage order for content."""
         # TODO: Implement actual DB query
-        return 1  # Mock value
+        return StageIndex.TEASER.value
 
-    async def get_gallery_items(
+    def _get_stage_by_index(self, index: int) -> ContentStageEnum:
+        """Convert stage index to enum value."""
+        for stage, details in STAGE_DETAILS.items():
+            if details["index"].value == index:
+                return stage
+        raise ValueError(f"Invalid stage index: {index}")
+
+    def _get_index_by_stage(self, stage: Union[ContentStageEnum, str]) -> int:
+        """Convert stage enum/name to index."""
+        if isinstance(stage, str):
+            stage = ContentStageEnum(stage)
+        return STAGE_DETAILS[stage]["index"].value
+
+    async def get_content_details(
         self, 
-        user_id: int, 
-        skip: int = 0, 
-        limit: int = 20
-    ) -> List[AdultContentGalleryItem]:
-        """Get gallery items with pagination."""
-        # Mock implementation
-        return [
-            AdultContentGalleryItem(
-                id=1,
-                title="Sample Content",
-                preview_url="https://example.com/preview.jpg",
-                type=ContentStageEnum.TEASER.value,
-                unlock_level=1,
-                is_locked=False,
-                name="Sample",
-                thumbnail_url="https://example.com/thumb.jpg",
-                highest_unlocked_stage=1
+        content_id: int,
+        user_id: int
+    ) -> Optional[AdultContentDetail]:
+        """Get detailed information about specific content."""
+        max_order = self._get_user_segment_max_order(user_id)
+        current_stage = self._get_user_unlocked_stage_order(user_id, content_id)
+
+        stages = [
+            AdultContentStageBase(
+                stage_name=stage.value,
+                cost=STAGE_DETAILS[stage]["cost"],
+                description=STAGE_DETAILS[stage]["description"],
+                is_unlocked=STAGE_DETAILS[stage]["index"].value <= current_stage
             )
+            for stage in ContentStageEnum
+            if STAGE_DETAILS[stage]["index"].value <= max_order
         ]
+
+        return AdultContentDetail(
+            id=content_id,
+            title="Sample Content",
+            description="Sample description",
+            content_url="https://example.com/content",
+            type=ContentStageEnum.BASIC.value,
+            unlock_level=1,
+            prerequisites=["age_verified"],
+            stages=stages,
+            user_current_access_level=current_stage
+        )
 
     async def unlock_content_stage(
         self, 
         content_id: int,
-        stage_to_unlock: int,
+        stage_to_unlock: Union[int, str, ContentStageEnum],
         user: User
     ) -> ContentUnlockResponse:
         """Unlock specific content stage."""
-        if not content_id:
+        try:
+            if isinstance(stage_to_unlock, (str, ContentStageEnum)):
+                stage_index = self._get_index_by_stage(stage_to_unlock)
+            else:
+                stage_index = stage_to_unlock
+
+            stage = self._get_stage_by_index(stage_index)
+            cost = STAGE_DETAILS[stage]["cost"]
+
+            return ContentUnlockResponse(
+                success=True,
+                status="success",
+                content_url="https://example.com/content",
+                message="Stage unlocked successfully",
+                unlocked_stage=stage_index,
+                tokens_spent=cost,
+                remaining_tokens=900
+            )
+        except (ValueError, KeyError):
             return ContentUnlockResponse(
                 success=False,
                 status="error",
-                message="Invalid content ID"
+                message="Invalid stage to unlock"
             )
-
-        # Mock successful unlock
-        return ContentUnlockResponse(
-            success=True,
-            status="success",
-            content_url="https://example.com/content",
-            message="Stage unlocked successfully",
-            unlocked_stage=stage_to_unlock,
-            tokens_spent=100,
-            remaining_tokens=900
-        )
 
     async def upgrade_access_temporarily(
         self,
@@ -119,4 +178,19 @@ class AdultContentService:
             new_segment_level=request.requested_level,
             tokens_spent=500,
             valid_until=valid_until
+        )
+
+    async def get_content_preview(
+        self,
+        content_id: int,
+        user_id: int
+    ) -> ContentPreviewResponse:
+        """Get preview for content."""
+        return ContentPreviewResponse(
+            id=content_id,
+            title="Sample Preview",
+            preview_data={"thumbnail": "https://example.com/thumb.jpg"},
+            unlock_requirements={"min_level": 1, "tokens": 100},
+            preview_url="https://example.com/preview.jpg",
+            current_stage_accessed=0
         )
