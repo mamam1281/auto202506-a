@@ -1,94 +1,114 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+"""Game-related routes and endpoints."""
+
+from fastapi import APIRouter, Depends, HTTPException, Response
 from typing import List, Optional
-from pydantic import BaseModel
+import logging
 
-from ..database import get_db
 from ..services.game_service import GameService
+from ..auth.jwt import get_current_user
+from ..models import User, Game
+from ..schemas import GameCreate, GameUpdate, GameResponse
 
-router = APIRouter()
-game_service = GameService()
+router = APIRouter(
+    prefix="/api/games",
+    tags=["games"],
+    responses={401: {"description": "Unauthorized"}}
+)
 
-
-class SlotSpinRequest(BaseModel):
-    user_id: int
-
-class SlotSpinResponse(BaseModel):
-    result: str
-    tokens_change: int
-    balance: int
-    streak: int
-    animation: Optional[str]
-
-
-@router.post("/games/slot-spin", response_model=SlotSpinResponse, tags=["games"])
-def slot_spin(request: SlotSpinRequest, db: Session = Depends(get_db)):
+@router.get("/", response_model=List[GameResponse])
+async def list_games(
+    skip: int = 0,
+    limit: int = 10,
+    current_user: User = Depends(get_current_user),
+    game_service: GameService = Depends()
+) -> List[GameResponse]:
+    """List available games with pagination."""
     try:
-        result = game_service.slot_spin(request.user_id, db)
-    except ValueError:
-        raise HTTPException(status_code=402, detail="Insufficient tokens")
-    return SlotSpinResponse(
-        result=result.result,
-        tokens_change=result.tokens_change,
-        balance=result.balance,
-        streak=result.streak,
-        animation=result.animation,
-    )
+        games = game_service.get_games(skip=skip, limit=limit)
+        return [GameResponse.from_orm(game) for game in games]
+    except Exception as e:
+        logging.error(f"Error listing games: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
-
-class RouletteSpinRequest(BaseModel):
-    user_id: int
-    bet_amount: int
-    bet_type: str
-    value: Optional[str] = None
-
-class RouletteSpinResponse(BaseModel):
-    winning_number: int
-    result: str
-    tokens_change: int
-    balance: int
-    animation: Optional[str]
-
-
-@router.post("/games/roulette-spin", response_model=RouletteSpinResponse, tags=["games"])
-def roulette_spin(request: RouletteSpinRequest, db: Session = Depends(get_db)):
+@router.get("/{game_id}", response_model=GameResponse)
+async def get_game(
+    game_id: int,
+    current_user: User = Depends(get_current_user),
+    game_service: GameService = Depends()
+) -> GameResponse:
+    """Get specific game details."""
     try:
-        result = game_service.roulette_spin(request.user_id, request.bet_amount, request.bet_type, request.value, db)
-    except ValueError:
-        raise HTTPException(status_code=402, detail="Insufficient tokens")
+        game = game_service.get_game_by_id(game_id)
+        if not game:
+            raise HTTPException(status_code=404, detail="Game not found")
+        return GameResponse.from_orm(game)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error fetching game {game_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
-    return RouletteSpinResponse(
-        winning_number=result.winning_number,
-        result=result.result,
-        tokens_change=result.tokens_change,
-        balance=result.balance,
-        animation=result.animation,
-    )
-
-
-class GachaPullRequest(BaseModel):
-    user_id: int
-    count: int = 1
-
-class GachaResult(BaseModel):
-    rarity: str
-
-class GachaPullResponse(BaseModel):
-    results: List[GachaResult]
-    tokens_change: int
-    balance: int
-
-
-@router.post("/games/gacha-pull", response_model=GachaPullResponse, tags=["games"])
-def gacha_pull(request: GachaPullRequest, db: Session = Depends(get_db)):
+@router.post("/play/{game_id}")
+async def play_game(
+    game_id: int,
+    bet_amount: Optional[int] = None,
+    current_user: User = Depends(get_current_user),
+    game_service: GameService = Depends()
+) -> dict:
+    """Play a game with optional betting."""
     try:
-        result = game_service.gacha_pull(request.user_id, request.count, db)
-    except ValueError:
-        raise HTTPException(status_code=402, detail="Insufficient tokens")
+        result = game_service.play_game(
+            user_id=current_user.id,
+            game_id=game_id,
+            bet_amount=bet_amount
+        )
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logging.error(f"Error playing game {game_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
-    return GachaPullResponse(
-        results=[GachaResult(rarity=r) for r in result.results],
-        tokens_change=result.tokens_change,
-        balance=result.balance,
-    )
+@router.get("/history/{user_id}", response_model=List[dict])
+async def get_game_history(
+    user_id: int,
+    skip: int = 0,
+    limit: int = 10,
+    current_user: User = Depends(get_current_user),
+    game_service: GameService = Depends()
+) -> List[dict]:
+    """Get user's game history."""
+    if current_user.id != user_id:
+        raise HTTPException(
+            status_code=403,
+            detail="Not authorized to view this user's history"
+        )
+    
+    try:
+        history = game_service.get_user_game_history(
+            user_id=user_id,
+            skip=skip,
+            limit=limit
+        )
+        return history
+    except Exception as e:
+        logging.error(f"Error fetching game history for user {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
+@router.get("/stats/{game_id}")
+async def get_game_stats(
+    game_id: int,
+    current_user: User = Depends(get_current_user),
+    game_service: GameService = Depends()
+) -> dict:
+    """Get game statistics."""
+    try:
+        stats = game_service.get_game_stats(game_id)
+        if not stats:
+            raise HTTPException(status_code=404, detail="Game stats not found")
+        return stats
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error fetching game stats for {game_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")

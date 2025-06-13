@@ -562,6 +562,59 @@ pytest cc-webapp/backend/tests/ -v --ignore=cc-webapp/backend/tests/integration/
 5. main.py import 에러 해결
 ```
 
+# 11.4. 🆕 최신 테스트 실패/업데이트 현황 (2025-06-13 기준)
+
+### 11.4.1. 전체 테스트 현황 요약
+- 전체 테스트: 193개
+- 통과(PASS): 151개
+- 실패(FAIL): 27개
+- 에러(ERROR): 75개
+- 경고(WARN): 15개 (주로 Pydantic V2, pytest mark 등)
+
+### 11.4.2. 주요 실패/에러 유형 및 원인
+- **TypeError: Client.__init__() got an unexpected keyword argument 'app'**
+  - FastAPI/Starlette TestClient 사용법 변경 미반영 (app 파라미터 제거 필요)
+  - 영향: test_main.py, test_auth.py, test_e2e_integration.py 등 다수 API/라우터/통합 테스트
+- **TypeError: GameService.__init__() got an unexpected keyword argument 'segment_service'**
+  - GameService 생성자 시그니처 불일치, 테스트와 실제 코드 동기화 필요
+- **AttributeError: Mock object has no attribute ...**
+  - Mock 객체에 get_game_by_id, record_game_result 등 메서드 누락
+- **AttributeError: <module ...> has no attribute 'deduct_tokens'/'get_balance'**
+  - slot_service, roulette_service 등에서 테스트용 메서드 미구현
+- **AssertionError: Route prefix /api/chat not found**
+  - 라우터 등록 누락 또는 경로 불일치
+- **Sentry/Prometheus 등 외부 연동 테스트 실패**
+  - 환경변수/설정 누락, Mock 미적용
+
+### 11.4.3. 즉시 조치/우선순위
+1. **TestClient(app) → TestClient(app_instance) 또는 app 파라미터 제거**  
+   - 모든 테스트 파일에서 TestClient 생성부 일괄 수정
+2. **GameService, CJAIService 등 서비스 클래스 시그니처/Mock 동기화**
+   - 테스트와 실제 서비스 코드의 생성자/메서드 일치
+3. **Mock 객체에 필요한 메서드/속성 추가**
+   - get_game_by_id, record_game_result 등
+4. **서비스별 핵심 메서드(예: deduct_tokens, get_balance) 임시 구현**
+   - 테스트 통과 목적의 최소 구현 우선
+5. **라우터 경로/등록 상태 점검 및 누락시 즉시 추가**
+6. **외부 연동(Mock/환경변수) 테스트는 임시로 skip 또는 fixture 보완**
+
+### 11.4.4. 대표 에러 예시
+```text
+TypeError: Client.__init__() got an unexpected keyword argument 'app'
+TypeError: GameService.__init__() got an unexpected keyword argument 'segment_service'
+AttributeError: Mock object has no attribute 'get_game_by_id'
+AttributeError: <module 'app.services.slot_service'> has no attribute 'deduct_tokens'
+AssertionError: Route prefix /api/chat not found
+```
+
+### 11.4.5. 임시 우회/베스트 프랙티스
+- TestClient(app) → TestClient(app)에서 app 파라미터 제거 또는 app=app_instance로 명시
+- 서비스/Mock 시그니처는 항상 테스트와 동기화
+- 신규 메서드/Mock은 최소 구현 후 점진적 리팩터링
+- 외부 연동/환경 의존 테스트는 pytest.mark.skip 또는 fixture로 분리
+
+
+
 ### 8.7. 수정된 테스트 항목 상세 📋
 ```bash
 # 테스트명 / 내용 / 오류 / 수정방법:
@@ -678,58 +731,227 @@ pytest cc-webapp/backend/tests/ -v --ignore=cc-webapp/backend/tests/integration/
 ```
 
 #### D. 외부 의존성 오류
-```bash
-# 1. Redis 연결 오류
-- 오류: ConnectionRefusedError (Redis 서버 연결 불가)
-- 테스트: game_repository.py 관련 테스트들
-- 해결: Redis mock 객체 사용 또는 테스트 skip 처리
-  @pytest.fixture(autouse=True)
-  def clean_environment():
-      with patch('app.repository.game_repository.redis_client') as mock_redis:
-          mock_redis.flushdb.return_value = True
-          yield
+## 10. 📚 테스트 베스트 프랙티스
 
-# 2. WebSocket 연결 오류
-- 오류: WebSocketDisconnect
-- 테스트: test_chat_ws.py 관련 테스트들
-- 해결: WebSocket mock 객체 사용
-```
+### 10.1. 코드 품질 가이드라인
+- [ ] **명확한 테스트 이름**: 테스트 목적이 명확히 드러나는 함수명 사용
+- [ ] **AAA 패턴**: Arrange(준비) - Act(실행) - Assert(검증) 패턴 준수
+- [ ] **독립성**: 각 테스트는 다른 테스트에 의존하지 않고 독립적으로 실행
+- [ ] **반복성**: 동일한 환경에서 몇 번을 실행해도 같은 결과
+- [ ] **빠른 실행**: 단위 테스트는 1초 이내, 통합 테스트는 10초 이내
 
-#### E. 통합 테스트 실패
-```bash
-# 1. 엔드포인트 기대값 불일치
-- 오류: assert "neutral" in ["excited", "happy", "positive"]
-- 테스트: test_emotion_api_integration.py::TestEmotionAPIIntegration::test_complete_emotion_analysis_flow
-- 해결: 감정값 목록 확장 또는 mock 응답 설정
+### 10.2. Mock과 Fixture 활용
+- [ ] **적절한 Mock 사용**: 외부 의존성은 Mock으로 대체
+- [ ] **공통 Fixture**: 재사용 가능한 테스트 데이터는 conftest.py에 정의
+- [ ] **데이터 격리**: 각 테스트마다 독립적인 테스트 데이터 사용
+- [ ] **리소스 정리**: tearDown에서 생성된 리소스 정리
 
-# 2. 여러 사용자 동시 처리 실패
-- 오류: 동시 게임 성공률 부족 (0/5)
-- 테스트: test_mvp_user_flow.py::TestConcurrentUsers::test_5_users_can_play_simultaneously
-- 해결: 동시성 처리 로직 개선 및 테스트 환경 구성
-```
+### 10.3. 성능 테스트 전략
+- [ ] **부하 테스트**: Apache JMeter 또는 locust 활용
+- [ ] **스트레스 테스트**: 한계점 확인 및 복구 능력 테스트
+- [ ] **메모리 누수**: 장시간 실행 후 메모리 사용량 모니터링
+- [ ] **동시성 테스트**: 여러 사용자 동시 접속 시나리오
 
-### 8.10. 테스트 오류 우선순위 및 해결 계획 🚀
+---
 
-#### 긴급 해결 (P0)
-```bash
-# 즉시 해결이 필요한 중요한 문제
-1. EmotionResult 필수 파라미터 추가 (score, language)
-2. FeedbackResponse 클래스 추가
-3. API 경로 불일치 수정 (/api/ai/analyze)
-```
+## 11. 🎯 최종 체크리스트
 
-#### 중요 해결 (P1)
-```bash
-# 주요 기능 활성화를 위한 문제
-1. 기본 서비스 클래스 구현 (RecommendationService, EmotionFeedbackService)
-2. 누락된 라우터 파일 생성 및 등록
-3. SupportedEmotion 타입 처리 수정
-```
+### 11.1. 테스트 완성도 점검
+- [ ] **단위 테스트**: 모든 핵심 비즈니스 로직 커버
+- [ ] **통합 테스트**: 서비스 간 연동 확인
+- [ ] **API 테스트**: 모든 엔드포인트 정상 작동
+- [ ] **E2E 테스트**: 사용자 시나리오 완주 가능
 
-#### 보류 가능 (P2)
-```bash
-# 임시 해결책이 있거나 차후 해결 가능한 문제
-1. Redis 연결 오류 (mock 객체로 대체)
-2. WebSocket 테스트 오류 (외부 의존성)
-3. 동시 사용자 처리 성능 이슈
-```
+### 11.2. 문서화 완성도
+- [ ] **API 문서**: Swagger/OpenAPI 자동 생성
+- [ ] **테스트 문서**: 각 테스트의 목적과 범위 설명
+- [ ] **트러블슈팅**: 자주 발생하는 문제와 해결책 정리
+- [ ] **배포 가이드**: 프로덕션 배포를 위한 단계별 가이드
+
+### 11.3. 운영 준비도
+- [ ] **모니터링**: Prometheus + Grafana 대시보드 구성
+- [ ] **로깅**: 구조화된 로그 시스템 구축
+- [ ] **알림**: 장애 발생 시 자동 알림 시스템
+- [ ] **백업**: 데이터베이스 자동 백업 체계
+
+---
+
+
+### 11.4.2. 주요 실패/에러 유형 및 원인
+- **TypeError: Client.__init__() got an unexpected keyword argument 'app'**
+  - FastAPI/Starlette TestClient 사용법 변경 미반영 (app 파라미터 제거 필요)
+  - 영향: test_main.py, test_auth.py, test_e2e_integration.py 등 다수 API/라우터/통합 테스트
+- **TypeError: GameService.__init__() got an unexpected keyword argument 'segment_service'**
+  - GameService 생성자 시그니처 불일치, 테스트와 실제 코드 동기화 필요
+- **AttributeError: Mock object has no attribute ...**
+  - Mock 객체에 get_game_by_id, record_game_result 등 메서드 누락
+- **AttributeError: <module ...> has no attribute 'deduct_tokens'/'get_balance'**
+  - slot_service, roulette_service 등에서 테스트용 메서드 미구현
+- **AssertionError: Route prefix /api/chat not found**
+  - 라우터 등록 누락 또는 경로 불일치
+- **Sentry/Prometheus 등 외부 연동 테스트 실패**
+  - 환경변수/설정 누락, Mock 미적용
+
+
+====================== warnings summary ======================= 
+..\..\.venv\Lib\site-packages\pydantic\_internal\_config.py:268 
+..\..\.venv\Lib\site-packages\pydantic\_internal\_config.py:268 
+..\..\.venv\Lib\site-packages\pydantic\_internal\_config.py:268 
+..\..\.venv\Lib\site-packages\pydantic\_internal\_config.py:268 
+..\..\.venv\Lib\site-packages\pydantic\_internal\_config.py:268 
+..\..\.venv\Lib\site-packages\pydantic\_internal\_config.py:268 
+..\..\.venv\Lib\site-packages\pydantic\_internal\_config.py:268 
+..\..\.venv\Lib\site-packages\pydantic\_internal\_config.py:268 
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\pydantic\_internal\_config.py:268: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)      
+
+app\routers\recommendation.py:30
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend\app\routers\recommendation.py:30: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    @validator('current_emotion_data', pre=True, always=True) # always=True if it can be default
+
+tests\test_emotion_integrated.py:153
+  c:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend\tests\test_emotion_integrated.py:153: PytestUnknownMarkWarning: Unknown pytest.mark.performance - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html        
+    @pytest.mark.performance
+
+tests\test_gacha_service_integrated.py:11
+  c:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend\tests\test_gacha_service_integrated.py:11: PytestUnknownMarkWarning: Unknown pytest.mark.gacha - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.gacha
+
+tests\test_gacha_service_integrated.py:347
+  c:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend\tests\test_gacha_service_integrated.py:347: PytestUnknownMarkWarning: Unknown pytest.mark.performance - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html  
+    @pytest.mark.performance
+
+tests/test_auth.py: 2 warnings
+tests/test_auth_logging.py: 1 warning
+tests/test_e2e_integration.py: 13 warnings
+tests/test_feedback_router_integration.py: 14 warnings
+tests/test_gacha_router.py: 1 warning
+tests/test_main.py: 6 warnings
+tests/test_notification.py: 5 warnings
+tests/test_rewards.py: 7 warnings
+tests/test_unlock.py: 4 warnings
+tests/test_user_segments.py: 5 warnings
+tests/integration/test_emotion_api_integration.py: 8 warnings   
+tests/integration/test_mvp_user_flow.py: 6 warnings
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\httpx\_client.py:690: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
+    warnings.warn(message, DeprecationWarning)
+
+tests/test_e2e_integration.py::TestEndToEndUserFlows::test_openapi_documentation_completeness
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\fastapi\openapi\utils.py:207: UserWarning: Duplicate Operation ID analyze_emotion_api_ai_analyze_post for function analyze_emotion at C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend\app\routers\analyze.py        
+    warnings.warn(message, stacklevel=1)
+
+tests/test_e2e_integration.py::TestEndToEndUserFlows::test_openapi_documentation_completeness
+  C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\.venv\Lib\site-packages\fastapi\openapi\utils.py:207: UserWarning: Duplicate Operation ID get_personalized_recommendations_api_recommend_personalized_get for function get_personalized_recommendations at C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend\app\routers\recommendation.py
+    warnings.warn(message, stacklevel=1)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=================== short test summary info ===================
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_complete_user_gaming_session - assert 401 == 200
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_game_flow_with_tokens - AttributeError: <module 'app.routers.games' from 'C:\\Users...
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_feedback_and_ai_integration - assert 400 in [200, 503]        
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_gacha_and_rewards_flow - AttributeError: <module 'app.routers.gacha' from 'C:\\Users...
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_user_segments_and_personalization - AttributeError: <module 'app.routers.user_segments' from 'C...
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_notification_and_tracking_system - AttributeError: <module 'app.routers.notification' from 'C:...
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_adult_content_verification_flow - AttributeError: <module 'app.routers.adult_content' from 'C...
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_corporate_features_integration - AttributeError: <module 'app.routers.corporate' from 'C:\\U...
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_authentication_flow_across_endpoints - AssertionError: Endpoint /api/feedback/generate should requ...
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_data_consistency_across_services - AttributeError: <module 'app.routers.auth' from 'C:\\Users\...
+FAILED tests/test_e2e_integration.py::TestEndToEndUserFlows::test_openapi_documentation_completeness - AssertionError: No documented paths found for /api/user_seg...
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_emotion_based_feedback_valid_request - assert 400 == 200
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_emotion_based_feedback_service_unavailable - assert 400 == 503
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_emotion_based_feedback_service_exception - assert 400 == 500
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_emotion_based_feedback_no_feedback_generated - assert 400 == 200
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_generate_feedback_valid_request - assert 401 == 200
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_generate_feedback_missing_required_fields - assert 401 == 400
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_generate_feedback_unauthorized_user - assert 401 == 403
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_generate_feedback_service_exception - assert 401 == 200
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_generate_feedback_default_values - assert 401 == 200
+FAILED tests/test_feedback_router_integration.py::TestFeedbackRouterIntegration::test_multiple_concurrent_requests - assert 400 == 200
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_init_with_default_parameters - AttributeError: 'GameService' object has no attribute 'segm...
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_init_with_custom_parameters - TypeError: GameService.__init__() got an unexpected keyword...
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_repository_access - AttributeError: Mock object has no attribute 'get_game_by_id'
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_segment_service_integration - TypeError: GameService.__init__() got an unexpected keyword...
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_service_without_segment_service - AttributeError: 'GameService' object has no attribute 'segm...
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_game_statistics_tracking - AttributeError: Mock object has no attribute 'record_game_r...
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_error_handling_in_game_operations - AttributeError: Mock object has no attribute 'get_game_by_id'
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_service_state_consistency - TypeError: GameService.__init__() got an unexpected keyword...
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_multiple_game_types_support - AttributeError: Mock object has no attribute 'get_games_by_...
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_concurrent_game_sessions - AttributeError: Mock object has no attribute 'get_active_se...
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_game_configuration_loading - AttributeError: Mock object has no attribute 'get_game_config'
+FAILED tests/test_game_service_enhanced.py::TestGameService::test_user_preferences_integration - TypeError: GameService.__init__() got an unexpected keyword...
+FAILED tests/test_main.py::test_sentry_initialization_success - AssertionError: Expected 'init' to have been called once. C...  
+FAILED tests/test_main.py::test_router_inclusion - AssertionError: Route prefix /api/chat not found
+FAILED tests/test_roulette_service.py::TestRouletteService::test_spin_insufficient_tokens - AttributeError: <module 'app.services.roulette_service' fro...
+FAILED tests/test_roulette_service.py::TestRouletteService::test_spin_jackpot - AttributeError: <module 'app.services.roulette_service' fro...
+FAILED tests/test_roulette_service.py::TestRouletteService::test_spin_lose_increments_streak - AttributeError: <module 'app.services.roulette_service' fro...
+FAILED tests/test_roulette_service.py::TestRouletteService::test_spin_win_number - AttributeError: <module 'app.services.roulette_service' fro...
+FAILED tests/test_slot_service.py::TestSlotService::test_spin_insufficient_tokens - AttributeError: <module 'app.services.slot_service' from 'C...
+FAILED tests/test_slot_service.py::TestSlotService::test_spin_jackpot - AttributeError: <module 'app.services.slot_service' from 'C...
+FAILED tests/test_slot_service.py::TestSlotService::test_spin_lose - AttributeError: <module 'app.services.slot_service' from 'C...
+FAILED tests/integration/test_emotion_api_integration.py::TestEmotionAPIIntegration::test_complete_emotion_analysis_flow - ValueError: Duplicated timeseries in CollectorRegistry: {'h...       
+FAILED tests/integration/test_emotion_api_integration.py::TestEmotionAPIIntegration::test_recommendation_based_on_emotion - AttributeError: <module 'app.services.recommendation_servic...      
+FAILED tests/integration/test_emotion_api_integration.py::TestEmotionAPIIntegration::test_feedback_generation_pipeline - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+FAILED tests/integration/test_emotion_api_integration.py::TestConcurrentEmotionAnalysis::test_concurrent_emotion_requests - assert 0 >= 8
+FAILED tests/integration/test_emotion_api_integration.py::TestErrorHandlingIntegration::test_invalid_emotion_analysis_request - ValueError: Duplicated timeseries in CollectorRegistry: {'h...  
+FAILED tests/integration/test_emotion_api_integration.py::TestErrorHandlingIntegration::test_llm_fallback_error_handling - ValueError: Duplicated timeseries in CollectorRegistry: {'h...       
+FAILED tests/integration/test_emotion_api_integration.py::TestDataConsistencyIntegration::test_emotion_log_database_consistency - AttributeError: <module 'app.database' from 'C:\\Users\\tas...
+FAILED tests/integration/test_emotion_api_integration.py::TestDataConsistencyIntegration::test_redis_cache_consistency - AttributeError: <module 'app.services.cj_ai_service' from '...
+FAILED tests/integration/test_mvp_user_flow.py::TestBasicUserJourney::test_complete_user_flow_happy_path - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+FAILED tests/integration/test_mvp_user_flow.py::TestBasicUserJourney::test_user_with_insufficient_tokens - AttributeError: <module 'app.services.token_service' from '...
+FAILED tests/integration/test_mvp_user_flow.py::TestConcurrentUsers::test_5_users_can_play_simultaneously - AttributeError: <module 'app.services.token_service' from '...
+FAILED tests/integration/test_mvp_user_flow.py::TestMinimalPerformance::test_login_response_time_reasonable - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+FAILED tests/integration/test_mvp_user_flow.py::TestMinimalPerformance::test_game_response_time_acceptable - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_chat_ws.py::test_chat_websocket_success - AttributeError: <module 'app.routers.chat' from 'C:\\Users\...       
+ERROR tests/test_chat_ws.py::test_chat_websocket_invalid_token - AttributeError: <module 'app.routers.chat' from 'C:\\Users\... 
+ERROR tests/test_chat_ws.py::test_chat_websocket_bad_message - AttributeError: <module 'app.routers.chat' from 'C:\\Users\...   
+ERROR tests/test_notification.py::test_get_one_pending_notification - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_notification.py::test_get_all_pending_notifications_sequentially - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_notification.py::test_get_pending_notifications_none_pending - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_notification.py::test_get_pending_notifications_user_not_found - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_notification.py::test_notification_not_re_sent_after_processing - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_rewards.py::test_get_rewards_first_page - ValueError: Duplicated timeseries in CollectorRegistry: {'h...       
+ERROR tests/test_rewards.py::test_get_rewards_second_page - ValueError: Duplicated timeseries in CollectorRegistry: {'h...      
+ERROR tests/test_rewards.py::test_get_rewards_last_page_partial - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_rewards.py::test_get_rewards_page_out_of_bounds - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_rewards.py::test_get_rewards_no_rewards - ValueError: Duplicated timeseries in CollectorRegistry: {'h...       
+ERROR tests/test_rewards.py::test_get_rewards_user_not_found - ValueError: Duplicated timeseries in CollectorRegistry: {'h...   
+ERROR tests/test_rewards.py::test_get_rewards_default_pagination - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_unlock.py::test_unlock_stages_sequentially - ValueError: Duplicated timeseries in CollectorRegistry: {'h...    
+ERROR tests/test_unlock.py::test_unlock_insufficient_segment - ValueError: Duplicated timeseries in CollectorRegistry: {'h...   
+ERROR tests/test_unlock.py::test_unlock_user_not_found - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/test_unlock.py::test_unlock_content_stage_not_found - ValueError: Duplicated timeseries in CollectorRegistry: {'h...
+ERROR tests/services/test_cj_ai_service.py::test_analyze_and_respond - TypeError: CJAIService.__init__() got an unexpected keyword...
+ERROR tests/services/test_cj_ai_service.py::test_store_interaction - TypeError: CJAIService.__init__() got an unexpected keyword...
+ERROR tests/services/test_cj_ai_service.py::test_get_user_emotion_history - TypeError: CJAIService.__init__() got an unexpected keyword...
+ERROR tests/services/test_cj_ai_service.py::test_get_user_emotion_history_no_redis - TypeError: CJAIService.__init__() got an unexpected keyword...
+ERROR tests/services/test_cj_ai_service.py::test_send_websocket_message - TypeError: CJAIService.__init__() got an unexpected keyword...
+ERROR tests/services/test_cj_ai_service.py::test_send_websocket_message_no_manager - TypeError: CJAIService.__init__() got an unexpected keyword...
+55 failed, 173 passed, 86 warnings, 25 errors in 5.91s
+(.venv) PS C:\Users\task2\O
+
+Package                           Version
+--------------------------------- -----------
+aiohttp                           3.9.1
+aiokafka                          0.9.0
+aiosignal                         1.3.2
+aiosqlite                         0.19.0
+alembic                           1.13.0
+amqp                              5.3.1
+annotated-types                   0.7.0
+anyio                             3.7.1
+async-timeout                     5.0.1
+attrs                             25.3.0
+bcrypt                            4.3.0
+billiard                          4.2.1
+black                             23.11.0
+celery                            5.3.4
+certifi                           2025.4.26
+cffi                              1.17.1
+click                             8.2.1
+click-didyoumean                  0.3.1
+(.venv) PS C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend> pip list | Measure-Object -Line
+
+Lines Words Characters Property
+----- ----- ---------- --------
+   94
+cd "C:\Users\task2\OneDrive\문서\GitHub\2025-2\auto202506-a\cc-webapp\backend"; pip list

@@ -9,6 +9,7 @@ from app.routers import gacha as gacha_router
 
 @pytest.fixture
 def client():
+    from app.main import app
     with TestClient(app) as c:
         yield c
 

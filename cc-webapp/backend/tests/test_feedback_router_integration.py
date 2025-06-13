@@ -8,6 +8,7 @@ from app.schemas import FeedbackResponse
 
 @pytest.fixture
 def client():
+    from app.main import app
     with TestClient(app) as c:
         yield c
 

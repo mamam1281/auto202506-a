@@ -30,6 +30,7 @@ app.dependency_overrides[get_db] = override_get_db
 
 @pytest.fixture
 def client():
+    from app.main import app
     with TestClient(app) as c:
         yield c
 

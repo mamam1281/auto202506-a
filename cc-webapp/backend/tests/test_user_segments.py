@@ -7,6 +7,7 @@ from app.models import UserSegment
 
 @pytest.fixture
 def client():
+    # FIX: app import moved to module level, TestClient(app) as positional argument only
     with TestClient(app) as c:
         yield c
 

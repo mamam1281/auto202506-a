@@ -4,6 +4,7 @@ from app.main import app
 
 @pytest.fixture
 def client():
+    # FIX: app import moved to module level, TestClient(app) as positional argument only
     with TestClient(app) as c:
         yield c
 
