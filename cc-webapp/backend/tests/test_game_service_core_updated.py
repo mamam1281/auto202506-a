@@ -120,7 +120,9 @@ class TestGameServiceDelegation(unittest.TestCase):
         self.mock_slot_service.spin.assert_called_once_with(123, self.mock_db)
         self.assertEqual(result.result, "win")
         self.assertEqual(result.animation, "force_win")
-        self.assertEqual(result.streak, 0)    def test_roulette_spin_number_win(self):
+        self.assertEqual(result.streak, 0)
+        
+    def test_roulette_spin_number_win(self):
         """룰렛 숫자 베팅 승리 테스트."""
         # 모의 결과 설정
         mock_result = MagicMock(spec=RouletteSpinResult)
@@ -149,13 +151,12 @@ class TestGameServiceDelegation(unittest.TestCase):
 
     def test_roulette_spin_color_win(self):
         """룰렛 색상 베팅 승리 테스트."""
-        # 모의 결과 설정
-        mock_result = MagicMock(spec=RouletteSpinResult)
-        mock_result.number = 7
+        # 모의 결과 설정        mock_result = MagicMock(spec=RouletteSpinResult)
+        mock_result.winning_number = 7
         mock_result.result = "win"
-        mock_result.payout = 10  # 5 베팅, 1배 승리
         mock_result.tokens_change = 5  # 5토큰 차감, 10토큰 획득
         mock_result.balance = 105
+        mock_result.animation = "win"
         
         # 모의 서비스 반환값 설정
         self.mock_roulette_service.spin.return_value = mock_result
