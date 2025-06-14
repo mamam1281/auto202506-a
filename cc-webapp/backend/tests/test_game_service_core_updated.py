@@ -151,10 +151,11 @@ class TestGameServiceDelegation(unittest.TestCase):
 
     def test_roulette_spin_color_win(self):
         """룰렛 색상 베팅 승리 테스트."""
-        # 모의 결과 설정        mock_result = MagicMock(spec=RouletteSpinResult)
+        # 모의 결과 설정
+        mock_result = MagicMock(spec=RouletteSpinResult)
         mock_result.winning_number = 7
         mock_result.result = "win"
-        mock_result.tokens_change = 5  # 5토큰 차감, 10토큰 획득
+        mock_result.tokens_change = 5  # 5토큰 차감, 10토큰 획득 = net +5
         mock_result.balance = 105
         mock_result.animation = "win"
         
@@ -173,16 +174,14 @@ class TestGameServiceDelegation(unittest.TestCase):
         # 검증
         self.mock_roulette_service.spin.assert_called_once_with(123, 5, "color", "red", self.mock_db)
         self.assertEqual(result.result, "win")
-        self.assertEqual(result.payout, 10)
         self.assertEqual(result.tokens_change, 5)
 
     def test_roulette_spin_odd_even_win(self):
         """룰렛 홀짝 베팅 승리 테스트."""
         # 모의 결과 설정
         mock_result = MagicMock(spec=RouletteSpinResult)
-        mock_result.number = 22
+        mock_result.winning_number = 22
         mock_result.result = "win"
-        mock_result.payout = 20  # 10 베팅, 1배 승리
         mock_result.tokens_change = 10  # 10토큰 차감, 20토큰 획득
         mock_result.balance = 110
         
@@ -201,16 +200,15 @@ class TestGameServiceDelegation(unittest.TestCase):
         # 검증
         self.mock_roulette_service.spin.assert_called_once_with(123, 10, "odd_even", "even", self.mock_db)
         self.assertEqual(result.result, "win")
-        self.assertEqual(result.payout, 20)
-        self.assertEqual(result.number, 22)
+        self.assertEqual(result.tokens_change, 10)
+        self.assertEqual(result.winning_number, 22)
 
     def test_roulette_spin_zero_lose(self):
         """룰렛 0이 나와서 패배하는 케이스 테스트."""
         # 모의 결과 설정
         mock_result = MagicMock(spec=RouletteSpinResult)
-        mock_result.number = 0
+        mock_result.winning_number = 0
         mock_result.result = "lose"
-        mock_result.payout = 0
         mock_result.tokens_change = -10  # 10토큰 차감
         mock_result.balance = 90
         
@@ -229,8 +227,8 @@ class TestGameServiceDelegation(unittest.TestCase):
         # 검증
         self.mock_roulette_service.spin.assert_called_once_with(123, 10, "color", "red", self.mock_db)
         self.assertEqual(result.result, "lose")
-        self.assertEqual(result.number, 0)
-        self.assertEqual(result.payout, 0)
+        self.assertEqual(result.winning_number, 0)
+        self.assertEqual(result.tokens_change, -10)
         self.assertEqual(result.tokens_change, -10)
 
     def test_roulette_bet_limit(self):
@@ -251,8 +249,8 @@ class TestGameServiceDelegation(unittest.TestCase):
         """가챠 뽑기 위임 테스트."""
         # 모의 결과 설정
         mock_result = MagicMock(spec=GachaPullResult)
-        mock_result.items = ["레어 아이템", "일반 아이템"]
-        mock_result.tokens_spent = 20
+        mock_result.results = ["레어 아이템", "일반 아이템"]
+        mock_result.tokens_change = -20
         mock_result.balance = 80
         
         # 모의 서비스 반환값 설정
@@ -263,8 +261,8 @@ class TestGameServiceDelegation(unittest.TestCase):
         
         # 검증
         self.mock_gacha_service.pull.assert_called_once_with(123, 2, self.mock_db)
-        self.assertEqual(result.items, ["레어 아이템", "일반 아이템"])
-        self.assertEqual(result.tokens_spent, 20)
+        self.assertEqual(result.results, ["레어 아이템", "일반 아이템"])
+        self.assertEqual(result.tokens_change, -20)
         self.assertEqual(result.balance, 80)
 
 

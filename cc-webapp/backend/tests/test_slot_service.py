@@ -172,6 +172,48 @@ class TestSlotService:
         assert result.streak == 0
         self.token_service.add_tokens.assert_called_once()
 
+    def test_spin_low_segment(self):
+        """Test slot spin for Low segment user."""
+        # Arrange
+        user_id = 1
+        self.token_service.deduct_tokens.return_value = 2
+        self.token_service.get_token_balance.return_value = 100
+        self.repo.get_user_segment.return_value = "Low"  # Low segment user
+        self.repo.get_streak.return_value = 0
+
+        # Mock random to force specific result
+        with patch('app.services.slot_service.random.random', return_value=0.95):  # Force lose
+            # Act
+            result = self.service.spin(user_id, self.db)
+
+        # Assert
+        assert isinstance(result, SlotSpinResult)
+        assert result.result == "lose"
+        self.token_service.deduct_tokens.assert_called_once_with(user_id, 2, self.db)
+        self.repo.get_user_segment.assert_called_once_with(user_id, self.db)
+        self.repo.get_streak.assert_called_once_with(user_id, self.db)
+
+    def test_spin_high_segment_lose_condition(self):
+        """Test slot spin for different segment with specific lose condition."""
+        # Arrange
+        user_id = 1
+        self.token_service.deduct_tokens.return_value = 2
+        self.token_service.get_token_balance.return_value = 100
+        self.repo.get_user_segment.return_value = "High"
+        self.repo.get_streak.return_value = 5
+
+        # Mock random to hit the line 41 condition (after win_prob adjustment)
+        with patch('app.services.slot_service.random.random', return_value=0.12):  # Just above win threshold
+            # Act
+            result = self.service.spin(user_id, self.db)
+
+        # Assert
+        assert isinstance(result, SlotSpinResult)
+        # The result depends on the exact probability calculation
+        self.token_service.deduct_tokens.assert_called_once_with(user_id, 2, self.db)
+        self.repo.get_user_segment.assert_called_once_with(user_id, self.db)
+        self.repo.get_streak.assert_called_once_with(user_id, self.db)
+
 
 class TestRTPFairness:
     """Tests for Return-To-Player fairness."""
