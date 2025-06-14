@@ -3,109 +3,39 @@ from typing import Optional
 from sqlalchemy.orm import Session
 
 from ..repositories.game_repository import GameRepository
-from .user_segment_service import UserSegmentService
 from .. import models
 from .slot_service import SlotService, SlotSpinResult
 from .roulette_service import RouletteService, RouletteSpinResult
 from .gacha_service import GachaService, GachaPullResult
 
 
-class SlotSpinResult:
-    def __init__(self, result: str, reward: int, balance: int, streak: int, animation: Optional[str]):
-        self.result = result
-        self.tokens_change = reward - 2
-        self.balance = balance
-        self.streak = streak
-        self.animation = animation
-
-
-
 class GameService:
-
-    def __init__(
-        self,
-        repository: GameRepository | None = None,
-        segment_service: UserSegmentService | None = None,
-    ) -> None:
-        self.repo = repository or GameRepository()
-        self.segment_service = segment_service
-
-    def slot_spin(self, user_id: int, db: Session) -> SlotSpinResult:
-        deduct_tokens(user_id, 2, db)
-
-        segment_service = self.segment_service or UserSegmentService(db)
-        segment = segment_service.get_segment_label(user_id)
-        streak = self.repo.get_streak(user_id)
-
-        base_prob = 0.10 + min(streak * 0.01, 0.05)
-        win_prob = segment_service.adjust_probability(base_prob, segment)
-        jackpot_prob = 0.01
-
-        spin = random.random()
-        result = "lose"
-        reward = 0
-        animation = "lose"
-        if streak >= 7:
-            result = "win"
-            reward = 10
-            animation = "force_win"
-            streak = 0
-        elif spin < jackpot_prob:
-            result = "jackpot"
-            reward = 100
-            animation = "jackpot"
-            streak = 0
-        elif spin < jackpot_prob + win_prob:
-            result = "win"
-            reward = 10
-            animation = "win"
-            streak = 0
-        else:
-            streak += 1
-
-        if reward:
-            add_tokens(user_id, reward, db)
-
-        self.repo.set_streak(user_id, streak)
-        balance = get_balance(user_id, db)
-        self.repo.record_action(db, user_id, "SLOT_SPIN", -2)
-        return SlotSpinResult(result, reward, balance, streak, animation)
-
-    def roulette_spin(self, user_id: int, bet: int, bet_type: str, value: Optional[str], db: Session) -> RouletteSpinResult:
-        bet = max(1, min(bet, 50))
-        deduct_tokens(user_id, bet, db)
-
-        segment_service = self.segment_service or UserSegmentService(db)
-        segment = segment_service.get_segment_label(user_id)
-        house_edge = segment_service.get_house_edge(segment)
-
-        number = random.randint(0, 36)
-        payout = 0
-        result = "lose"
-        animation = "lose"
-
-        if bet_type == "number" and value is not None:
-            if number == int(value):
-                payout = int(bet * 35 * (1 - house_edge))
-        elif bet_type == "color" and value in {"red", "black"}:
-            color_map = {"red": set(range(1, 37, 2)), "black": set(range(2, 37, 2))}
-            if number != 0 and number in color_map[value]:
-                payout = int(bet * (1 - house_edge))
-        elif bet_type == "odd_even" and value in {"odd", "even"}:
-            if number != 0 and (number % 2 == 0) == (value == "even"):
-                payout = int(bet * (1 - house_edge))
-
+    """게임 서비스 클래스: 모든 게임 기능의 통합 인터페이스 제공.
+    
+    위임 패턴을 통해 구체적인 게임 로직은 각 특화된 서비스 클래스에 위임합니다.
+    """
 
     def __init__(self, repository: "GameRepository | None" = None):
+        """게임 서비스 초기화.
+
+        Args:
+            repository: 게임 레포지토리. 없으면 새로 생성됨
+        """
         self.repo = repository or GameRepository()
         self.slot_service = SlotService(self.repo)
         self.roulette_service = RouletteService(self.repo)
         self.gacha_service = GachaService(self.repo)
 
-
-
     def slot_spin(self, user_id: int, db: Session) -> SlotSpinResult:
-        """슬롯 게임 스핀을 실행."""
+        """슬롯 게임 스핀을 실행.
+        
+        Args:
+            user_id: 사용자 ID
+            db: 데이터베이스 세션
+            
+        Returns:
+            SlotSpinResult: 슬롯 스핀 결과
+        """
         return self.slot_service.spin(user_id, db)
 
     def roulette_spin(
@@ -116,10 +46,30 @@ class GameService:
         value: Optional[str],
         db: Session,
     ) -> RouletteSpinResult:
-        """룰렛 게임 스핀 실행."""
+        """룰렛 게임 스핀 실행.
+        
+        Args:
+            user_id: 사용자 ID
+            bet: 베팅 금액
+            bet_type: 베팅 타입(number, color, odd_even)
+            value: 베팅 값
+            db: 데이터베이스 세션
+            
+        Returns:
+            RouletteSpinResult: 룰렛 스핀 결과
+        """
         return self.roulette_service.spin(user_id, bet, bet_type, value, db)
 
     def gacha_pull(self, user_id: int, count: int, db: Session) -> GachaPullResult:
-        """가챠 뽑기 실행."""
+        """가챠 뽑기 실행.
+        
+        Args:
+            user_id: 사용자 ID
+            count: 뽑기 횟수
+            db: 데이터베이스 세션
+            
+        Returns:
+            GachaPullResult: 가챠 뽑기 결과
+        """
         return self.gacha_service.pull(user_id, count, db)
 
