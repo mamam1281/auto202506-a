@@ -92,12 +92,16 @@ class RouletteService:
                     payout = int(bet * 50 * (1 - house_edge))
                     animation = "jackpot"
         elif bet_type == "color" and value in {"red", "black"}:
-            color_map = {"red": set(range(1, 37, 2)), "black": set(range(2, 37, 2))}
+            # 실제 룰렛에서의 색상 매핑
+            red_numbers = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
+            black_numbers = {2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35}
+            
+            color_map = {"red": red_numbers, "black": black_numbers}
             if number != 0 and number in color_map[value]:
-                payout = int(bet * (1 - house_edge))
+                payout = int(bet * 2 * (1 - house_edge))
         elif bet_type == "odd_even" and value in {"odd", "even"}:
             if number != 0 and (number % 2 == 0) == (value == "even"):
-                payout = int(bet * (1 - house_edge))
+                payout = int(bet * 2 * (1 - house_edge))
 
         if payout:
             result = "win" if animation != "jackpot" else "jackpot"
