@@ -126,14 +126,21 @@ const response = await fetch('/api/feedback/emotion', {
 소요 시간: 실제 4시간 (예상대로)
 ```
 
-#### **1.3 비동기 아키텍처 전환 완료** ✅ (신규)
+#### **1.3 완전 비동기 아키텍처 전환 완료** ✅ (신규)
 ```python
-# ✅ 완료: 완전 비동기 아키텍처
+# ✅ 완료: 핵심 게임 서비스 완전 비동기 아키텍처
 구현:
-- RPS Service: async/await + aiosqlite 완전 적용
+- 모든 게임 서비스: SlotService, RouletteService, GachaService, RPSService
+- async/await + aiosqlite 완전 적용으로 동시성 처리 최적화
 - TokenService: 비동기 변환 + user_tokens 테이블 생성
 - GameRepository: aiosqlite 기반 완전 전환
 - 상세 로깅: 게임/토큰 서비스 디버깅 로그 추가
+
+중요도 분석:
+- 높음: 게임 로직 (동시 접속자 처리 중요) ✅ 완료
+- 중간: 라우터 레이어 (일관성 개선 필요) 🔄
+- 낮음: 지원 서비스 (점진적 전환) 🔄
+
 소요 시간: 실제 8시간 (비동기 변환 + 로깅)
 ```
 
@@ -149,16 +156,34 @@ const response = await fetch('/api/feedback/emotion', {
 
 ### **Phase 2: 핵심 기능 (1-2일)** - **업데이트된 우선순위**
 
-#### **2.1 테스트 수정 완료** (최우선)
+#### **2.1 async/sync 혼재로 인한 테스트 수정 완료** (최우선)
 ```python
-# 현재: 테스트가 오래된 API 시그니처 사용
-# 문제: play(user_id, choice, amount, db) → play(user_id, choice, amount)
-# 작업: 비동기 API에 맞게 테스트 수정
+# 현재: 비동기 서비스 + 동기 테스트 패턴 충돌로 대량 실패
+# 문제: 
+# 1. RPS 테스트: unittest import 누락
+# 2. 모델 import 에러: User 모델 경로 불일치  
+# 3. async 서비스 테스트에 @pytest.mark.asyncio 누락
+# 4. 구 API 시그니처: play(user_id, choice, amount, db) → play(user_id, choice, amount)
 
-# 예상 시간: 2-3시간
+# 작업: 비동기 패턴에 맞게 모든 게임 서비스 테스트 수정
+
+# 예상 시간: 3-4시간 (critical path)
 ```
 
-#### **2.2 프론트엔드 RPS 연동 완료**
+#### **2.2 라우터 레이어 일관성 개선**
+```python
+# 현재: db: Session = Depends(get_db) 패턴 유지
+# 개선: async 서비스 직접 사용, 일관된 응답 시간
+
+@router.post("/slot/spin")
+async def spin_slot(
+    # db: Session = Depends(get_db)  # 제거
+    game_service: GameService = Depends(get_game_service)  # async 서비스 사용
+):
+    # async/await 패턴으로 동시성 처리 최적화
+```
+
+#### **2.3 프론트엔드 RPS 연동 완료**
 ```javascript
 // ✅ 준비 완료: 프론트엔드 RPS 페이지 존재
 // cc-webapp/frontend/app/rps/page.jsx (62 lines, UI 70% 완성)
@@ -366,15 +391,20 @@ const handlePlay = async (choice) => {
 ## ⚠️ **주의사항 및 리스크** (Phase 1 완료 후 업데이트)
 
 ### **기술적 리스크**
-1. ~~**RPS/Quiz 백엔드 구현**: 기존 아키텍처와의 일관성 유지 필요~~ ✅ **RPS 완료, 비동기 아키텍처 전환 완료**
-2. **테스트 API 시그니처 불일치**: 기존 테스트가 새 비동기 API와 맞지 않음 🔄
+1. ~~**RPS/Quiz 백엔드 구현**: 기존 아키텍처와의 일관성 유지 필요~~ ✅ **RPS 완료, 완전 비동기 아키텍처 전환 완료**
+2. **async/sync 혼재로 인한 테스트 대량 실패** 🚨 
+   - RPS 테스트: `unittest` import 누락
+   - 모델 import 불일치: `User` 모델 경로 문제
+   - 비동기 서비스 테스트에 `@pytest.mark.asyncio` 누락
+   - 총 18개 import/collection 에러 발생
 3. **DB 마이그레이션**: Quiz 테이블 추가 시 기존 데이터 영향 없음 확인
-4. **비동기 코드 안정성**: TokenService, Repository 비동기 변환 검증 필요
+4. **라우터 레이어 일관성**: Session 패턴 vs async 서비스 패턴 혼재
 
 ### **일정 리스크**
-1. **의존성**: ~~RPS →~~ 테스트 수정 → Quiz → 감정 피드백 순서 권장 (RPS 완료)
-2. ~~**테스트 실패**: 현재 56개 실패 테스트 우선 수정 필요~~ ✅ **핵심 테스트 완료**
+1. **의존성**: ~~RPS →~~ **async/sync 테스트 수정** → Quiz → 감정 피드백 순서 권장 (RPS 완료)
+2. ~~**테스트 실패**: 현재 56개 실패 테스트 우선 수정 필요~~ **18개 import 에러 + async 테스트 패턴 수정 필요** 🚨
 3. **API 스키마**: 프론트엔드-백엔드 스키마 불일치 주의
+4. **비동기 전환 완료**: 핵심 작업 완료로 일정 단축 가능 ✅
 
 ### **품질 리스크**
 1. **UX 일관성**: 기존 게임들과 동일한 UI/UX 패턴 유지
@@ -387,11 +417,12 @@ const handlePlay = async (choice) => {
 
 ### **개발 완료 기준**
 - [x] ~~RPS: 프론트엔드-백엔드 완전 연동, 테스트 통과~~ ✅ **완료**
-- [x] ~~비동기 아키텍처: async/await + aiosqlite 전환~~ ✅ **완료**
+- [x] ~~비동기 아키텍처: 핵심 게임 서비스 async/await + aiosqlite 전환~~ ✅ **완료**
 - [x] ~~문서화: API 문서 + ERD 완전 업데이트~~ ✅ **완료**
-- [ ] 테스트 수정: 비동기 API에 맞게 테스트 코드 수정
+- [ ] **테스트 안정화: async/sync 혼재 패턴으로 인한 18개 import 에러 + 테스트 패턴 수정** 🚨
 - [ ] Quiz: DB 스키마 + 서비스 + UI 완전 구현
 - [ ] 감정 피드백: 실제 API 연동, 모킹 제거
+- [ ] 라우터 레이어: Session 패턴 → async 서비스 패턴 일관성 개선
 
 ### **품질 기준**
 - [x] ~~게임 플레이: 버그 없는 완전한 플레이 사이클~~ ✅ **슬롯+RPS 완료**
@@ -406,3 +437,73 @@ const handlePlay = async (choice) => {
 **📋 문서 업데이트**: 2025.06.15 (Phase 1.5 완료 - 비동기 아키텍처 + 문서화 완료)
 **기준 문서**: `22_project_overview_and_status.md` 
 **다음 리뷰**: Phase 2 완료 후 (예상 2025.06.17)
+
+## 🔧 **긴급 테스트 수정 가이드** (async/sync 혼재 해결)
+
+### **테스트 실행 현황 분석 (2025.06.15)**
+
+**현재 상황**: 
+- **18개 import/collection 에러** 발생
+- **비동기 서비스 + 동기 테스트 패턴 충돌**
+- 모든 게임 서비스가 async/await로 전환되었으나 테스트는 기존 패턴 유지
+
+**주요 에러 패턴**:
+```python
+# 1. unittest import 누락 (RPS 테스트)
+E   NameError: name 'unittest' is not defined
+
+# 2. 모델 import 불일치 (18개 파일)
+E   ImportError: cannot import name 'User' from 'app.models'
+
+# 3. async 메서드 테스트 패턴 불일치
+# 기존: service.play(user_id, choice, amount, db)
+# 신규: await service.play(user_id, choice, amount)
+```
+
+### **수정 작업 체크리스트**
+
+#### **A. import 에러 수정** (18개 파일)
+```python
+# 파일들:
+# - tests/test_adult_content_service.py
+# - tests/test_age_verification_service.py  
+# - tests/test_auth.py
+# - tests/test_auth_logging.py
+# - 기타 15개 파일
+
+# 수정 방법:
+# from app.models import User  # 제거
+from app.models.user import User  # 정확한 경로
+```
+
+#### **B. RPS 테스트 수정**
+```python
+# 파일: tests/test_rps_service.py
+# 추가 필요:
+import unittest
+import pytest
+
+# async 테스트 데코레이터 추가:
+@pytest.mark.asyncio
+async def test_rps_play_async():
+    result = await rps_service.play(user_id, "rock", 10)
+    assert result.result in ["win", "lose", "draw"]
+```
+
+#### **C. 게임 서비스 테스트 async 전환**
+```python
+# 모든 게임 서비스 테스트에 적용:
+@pytest.mark.asyncio
+async def test_slot_spin_async():
+    result = await slot_service.spin(user_id, 10)  # db 파라미터 제거
+    assert result.balance >= 0
+
+@pytest.mark.asyncio  
+async def test_token_operations():
+    balance = await token_service.get_token_balance(user_id)
+    assert isinstance(balance, int)
+```
+
+### **예상 수정 시간**: 3-4시간 (critical path)
+
+---

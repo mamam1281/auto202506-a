@@ -1,5 +1,7 @@
 from typing import Optional
 
+from sqlalchemy.orm import Session
+
 from ..repositories.game_repository import GameRepository
 from .slot_service import SlotService, SlotSpinResult
 from .roulette_service import RouletteService, RouletteSpinResult
@@ -8,27 +10,27 @@ from .rps_service import RPSService, RPSResult
 
 
 class GameService:
-    """게임 서비스 클래스: 모든 게임 기능의 통합 인터페이스 제공 (async/await).
+    """게임 서비스 클래스: 모든 게임 기능의 통합 인터페이스 제공.
     
     위임 패턴을 통해 구체적인 게임 로직은 각 특화된 서비스 클래스에 위임합니다.
-    모든 게임 메서드가 async/await로 통일되었습니다.
+    비동기 게임들은 async 메서드로, 아직 동기인 게임들은 기존 메서드로 제공합니다.
     """
 
-    def __init__(self, repository: Optional[GameRepository] = None, db_path: str = "dev.db"):
+    def __init__(self, repository: "GameRepository | None" = None):
         """게임 서비스 초기화.
 
         Args:
             repository: 게임 레포지토리. 없으면 새로 생성됨
-            db_path: SQLite 데이터베이스 파일 경로
         """
-        self.repo = repository or GameRepository(db_path)
-        self.slot_service = SlotService(self.repo, db_path=db_path)
-        self.roulette_service = RouletteService(self.repo, db_path=db_path)
-        self.gacha_service = GachaService(self.repo, db_path=db_path)
-        self.rps_service = RPSService(self.repo, db_path=db_path)
+        self.repo = repository or GameRepository()
+        self.slot_service = SlotService(self.repo)
+        self.roulette_service = RouletteService(self.repo)
+        self.gacha_service = GachaService(self.repo)
+        self.rps_service = RPSService(self.repo)
 
+    # ✅ 비동기 게임 메서드들 (기술 기준 준수)
     async def slot_spin(self, user_id: int, bet_amount: int) -> SlotSpinResult:
-        """슬롯 머신 스핀 실행 (비동기).
+        """슬롯 게임 스핀을 실행 (비동기).
         
         Args:
             user_id: 사용자 ID
@@ -61,8 +63,7 @@ class GameService:
             
         Returns:
             RPSResult: RPS 게임 결과
-        """
-        return await self.rps_service.play(user_id, choice, bet_amount)
+        """        return await self.rps_service.play(user_id, choice, bet_amount)
 
     async def roulette_spin(
         self,
