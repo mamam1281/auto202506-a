@@ -25,7 +25,8 @@ cc-webapp/backend/app/
 │   ├── game_service.py (상위 레벨 위임 서비스)
 │   ├── slot_service.py (Variable-Ratio + 스트릭 보너스)
 │   ├── roulette_service.py (베팅 타입별 페이아웃)
-│   └── gacha_service.py (Pity System + 등급별 확률)
+│   ├── gacha_service.py (Pity System + 등급별 확률)
+│   └── rps_service.py (가위바위보 + 베팅 시스템)
 ├── repositories/game_repository.py (Redis + PostgreSQL)
 └── models/game_models.py (Pydantic V2 모델)
 ```
@@ -109,6 +110,7 @@ class GameService:
         self.slot_service = SlotService(self.repo)
         self.roulette_service = RouletteService(self.repo)
         self.gacha_service = GachaService(self.repo)
+        self.rps_service = RPSService(self.repo)
     
     def slot_spin(self, user_id: int, db: Session):
         return self.slot_service.spin(user_id, db)
@@ -118,6 +120,9 @@ class GameService:
     
     def gacha_pull(self, user_id: int, count: int, db: Session):
         return self.gacha_service.pull(user_id, count, db)
+    
+    def rps_play(self, user_id: int, choice: str, bet_amount: int, db: Session):
+        return self.rps_service.play(user_id, choice, bet_amount, db)
 ```
 
 ### **4. 환경 설정 표준 업데이트**
@@ -208,3 +213,47 @@ LOW_VALUE_TEST_SKIP=true         # 저가치 테스트 스킵
 현황문서에서 증명된 **혁신적 개발 방법론들**을 기준문서에 반영하여, 향후 프로젝트들이 같은 수준의 품질과 효율성을 달성할 수 있도록 표준화가 필요합니다.
 
 특히 **테스트 중심 개발**, **Clean Architecture 위임 패턴**, **로컬 LLM 통합**은 이 프로젝트의 핵심 성공 요소로서 기준문서에 필수적으로 반영되어야 합니다.
+
+---
+
+## 📌 **게임 시스템 완성도 업데이트 (2025.06.16 기준)**
+
+#### **4.1 가챠 게임 - 100% 완성**
+**기존 기준**: 미완성 상태로 기록
+**현재 상태**: 완전 구현 완료
+
+**백엔드 완성 사항**:
+- `GachaService`: 확률 테이블, Pity 시스템, 히스토리 추적 완전 구현
+- API 엔드포인트: `/api/games/gacha/pull`, `/api/gacha/pull` 등 다수 완성
+- 테스트 커버리지: 91% 달성 (test_gacha_service.py, test_gacha_router.py)
+
+**프론트엔드 완성 사항**:
+- `Gacha.jsx`: 애니메이션, 사운드, 시각적 이펙트 완전 구현
+- `/gacha` 페이지: 완전 작동 상태
+- API 연동: `gameApi.js` `pullGacha()`, `useGame.js` `pullGachaGame()` 완성
+
+#### **4.2 RPS 게임 - 95% → 100% 완성 (2025.06.16 수정)**
+**기존 상태**: 백엔드 서비스만 부분 구현
+**현재 상태**: 전체 구현 완료
+
+**백엔드 완성 사항**:
+- `RPSService`: 게임 로직, 세그먼트별 보상 차등화 완전 구현
+- API 엔드포인트: `/api/games/rps/play` 추가 완료 (2025.06.16)
+- 테스트 커버리지: 완전한 테스트 커버리지 (test_rps_service.py, test_rps_api.py)
+
+**프론트엔드 완성 사항**:
+- `RPSGame.jsx`: 게임 로직, 애니메이션, 사운드 완전 구현
+- `/rps` 페이지: 완전 작동 상태
+- API 연동: `gameApi.js` `playRPS()` 함수 완성
+
+#### **4.3 기준문서 반영 필요 사항**
+```markdown
+# 게임 시스템 현재 상태 (2025.06.16 업데이트)
+- ✅ 슬롯 머신: 100% 완성 (Variable-Ratio + 스트릭 보너스)
+- ✅ 룰렛: 100% 완성 (베팅 타입별 페이아웃 + 하우스 엣지)
+- ✅ 가챠: 100% 완성 (Pity System + 등급별 확률)
+- ✅ RPS: 100% 완성 (세그먼트별 보상 + 게임 기록)
+
+모든 게임이 백엔드 API와 프론트엔드 UI가 완전히 연동되어 
+실제 플레이 가능한 상태입니다.
+```

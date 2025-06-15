@@ -7,6 +7,7 @@ from .. import models
 from .slot_service import SlotService, SlotSpinResult
 from .roulette_service import RouletteService, RouletteSpinResult
 from .gacha_service import GachaService, GachaPullResult
+from .rps_service import RPSService, RPSResult
 
 
 class GameService:
@@ -25,6 +26,7 @@ class GameService:
         self.slot_service = SlotService(self.repo)
         self.roulette_service = RouletteService(self.repo)
         self.gacha_service = GachaService(self.repo)
+        self.rps_service = RPSService(self.repo)
 
     def slot_spin(self, user_id: int, db: Session) -> SlotSpinResult:
         """슬롯 게임 스핀을 실행.
@@ -66,10 +68,23 @@ class GameService:
         Args:
             user_id: 사용자 ID
             count: 뽑기 횟수
-            db: 데이터베이스 세션
-            
+            db: 데이터베이스 세션            
         Returns:
             GachaPullResult: 가챠 뽑기 결과
         """
         return self.gacha_service.pull(user_id, count, db)
+
+    def rps_play(self, user_id: int, choice: str, bet_amount: int, db: Session) -> RPSResult:
+        """RPS (Rock-Paper-Scissors) 게임 플레이.
+        
+        Args:
+            user_id: 사용자 ID
+            choice: 사용자 선택 (rock, paper, scissors)
+            bet_amount: 베팅 금액
+            db: 데이터베이스 세션
+            
+        Returns:
+            RPSResult: RPS 게임 결과
+        """
+        return self.rps_service.play(user_id, choice, bet_amount, db)
 

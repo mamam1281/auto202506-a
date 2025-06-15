@@ -34,6 +34,11 @@ class GachaPullRequest(BaseModel):
     count: int = 1
 
 
+class RPSPlayRequest(BaseModel):
+    choice: str
+    bet_amount: int
+
+
 @router.post("/slot/spin")
 async def spin_slot(
     current_user: User = Depends(get_current_user),
@@ -115,4 +120,31 @@ async def pull_gacha(
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:  # noqa: BLE001
         logging.error("Gacha pull error for user %s: %s", current_user, e)
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+@router.post("/rps/play")
+async def play_rps(
+    request: RPSPlayRequest,
+    current_user: User = Depends(get_current_user),
+    game_service: GameService = Depends(get_game_service),
+    db: Session = Depends(get_db),
+) -> dict:
+    """Play Rock-Paper-Scissors game."""
+    try:
+        user_id = getattr(current_user, "user_id", None)
+        if user_id is None and isinstance(current_user, dict):
+            user_id = current_user.get("user_id")
+        result = game_service.rps_play(int(user_id), request.choice, request.bet_amount, db)
+        return {
+            "user_choice": result.user_choice,
+            "computer_choice": result.computer_choice,
+            "result": result.result,
+            "tokens_change": result.tokens_change,
+            "balance": result.balance,
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:  # noqa: BLE001
+        logging.error("RPS play error for user %s: %s", current_user, e)
         raise HTTPException(status_code=500, detail="Internal server error")
