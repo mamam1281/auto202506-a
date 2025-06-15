@@ -3,7 +3,7 @@
 # from .tracking_service import TrackingService  # 임시 주석 처리
 from .game_service import GameService
 # from .user_segment_service import UserSegmentService  # 임시 주석 처리
-from .slot_service import SlotService
+# from .slot_service import SlotService  # SlotService 삭제됨
 # from .roulette_service import RouletteService  # 임시 주석 처리
 # from .gacha_service import GachaService  # 임시 주석 처리
 from .rps_service import RPSService  # 새로 추가
@@ -33,9 +33,10 @@ __all__ = [
     # "TrackingService", # 임시 주석 처리
     "GameService",
     # "UserSegmentService", # 임시 주석 처리
-    "SlotService",
+    # "SlotService",  # SlotService 삭제됨
     # "RouletteService", # 임시 주석 처리
-    # "GachaService", # 임시 주석 처리    "RPSService",  # 새로 추가
+    # "GachaService", # 임시 주석 처리
+    "RPSService",  # 새로 추가
     # "QuizService"  # 새로 추가 - 임시 주석 처리
 
     # "UserService",

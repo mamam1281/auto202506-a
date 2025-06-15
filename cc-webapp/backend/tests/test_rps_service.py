@@ -1,23 +1,22 @@
-import unittest
-from unittest.mock import Mock, patch
-from sqlalchemy.orm import Session
+import pytest
+from unittest.mock import AsyncMock, Mock, patch
 
 from app.services.rps_service import RPSService, RPSResult
 from app.services.token_service import TokenService
 from app.repositories.game_repository import GameRepository
 
 
-class TestRPSService(unittest.TestCase):
+@pytest.mark.asyncio
+class TestRPSService:
     """RPS (Rock-Paper-Scissors) 서비스 테스트."""
     
-    def setUp(self):
+    def setup_method(self):
         """각 테스트 전에 실행되는 설정."""
-        self.db = Mock(spec=Session)
-        self.token_service = Mock(spec=TokenService)
-        self.repo = Mock(spec=GameRepository)
+        self.token_service = AsyncMock(spec=TokenService)
+        self.repo = AsyncMock(spec=GameRepository)
         self.service = RPSService(repository=self.repo, token_service=self.token_service)
         
-    def test_play_success(self):
+    async def test_play_success(self):
         """정상적인 RPS 게임 플레이 테스트."""
         # Arrange
         user_id = 1
