@@ -10,13 +10,6 @@ from app.services.adult_content_service import (
     STAGE_DETAILS,
     USER_SEGMENT_ACCESS_ORDER
 )
-# Import models directly from models.py file
-import importlib.util
-import os
-_models_spec = importlib.util.spec_from_file_location("app_models", os.path.join(os.path.dirname(os.path.dirname(__file__)), "app", "models.py"))
-_models = importlib.util.module_from_spec(_models_spec)
-_models_spec.loader.exec_module(_models)
-UserSegment, AdultContent, User = _models.UserSegment, _models.AdultContent, _models.User
 
 
 @pytest.fixture
@@ -59,9 +52,10 @@ class TestAdultContentService:
         """Test basic content access level."""
         # Mock age verification to return True
         mock_age_verification_service.is_user_age_verified.return_value = True
-        
-        # Mock user segment query
-        mock_segment = UserSegment(user_id=1, rfm_group="Medium")
+          # Mock user segment query
+        mock_segment = MagicMock()
+        mock_segment.user_id = 1
+        mock_segment.rfm_group = "Medium"
         mock_db.query().filter().first.return_value = mock_segment
         
         result = adult_content_service.get_content_access_level(user_id=1, content_id=101)
