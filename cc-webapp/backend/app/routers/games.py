@@ -18,7 +18,7 @@ def get_game_service() -> GameService:
 
 
 router = APIRouter(
-    prefix="/api/games",
+    prefix="/games",
     tags=["games"],
     responses={401: {"description": "Unauthorized"}},
 )
