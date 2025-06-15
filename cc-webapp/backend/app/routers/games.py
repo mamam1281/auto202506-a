@@ -24,6 +24,10 @@ router = APIRouter(
 )
 
 
+class SlotSpinRequest(BaseModel):
+    bet_amount: int = 10
+
+
 class RouletteSpinRequest(BaseModel):
     bet_type: str
     bet_amount: int
@@ -36,6 +40,7 @@ class GachaPullRequest(BaseModel):
 
 @router.post("/slot/spin")
 async def spin_slot(
+    request: SlotSpinRequest,
     current_user: User = Depends(get_current_user),
     game_service: GameService = Depends(get_game_service),
     db: Session = Depends(get_db),
@@ -45,9 +50,12 @@ async def spin_slot(
         user_id = getattr(current_user, "user_id", None)
         if user_id is None and isinstance(current_user, dict):
             user_id = current_user.get("user_id")
-        result = game_service.slot_spin(int(user_id), db)
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="User ID not found")
+        result = game_service.slot_spin(int(user_id), request.bet_amount, db)
         return {
             "result": result.result,
+            "reels": result.reels,
             "tokens_change": result.tokens_change,
             "balance": result.balance,
             "streak": result.streak,
@@ -72,6 +80,8 @@ async def spin_roulette(
         user_id = getattr(current_user, "user_id", None)
         if user_id is None and isinstance(current_user, dict):
             user_id = current_user.get("user_id")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="User ID not found")
         result = game_service.roulette_spin(
             int(user_id),
             request.bet_amount,
@@ -105,6 +115,8 @@ async def pull_gacha(
         user_id = getattr(current_user, "user_id", None)
         if user_id is None and isinstance(current_user, dict):
             user_id = current_user.get("user_id")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="User ID not found")
         result = game_service.gacha_pull(int(user_id), request.count, db)
         return {
             "results": result.results,

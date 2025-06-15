@@ -24,21 +24,23 @@ class TestSlotService:
         """Test successful slot spin."""
         # Arrange
         user_id = 1
-        self.token_service.deduct_tokens.return_value = 2
+        bet_amount = 10
+        self.token_service.deduct_tokens.return_value = bet_amount
         self.token_service.get_token_balance.return_value = 100
         self.repo.get_user_segment.return_value = "Medium"
         self.repo.get_streak.return_value = 0
         
         # Act
-        result = self.service.spin(user_id, self.db)
+        result = self.service.spin(user_id, bet_amount, self.db)
         
         # Assert
-        self.token_service.deduct_tokens.assert_called_once_with(user_id, 2)
+        self.token_service.deduct_tokens.assert_called_once_with(user_id, bet_amount)
         self.repo.get_user_segment.assert_called_once_with(self.db, user_id)
         self.repo.get_streak.assert_called_once_with(user_id)
         self.repo.record_action.assert_called_once()
         assert isinstance(result, SlotSpinResult)
         assert hasattr(result, 'result')
+        assert hasattr(result, 'reels')
         assert hasattr(result, 'tokens_change')
         assert hasattr(result, 'balance')
         assert hasattr(result, 'streak')
@@ -48,18 +50,20 @@ class TestSlotService:
         """Test slot spin with insufficient tokens."""
         # Arrange
         user_id = 1
+        bet_amount = 10
         self.token_service.deduct_tokens.return_value = None
         
         # Act & Assert
         with pytest.raises(ValueError, match="토큰이 부족합니다"):
-            self.service.spin(user_id, self.db)
+            self.service.spin(user_id, bet_amount, self.db)
 
     @patch('random.random')
     def test_spin_result_win(self, mock_random):
         """Test slot spin with a win result."""
         # Arrange
         user_id = 1
-        self.token_service.deduct_tokens.return_value = 2
+        bet_amount = 10
+        self.token_service.deduct_tokens.return_value = bet_amount
         self.token_service.get_token_balance.return_value = 110
         self.repo.get_user_segment.return_value = "Medium"
         self.repo.get_streak.return_value = 0
@@ -69,11 +73,12 @@ class TestSlotService:
         mock_random.return_value = 0.05
         
         # Act
-        result = self.service.spin(user_id, self.db)
+        result = self.service.spin(user_id, bet_amount, self.db)
         
         # Assert
         assert result.result == "win"
         assert result.tokens_change > 0
+        assert len(result.reels) == 3
         self.token_service.add_tokens.assert_called_once()
 
     @patch('random.random')
@@ -81,7 +86,8 @@ class TestSlotService:
         """Test slot spin with a jackpot result."""
         # Arrange
         user_id = 1
-        self.token_service.deduct_tokens.return_value = 2
+        bet_amount = 10
+        self.token_service.deduct_tokens.return_value = bet_amount
         self.token_service.get_token_balance.return_value = 200
         self.repo.get_user_segment.return_value = "Medium"
         self.repo.get_streak.return_value = 0
@@ -91,11 +97,12 @@ class TestSlotService:
         mock_random.return_value = 0.005
         
         # Act
-        result = self.service.spin(user_id, self.db)
+        result = self.service.spin(user_id, bet_amount, self.db)
         
         # Assert
         assert result.result == "jackpot"
-        assert result.tokens_change >= 98  # 100 - 2 (bet)
+        assert result.tokens_change >= 90  # 100 - 10 (bet)
+        assert len(result.reels) == 3
         self.token_service.add_tokens.assert_called_once()
 
     @patch('random.random')
@@ -103,8 +110,9 @@ class TestSlotService:
         """Test slot spin with a loss result."""
         # Arrange
         user_id = 1
-        self.token_service.deduct_tokens.return_value = 2
-        self.token_service.get_token_balance.return_value = 98
+        bet_amount = 10
+        self.token_service.deduct_tokens.return_value = bet_amount
+        self.token_service.get_token_balance.return_value = 90
         self.repo.get_user_segment.return_value = "Medium"
         self.repo.get_streak.return_value = 0
         
@@ -113,25 +121,27 @@ class TestSlotService:
         mock_random.return_value = 0.5
         
         # Act
-        result = self.service.spin(user_id, self.db)
+        result = self.service.spin(user_id, bet_amount, self.db)
         
         # Assert
         assert result.result == "lose"
-        assert result.tokens_change == -2
+        assert result.tokens_change == -bet_amount
+        assert len(result.reels) == 3
         self.token_service.add_tokens.assert_not_called()
 
     def test_streak_counter_increments_on_loss(self):
         """Test that streak counter increments on loss."""
         # Arrange
         user_id = 1
-        self.token_service.deduct_tokens.return_value = 2
-        self.token_service.get_token_balance.return_value = 98
+        bet_amount = 10
+        self.token_service.deduct_tokens.return_value = bet_amount
+        self.token_service.get_token_balance.return_value = 90
         self.repo.get_user_segment.return_value = "Medium"
         self.repo.get_streak.return_value = 3
         
         with patch('random.random', return_value=0.5):  # Force a loss
             # Act
-            result = self.service.spin(user_id, self.db)
+            result = self.service.spin(user_id, bet_amount, self.db)
             
             # Assert
             assert result.streak == 4
@@ -166,8 +176,7 @@ class TestSlotService:
         # Act
         result = self.service.spin(user_id, self.db)
         
-        # Assert
-        assert result.result == "win"
+        # Assert        assert result.result == "win"
         assert result.animation == "force_win"
         assert result.streak == 0
         self.token_service.add_tokens.assert_called_once()
@@ -176,7 +185,8 @@ class TestSlotService:
         """Test slot spin for Low segment user."""
         # Arrange
         user_id = 1
-        self.token_service.deduct_tokens.return_value = 2
+        bet_amount = 10
+        self.token_service.deduct_tokens.return_value = bet_amount
         self.token_service.get_token_balance.return_value = 100
         self.repo.get_user_segment.return_value = "Low"  # Low segment user
         self.repo.get_streak.return_value = 0
@@ -184,14 +194,14 @@ class TestSlotService:
         # Mock random to force specific result
         with patch('app.services.slot_service.random.random', return_value=0.95):  # Force lose
             # Act
-            result = self.service.spin(user_id, self.db)
+            result = self.service.spin(user_id, bet_amount, self.db)
 
         # Assert
         assert isinstance(result, SlotSpinResult)
         assert result.result == "lose"
-        self.token_service.deduct_tokens.assert_called_once_with(user_id, 2, self.db)
-        self.repo.get_user_segment.assert_called_once_with(user_id, self.db)
-        self.repo.get_streak.assert_called_once_with(user_id, self.db)
+        self.token_service.deduct_tokens.assert_called_once_with(user_id, bet_amount)
+        self.repo.get_user_segment.assert_called_once_with(self.db, user_id)
+        self.repo.get_streak.assert_called_once_with(user_id)
 
     def test_spin_high_segment_lose_condition(self):
         """Test slot spin for different segment with specific lose condition."""

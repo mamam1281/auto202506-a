@@ -10,6 +10,7 @@ from ..repositories.game_repository import GameRepository
 @dataclass
 class SlotSpinResult:
     result: str
+    reels: list[int]
     tokens_change: int
     balance: int
     streak: int
@@ -23,10 +24,10 @@ class SlotService:
         self.repo = repository or GameRepository()
         self.token_service = token_service or TokenService(db or None, self.repo)
 
-    def spin(self, user_id: int, db: Session) -> SlotSpinResult:
+    def spin(self, user_id: int, bet_amount: int, db: Session) -> SlotSpinResult:
         """슬롯 스핀을 실행하고 결과를 반환."""
         # 토큰 차감. 부족하면 ValueError 발생
-        deducted_tokens = self.token_service.deduct_tokens(user_id, 2)
+        deducted_tokens = self.token_service.deduct_tokens(user_id, bet_amount)
         if deducted_tokens is None:
             raise ValueError("토큰이 부족합니다.")
 
@@ -45,18 +46,29 @@ class SlotService:
         result = "lose"
         reward = 0
         animation = "lose"
+        
+        # 릴 결과 생성 (1-9 숫자)
+        reels = [random.randint(1, 9) for _ in range(3)]
+        
         if streak >= 7:
-            # 연패 보상으로 강제 승리
+            # 연패 보상으로 강제 승리 (모든 릴이 같은 숫자)
+            same_number = random.randint(1, 9)
+            reels = [same_number, same_number, same_number]
             result = "win"
             reward = 10
             animation = "force_win"
             streak = 0
         elif spin < jackpot_prob:
+            # 잭팟 (모든 릴이 7)
+            reels = [7, 7, 7]
             result = "jackpot"
             reward = 100
             animation = "jackpot"
             streak = 0
         elif spin < jackpot_prob + win_prob:
+            # 일반 승리 (2개 이상 같은 숫자)
+            same_number = random.randint(1, 9)
+            reels = [same_number, same_number, random.randint(1, 9)]
             result = "win"
             reward = 10
             animation = "win"
@@ -69,5 +81,5 @@ class SlotService:
 
         self.repo.set_streak(user_id, streak)
         balance = self.token_service.get_token_balance(user_id)
-        self.repo.record_action(db, user_id, "SLOT_SPIN", -2)
-        return SlotSpinResult(result, reward - 2, balance, streak, animation)
+        self.repo.record_action(db, user_id, "SLOT_SPIN", -bet_amount)
+        return SlotSpinResult(result, reels, reward - bet_amount, balance, streak, animation)

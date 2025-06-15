@@ -19,14 +19,13 @@ export default function SlotMachine() {
       fetchTokenBalance(accessToken).then(setTokens).catch(() => {});
     }
   }, [accessToken]);
-
   const spin = async () => {
     if (!accessToken) return;
     setSpinning(true);
     try {
       const result = await playSlot(bet, accessToken);
       setReels(result.reels.map((n) => n.toString()));
-      setTokens(result.remaining_tokens);
+      setTokens(result.balance);
     } catch (err) {
       console.error(err);
     } finally {

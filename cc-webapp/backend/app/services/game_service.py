@@ -26,17 +26,18 @@ class GameService:
         self.roulette_service = RouletteService(self.repo)
         self.gacha_service = GachaService(self.repo)
 
-    def slot_spin(self, user_id: int, db: Session) -> SlotSpinResult:
+    def slot_spin(self, user_id: int, bet_amount: int, db: Session) -> SlotSpinResult:
         """슬롯 게임 스핀을 실행.
         
         Args:
             user_id: 사용자 ID
+            bet_amount: 베팅 금액
             db: 데이터베이스 세션
             
         Returns:
             SlotSpinResult: 슬롯 스핀 결과
         """
-        return self.slot_service.spin(user_id, db)
+        return self.slot_service.spin(user_id, bet_amount, db)
 
     def roulette_spin(
         self,
