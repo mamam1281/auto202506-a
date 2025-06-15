@@ -1,12 +1,8 @@
-"""Game state repository with PostgreSQL persistence."""
+"""Game state repository with aiosqlite persistence."""
 
 import logging
+import aiosqlite
 from typing import List
-
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
-
-from .. import models
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +13,10 @@ _gacha_history_cache: dict[int, List[str]] = {}
 
 
 class GameRepository:
-    """Data access layer for game state using DB."""
+    """Data access layer for game state using aiosqlite."""
+
+    def __init__(self, db_path: str = "dev.db"):
+        self.db_path = db_path
 
     def get_streak(self, user_id: int) -> int:
         """Return the current win streak for the user."""
@@ -43,29 +42,55 @@ class GameRepository:
         """Save recent gacha history for the user."""
         _gacha_history_cache[user_id] = history
 
-    def get_user_segment(self, db: Session, user_id: int) -> str:
+    async def get_user_segment(self, user_id: int) -> str:
         """Fetch the user's segment label from the database."""
         try:
-            seg = (
-                db.query(models.UserSegment)
-                .filter(models.UserSegment.user_id == user_id)
-                .first()
-            )
-            return "Low" if seg is None or seg.rfm_group is None else str(seg.rfm_group)
-        except SQLAlchemyError as exc:
+            async with aiosqlite.connect(self.db_path) as conn:
+                # Create table if not exists
+                await conn.execute('''
+                    CREATE TABLE IF NOT EXISTS user_segments (
+                        user_id INTEGER PRIMARY KEY,
+                        rfm_group TEXT DEFAULT 'Medium'
+                    )
+                ''')
+                
+                async with conn.execute(
+                    "SELECT rfm_group FROM user_segments WHERE user_id = ?", 
+                    (user_id,)
+                ) as cursor:
+                    row = await cursor.fetchone()
+                    return row[0] if row else "Medium"
+        except Exception as exc:
             logger.error("Error fetching user segment: %s", exc)
-            db.rollback()
-            return "Low"
+            return "Medium"
 
-    def record_action(self, db: Session, user_id: int, action_type: str, value: float) -> models.UserAction:
+    async def record_action(self, user_id: int, action_type: str, value: float) -> dict:
         """Record a user action in the database."""
-        action = models.UserAction(user_id=user_id, action_type=action_type, value=value)
         try:
-            db.add(action)
-            db.commit()
-            db.refresh(action)
-            return action
-        except SQLAlchemyError as exc:
+            async with aiosqlite.connect(self.db_path) as conn:
+                # Create table if not exists
+                await conn.execute('''
+                    CREATE TABLE IF NOT EXISTS user_actions (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        user_id INTEGER NOT NULL,
+                        action_type TEXT NOT NULL,
+                        value REAL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                ''')
+                
+                await conn.execute(
+                    "INSERT INTO user_actions (user_id, action_type, value) VALUES (?, ?, ?)",
+                    (user_id, action_type, value)
+                )
+                await conn.commit()
+                
+                # Return action info as dict
+                return {
+                    "user_id": user_id,
+                    "action_type": action_type,
+                    "value": value
+                }
+        except Exception as exc:
             logger.error("Failed to record action: %s", exc)
-            db.rollback()
             raise

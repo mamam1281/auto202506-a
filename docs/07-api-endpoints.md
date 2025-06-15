@@ -29,8 +29,17 @@ POST /auth/refresh        - Token refresh
 POST /games/slot/spin     - Slot machine spin
 POST /games/roulette/spin - Roulette spin  
 POST /games/gacha/pull    - Gacha pull
+POST /games/rps/play      - Rock-Paper-Scissors game
 GET  /games/history       - Game history query
 GET  /games/probability   - Probability info query
+```
+
+### Quiz Service (New) 📝
+```
+GET  /api/quiz/list       - Quiz list query
+POST /api/quiz/submit     - Quiz submission and scoring
+GET  /api/quiz/{id}       - Individual quiz query
+POST /api/quiz/create     - Quiz creation (admin)
 ```
 
 ### AI Consultation Service
@@ -82,6 +91,18 @@ POST /tokens/sync         - Head office site token synchronization
 - **Grade-based Probability**: Legendary(5%), Epic(20%), Rare(50%), Common(25%)
 - **Pity System**: Guaranteed within 90 pulls
 - **Duplication Prevention**: 50% reduced probability for owned items
+
+### Rock-Paper-Scissors (RPS) System
+- **Choices**: rock, paper, scissors
+- **Win Logic**: rock beats scissors, paper beats rock, scissors beats paper
+- **Segment-based Rewards**: 
+  - Whale users: 2.5x bet amount on win
+  - Medium users: 2x bet amount on win
+  - Low users: 1.5x bet amount on win
+- **Draw**: Bet amount refunded
+- **Loss**: Bet amount lost
+- **Minimum Bet**: User-defined amount (must have sufficient tokens)
+- **Game Recording**: All games logged to user_actions table
 
 ## 4. Authentication and Security
 
@@ -147,6 +168,29 @@ ws.onmessage = (event) => {
   "reward": 100,
   "streak": 0,
   "message": "Congratulations! You've won 100 tokens!"
+}
+```
+
+### RPS Game Response
+```json
+{
+  "success": true,
+  "data": {
+    "user_choice": "rock",
+    "computer_choice": "scissors", 
+    "result": "win",
+    "tokens_change": 15,
+    "balance": 285
+  },
+  "message": "You won!"
+}
+```
+
+### RPS Game Request
+```json
+{
+  "user_choice": "rock",
+  "bet_amount": 10
 }
 ```
 

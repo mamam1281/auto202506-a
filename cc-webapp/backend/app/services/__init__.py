@@ -7,7 +7,7 @@ from .slot_service import SlotService
 # from .roulette_service import RouletteService  # 임시 주석 처리
 # from .gacha_service import GachaService  # 임시 주석 처리
 from .rps_service import RPSService  # 새로 추가
-from .quiz_service import QuizService  # 새로 추가
+# from .quiz_service import QuizService  # 새로 추가 - 임시 주석 처리
 
 
 # Optionally, make other services available for easier import if structured this way
@@ -35,9 +35,8 @@ __all__ = [
     # "UserSegmentService", # 임시 주석 처리
     "SlotService",
     # "RouletteService", # 임시 주석 처리
-    # "GachaService", # 임시 주석 처리
-    "RPSService",  # 새로 추가
-    "QuizService"  # 새로 추가
+    # "GachaService", # 임시 주석 처리    "RPSService",  # 새로 추가
+    # "QuizService"  # 새로 추가 - 임시 주석 처리
 
     # "UserService",
     # "AuthService",

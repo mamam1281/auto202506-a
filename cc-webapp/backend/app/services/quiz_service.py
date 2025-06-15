@@ -143,11 +143,11 @@ class QuizService:
             question_id = answer_data.get("question_id")
             selected_option_id = answer_data.get("selected_option_id")
             text_answer = answer_data.get("text_answer")
-            
-            question = self.db.query(QuizQuestion).filter(QuizQuestion.id == question_id).first()
+              question = self.db.query(QuizQuestion).filter(QuizQuestion.id == question_id).first()
             if not question:
                 continue
-                  max_score += int(question.points)
+                
+            max_score += int(question.points)
             is_correct = False
             
             if selected_option_id:

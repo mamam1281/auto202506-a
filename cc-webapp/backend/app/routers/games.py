@@ -149,7 +149,7 @@ async def play_rps(
             user_id = current_user.get("user_id")
         if user_id is None:
             raise HTTPException(status_code=401, detail="User ID not found")
-        result = game_service.rps_play(int(user_id), request.choice, request.bet_amount, db)
+        result = await game_service.rps_play(int(user_id), request.choice, request.bet_amount)
         return {
             "user_choice": result.user_choice,
             "computer_choice": result.computer_choice,

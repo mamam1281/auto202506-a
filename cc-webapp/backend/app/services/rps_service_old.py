@@ -21,8 +21,7 @@ class RPSResult:
 
 class RPSService:
     """RPS (Rock-Paper-Scissors) 게임 로직을 담당하는 서비스 계층."""
-    
-    VALID_CHOICES = ["rock", "paper", "scissors"]
+      VALID_CHOICES = ["rock", "paper", "scissors"]
     WINNING_COMBINATIONS = {
         "rock": "scissors",
         "paper": "rock", 
@@ -59,7 +58,6 @@ class RPSService:
 
             # 컴퓨터 선택 (랜덤)
             computer_choice = random.choice(self.VALID_CHOICES)
-            logger.debug(f"Computer choice: {computer_choice}")
             
             # 게임 결과 결정
             if user_choice == computer_choice:
@@ -68,12 +66,8 @@ class RPSService:
                 result = "win"
             else:
                 result = "lose"
-                
-            logger.info(f"Game result: user={user_choice}, computer={computer_choice}, result={result}")
-                
-            # 사용자 세그먼트에 따른 보상 조정 (비동기 버전)
+                  # 사용자 세그먼트에 따른 보상 조정 (비동기 버전)
             segment = await self.repo.get_user_segment(user_id)
-            logger.debug(f"User {user_id} segment: {segment}")
             
             # 토큰 변화량 계산
             tokens_change = 0
@@ -86,24 +80,18 @@ class RPSService:
                 
                 await self.token_service.add_tokens(user_id, reward)
                 tokens_change = reward - bet_amount
-                logger.info(f"User {user_id} won: reward={reward}, net_change={tokens_change}")
             elif result == "draw":
                 # 무승부 시 베팅 금액 환불
                 await self.token_service.add_tokens(user_id, bet_amount)
                 tokens_change = 0
-                logger.info(f"User {user_id} draw: bet refunded")
             else:  # lose
                 # 패배 시 베팅 금액만 잃음
                 tokens_change = -bet_amount
-                logger.info(f"User {user_id} lost: lost={bet_amount}")
 
             # 현재 잔액 조회
-            balance = await self.token_service.get_token_balance(user_id)
-            
-            # 게임 기록 (비동기 버전)
+            balance = await self.token_service.get_token_balance(user_id)            # 게임 기록 (비동기 버전)
             await self.repo.record_action(user_id, "RPS_PLAY", -bet_amount)
-            logger.debug(f"Game action recorded for user {user_id}")
             
-            logger.info(f"RPS game completed: user_id={user_id}, result={result}, tokens_change={tokens_change}, balance={balance}")
+            logger.info(f"RPS game completed: user={user_id}, result={result}, tokens_change={tokens_change}, balance={balance}")
             
             return RPSResult(user_choice, computer_choice, result, tokens_change, balance)
