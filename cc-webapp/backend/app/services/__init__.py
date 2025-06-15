@@ -1,11 +1,13 @@
-from .reward_service import RewardService
-from .notification_service import NotificationService  # Added
-from .tracking_service import TrackingService  # Added
+# from .reward_service import RewardService  # 임시 주석 처리
+# from .notification_service import NotificationService  # 임시 주석 처리  
+# from .tracking_service import TrackingService  # 임시 주석 처리
 from .game_service import GameService
-from .user_segment_service import UserSegmentService
+# from .user_segment_service import UserSegmentService  # 임시 주석 처리
 from .slot_service import SlotService
-from .roulette_service import RouletteService
-from .gacha_service import GachaService
+# from .roulette_service import RouletteService  # 임시 주석 처리
+# from .gacha_service import GachaService  # 임시 주석 처리
+from .rps_service import RPSService  # 새로 추가
+from .quiz_service import QuizService  # 새로 추가
 
 
 # Optionally, make other services available for easier import if structured this way
@@ -26,14 +28,16 @@ from .gacha_service import GachaService
 # from .chat_service import ChatService
 
 __all__ = [
-    "RewardService",
-    "NotificationService", # Added
-    "TrackingService", # Added
+    # "RewardService",  # 임시 주석 처리
+    # "NotificationService", # 임시 주석 처리
+    # "TrackingService", # 임시 주석 처리
     "GameService",
-    "UserSegmentService",
+    # "UserSegmentService", # 임시 주석 처리
     "SlotService",
-    "RouletteService",
-    "GachaService",
+    # "RouletteService", # 임시 주석 처리
+    # "GachaService", # 임시 주석 처리
+    "RPSService",  # 새로 추가
+    "QuizService"  # 새로 추가
 
     # "UserService",
     # "AuthService",

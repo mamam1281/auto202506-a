@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError # Import SQLAlchemyError
 
-from app import models
+from app.models import UserReward
 
 
 class RewardService:
@@ -17,13 +17,13 @@ class RewardService:
         stage_name: str,
         source_description: str,
         awarded_at: datetime = None,
-    ) -> models.UserReward:
+    ) -> UserReward:
         if awarded_at is None:
             awarded_at = datetime.now(timezone.utc)
 
         reward_value = f"{content_id}_{stage_name}"
 
-        db_user_reward = models.UserReward(
+        db_user_reward = UserReward(
             user_id=user_id,
             reward_type="CONTENT_UNLOCK",
             reward_value=reward_value,
