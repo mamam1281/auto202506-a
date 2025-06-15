@@ -37,25 +37,23 @@ class RPSService:
     async def play(self, user_id: int, user_choice: str, bet_amount: int) -> RPSResult:
         """RPS 게임을 플레이하고 결과를 반환."""
         logger.info(f"RPS game started: user_id={user_id}, choice={user_choice}, bet_amount={bet_amount}")
-        
-        # 입력 검증
+          # 입력 검증
         if user_choice not in self.VALID_CHOICES:
             logger.warning(f"Invalid choice from user {user_id}: {user_choice}")
-            raise ValueError("올바르지 않은 선택입니다. rock, paper, scissors 중 하나를 선택하세요.")
+            raise ValueError("Invalid choice. Please select rock, paper, or scissors.")
         
         if bet_amount <= 0:
             logger.warning(f"Invalid bet amount from user {user_id}: {bet_amount}")
-            raise ValueError("베팅 금액은 0보다 커야 합니다.")
+            raise ValueError("Bet amount must be greater than 0.")
         
-        async with aiosqlite.connect(self.db_path) as conn:
-            # 토큰 차감. 부족하면 ValueError 발생
+        async with aiosqlite.connect(self.db_path) as conn:            # 토큰 차감. 부족하면 ValueError 발생
             initial_balance = await self.token_service.get_token_balance(user_id)
             logger.debug(f"User {user_id} initial balance: {initial_balance}, bet: {bet_amount}")
             
             deducted_tokens = await self.token_service.deduct_tokens(user_id, bet_amount)
             if deducted_tokens is None:
                 logger.error(f"Insufficient tokens for user {user_id}: balance={initial_balance}, required={bet_amount}")
-                raise ValueError("토큰이 부족합니다.")
+                raise ValueError("Insufficient tokens")
 
             # 컴퓨터 선택 (랜덤)
             computer_choice = random.choice(self.VALID_CHOICES)
@@ -74,18 +72,20 @@ class RPSService:
             # 사용자 세그먼트에 따른 보상 조정 (비동기 버전)
             segment = await self.repo.get_user_segment(user_id)
             logger.debug(f"User {user_id} segment: {segment}")
-            
-            # 토큰 변화량 계산
+              # 토큰 변화량 계산
             tokens_change = 0
             if result == "win":
-                reward = bet_amount * 2  # 기본 2배 보상
-                if segment == "Whale":
-                    reward = int(bet_amount * 2.5)  # 고래 사용자 2.5배
-                elif segment == "Low":
-                    reward = int(bet_amount * 1.5)  # 저소비 사용자 1.5배
+                base_reward = bet_amount * 2  # 기본 2배 보상
+                multiplier = 2.0  # 기본 배율
                 
+                if segment == "Whale":
+                    multiplier = 3.0  # 고래 사용자 3배 총 보상
+                elif segment == "Low":
+                    multiplier = 1.5  # 저소비 사용자 1.5배 총 보상
+                
+                reward = int(bet_amount * multiplier)
                 await self.token_service.add_tokens(user_id, reward)
-                tokens_change = reward - bet_amount
+                tokens_change = reward - bet_amount  # 실제 순수익
                 logger.info(f"User {user_id} won: reward={reward}, net_change={tokens_change}")
             elif result == "draw":
                 # 무승부 시 베팅 금액 환불

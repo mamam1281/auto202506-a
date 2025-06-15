@@ -3,6 +3,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 
 from ..repositories.game_repository import GameRepository
+from .slot_service import SlotService, SlotSpinResult
 from .roulette_service import RouletteService, RouletteSpinResult
 from .gacha_service import GachaService, GachaPullResult
 from .rps_service import RPSService, RPSResult
@@ -21,9 +22,22 @@ class GameService:
             repository: 게임 레포지토리. 없으면 새로 생성됨
         """
         self.repo = repository or GameRepository()
+        self.slot_service = SlotService(self.repo)
         self.roulette_service = RouletteService(self.repo)
         self.gacha_service = GachaService(self.repo)
         self.rps_service = RPSService(self.repo)
+
+    async def slot_spin(self, user_id: int, bet_amount: int) -> SlotSpinResult:
+        """슬롯 게임 스핀을 실행 (비동기).
+        
+        Args:
+            user_id: 사용자 ID
+            bet_amount: 베팅 금액
+            
+        Returns:
+            SlotSpinResult: 슬롯 스핀 결과
+        """
+        return await self.slot_service.spin(user_id, bet_amount)
 
     def roulette_spin(
         self,
