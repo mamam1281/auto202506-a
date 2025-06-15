@@ -158,7 +158,7 @@ class TestSlotService:
         
         with patch('random.random', return_value=0.05):  # Force a win
             # Act
-            result = self.service.spin(user_id, self.db)
+            result = self.service.spin(user_id, 10, self.db)
             
             # Assert
             assert result.streak == 0
@@ -174,9 +174,10 @@ class TestSlotService:
         self.repo.get_streak.return_value = 7
         
         # Act
-        result = self.service.spin(user_id, self.db)
+        result = self.service.spin(user_id, 10, self.db)
         
-        # Assert        assert result.result == "win"
+        # Assert
+        assert result.result == "win"
         assert result.animation == "force_win"
         assert result.streak == 0
         self.token_service.add_tokens.assert_called_once()
@@ -201,26 +202,25 @@ class TestSlotService:
         assert result.result == "lose"
         self.token_service.deduct_tokens.assert_called_once_with(user_id, bet_amount)
         self.repo.get_user_segment.assert_called_once_with(self.db, user_id)
-        self.repo.get_streak.assert_called_once_with(user_id)
-
-    def test_spin_high_segment_lose_condition(self):
+        self.repo.get_streak.assert_called_once_with(user_id)    def test_spin_high_segment_lose_condition(self):
         """Test slot spin for different segment with specific lose condition."""
         # Arrange
         user_id = 1
-        self.token_service.deduct_tokens.return_value = 2
+        bet_amount = 10
+        self.token_service.deduct_tokens.return_value = bet_amount
         self.token_service.get_token_balance.return_value = 100
         self.repo.get_user_segment.return_value = "High"
         self.repo.get_streak.return_value = 5
-
+        
         # Mock random to hit the line 41 condition (after win_prob adjustment)
         with patch('app.services.slot_service.random.random', return_value=0.12):  # Just above win threshold
             # Act
-            result = self.service.spin(user_id, self.db)
-
+            result = self.service.spin(user_id, bet_amount, self.db)
+        
         # Assert
         assert isinstance(result, SlotSpinResult)
         # The result depends on the exact probability calculation
-        self.token_service.deduct_tokens.assert_called_once_with(user_id, 2, self.db)
+        self.token_service.deduct_tokens.assert_called_once_with(user_id, bet_amount)
         self.repo.get_user_segment.assert_called_once_with(user_id, self.db)
         self.repo.get_streak.assert_called_once_with(user_id, self.db)
 
@@ -256,11 +256,10 @@ class TestRTPFairness:
             return amount
             
         self.token_service.add_tokens.side_effect = add_tokens_side_effect
-        
-        # Simulate many spins
+          # Simulate many spins
         for _ in range(spins):
             total_bets += 2  # Each spin costs 2 tokens
-            self.service.spin(user_id, self.db)
+            self.service.spin(user_id, 2, self.db)
         
         # Calculate RTP (should be around 0.85-0.95 for a fair slot machine)
         rtp = total_returns / total_bets if total_bets > 0 else 0
