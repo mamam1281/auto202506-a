@@ -507,3 +507,58 @@ async def test_token_operations():
 ### **예상 수정 시간**: 3-4시간 (critical path)
 
 ---
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+===================================== short test summary info ===================================== 
+ERROR tests/test_adult_content_service.py
+ERROR tests/test_auth.py - AttributeError: module 'app.models' has no attribute 'User'
+ERROR tests/test_auth_logging.py - AttributeError: module 'app.models' has no attribute 'User'      
+ERROR tests/test_gacha_router.py - AttributeError: module 'app.models' has no attribute 'User'      
+ERROR tests/test_main.py - AttributeError: module 'app.models' has no attribute 'User'
+ERROR tests/test_notification.py - AttributeError: module 'app.models' has no attribute 'User'      
+ERROR tests/test_notification_service.py
+ERROR tests/test_quiz_service.py
+ERROR tests/test_rps_api.py - AttributeError: module 'app.models' has no attribute 'User'
+ERROR tests/test_tracking_service.py - AttributeError: module 'app.models' has no attribute 'SiteVisit'
+ERROR tests/test_user_segments.py - AttributeError: module 'app.models' has no attribute 'User'     
+ERROR tests/routers/test_doc_titles.py - AttributeError: module 'app.models' has no attribute 'User'!!!!!!!!!!!!!!!!!!!!!!!!!!!! Interrupted: 12 errors during collection !!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+============================= 233 tests collected, 12 errors in 4.38s =============================문제가 명확해졌습니다. 주요 이슈들은:
+
+app.models.__init__.py의 순환 import 문제 - 많은 서비스가 app.models에서 모델을 import하려 하지만 이 파일이 빈 상태이거나 순환 import 때문에 문제가 발생합니다.
+구문 오류 - test_notification_service.py에 구문 오류가 있습니다.
+누락된 모델들 - QuizResult 모델이 models.py에 없습니다.
+순서대로 수정하겠습니다:
+
+먼저 app.models.__init__.py 파일을 확인하고 수정하겠습니다:
+
+읽기 __init__.py, 1 줄에서 2 줄까지
+
+app.models.__init__.py
+
+가 비어있습니다. 이를 수정해서 모든 모델을 올바르게 export하도록 하겠습니다:
+
+__init__.py+49-1
+이제 QuizResult 모델이 누락되어 있으므로 models.py에 추가하겠습니다:
+
+읽기 models.py, 20 줄에서 100 줄까지
+
+이제 models.py 파일의 끝에 QuizResult 모델을 추가하겠습니다:
+
+ㄴ 1) 동기화 된 파일들을 전체 비동기화로 리팩토링중
+2) 주요 게임 및 서비스 로직 비동기화로 교체중이지만 어떤 상황인지 모름
+3) 테스트가 동기화된 상태로 남아있어 async/await 패턴과 충돌 발생
+# models.py에 QuizResult 모델 추가
+class QuizResult(Base):
+    __tablename__ = 'quiz_results'
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    score = Column(Integer, default=0)
+    total_questions = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="quiz_results")  
+
+이제 모든 테스트 파일들을 체계적으로 수정하여 app.models에서 직접 import하도록 하겠습니다. 먼저 현재 실패하는 테스트 파일들을 확인해보겠습니다:
+문제가 발생했던 커밋아이디 : 48c2c968a6a750c5e4456c57dfe9375a72036764
+feat: 슬롯 서비스 삭제 및 RPS 서비스 통합; 관련 테스트 케이스 비동기화 및 개선

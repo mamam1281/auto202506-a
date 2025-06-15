@@ -6,7 +6,14 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.services.notification_service import NotificationService
-from app.models import Notification
+# Import models directly from models.py file  
+import sys
+import importlib.util
+spec = importlib.util.spec_from_file_location("models", "app/models.py")
+models = importlib.util.module_from_spec(spec)
+sys.modules["app.models"] = models
+spec.loader.exec_module(models)
+Notification = models.Notification
 
 class TestNotificationService(unittest.TestCase):
 

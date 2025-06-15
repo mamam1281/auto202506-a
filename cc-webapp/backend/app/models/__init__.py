@@ -1,1 +1,51 @@
-# Empty __init__.py to make it a package
+# Import all models from models.py to avoid circular import issues
+from ..models import (
+    Base,
+    User,
+    UserAction, 
+    UserSegment,
+    SiteVisit,
+    InviteCode,
+    UserReward,
+    AdultContent,
+    Notification,
+    FlashOffer,
+    VIPAccessLog,
+    AgeVerificationRecord,
+    GameLog,
+    UserStreak,
+    TokenTransfer,
+    Game,
+    Quiz,
+    QuizQuestion,
+    QuizOption,
+    QuizSession,
+    QuizUserAnswer,
+    QuizResult
+)
+
+# Make all models available when importing from app.models
+__all__ = [
+    "Base",
+    "User",
+    "UserAction", 
+    "UserSegment",
+    "SiteVisit",
+    "InviteCode",
+    "UserReward",
+    "AdultContent",
+    "Notification",
+    "FlashOffer",
+    "VIPAccessLog",
+    "AgeVerificationRecord",
+    "GameLog",
+    "UserStreak",
+    "TokenTransfer",
+    "Game",
+    "Quiz",
+    "QuizQuestion",
+    "QuizOption",
+    "QuizSession",
+    "QuizUserAnswer",
+    "QuizResult"
+]

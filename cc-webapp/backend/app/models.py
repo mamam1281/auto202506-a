@@ -288,6 +288,26 @@ class QuizUserAnswer(Base):
     selected_option = relationship("QuizOption")
 
 
+class QuizResult(Base):
+    __tablename__ = "quiz_results"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    quiz_id = Column(Integer, ForeignKey("quizzes.id"), nullable=False)
+    session_id = Column(Integer, ForeignKey("quiz_sessions.id"), nullable=False)
+    score = Column(Integer, nullable=False, default=0)
+    total_questions = Column(Integer, nullable=False)
+    correct_answers = Column(Integer, nullable=False, default=0)
+    percentage_score = Column(Float, nullable=False, default=0.0)
+    time_spent_seconds = Column(Integer, default=0)
+    completed_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    user = relationship("User", back_populates="quiz_results")
+    quiz = relationship("Quiz")
+    session = relationship("QuizSession")
+
+
 # In User model, add the other side of the relationship if you want two-way population
 # class User(Base):
 #   ...

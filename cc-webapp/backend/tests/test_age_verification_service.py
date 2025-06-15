@@ -3,7 +3,15 @@ from unittest.mock import MagicMock, patch
 from datetime import datetime
 
 from app.services.age_verification_service import AgeVerificationService
-from app.models import User, AgeVerificationRecord
+# Import models directly from models.py file
+import sys
+import importlib.util
+spec = importlib.util.spec_from_file_location("models", "app/models.py")
+models = importlib.util.module_from_spec(spec)
+sys.modules["app.models"] = models
+spec.loader.exec_module(models)
+User = models.User
+AgeVerificationRecord = models.AgeVerificationRecord
 from app.schemas import AgeVerificationRequest # Assuming this is the correct schema name
 
 class TestAgeVerificationService(unittest.TestCase):

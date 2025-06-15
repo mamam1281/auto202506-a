@@ -1,5 +1,14 @@
 from sqlalchemy.orm import Session
-from app.models import User, AgeVerificationRecord
+# Import models directly from models.py file
+import sys
+import importlib.util
+spec = importlib.util.spec_from_file_location("models", "app/models.py") 
+if spec and spec.loader:
+    models = importlib.util.module_from_spec(spec)
+    sys.modules["app.models"] = models
+    spec.loader.exec_module(models)
+    User = models.User
+    AgeVerificationRecord = models.AgeVerificationRecord
 from app.schemas import AgeVerificationRequest # AgeVerificationResponse is not directly used here but good to note
 from datetime import datetime
 from typing import Optional # Added for the commented out method
