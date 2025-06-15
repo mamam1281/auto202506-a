@@ -10,7 +10,13 @@ from app.services.adult_content_service import (
     STAGE_DETAILS,
     USER_SEGMENT_ACCESS_ORDER
 )
-from app.models import UserSegment, AdultContent
+# Import models directly from models.py file
+import importlib.util
+import os
+_models_spec = importlib.util.spec_from_file_location("app_models", os.path.join(os.path.dirname(os.path.dirname(__file__)), "app", "models.py"))
+_models = importlib.util.module_from_spec(_models_spec)
+_models_spec.loader.exec_module(_models)
+UserSegment, AdultContent, User = _models.UserSegment, _models.AdultContent, _models.User
 
 
 @pytest.fixture

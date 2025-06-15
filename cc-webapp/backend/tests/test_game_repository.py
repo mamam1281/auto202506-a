@@ -4,7 +4,13 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.exc import IntegrityError
 from unittest.mock import Mock
 
-from app.models import Base, User, UserAction, UserSegment
+# Import models directly from models.py file
+import importlib.util
+import os
+_models_spec = importlib.util.spec_from_file_location("app_models", os.path.join(os.path.dirname(os.path.dirname(__file__)), "app", "models.py"))
+_models = importlib.util.module_from_spec(_models_spec)
+_models_spec.loader.exec_module(_models)
+Base, User, UserAction, UserSegment = _models.Base, _models.User, _models.UserAction, _models.UserSegment
 from app.repositories.game_repository import GameRepository
 
 # Setup SQLite test database

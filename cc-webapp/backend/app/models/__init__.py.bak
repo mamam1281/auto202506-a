@@ -1,0 +1,30 @@
+"""Models package initialization."""
+
+# Import from parent directory models.py file directly
+import sys
+import os
+parent_dir = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, parent_dir)
+
+# Import from models.py in parent directory
+from models import Base, User, UserAction, UserSegment, InviteCode
+
+# Clean up sys.path
+sys.path.remove(parent_dir)
+# Now import from models.py (not from app.models package)
+import models
+
+# Export the classes
+Base = models.Base
+User = models.User
+UserAction = models.UserAction  
+UserSegment = models.UserSegment
+InviteCode = models.InviteCode
+
+# Quiz models from separate file  
+try:
+    from .quiz import Quiz, QuizQuestion, QuizOption, QuizResult, QuizUserAnswer
+    __all__ = ["Base", "User", "UserAction", "UserSegment", "InviteCode", 
+               "Quiz", "QuizQuestion", "QuizOption", "QuizResult", "QuizUserAnswer"]
+except ImportError:
+    __all__ = ["Base", "User", "UserAction", "UserSegment", "InviteCode"]
