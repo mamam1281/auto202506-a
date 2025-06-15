@@ -1,59 +1,47 @@
-// cc-webapp/frontend/app/page.jsx (example for App Router)
-'use client'; // Required for event handlers and hooks in App Router components
-
-import { useRouter } from 'next/navigation'; // For redirection in App Router
-// Assuming apiClient is configured in utils/apiClient.js
-// import apiClient from '@/utils/apiClient'; // Adjust path if needed
-import axios from 'axios'; // Or use apiClient
+'use client';
+import { useState, useEffect } from 'react';
+import LoginForm from '@/components/LoginForm';
+import TokenDisplay from '@/components/TokenDisplay';
+import GameMenu from '@/components/GameMenu';
+import { fetchTokenBalance } from '@/services/auth';
 
 export default function HomePage() {
-  const router = useRouter();
-  // Placeholder for user_id. In a real app, this would come from auth context/state.
-  const userId = 1;
+  const [accessToken, setAccessToken] = useState(null);
+  const [tokens, setTokens] = useState(null);
 
-  const handleVisitHQ = async () => {
-    try {
-      const payload = { user_id: userId, source: "webapp_hq_button" }; // More specific source
-      // Adjust baseURL if apiClient is not used or not configured for http://localhost:8000
-      // Using direct URL as per subtask instructions for now
-      await axios.post('http://localhost:8000/api/notify/site_visit', payload);
-      console.log('Site visit logged for user:', userId);
-
-      // Redirect to corporate site
-      const corporateSiteUrl = `https://corporate-site.example.com/welcome?userId=${userId}`;
-
-      // For external URLs, direct assignment is often simplest and most reliable.
-      // Using window.location.assign to mimic a click an allow going back to the webapp.
-      // router.push() is more for internal navigation.
-      window.location.assign(corporateSiteUrl);
-
-    } catch (error) {
-      console.error('Failed to log site visit or redirect:', error);
-      // Handle error appropriately in UI if needed, e.g., show a message to the user
-      alert('Could not process your request to visit the HQ site. Please try again later.');
+  useEffect(() => {
+    const stored = localStorage.getItem('accessToken');
+    if (stored) {
+      setAccessToken(stored);
     }
+  }, []);
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchTokenBalance(accessToken).then(setTokens).catch(() => setTokens(null));
+    }
+  }, [accessToken]);
+
+  const handleLoggedIn = (token) => {
+    setAccessToken(token);
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>CC Webapp – Welcome!</h1>
-      {/* Other content for the homepage can go here */}
-      <p>Explore our features and engage with our platform.</p>
-      <button
-        onClick={handleVisitHQ}
-        style={{
-          marginTop: '20px',
-          padding: '10px 15px',
-          cursor: 'pointer',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          fontSize: '16px'
-        }}
-      >
-        Visit HQ Site
-      </button>
+    <div className="min-h-screen flex flex-col bg-gray-900 text-white">
+      <header className="p-4 flex justify-between items-center bg-gray-800 shadow">
+        <h1 className="text-2xl font-bold">Cyber Casino</h1>
+        {accessToken && <TokenDisplay tokens={tokens} />}
+      </header>
+      <main className="flex-grow flex flex-col items-center justify-center p-4">
+        {!accessToken ? (
+          <LoginForm onLoggedIn={handleLoggedIn} />
+        ) : (
+          <GameMenu />
+        )}
+      </main>
+      <footer className="text-center p-4 text-xs text-gray-400 bg-gray-800">
+        &copy; {new Date().getFullYear()} Cyber Casino
+      </footer>
     </div>
   );
 }
