@@ -67,10 +67,9 @@ class TestSlotService:
         self.token_service.get_token_balance.return_value = 110
         self.repo.get_user_segment.return_value = "Medium"
         self.repo.get_streak.return_value = 0
-        
-        # Force a win by setting random to return a value in the win range
-        # Assuming win_prob is ~0.10, we set random to return 0.05
-        mock_random.return_value = 0.05
+          # Force a win by setting random to return a value in the win range
+        # Assuming win_prob is ~0.40, we set random to return 0.30
+        mock_random.return_value = 0.30
         
         # Act
         result = self.service.spin(user_id, bet_amount, self.db)
@@ -91,17 +90,15 @@ class TestSlotService:
         self.token_service.get_token_balance.return_value = 200
         self.repo.get_user_segment.return_value = "Medium"
         self.repo.get_streak.return_value = 0
-        
-        # Force a jackpot by setting random to return a value less than jackpot_prob
-        # Assuming jackpot_prob is 0.01, we set random to return 0.005
-        mock_random.return_value = 0.005
+          # Force a jackpot by setting random to return a value less than jackpot_prob
+        # Assuming jackpot_prob is 0.02, we set random to return 0.01
+        mock_random.return_value = 0.01
         
         # Act
         result = self.service.spin(user_id, bet_amount, self.db)
-        
-        # Assert
+          # Assert
         assert result.result == "jackpot"
-        assert result.tokens_change >= 90  # 100 - 10 (bet)
+        assert result.tokens_change >= 40  # 50 - 10 (bet), jackpot is now 5x bet
         assert len(result.reels) == 3
         self.token_service.add_tokens.assert_called_once()
 
@@ -115,10 +112,9 @@ class TestSlotService:
         self.token_service.get_token_balance.return_value = 90
         self.repo.get_user_segment.return_value = "Medium"
         self.repo.get_streak.return_value = 0
-        
-        # Force a loss by setting random to return a value greater than win_prob
-        # Assuming win_prob + jackpot_prob is ~0.11, we set random to return 0.5
-        mock_random.return_value = 0.5
+          # Force a loss by setting random to return a value greater than win_prob
+        # Assuming win_prob + jackpot_prob is ~0.42, we set random to return 0.8
+        mock_random.return_value = 0.8
         
         # Act
         result = self.service.spin(user_id, bet_amount, self.db)
@@ -202,7 +198,9 @@ class TestSlotService:
         assert result.result == "lose"
         self.token_service.deduct_tokens.assert_called_once_with(user_id, bet_amount)
         self.repo.get_user_segment.assert_called_once_with(self.db, user_id)
-        self.repo.get_streak.assert_called_once_with(user_id)    def test_spin_high_segment_lose_condition(self):
+        self.repo.get_streak.assert_called_once_with(user_id)
+    
+    def test_spin_high_segment_lose_condition(self):
         """Test slot spin for different segment with specific lose condition."""
         # Arrange
         user_id = 1
@@ -221,8 +219,8 @@ class TestSlotService:
         assert isinstance(result, SlotSpinResult)
         # The result depends on the exact probability calculation
         self.token_service.deduct_tokens.assert_called_once_with(user_id, bet_amount)
-        self.repo.get_user_segment.assert_called_once_with(user_id, self.db)
-        self.repo.get_streak.assert_called_once_with(user_id, self.db)
+        self.repo.get_user_segment.assert_called_once_with(self.db, user_id)
+        self.repo.get_streak.assert_called_once_with(user_id)
 
 
 class TestRTPFairness:
@@ -234,17 +232,18 @@ class TestRTPFairness:
         self.token_service = MagicMock(spec=TokenService)
         self.db = MagicMock(spec=Session)
         self.service = SlotService(repository=self.repo, token_service=self.token_service)
-
+    
     def test_rtp_calculation(self):
         """Test RTP calculations match expected values."""
         # This is a statistical test so we simulate many spins
         user_id = 1
+        bet_amount = 10
         total_bets = 0
         total_returns = 0
         spins = 1000
         
         # Setup mocks
-        self.token_service.deduct_tokens.return_value = 2
+        self.token_service.deduct_tokens.return_value = bet_amount
         self.token_service.get_token_balance.return_value = 1000
         self.repo.get_user_segment.return_value = "Medium"
         self.repo.get_streak.return_value = 0
@@ -256,10 +255,11 @@ class TestRTPFairness:
             return amount
             
         self.token_service.add_tokens.side_effect = add_tokens_side_effect
-          # Simulate many spins
+        
+        # Simulate many spins
         for _ in range(spins):
-            total_bets += 2  # Each spin costs 2 tokens
-            self.service.spin(user_id, 2, self.db)
+            total_bets += bet_amount  # Each spin costs bet_amount tokens
+            self.service.spin(user_id, bet_amount, self.db)
         
         # Calculate RTP (should be around 0.85-0.95 for a fair slot machine)
         rtp = total_returns / total_bets if total_bets > 0 else 0

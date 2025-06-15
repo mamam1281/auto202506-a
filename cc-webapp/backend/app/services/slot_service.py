@@ -33,14 +33,14 @@ class SlotService:
 
         segment = self.repo.get_user_segment(db, user_id)
         streak = self.repo.get_streak(user_id)
-
-        # 기본 승리 확률과 잭팟 확률 설정
-        win_prob = 0.10 + min(streak * 0.01, 0.05)
+        
+        # 기본 승리 확률과 잭팟 확률 설정 (RTP ~90% 목표)
+        win_prob = 0.40 + min(streak * 0.01, 0.05)  # 기본 40% 승리 확률
         if segment == "Whale":
-            win_prob += 0.02
+            win_prob += 0.05
         elif segment == "Low":
-            win_prob -= 0.02
-        jackpot_prob = 0.01
+            win_prob -= 0.05
+        jackpot_prob = 0.02  # 잭팟 확률 2%
 
         spin = random.random()
         result = "lose"
@@ -55,14 +55,14 @@ class SlotService:
             same_number = random.randint(1, 9)
             reels = [same_number, same_number, same_number]
             result = "win"
-            reward = 10
+            reward = int(bet_amount * 1.8)  # 베팅 금액의 1.8배
             animation = "force_win"
             streak = 0
         elif spin < jackpot_prob:
             # 잭팟 (모든 릴이 7)
             reels = [7, 7, 7]
             result = "jackpot"
-            reward = 100
+            reward = bet_amount * 5  # 베팅 금액의 5배
             animation = "jackpot"
             streak = 0
         elif spin < jackpot_prob + win_prob:
@@ -70,7 +70,7 @@ class SlotService:
             same_number = random.randint(1, 9)
             reels = [same_number, same_number, random.randint(1, 9)]
             result = "win"
-            reward = 10
+            reward = int(bet_amount * 1.8)  # 베팅 금액의 1.8배
             animation = "win"
             streak = 0
         else:
