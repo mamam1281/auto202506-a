@@ -9,8 +9,17 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.models import Base # Import Base from your models
-target_metadata = Base.metadata # Configure Alembic to use your models' metadata
+# Import Base from your models - models.py contains the Base
+import sys
+import os.path
+sys.path.append(os.path.dirname(__file__) + '/../')
+
+# Import models directly 
+from app import models  # This imports all models and Base
+from sqlalchemy.orm import declarative_base
+
+# Use the Base from models.py
+target_metadata = models.Base.metadata # Configure Alembic to use your models' metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

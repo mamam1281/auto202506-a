@@ -22,12 +22,11 @@ class User(Base):
     segment = relationship("UserSegment", uselist=False, back_populates="user") # One-to-one
     rewards = relationship("UserReward", back_populates="user")
     site_visits = relationship("SiteVisit", back_populates="user")
-    notifications = relationship("Notification", back_populates="user") # Added for Notification
-
-    # Relationships for new models
+    notifications = relationship("Notification", back_populates="user") # Added for Notification    # Relationships for new models
     flash_offers = relationship("FlashOffer", back_populates="user")
     vip_access_logs = relationship("VIPAccessLog", back_populates="user")
     age_verification_records = relationship("AgeVerificationRecord", back_populates="user")
+    quiz_results = relationship("QuizResult", back_populates="user")
 
 class UserAction(Base):
     __tablename__ = "user_actions"
@@ -201,13 +200,92 @@ class Game(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    game_type = Column(String(50), nullable=False)  # slot, roulette, gacha
+    game_type = Column(String(50), nullable=False)  # slot, roulette, gacha, rps, quiz
     bet_amount = Column(Integer, default=0)
     result = Column(String(255), nullable=True)
     payout = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User")
+
+
+class Quiz(Base):
+    __tablename__ = "quizzes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    description = Column(Text, nullable=True)
+    category = Column(String(50), nullable=False)  # e.g., "general", "science", "history"
+    difficulty = Column(String(20), nullable=False)  # "easy", "medium", "hard"
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    questions = relationship("QuizQuestion", back_populates="quiz", cascade="all, delete-orphan")
+
+
+class QuizQuestion(Base):
+    __tablename__ = "quiz_questions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    quiz_id = Column(Integer, ForeignKey("quizzes.id"), nullable=False)
+    question_text = Column(Text, nullable=False)
+    question_type = Column(String(20), nullable=False, default="multiple_choice")  # "multiple_choice", "true_false"
+    points = Column(Integer, default=10)
+    order_index = Column(Integer, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    quiz = relationship("Quiz", back_populates="questions")
+    options = relationship("QuizOption", back_populates="question", cascade="all, delete-orphan")
+    user_answers = relationship("QuizUserAnswer", back_populates="question")
+
+
+class QuizOption(Base):
+    __tablename__ = "quiz_options"
+
+    id = Column(Integer, primary_key=True, index=True)
+    question_id = Column(Integer, ForeignKey("quiz_questions.id"), nullable=False)
+    option_text = Column(Text, nullable=False)
+    is_correct = Column(Boolean, default=False)
+    order_index = Column(Integer, nullable=False)
+
+    question = relationship("QuizQuestion", back_populates="options")
+
+
+class QuizSession(Base):
+    __tablename__ = "quiz_sessions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    quiz_id = Column(Integer, ForeignKey("quizzes.id"), nullable=False)
+    status = Column(String(20), nullable=False, default="in_progress")  # "in_progress", "completed", "abandoned"
+    score = Column(Integer, default=0)
+    total_questions = Column(Integer, nullable=False)
+    correct_answers = Column(Integer, default=0)
+    time_spent_seconds = Column(Integer, default=0)
+    bet_amount = Column(Integer, default=0)
+    reward_amount = Column(Integer, default=0)
+    started_at = Column(DateTime, default=datetime.utcnow)
+    completed_at = Column(DateTime, nullable=True)
+
+    user = relationship("User")
+    quiz = relationship("Quiz")
+    user_answers = relationship("QuizUserAnswer", back_populates="session", cascade="all, delete-orphan")
+
+
+class QuizUserAnswer(Base):
+    __tablename__ = "quiz_user_answers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    session_id = Column(Integer, ForeignKey("quiz_sessions.id"), nullable=False)
+    question_id = Column(Integer, ForeignKey("quiz_questions.id"), nullable=False)
+    selected_option_id = Column(Integer, ForeignKey("quiz_options.id"), nullable=True)
+    is_correct = Column(Boolean, default=False)
+    answered_at = Column(DateTime, default=datetime.utcnow)
+
+    session = relationship("QuizSession", back_populates="user_answers")
+    question = relationship("QuizQuestion", back_populates="user_answers")
+    selected_option = relationship("QuizOption")
 
 
 # In User model, add the other side of the relationship if you want two-way population

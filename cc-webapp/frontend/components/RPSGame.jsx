@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios'; // Or your apiClient
 import { useEmotionFeedback } from '@/hooks/useEmotionFeedback'; // Adjust path if needed
+import { playRPS } from '@/services/gameApi'; // Import RPS API function
 import EmotionFeedback from './EmotionFeedback';
 import useSound from 'use-sound';
 import confetti from 'canvas-confetti';
@@ -57,6 +58,9 @@ export default function RPSGame({ userId = 1 }) {
   const [computerChoice, setComputerChoice] = useState(null); // Stores name
   const [result, setResult] = useState(null); // 'win', 'lose', 'draw', or null
   const [isPlaying, setIsPlaying] = useState(false);
+  const [betAmount, setBetAmount] = useState(10); // Default bet amount
+  const [balance, setBalance] = useState(1000); // User balance (should come from props/context)
+  const [winAmount, setWinAmount] = useState(0);
 
   const [feedback, setFeedback] = useState({ emotion: '', message: '' });
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
@@ -80,58 +84,74 @@ export default function RPSGame({ userId = 1 }) {
     if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
     feedbackTimerRef.current = setTimeout(() => setIsFeedbackVisible(false), duration);
   };
-
   const triggerConfetti = (isWin) => {
     const particleColors = isWin ? ['#00FF00', '#FFFF00', '#00FFFF'] : ['#FF0000', '#C0C0C0'];
     confetti({ particleCount: isWin ? 120 : 60, spread: isWin ? 70 : 40, origin: { y: 0.6 }, zIndex: 1000, colors: particleColors, disableForReducedMotion: true });
   };
-
-  const determineWinner = (pChoiceName, cChoiceName) => {
-    const pChoiceObj = CHOICES.find(c => c.name === pChoiceName);
-    if (pChoiceObj.name === cChoiceName) return 'draw';
-    if (pChoiceObj.beats === cChoiceName) return 'win';
-    return 'lose';
-  };
-
   const handlePlay = async (chosenPlayerChoiceName) => {
-    if (isPlaying) return;
+    if (isPlaying || betAmount > balance) return;
 
     setIsPlaying(true);
     setPlayerChoice(chosenPlayerChoiceName);
     setComputerChoice(null); // Hide computer's previous choice
     setResult(null); // Clear previous result
+    setWinAmount(0);
     setIsFeedbackVisible(false); // Clear previous feedback message
     playChoiceSound();
     showFeedbackTemporarily('determination', `You chose ${chosenPlayerChoiceName}! Computer is thinking...`, 1500);
 
     try {
+      // Log player choice action
       apiClient.post('/actions', {
         user_id: userId, action_type: "RPS_PLAYER_CHOICE",
-        metadata: { choice: chosenPlayerChoiceName, game_id: "classic_rps" },
+        metadata: { choice: chosenPlayerChoiceName, game_id: "classic_rps", bet_amount: betAmount },
         timestamp: new Date().toISOString(),
       }).catch(err => console.error("Failed to log RPS_PLAYER_CHOICE action:", err));
 
-      await new Promise(resolve => setTimeout(resolve, 1300)); // Simulate opponent "thinking"
+      await new Promise(resolve => setTimeout(resolve, 800)); // Shorter wait time
 
-      const compChoiceObj = CHOICES[Math.floor(Math.random() * CHOICES.length)];
-      setComputerChoice(compChoiceObj.name);
+      // Call backend RPS API
+      const token = 'dummy-token'; // In real app, get from auth context
+      const rpsResult = await playRPS(chosenPlayerChoiceName, betAmount, token);
+      
+      // Update state with backend results
+      setComputerChoice(rpsResult.computer_choice);
+      setResult(rpsResult.result); // 'win', 'lose', 'draw'
+      setWinAmount(rpsResult.win_amount || 0);
+      setBalance(rpsResult.new_balance || balance);
 
-      const gameResult = determineWinner(chosenPlayerChoiceName, compChoiceObj.name);
-      setResult(gameResult); // 'win', 'lose', 'draw'
-
-      const actionType = `RPS_${gameResult.toUpperCase()}`; // e.g., RPS_WIN
-      const feedbackResult = await fetchEmotionFeedback(userId, actionType); // Hook returns mocked data
+      // Get emotion feedback
+      const actionType = `RPS_${rpsResult.result.toUpperCase()}`; // e.g., RPS_WIN
+      const feedbackResult = await fetchEmotionFeedback(userId, actionType);
       if (feedbackResult) {
-        showFeedbackTemporarily(feedbackResult.emotion, feedbackResult.message);
+        const message = rpsResult.result === 'win' 
+          ? `${feedbackResult.message} You won ${rpsResult.win_amount} points!`
+          : rpsResult.result === 'lose' 
+          ? `${feedbackResult.message} You lost ${betAmount} points.`
+          : `${feedbackResult.message} It's a draw!`;
+        showFeedbackTemporarily(feedbackResult.emotion, message);
       }
 
-      if (gameResult === 'win') { playWinSound(); triggerConfetti(true); }
-      else if (gameResult === 'lose') { playLoseSound(); /* triggerConfetti(false); */ } // Optional: different confetti for loss
-      else { playDrawSound(); }
+      // Play sounds and effects
+      if (rpsResult.result === 'win') { 
+        playWinSound(); 
+        triggerConfetti(true); 
+      } else if (rpsResult.result === 'lose') { 
+        playLoseSound(); 
+      } else { 
+        playDrawSound(); 
+      }
 
+      // Log game result
       apiClient.post('/actions', {
         user_id: userId, action_type: actionType,
-        metadata: { player_choice: chosenPlayerChoiceName, computer_choice: compChoiceObj.name, result: gameResult },
+        metadata: { 
+          player_choice: chosenPlayerChoiceName, 
+          computer_choice: rpsResult.computer_choice, 
+          result: rpsResult.result,
+          bet_amount: betAmount,
+          win_amount: rpsResult.win_amount || 0
+        },
         timestamp: new Date().toISOString(),
       }).catch(err => console.error(`Failed to log ${actionType} action:`, err));
 
@@ -143,21 +163,26 @@ export default function RPSGame({ userId = 1 }) {
       setTimeout(() => { setIsPlaying(false); }, 1800); // Allow new game after results are shown
     }
   };
-
   const resetGame = () => {
     setPlayerChoice(null);
     setComputerChoice(null);
     setResult(null);
+    setWinAmount(0);
     setIsPlaying(false);
     setIsFeedbackVisible(false);
     if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
   };
 
+  const handleBetChange = (newBet) => {
+    if (newBet > 0 && newBet <= balance) {
+      setBetAmount(newBet);
+    }
+  };
+
   const getChoiceObjectByName = (name) => CHOICES.find(c => c.name === name);
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-800 text-white border-2 border-indigo-700 rounded-xl shadow-2xl text-center max-w-lg mx-auto my-4">
-      <header className="mb-6">
+    <div className="p-4 sm:p-6 bg-gray-800 text-white border-2 border-indigo-700 rounded-xl shadow-2xl text-center max-w-lg mx-auto my-4">      <header className="mb-6">
         <motion.h2
             whileHover={{ scale:1.03, color: '#818cf8' }}
             className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400"
@@ -165,6 +190,39 @@ export default function RPSGame({ userId = 1 }) {
           Rock, Paper, Scissors
         </motion.h2>
         <p className="text-xs sm:text-sm text-gray-400 mt-1">Make your choice to challenge the computer!</p>
+        
+        {/* Balance and Betting UI */}
+        <div className="mt-4 p-3 bg-gray-700 rounded-lg">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-gray-300">Balance:</span>
+            <span className="text-lg font-bold text-green-400">{balance} pts</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-300">Bet Amount:</span>
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={() => handleBetChange(Math.max(5, betAmount - 5))}
+                disabled={isPlaying || betAmount <= 5}
+                className="px-2 py-1 bg-gray-600 hover:bg-gray-500 text-white rounded text-sm disabled:opacity-50"
+              >
+                -
+              </button>
+              <span className="text-lg font-bold text-yellow-400 min-w-[60px] text-center">{betAmount} pts</span>
+              <button 
+                onClick={() => handleBetChange(Math.min(balance, betAmount + 5))}
+                disabled={isPlaying || betAmount >= balance}
+                className="px-2 py-1 bg-gray-600 hover:bg-gray-500 text-white rounded text-sm disabled:opacity-50"
+              >
+                +
+              </button>
+            </div>
+          </div>
+          {winAmount > 0 && (
+            <div className="mt-2 text-center">
+              <span className="text-green-400 font-bold">Won: +{winAmount} pts!</span>
+            </div>
+          )}
+        </div>
       </header>
 
       <div className="mb-4 sm:mb-6 min-h-[80px] sm:min-h-[100px] flex flex-col items-center justify-center">
@@ -181,13 +239,17 @@ export default function RPSGame({ userId = 1 }) {
             {computerChoice ? (getChoiceObjectByName(computerChoice)?.icon) : <ShieldQuestion size="55%" className="opacity-60" />}
           </motion.div>
         </AnimatePresence>
-      </div>
-
-       {playerChoice && (
+      </div>       {playerChoice && (
         <div className="my-3 text-center">
           <p className="text-sm text-gray-400">You chose: <span className={`font-semibold text-lg ${
             result === 'win' ? 'text-green-400' : result === 'lose' ? 'text-red-400' : result === 'draw' ? 'text-yellow-400' : 'text-blue-400'
           }`}>{playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1)}</span></p>
+        </div>
+      )}
+
+      {betAmount > balance && !isPlaying && (
+        <div className="my-3 text-center">
+          <p className="text-sm text-red-400">Insufficient balance! Reduce your bet amount.</p>
         </div>
       )}
 
@@ -199,15 +261,13 @@ export default function RPSGame({ userId = 1 }) {
         }`}>
           {result === 'draw' ? "It's a Draw!" : `You ${result.toUpperCase()}!`}
         </motion.p>
-      )}
-
-      <div className="flex justify-around items-center my-6 sm:my-8 space-x-2 sm:space-x-3">
+      )}      <div className="flex justify-around items-center my-6 sm:my-8 space-x-2 sm:space-x-3">
         {CHOICES.map((choice) => (
           <RPSChoiceButton
             key={choice.name}
             choice={choice}
             onSelect={handlePlay}
-            disabled={isPlaying}
+            disabled={isPlaying || betAmount > balance}
             isPlayerChoice={playerChoice === choice.name}
             isComputerChoice={computerChoice === choice.name}
             gameResult={playerChoice === choice.name ? result : null} // Pass result only if it's player's choice

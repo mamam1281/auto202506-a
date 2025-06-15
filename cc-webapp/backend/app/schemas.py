@@ -12,6 +12,8 @@ class GameType(str, Enum):
     GACHA = "gacha"
     POKER = "poker"
     BLACKJACK = "blackjack"
+    RPS = "rps"
+    QUIZ = "quiz"
 
 class GameCreate(BaseModel):
     name: str
@@ -246,3 +248,157 @@ class FlashOfferActionResponse(BaseModel):
 class FlashOfferPurchaseRequest(BaseModel):
     offer_id: int
     user_id: int
+
+
+# Quiz related schemas
+class QuizDifficulty(str, Enum):
+    EASY = "easy"
+    MEDIUM = "medium"
+    HARD = "hard"
+
+
+class QuizCategory(str, Enum):
+    GENERAL = "general"
+    SCIENCE = "science"
+    HISTORY = "history"
+    SPORTS = "sports"
+    ENTERTAINMENT = "entertainment"
+
+
+class QuizOptionCreate(BaseModel):
+    option_text: str
+    is_correct: bool
+    order_index: int
+
+
+class QuizOptionResponse(BaseModel):
+    id: int
+    option_text: str
+    is_correct: bool = Field(exclude=True)  # Don't reveal correct answer by default
+    order_index: int
+
+    class Config:
+        from_attributes = True
+
+
+class QuizOptionWithAnswer(QuizOptionResponse):
+    is_correct: bool = Field(exclude=False)  # Include correct answer for results
+
+
+class QuizQuestionCreate(BaseModel):
+    question_text: str
+    question_type: str = "multiple_choice"
+    points: int = 10
+    order_index: int
+    options: List[QuizOptionCreate]
+
+
+class QuizQuestionResponse(BaseModel):
+    id: int
+    question_text: str
+    question_type: str
+    points: int
+    order_index: int
+    options: List[QuizOptionResponse]
+
+    class Config:
+        from_attributes = True
+
+
+class QuizQuestionWithAnswers(BaseModel):
+    id: int
+    question_text: str
+    question_type: str
+    points: int
+    order_index: int
+    options: List[QuizOptionWithAnswer]
+
+    class Config:
+        from_attributes = True
+
+
+class QuizCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    category: QuizCategory
+    difficulty: QuizDifficulty
+    questions: List[QuizQuestionCreate]
+
+
+class QuizResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    category: str
+    difficulty: str
+    is_active: bool
+    created_at: datetime
+    questions: List[QuizQuestionResponse]
+
+    class Config:
+        from_attributes = True
+
+
+class QuizListResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    category: str
+    difficulty: str
+    question_count: int
+    is_active: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class QuizSessionStart(BaseModel):
+    quiz_id: int
+    bet_amount: int = 0
+
+
+class QuizSessionResponse(BaseModel):
+    id: int
+    quiz_id: int
+    status: str
+    score: int
+    total_questions: int
+    correct_answers: int
+    time_spent_seconds: int
+    bet_amount: int
+    reward_amount: int
+    started_at: datetime
+    completed_at: Optional[datetime]
+
+    class Config:
+        from_attributes = True
+
+
+class QuizAnswerSubmit(BaseModel):
+    question_id: int
+    selected_option_id: int
+
+
+class QuizAnswerResponse(BaseModel):
+    question_id: int
+    selected_option_id: int
+    is_correct: bool
+    correct_option_id: int
+    points_earned: int
+
+    class Config:
+        from_attributes = True
+
+
+class QuizSessionComplete(BaseModel):
+    session_id: int
+    final_score: int
+    correct_answers: int
+    total_questions: int
+    time_spent_seconds: int
+    reward_amount: int
+    new_balance: int
+
+    class Config:
+        from_attributes = True

@@ -26,3 +26,13 @@ export async function pullGacha(count, token) {
   });
   return data;
 }
+
+export async function playRPS(userChoice, betAmount, token) {
+  const { data } = await api.post('/api/games/rps/play', {
+    choice: userChoice,
+    bet_amount: betAmount
+  }, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return data;
+}
