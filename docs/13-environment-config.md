@@ -1,3 +1,6 @@
+# ⚠️ [중요] Vite(및 cc-webapp-frontend) 기반 프론트엔드는 절대 사용하지 마세요!
+# 반드시 cc-webapp/frontend(Next.js 15+)만 사용해야 하며, Vite 관련 폴더/파일은 모두 폐기 대상입니다.
+
 # 환경 설정 가이드
 
 ## 개요

@@ -9,6 +9,9 @@ echo "🎰 Casino-Club F2P 환경 설정 시작..."
 WORKDIR="${WORKDIR:-$(pwd)}"
 cd "$WORKDIR"
 
+# ⚠️ [중요] Vite(및 cc-webapp-frontend) 기반 프론트엔드는 환경설정/실행에 절대 사용하지 마세요!
+# 반드시 cc-webapp/frontend(Next.js 15+)만 사용해야 하며, Vite 관련 폴더/파일은 모두 폐기 대상입니다.
+
 # === 백엔드 환경 설정 (개선됨) ===
 echo "🔧 백엔드 환경 설정..."
 cd "$WORKDIR/cc-webapp/backend"

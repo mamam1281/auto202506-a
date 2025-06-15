@@ -1,3 +1,6 @@
+# ⚠️ [중요] Vite 기반 프론트엔드(cc-webapp-frontend) 및 관련 파일은 절대 사용하지 마세요!
+# 본 폴더(cc-webapp/frontend)는 Next.js 15+ 기반의 공식 프론트엔드입니다. Vite 관련 폴더/파일은 모두 폐기 대상이며, 혼동 방지를 위해 반드시 Next.js 폴더만 사용하세요!
+
 # CC Webapp - Frontend
 
 This directory contains the Next.js frontend for the CC Webapp.
