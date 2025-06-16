@@ -56,6 +56,33 @@ cc-webapp/backend/app/
 - 환경 변수: LOCAL_LLM_MODEL_PATH, LLM_FALLBACK_ENABLED
 ```
 
+#### **1.4 프론트엔드 아키텍처 통일 완료**
+**기존 문제점**:
+```markdown
+# 중복 프론트엔드 구조
+cc-webapp/frontend/ (Next.js 15)
+cc-webapp-frontend/ (Vite + React 18)
+→ 기술 스택 혼재, 유지보수 복잡성 증가
+```
+
+**해결 완료**:
+```markdown
+# 단일 프론트엔드 구조 확정
+cc-webapp/frontend/ (Next.js 15.3.3)
+├── app/ (App Router 구조)
+│   ├── slots/, roulette/, gacha/, rps/ (4개 게임 페이지)
+│   ├── profile/, adult_content/, quiz/ (사용자 기능)
+├── components/ (완전한 게임 컴포넌트)
+│   ├── SlotMachine.jsx, Gacha.jsx, RPSGame.jsx
+├── utils/apiClient.js (백엔드 API 연동)
+└── styles/ (Tailwind CSS 4.1.8)
+
+# 기술 스택 통일
+- React 19.0.0 (최신)
+- Next.js 15.3.3 + Turbopack
+- 완전한 테스트 환경 (Jest + Cypress)
+```
+
 ### **2. 09-testing-guide.md 업데이트 필요**
 
 #### **2.1 테스트 최적화 전략 공식화**
