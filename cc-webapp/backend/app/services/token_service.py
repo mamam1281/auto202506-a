@@ -56,7 +56,7 @@ class TokenService:
             logger.info(f"Added {amount} tokens to user {user_id}, new balance: {new_balance}")
             return new_balance
             
-        except SQLAlchemyError as exc:
+        except Exception as exc:
             logger.error(f"Failed to add tokens for user {user_id}: {exc}")
             self.db.rollback()
             return self.get_token_balance(user_id)
@@ -95,7 +95,7 @@ class TokenService:
             logger.info(f"Deducted {amount} tokens from user {user_id}, new balance: {new_balance}")
             return new_balance
             
-        except SQLAlchemyError as exc:
+        except Exception as exc:
             logger.error(f"Failed to deduct tokens for user {user_id}: {exc}")
             self.db.rollback()
             return None
@@ -121,21 +121,55 @@ class TokenService:
                 return 0
                 
             balance = getattr(user, 'cyber_token_balance', 0) or 0
+            logger.info(f"Retrieved token balance for user {user_id}: {balance}")
             return balance
             
-        except SQLAlchemyError as exc:
-            logger.error(f"Failed to retrieve token balance for user {user_id}: {exc}")
+        except Exception as exc:
+            logger.error(f"Failed to get token balance for user {user_id}: {exc}")
             return 0
 
-    def reset_token_balance(self, user_id: int) -> int:
+    def validate_token_deduction(self, user_id: int, amount: int) -> bool:
         """
-        Reset a user's token balance to zero in the database.
+        Validate if a user has sufficient tokens for deduction.
 
         Args:
             user_id (int): User's unique identifier
+            amount (int): Number of tokens to validate
 
         Returns:
-            int: Reset token balance (always 0)
+            bool: True if user has sufficient tokens, False otherwise
+        """
+        current_balance = self.get_token_balance(user_id)
+        return current_balance >= amount
+
+    def get_transaction_history(self, user_id: int, limit: int = 10) -> list:
+        """
+        Get token transaction history for a user.
+        
+        Note: This is a placeholder implementation. 
+        In a real system, you would have a separate transaction log table.
+
+        Args:
+            user_id (int): User's unique identifier
+            limit (int): Maximum number of transactions to return
+
+        Returns:
+            list: List of transaction records
+        """
+        # Placeholder implementation
+        logger.info(f"Transaction history requested for user {user_id} (limit: {limit})")
+        return []
+
+    def reset_tokens(self, user_id: int, new_balance: int = 0) -> int:
+        """
+        Reset a user's token balance to a specific amount.
+
+        Args:
+            user_id (int): User's unique identifier
+            new_balance (int): New token balance to set
+
+        Returns:
+            int: Updated token balance
         """
         if not self.db:
             logger.error("Database session not available")
@@ -147,14 +181,14 @@ class TokenService:
                 logger.error(f"User {user_id} not found")
                 return 0
                 
-            setattr(user, 'cyber_token_balance', 0)
+            setattr(user, 'cyber_token_balance', new_balance)
             self.db.commit()
             self.db.refresh(user)
             
-            logger.info(f"Reset token balance for user {user_id}")
-            return 0
+            logger.info(f"Reset tokens for user {user_id} to {new_balance}")
+            return new_balance
             
-        except SQLAlchemyError as exc:
-            logger.error(f"Failed to reset token balance for user {user_id}: {exc}")
+        except Exception as exc:
+            logger.error(f"Failed to reset tokens for user {user_id}: {exc}")
             self.db.rollback()
-            return 0
+            return self.get_token_balance(user_id)

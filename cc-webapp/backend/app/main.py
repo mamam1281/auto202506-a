@@ -49,7 +49,8 @@ from app.routers import (
     actions,  # 추가
     corporate,  # 추가
     users,  # 추가
-    recommendation  # 추가된 임포트
+    recommendation,  # 추가된 임포트
+    doc_titles  # 추가
 )
 
 # --- Sentry Initialization (Placeholder - should be configured properly with DSN) ---
@@ -148,6 +149,7 @@ app.include_router(actions.router, prefix="/api")  # 추가
 app.include_router(corporate.router, prefix="/api")  # 추가
 app.include_router(users.router, prefix="/api")  # 추가
 app.include_router(recommendation.router, prefix="/api")  # 추가된 라우터 등록
+app.include_router(doc_titles.router)  # prefix 없이 등록하여 /docs/titles 직접 접근 가능
 
 
 # Request/Response Models
