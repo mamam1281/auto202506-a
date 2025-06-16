@@ -17,6 +17,7 @@ class TestRouletteService:
         """Setup test environment before each test."""
         self.repo = MagicMock(spec=GameRepository)
         self.token_service = MagicMock(spec=TokenService)
+        self.token_service.db = None  # Add db attribute to mock
         self.db = MagicMock(spec=Session)
         self.service = RouletteService(repository=self.repo, token_service=self.token_service)
         
@@ -242,6 +243,7 @@ class TestRoulettePayouts:
         """Setup for payout tests."""
         self.repo = MagicMock(spec=GameRepository)
         self.token_service = MagicMock(spec=TokenService)
+        self.token_service.db = None  # Add db attribute to mock
         self.db = MagicMock(spec=Session)
         self.service = RouletteService(repository=self.repo, token_service=self.token_service)
         

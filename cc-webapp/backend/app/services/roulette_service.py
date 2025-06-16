@@ -28,7 +28,7 @@ class RouletteService:
 
     def __init__(self, repository: GameRepository | None = None, token_service: TokenService | None = None, db: Optional[Session] = None) -> None:
         self.repo = repository or GameRepository()
-        self.token_service = token_service or TokenService(db or None, self.repo)
+        self.token_service = token_service or TokenService(db, self.repo)
 
     def spin(
         self,
@@ -38,6 +38,10 @@ class RouletteService:
         value: Optional[str],
         db: Session,
     ) -> RouletteSpinResult:
+        """룰렛 스핀을 실행하고 결과를 반환."""
+        # DB 세션을 TokenService에 설정
+        if not self.token_service.db:
+            self.token_service.db = db
         """룰렛 스핀을 실행하고 결과를 반환한다.
 
         Parameters

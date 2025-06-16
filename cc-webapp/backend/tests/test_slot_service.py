@@ -12,13 +12,14 @@ from app.services.token_service import TokenService
 
 class TestSlotService:
     """Tests for the SlotService class."""
-
+    
     def setup_method(self):
         """Setup test environment before each test."""
         self.repo = MagicMock(spec=GameRepository)
         self.token_service = MagicMock(spec=TokenService)
+        self.token_service.db = MagicMock(spec=Session)  # DB 속성 추가
         self.db = MagicMock(spec=Session)
-        self.service = SlotService(repository=self.repo, token_service=self.token_service)
+        self.service = SlotService(repository=self.repo, token_service=self.token_service, db=self.db)
 
     def test_spin_success(self):
         """Test successful slot spin."""
@@ -184,14 +185,11 @@ class TestSlotService:
         # Mock random to force specific result
         with patch('app.services.slot_service.random.random', return_value=0.95):  # Force lose
             # Act
-            result = self.service.spin(user_id, self.db)
-
-        # Assert
-        assert isinstance(result, SlotSpinResult)
+            result = self.service.spin(user_id, self.db)        # Assert        assert isinstance(result, SlotSpinResult)
         assert result.result == "lose"
-        self.token_service.deduct_tokens.assert_called_once_with(user_id, 2, self.db)
-        self.repo.get_user_segment.assert_called_once_with(user_id, self.db)
-        self.repo.get_streak.assert_called_once_with(user_id, self.db)
+        self.token_service.deduct_tokens.assert_called_once_with(user_id, 2)
+        self.repo.get_user_segment.assert_called_once_with(self.db, user_id)
+        self.repo.get_streak.assert_called_once_with(user_id)
 
     def test_spin_high_segment_lose_condition(self):
         """Test slot spin for different segment with specific lose condition."""
@@ -207,12 +205,11 @@ class TestSlotService:
             # Act
             result = self.service.spin(user_id, self.db)
 
-        # Assert
-        assert isinstance(result, SlotSpinResult)
+        # Assert        assert isinstance(result, SlotSpinResult)
         # The result depends on the exact probability calculation
-        self.token_service.deduct_tokens.assert_called_once_with(user_id, 2, self.db)
-        self.repo.get_user_segment.assert_called_once_with(user_id, self.db)
-        self.repo.get_streak.assert_called_once_with(user_id, self.db)
+        self.token_service.deduct_tokens.assert_called_once_with(user_id, 2)
+        self.repo.get_user_segment.assert_called_once_with(self.db, user_id)
+        self.repo.get_streak.assert_called_once_with(user_id)
 
 
 class TestRTPFairness:
@@ -222,6 +219,7 @@ class TestRTPFairness:
         """Setup test environment for RTP tests."""
         self.repo = MagicMock(spec=GameRepository)
         self.token_service = MagicMock(spec=TokenService)
+        self.token_service.db = MagicMock(spec=Session)  # DB 속성 추가
         self.db = MagicMock(spec=Session)
         self.service = SlotService(repository=self.repo, token_service=self.token_service)
 

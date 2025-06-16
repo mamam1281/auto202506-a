@@ -21,10 +21,14 @@ class SlotService:
 
     def __init__(self, repository: GameRepository | None = None, token_service: TokenService | None = None, db: Optional[Session] = None) -> None:
         self.repo = repository or GameRepository()
-        self.token_service = token_service or TokenService(db or None, self.repo)
+        self.token_service = token_service or TokenService(db, self.repo)
 
     def spin(self, user_id: int, db: Session) -> SlotSpinResult:
         """슬롯 스핀을 실행하고 결과를 반환."""
+        # DB 세션을 TokenService에 설정
+        if not self.token_service.db:
+            self.token_service.db = db
+            
         # 토큰 차감. 부족하면 ValueError 발생
         deducted_tokens = self.token_service.deduct_tokens(user_id, 2)
         if deducted_tokens is None:

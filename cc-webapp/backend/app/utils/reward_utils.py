@@ -111,23 +111,26 @@ def spin_gacha(user_id: int, db: Session) -> dict:
     The caller (e.g., an /api/actions endpoint for GACHA_SPIN) is responsible for:
     1. Deducting gacha cost (if any).
     2. Recording the gacha result as a UserReward.
-    3. If CONTENT_UNLOCK is the result, the frontend should then be prompted to call /api/unlock.
-    """
+    3. If CONTENT_UNLOCK is the result, the frontend should then be prompted to call /api/unlock.    """
     choices, weights = zip(*[(item, item["weight"]) for item in GACHA_ITEMS_POOL])
     chosen_item_template = random.choices(choices, weights=weights, k=1)[0]
 
     item_type = chosen_item_template["item_type"]
     details = chosen_item_template["details"]
-
-    gacha_result = {"user_id": user_id}
+    
+    gacha_result: dict = {"user_id": user_id}
 
     if item_type == "COIN":
         amount = random.randint(details["min_amount"], details["max_amount"])
-        gacha_result.update({"type": "COIN", "amount": amount, "message": f"You won {amount} coins!"})
+        gacha_result["type"] = "COIN"
+        gacha_result["amount"] = amount
+        gacha_result["message"] = f"You won {amount} coins!"
         logger.info(f"Gacha result for user {user_id}: {amount} COINs.")
     elif item_type == "BADGE":
         badge_name = details["badge_name"]
-        gacha_result.update({"type": "BADGE", "badge_name": badge_name, "message": f"You won the '{badge_name}' badge!"})
+        gacha_result["type"] = "BADGE"
+        gacha_result["badge_name"] = badge_name
+        gacha_result["message"] = f"You won the '{badge_name}' badge!"
         logger.info(f"Gacha result for user {user_id}: BADGE '{badge_name}'.")
     elif item_type == "CONTENT_UNLOCK":
         stage_to_potentially_unlock = details["stage"]
@@ -139,7 +142,7 @@ def spin_gacha(user_id: int, db: Session) -> dict:
         ).order_by(desc(models.UserReward.awarded_at)).first() # Or by int value of stage
 
         last_stage_unlocked = 0
-        if latest_unlock_reward and latest_unlock_reward.reward_value:
+        if latest_unlock_reward and hasattr(latest_unlock_reward, 'reward_value') and latest_unlock_reward.reward_value:
             try:
                 last_stage_unlocked = int(latest_unlock_reward.reward_value)
             except ValueError: # Should not happen if reward_value for CONTENT_UNLOCK is always int string
@@ -149,15 +152,21 @@ def spin_gacha(user_id: int, db: Session) -> dict:
         if stage_to_potentially_unlock <= last_stage_unlocked:
             # User already unlocked this or a higher stage, give fallback COIN reward
             fallback_coins = random.randint(10, 30)
-            gacha_result.update({"type": "COIN", "amount": fallback_coins, "message": f"You already unlocked stage {stage_to_potentially_unlock} or higher! Here's {fallback_coins} coins instead."})
+            gacha_result["type"] = "COIN"
+            gacha_result["amount"] = fallback_coins
+            gacha_result["message"] = f"You already unlocked stage {stage_to_potentially_unlock} or higher! Here's {fallback_coins} coins instead."
             logger.info(f"Gacha result for user {user_id}: CONTENT_UNLOCK for stage {stage_to_potentially_unlock} (already unlocked or surpassed). Awarding fallback {fallback_coins} COINs.")
         else:
             # User won a new content unlock stage. Frontend should be informed to call /api/unlock.
             # The /api/unlock endpoint will verify segment eligibility.
-            gacha_result.update({"type": "CONTENT_UNLOCK", "stage": stage_to_potentially_unlock, "message": f"Congratulations! You've won a chance to unlock new content (Stage {stage_to_potentially_unlock})!"})
+            gacha_result["type"] = "CONTENT_UNLOCK"
+            gacha_result["stage"] = stage_to_potentially_unlock
+            gacha_result["message"] = f"Congratulations! You've won a chance to unlock new content (Stage {stage_to_potentially_unlock})!"
             logger.info(f"Gacha result for user {user_id}: CONTENT_UNLOCK for stage {stage_to_potentially_unlock}.")
     else: # Should not happen if GACHA_ITEMS_POOL is well-defined
         logger.error(f"spin_gacha: User {user_id}, unknown item_type '{item_type}' from GACHA_ITEMS_POOL.")
-        gacha_result.update({"type": "COIN", "amount": 1, "message": "Here's a small consolation prize."}) # Default consolation
+        gacha_result["type"] = "COIN"
+        gacha_result["amount"] = 1
+        gacha_result["message"] = "Here's a small consolation prize." # Default consolation
 
     return gacha_result
