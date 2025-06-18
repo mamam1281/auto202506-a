@@ -60,29 +60,29 @@
 ### ✅ **Button Components**
 ```
 Primary Button Set:
-- [ ] btn-primary-default (컴포넌트 생성)
-- [ ] btn-primary-hover (Variant 추가)
-- [ ] btn-primary-active (Variant 추가)
-- [ ] btn-primary-disabled (Variant 추가)
+- [✅] btn-primary-default (컴포넌트 생성)
+- [✅] btn-primary-hover (Variant 추가)
+- [✅] btn-primary-active (Variant 추가)
+- [✅] btn-primary-disabled (Variant 추가)
 
 Properties 설정:
-- [ ] State: Default/Hover/Active/Disabled
-- [ ] Size: Small/Medium/Large
-- [ ] Icon: True/False
+- [✅] State: Default/Hover/Active/Disabled
+- [✅] Size: Small/Medium/Large
+- [✅] Icon: True/False
 ```
 
-### ✅ **Input Components**
+### ✅ **Input Components**bvb
 ```
 Input Component Set:
-- [ ] input-text-default
-- [ ] input-text-focus (네온 아웃라인)
-- [ ] input-text-error
-- [ ] input-password (눈 아이콘 토글)
+- [✅] input-text-default
+- [✅] input-text-focus (네온 아웃라인)
+- [✅] input-text-error
+- [✅] input-password (눈 아이콘 토글)
 
 Properties:
-- [ ] State: Default/Focus/Error/Disabled
-- [ ] Type: Text/Password/Search
-- [ ] Icon: True/False
+- [✅] State: Default/Focus/Error/Disabled
+- [✅] Type: Text/Password/Search
+- [✅] Icon: True/False
 ```
 
 ### ✅ **Card Components**
