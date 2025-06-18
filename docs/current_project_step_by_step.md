@@ -1,12 +1,20 @@
 # 🎯 현재 프로젝트 단계별 개선 가이드 (초보자용)
 
-## 📍 **현재 상황 파악**
+## 📍 **현재 상황 파악 (2025.06.18 최신 업데이트)**
 
 ### **지금 우리가 가진 것들**
-- ✅ **SlotMachine.jsx** - 슬롯머신 게임 (90% 완성)
-- ✅ **백엔드 API** - 서버 (80% 완성)
-- ❌ **토큰 시스템** - 포인트 표시 (아직 없음)
-- ❌ **CJ AI** - 챗봇 (아직 없음)
+- ✅ **완성된 백엔드**: 274개 테스트 100% 통과, 80% 서비스 커버리지
+- ✅ **4개 게임 완전 구현**: 슬롯, 룰렛, 가챠, RPS (100% DB 연동)
+- ✅ **Next.js 프론트엔드**: 모든 게임 페이지 구현 완료
+- ✅ **토큰 시스템**: 실제 DB 기반 완전 구현
+- ✅ **CJ AI 서비스**: 기본 구조 완성
+- 🔄 **진행중**: 프론트엔드 카드 컴포넌트 시스템 설계
+
+### **최근 완료된 작업들 (2025.06.18)**
+- ✅ **백엔드 테스트 커버리지 개선**: 5개 모듈 100% 달성
+- ✅ **테스트 품질 향상**: 70개 새로운 테스트 케이스 추가
+- ✅ **서비스 안정성**: 전체 커버리지 75% → 80% 향상
+- 🎨 **카드 컴포넌트 설계**: 재사용 가능한 UI 컴포넌트 4종 설계
 
 ---
 
@@ -99,70 +107,66 @@ SlotMachine 컴포넌트 맨 마지막 부분
 
 ---
 
-## 🏃‍♂️ **Step 4: 색깔 프로젝트에 맞게 바꾸기 (30분)**
+## 🚀 **Step 4: 카드 컴포넌트 시스템 구현하기 (5시간)** **(신규 2025.06.18)**
 
 ### **뭘 하는 건가요?**
-지금 색깔들을 프로젝트 테마에 맞게 통일하기
+게임, 미션, 보상 등을 보여주는 예쁜 카드들을 만드는 것
 
-### **바꿀 색깔들**
-```jsx
-// 현재 → 바꿀 색깔
+### **어디에 만들까요?**
+`cc-webapp/frontend/components/cards/` 폴더
 
-'border-purple-700' → 'border-indigo-500'
-'from-green-500'    → 'from-indigo-500' 
-'to-teal-500'       → 'to-purple-500'
-'text-yellow-300'   → 'text-amber-400'
+### **만들어야 할 파일들**
+```
+components/
+├── cards/
+│   ├── CardBase.jsx      // 기본 카드
+│   ├── CardGame.jsx      // 게임 카드
+│   ├── CardMission.jsx   // 미션 카드
+│   └── CardReward.jsx    // 보상 카드
 ```
 
-### **어떻게 바꾸나요?**
-1. **Ctrl + F** 눌러서 찾기 창 열기
-2. **'border-purple-700'** 검색
-3. **'border-indigo-500'**로 바꾸기
-4. 다른 색깔들도 같은 방식으로
+### **각 카드의 기능**
+- **CardGame**: 게임 선택용 (슬롯, 룰렛, 가챠, RPS)
+- **CardMission**: 일일/주간 미션 표시
+- **CardReward**: 보상 수령 카드
+- **CardBase**: 범용 카드 (다른 용도)
+
+### **사용 예시**
+```jsx
+// 메인 페이지에서 이렇게 사용
+<CardGame 
+  gameType="slots"
+  title="슬롯머신"
+  description="행운을 시험해보세요!"
+  onPlay={() => router.push('/slots')}
+/>
+```
 
 ---
 
-## 🏃‍♂️ **Step 5: 다른 페이지 추가하기 (하루)**
+## 🔧 **Step 5: 백엔드 테스트 커버리지 향상 (지속적)** **(신규 2025.06.18)**
 
 ### **뭘 하는 건가요?**
-슬롯머신 말고 다른 게임들도 만들기
+코드의 품질을 높이기 위해 테스트를 더 많이 작성하는 것
 
-### **만들 페이지들**
-1. **대시보드** (메인 화면)
-2. **룰렛 게임**
-3. **설정 페이지**
+### **현재 진행상황**
+- ✅ **완료**: 5개 모듈 100% 커버리지 달성
+- 🔄 **진행중**: adult_content_service.py (68% → 100% 목표)
+- 📋 **대기중**: token_service.py, user_service.py, cj_ai_service.py
 
-### **대시보드 만들기**
-새 파일: `components/Dashboard.jsx`
-```jsx
-export default function Dashboard() {
-  return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-3xl font-bold text-white text-center">
-        게임 센터
-      </h1>
-      
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-gray-800 p-4 rounded-lg border border-indigo-500">
-          <h3 className="text-white text-lg">슬롯머신</h3>
-          <p className="text-gray-400 text-sm">운을 시험해보세요!</p>
-          <button className="mt-2 bg-indigo-500 text-white px-4 py-2 rounded">
-            플레이
-          </button>
-        </div>
-        
-        <div className="bg-gray-800 p-4 rounded-lg border border-indigo-500">
-          <h3 className="text-white text-lg">룰렛</h3>
-          <p className="text-gray-400 text-sm">숫자를 맞춰보세요!</p>
-          <button className="mt-2 bg-indigo-500 text-white px-4 py-2 rounded">
-            준비중
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+### **어떤 도구를 사용하나요?**
+```bash
+# 커버리지 확인
+python -m pytest --cov=app.services --cov-report=term-missing
+
+# 특정 서비스 테스트
+python -m pytest tests/test_adult_content_service.py -v
 ```
+
+### **왜 중요한가요?**
+- 🛡️ **안정성**: 버그를 미리 잡을 수 있음
+- 📈 **품질**: 코드의 신뢰성 향상
+- 🚀 **개발 속도**: 수정 시 빠른 검증 가능
 
 ---
 
