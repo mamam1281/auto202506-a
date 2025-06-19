@@ -1,0 +1,65 @@
+/* Skeleton 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.skeleton {
+  background-color: var(--color-slate-700);
+  display: block;
+}
+
+/* === 모양별 스타일 === */
+.skeleton.text {
+  border-radius: var(--radius-sm);
+  height: 1rem;
+}
+
+.skeleton.rectangular {
+  border-radius: var(--radius-button);
+}
+
+.skeleton.circular {
+  border-radius: var(--radius-full);
+}
+
+/* === 애니메이션 === */
+.skeleton.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.skeleton.wave {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton.wave::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: wave 1.6s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

@@ -1,0 +1,42 @@
+/* Separator 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.separator {
+  background-color: var(--color-slate-600);
+  border: none;
+}
+
+/* === 방향별 스타일 === */
+.separator.horizontal {
+  width: 100%;
+  height: 1px;
+}
+
+.separator.vertical {
+  width: 1px;
+  height: 100%;
+}
+
+/* === 크기별 스타일 === */
+.separator.horizontal.sm {
+  height: 1px;
+}
+
+.separator.horizontal.md {
+  height: 1px;
+}
+
+.separator.horizontal.lg {
+  height: 2px;
+}
+
+.separator.vertical.sm {
+  width: 1px;
+}
+
+.separator.vertical.md {
+  width: 1px;
+}
+
+.separator.vertical.lg {
+  width: 2px;
+}

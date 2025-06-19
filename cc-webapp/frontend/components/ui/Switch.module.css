@@ -1,0 +1,88 @@
+/* Switch 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--color-slate-600);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-ease-out);
+  outline: none;
+}
+
+/* === 크기별 스타일 === */
+.switch.sm {
+  width: 32px;
+  height: 18px;
+}
+
+.switch.md {
+  width: 44px;
+  height: 24px;
+}
+
+.switch.lg {
+  width: 56px;
+  height: 30px;
+}
+
+/* === 썸 === */
+.thumb {
+  position: absolute;
+  background-color: white;
+  border-radius: var(--radius-full);
+  transition: transform var(--duration-fast) var(--easing-ease-out);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.switch.sm .thumb {
+  width: 14px;
+  height: 14px;
+  top: 2px;
+  left: 2px;
+}
+
+.switch.md .thumb {
+  width: 20px;
+  height: 20px;
+  top: 2px;
+  left: 2px;
+}
+
+.switch.lg .thumb {
+  width: 26px;
+  height: 26px;
+  top: 2px;
+  left: 2px;
+}
+
+/* === 체크된 상태 === */
+.switch.checked {
+  background-color: var(--color-neon-blue);
+}
+
+.switch.sm.checked .thumb {
+  transform: translateX(14px);
+}
+
+.switch.md.checked .thumb {
+  transform: translateX(20px);
+}
+
+.switch.lg.checked .thumb {
+  transform: translateX(26px);
+}
+
+/* === 비활성 상태 === */
+.switch.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* === 포커스 상태 === */
+.switch:focus-visible {
+  outline: 2px solid var(--color-neon-blue);
+  outline-offset: 2px;
+}

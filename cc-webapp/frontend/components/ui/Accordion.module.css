@@ -1,0 +1,53 @@
+/* Accordion 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.accordion {
+  width: 100%;
+  border: 1px solid var(--color-slate-600);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.item {
+  border-bottom: 1px solid var(--color-slate-600);
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4);
+  background-color: var(--color-slate-800);
+  border: none;
+  color: var(--color-slate-200);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--easing-ease-out);
+  text-align: left;
+}
+
+.trigger:hover {
+  background-color: var(--color-slate-700);
+}
+
+.icon {
+  transition: transform var(--duration-fast) var(--easing-ease-out);
+  font-size: var(--font-size-xs);
+}
+
+.trigger.open .icon {
+  transform: rotate(180deg);
+}
+
+.content {
+  padding: var(--spacing-4);
+  background-color: var(--color-slate-900);
+  color: var(--color-slate-300);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}

@@ -1,0 +1,29 @@
+/* Form 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.form {
+  width: 100%;
+}
+
+.field {
+  margin-bottom: var(--spacing-4);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--spacing-1);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-slate-200);
+}
+
+.required {
+  color: var(--color-error);
+  margin-left: var(--spacing-0-5);
+}
+
+.error {
+  display: block;
+  margin-top: var(--spacing-1);
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+}

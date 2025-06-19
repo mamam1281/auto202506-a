@@ -1,0 +1,221 @@
+/* ContextMenu 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.contextMenuTrigger {
+  position: relative;
+  display: inline-block;
+}
+
+.triggerContent {
+  width: 100%;
+  height: 100%;
+}
+
+.contextMenu {
+  position: fixed;
+  z-index: var(--z-modal, 30);
+  min-width: 200px;
+  
+  background: var(--color-primary-charcoal, #2d2d2d);
+  border: 1px solid var(--color-neutral-dark-gray, #333333);
+  border-radius: var(--radius-lg, 8px);
+  
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px);
+  
+  padding: var(--spacing-1, 8px);
+  
+  animation: contextMenuEnter 0.15s ease-out;
+}
+
+@keyframes contextMenuEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.menuItem {
+  position: relative;
+  border-radius: var(--radius-base, 4px);
+  transition: all 0.15s var(--ease-out-cubic, cubic-bezier(0.33, 1, 0.68, 1));
+  cursor: pointer;
+  user-select: none;
+}
+
+.menuItem:hover:not(.disabled) {
+  background: rgba(123, 41, 205, 0.1);
+}
+
+.menuItem.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.menuItem.danger:hover:not(.disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error, #ef4444);
+}
+
+.itemContent {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-1-5, 6px) var(--spacing-2, 16px);
+  gap: var(--spacing-2, 16px);
+  min-height: 32px;
+}
+
+.itemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: var(--font-size-sm, 14px);
+  flex-shrink: 0;
+}
+
+.itemLabel {
+  flex: 1;
+  font-family: var(--font-family-sans, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--color-neutral-white, #ffffff);
+  line-height: 1.4;
+}
+
+.itemShortcut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--spacing-0-5, 2px);
+  background: var(--color-neutral-dark-gray, #333333);
+  border-radius: var(--radius-sm, 2px);
+  font-family: var(--font-family-mono, 'Fira Code', monospace);
+  font-size: 10px;
+  color: var(--color-neutral-gray, #9CA3AF);
+  font-weight: var(--font-weight-medium, 500);
+  flex-shrink: 0;
+}
+
+.submenuArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--color-neutral-gray, #9CA3AF);
+  font-size: var(--font-size-sm, 14px);
+  flex-shrink: 0;
+}
+
+.submenu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  z-index: var(--z-modal, 30);
+  min-width: 180px;
+  margin-left: var(--spacing-1, 8px);
+  
+  background: var(--color-primary-charcoal, #2d2d2d);
+  border: 1px solid var(--color-neutral-dark-gray, #333333);
+  border-radius: var(--radius-lg, 8px);
+  
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px);
+  
+  padding: var(--spacing-1, 8px);
+  
+  animation: submenuEnter 0.1s ease-out;
+}
+
+@keyframes submenuEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.separator {
+  height: 1px;
+  background: var(--color-neutral-dark-gray, #333333);
+  margin: var(--spacing-1, 8px) 0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-overlay, 20);
+  background: transparent;
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .contextMenu {
+    min-width: 160px;
+    padding: var(--spacing-0-5, 2px);
+  }
+  
+  .itemContent {
+    padding: var(--spacing-1, 8px) var(--spacing-1-5, 6px);
+    gap: var(--spacing-1-5, 6px);
+    min-height: 40px;
+  }
+  
+  .itemLabel {
+    font-size: var(--font-size-sm, 14px);
+  }
+  
+  .submenu {
+    min-width: 140px;
+    margin-left: var(--spacing-0-5, 2px);
+  }
+}
+
+/* 접근성 */
+@media (prefers-reduced-motion: reduce) {
+  .contextMenu,
+  .submenu {
+    animation: none;
+  }
+  
+  .menuItem {
+    transition: none;
+  }
+}
+
+/* 터치 최적화 */
+.contextMenuTrigger {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menuItem {
+  min-height: 44px;
+}
+
+@media (hover: none) {
+  .menuItem:hover {
+    background: transparent;
+  }
+  
+  .menuItem:active:not(.disabled) {
+    background: rgba(123, 41, 205, 0.1);
+  }
+  
+  .menuItem.danger:active:not(.disabled) {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-error, #ef4444);
+  }
+}

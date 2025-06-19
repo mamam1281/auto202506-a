@@ -1,0 +1,48 @@
+/* Textarea 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px 16px;
+  background-color: var(--color-slate-800);
+  border: 1px solid var(--color-slate-600);
+  border-radius: var(--radius-button);
+  color: var(--color-slate-200);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  transition: all var(--duration-fast) var(--easing-ease-out);
+  outline: none;
+}
+
+.textarea:focus {
+  border-color: var(--color-neon-blue);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.textarea::placeholder {
+  color: var(--color-slate-400);
+}
+
+.textarea.disabled {
+  background-color: var(--color-slate-700);
+  color: var(--color-slate-500);
+  cursor: not-allowed;
+}
+
+/* === 크기 조절 설정 === */
+.textarea.none {
+  resize: none;
+}
+
+.textarea.vertical {
+  resize: vertical;
+}
+
+.textarea.horizontal {
+  resize: horizontal;
+}
+
+.textarea.both {
+  resize: both;
+}
