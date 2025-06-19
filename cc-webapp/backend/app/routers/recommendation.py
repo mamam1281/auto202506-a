@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, Field, validator # Ensure all are imported
+from pydantic import BaseModel, Field, field_validator # Ensure all are imported
 
 from ..emotion_models import EmotionResult, SupportedEmotion, SupportedLanguage
 from ..services.recommendation_service import RecommendationService
@@ -25,10 +25,9 @@ class PersonalizedRecommendationRequest(BaseModel):
     user_id: int
     current_emotion_data: Dict[str, Any]
     context: Optional[Dict[str, Any]] = None
-    limit: int = Field(default=5, gt=0, le=20)
-
-    @validator('current_emotion_data', pre=True, always=True) # always=True if it can be default
-    def parse_emotion_data(cls, v_dict, values): # Changed v to v_dict for clarity
+    limit: int = Field(default=5, gt=0, le=20)    @field_validator('current_emotion_data', mode='before')
+    @classmethod
+    def parse_emotion_data(cls, v_dict): # Removed values parameter as it's not needed in V2
         if not v_dict: # Handle case where current_emotion_data might be optional or empty
             raise ValueError("current_emotion_data must be provided")
         # This validator is intended to ensure the input dict is valid for EmotionResult instantiation

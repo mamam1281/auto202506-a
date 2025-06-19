@@ -1,6 +1,6 @@
 """Pydantic schemas for FastAPI request/response models."""
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List, Dict, Union
 from enum import Enum
 from datetime import datetime
@@ -30,6 +30,8 @@ class GameUpdate(BaseModel):
     is_active: Optional[bool] = None
 
 class GameResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     name: str
     type: GameType
@@ -41,10 +43,9 @@ class GameResponse(BaseModel):
     created_at: datetime
     updated_at: Optional[datetime]
 
-    class Config:
-        from_attributes = True
-
 class GameHistoryResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     user_id: int
     game_id: int
@@ -52,10 +53,9 @@ class GameHistoryResponse(BaseModel):
     result: Dict
     created_at: datetime
 
-    class Config:
-        from_attributes = True
-
 class GameStatsResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     game_id: int
     total_plays: int
     total_wins: int
@@ -65,9 +65,6 @@ class GameStatsResponse(BaseModel):
     total_payouts: Optional[int]
     most_active_hour: Optional[int]
     updated_at: datetime
-
-    class Config:
-        from_attributes = True
 
 # Adult content related schemas
 class AdultContentStageBase(BaseModel):

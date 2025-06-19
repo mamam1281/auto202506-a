@@ -40,12 +40,12 @@
 ### ✅ **타이포그래피 설정**
 ```
 1. Text Styles 생성
-- [✅ ] H1/32px/Bold (-0.02em)
+- [✅] H1/32px/Bold (-0.02em)
 - [✅] H2/24px/SemiBold (-0.01em)
-- [✅ ] H3/20px/SemiBold
-- [✅ ] Body/16px/Regular (1.5 line-height)
-- [✅ ] Caption/14px/Medium (1.4 line-height)
-- [✅ ] Token-Number/16px/JetBrains Mono
+- [✅] H3/20px/SemiBold
+- [✅] Body/16px/Regular (1.5 line-height)
+- [✅] Caption/14px/Medium (1.4 line-height)
+- [✅] Token-Number/16px/JetBrains Mono
 ```
 
 ### ✅ **간격 시스템 & 그리드**

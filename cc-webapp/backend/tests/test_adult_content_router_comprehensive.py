@@ -24,30 +24,46 @@ from app.schemas import (
 
 @pytest.fixture
 def app():
-    """테스트용 FastAPI 앱"""
+    """테스트용 FastAPI 앱 - 의존성 오버라이드 포함"""
     app = FastAPI()
     app.include_router(router)
     return app
 
 
 @pytest.fixture  
-def client(app):
-    """테스트 클라이언트"""
-    return TestClient(app)
+def mock_db():
+    """Mock DB 세션"""
+    return Mock(spec=Session)
 
 
 @pytest.fixture
-def mock_auth_user():
-    """인증된 사용자 모킹"""
-    return 123
+def mock_adult_content_service():
+    """Mock AdultContentService"""
+    return Mock()
 
 
 @pytest.fixture
-def override_auth(mock_auth_user):
-    """인증 의존성 오버라이드"""
-    async def mock_get_current_user_id():
-        return mock_auth_user
-    return mock_get_current_user_id
+def mock_token_service():
+    """Mock TokenService"""
+    return Mock()
+
+
+@pytest.fixture
+def client(app, mock_adult_content_service, mock_token_service, mock_db):
+    """테스트 클라이언트 - 의존성 오버라이드 설정"""
+    from app.routers.adult_content import get_adult_content_service, get_token_service, get_current_user_id, get_db
+    
+    # 의존성 오버라이드
+    app.dependency_overrides[get_current_user_id] = lambda: 123
+    app.dependency_overrides[get_adult_content_service] = lambda: mock_adult_content_service
+    app.dependency_overrides[get_token_service] = lambda: mock_token_service
+    app.dependency_overrides[get_db] = lambda: mock_db
+    
+    client = TestClient(app)
+    yield client
+    
+    # 테스트 후 정리
+    app.dependency_overrides.clear()
 
 
 class TestAdultContentRouterAuth:
@@ -84,24 +100,35 @@ class TestContentPreviewEndpoint:
         # Mock 설정
         mock_auth.return_value = 123
         mock_service = Mock()
-        mock_service.get_gallery_for_user.return_value = {
-            "stages": [
-                {"stage": 1, "title": "Basic", "unlocked": True},
-                {"stage": 2, "title": "Premium", "unlocked": False}
-            ],
-            "total_stages": 2
-        }
+        
+        # 실제 서비스 메서드에 맞게 수정
+        from app.schemas import ContentPreviewResponse
+        mock_preview = ContentPreviewResponse(
+            id=1,
+            title="Test Content",
+            preview_data={"thumbnail": "https://example.com/thumb.jpg"},
+            unlock_requirements={"min_level": 1, "tokens": 100},
+            preview_url="https://example.com/preview.jpg",
+            current_stage_accessed=1
+        )
+        
+        # get_content_preview를 async로 mock
+        async def mock_get_content_preview(content_id, user_id):
+            return mock_preview
+            
+        mock_service.get_content_preview = mock_get_content_preview
         mock_service_dep.return_value = mock_service
         
-        # 테스트 실행
-        response = client.get("/v1/adult/content/preview", 
+        # 테스트 실행 - 올바른 URL 사용
+        response = client.get("/v1/adult/1/preview", 
                             headers={"Authorization": "Bearer valid_token"})
         
         # 검증
         assert response.status_code == 200
         data = response.json()
-        assert "stages" in data
-        assert len(data["stages"]) == 2
+        assert data["id"] == 1
+        assert data["title"] == "Test Content"
+        assert "preview_data" in data
 
     @patch('app.routers.adult_content.get_current_user_id')
     @patch('app.routers.adult_content.get_adult_content_service')
