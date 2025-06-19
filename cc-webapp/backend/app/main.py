@@ -1,18 +1,18 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
+class _DummyScheduler:
+    running = False
+
+    def shutdown(self, wait: bool = False) -> None:  # noqa: D401
+        """No-op shutdown when scheduler is unavailable."""
+
 try:
     from .apscheduler_jobs import start_scheduler, scheduler
 except Exception:  # noqa: BLE001
 
     def start_scheduler():
         print("Scheduler disabled or APScheduler not installed")
-
-    class _DummyScheduler:
-        running = False
-
-        def shutdown(self, wait: bool = False) -> None:  # noqa: D401
-            """No-op shutdown when scheduler is unavailable."""
 
     scheduler = _DummyScheduler()
 try:
