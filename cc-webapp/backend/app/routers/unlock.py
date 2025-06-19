@@ -59,10 +59,8 @@ async def attempt_content_unlock(
     latest_unlock_reward = db.query(models.UserReward).filter(
         models.UserReward.user_id == user_id,
         models.UserReward.reward_type == "CONTENT_UNLOCK"
-    ).order_by(desc(models.UserReward.awarded_at)).first() # Order by awarded_at to get the latest
-
-    last_stage_unlocked = 0
-    if latest_unlock_reward and latest_unlock_reward.reward_value:
+    ).order_by(desc(models.UserReward.awarded_at)).first() # Order by awarded_at to get the latest    last_stage_unlocked = 0
+    if latest_unlock_reward is not None and getattr(latest_unlock_reward, 'reward_value', None) is not None:
         try:
             # Assuming reward_value stores the stage number as a string
             last_stage_unlocked = int(str(latest_unlock_reward.reward_value))

@@ -37,9 +37,31 @@ class GachaPullResponseItem(BaseModel):
     stage: Union[int, None] = None       # For CONTENT_UNLOCK type
     badge_name: Union[str, None] = None  # For BADGE type
     message: Union[str, None] = None     # Optional message from spin_gacha logic
+    
+    # Pydantic validators for type conversion
+    @classmethod
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+    
+    def __init__(self, **data):
+        # Convert string values to appropriate types
+        if 'amount' in data and data['amount'] is not None:
+            if isinstance(data['amount'], str):
+                try:
+                    data['amount'] = int(data['amount'])
+                except (ValueError, TypeError):
+                    data['amount'] = None
+        
+        if 'stage' in data and data['stage'] is not None:
+            if isinstance(data['stage'], str):
+                try:
+                    data['stage'] = int(data['stage'])
+                except (ValueError, TypeError):
+                    data['stage'] = None
+                    
+        super().__init__(**data)
 
     class Config:
-
         # Pydantic V2 uses ``from_attributes``. This is not strictly needed
         # here as we are creating from a dict, but is good practice if the
         # source dict could be an ORM model.
@@ -77,11 +99,13 @@ async def pull_gacha_for_user(
     if hasattr(result, 'results') and len(result.results) > 1:
         # results가 더 복잡한 구조일 수 있음
         pass
-    
-    # Dict 타입으로 변환을 위해 안전한 기본값 사용
+      # Dict 타입으로 변환을 위해 안전한 기본값 사용
     gacha_result_dict = {
         "type": str(result.results[0]) if result.results else "UNKNOWN"
     }
+    
+    # 타입 안전성을 위해 명시적으로 없는 필드는 제외
+    # amount와 stage는 가챠 결과에 따라 동적으로 설정될 수 있음
 
     if not gacha_result_dict or not gacha_result_dict.get("type"):
         logger.error(

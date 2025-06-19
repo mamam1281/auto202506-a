@@ -136,10 +136,10 @@ Properties:
 #### **슬롯 머신**
 ```
 컴포넌트 생성: slot-machine
-- [ ] slot-reel (3개 릴)
-- [ ] slot-symbol (심볼 세트)
-- [ ] spin-button (메인 스핀)
-- [ ] bet-control (베팅 조절)
+- [✅] slot-reel (3개 릴)
+- [✅] slot-symbol (심볼 세트)
+- [✅] spin-button (메인 스핀)
+- [✅] bet-control (베팅 조절)
 
 Properties:
 - [ ] State: Idle/Spinning/Result
