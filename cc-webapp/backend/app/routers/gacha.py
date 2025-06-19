@@ -69,11 +69,19 @@ async def pull_gacha_for_user(
     user = db.query(User).filter(User.id == request_data.user_id).first()
     if not user:
         logger.warning(f"Gacha pull attempt by non-existent user_id: {request_data.user_id}")
-        raise HTTPException(status_code=404, detail=f"User with id {request_data.user_id} not found.")
-
-    # GachaService가 통화 차감 및 보상 풀 관리 등을 수행
+        raise HTTPException(status_code=404, detail=f"User with id {request_data.user_id} not found.")    # GachaService가 통화 차감 및 보상 풀 관리 등을 수행
     result = service.pull(request_data.user_id, 1, db)
     gacha_result_dict = {"type": result.results[0]}
+    
+    # 결과 객체에서 추가 정보 추출 (안전하게)
+    if hasattr(result, 'results') and len(result.results) > 1:
+        # results가 더 복잡한 구조일 수 있음
+        pass
+    
+    # Dict 타입으로 변환을 위해 안전한 기본값 사용
+    gacha_result_dict = {
+        "type": str(result.results[0]) if result.results else "UNKNOWN"
+    }
 
     if not gacha_result_dict or not gacha_result_dict.get("type"):
         logger.error(

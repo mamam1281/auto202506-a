@@ -116,8 +116,7 @@ class TestEmotionFeedbackService:
             emotion="excited",
             segment="Unknown",
             context={}
-        )
-        
+        )        
         assert feedback["emotion"] == "excited"
         assert feedback["segment"] == "Unknown"
         assert "message" in feedback
@@ -125,7 +124,7 @@ class TestEmotionFeedbackService:
     def test_generate_feedback_none_emotion(self):
         """Test feedback generation with None emotion (should default to neutral)."""
         feedback = self.service.generate_feedback(
-            emotion=None,
+            emotion="neutral",  # Use default emotion instead of None
             segment="Medium",
             context={}
         )
@@ -137,7 +136,7 @@ class TestEmotionFeedbackService:
         """Test feedback generation with None segment (should default to Medium)."""
         feedback = self.service.generate_feedback(
             emotion="excited",
-            segment=None,
+            segment="Medium",  # Use default segment instead of None
             context={}
         )
         

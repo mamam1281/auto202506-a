@@ -156,8 +156,7 @@ async def unlock_content_stage(
         user = user_service.get_user_or_error(current_user_id)
         
         response = await service.unlock_content_stage(
-            content_id=request_data.content_id,
-            stage_to_unlock=request_data.stage_to_unlock or 1,
+            content_id=request_data.content_id,            stage_to_unlock=int(request_data.stage_to_unlock) if isinstance(request_data.stage_to_unlock, str) else (request_data.stage_to_unlock or 1),
             user=user
         )
         return response
@@ -173,9 +172,16 @@ async def get_unlock_history(
 ):
     """Get user's unlock history."""
     try:
-        history = service.get_user_unlock_history(user_id=current_user_id)
-        return UnlockHistoryResponse(history=history)
-    except ValueError as e:        handle_service_errors(e)
+        history_data = service.get_user_unlock_history(user_id=current_user_id)
+        # Convert Dict to UnlockHistoryItem objects
+        from app.schemas import UnlockHistoryItem
+        history_items = [
+            UnlockHistoryItem(**item) if isinstance(item, dict) else item
+            for item in history_data
+        ]
+        return UnlockHistoryResponse(history=history_items)
+    except ValueError as e:
+        handle_service_errors(e)
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal server error getting unlock history.")
 
@@ -241,7 +247,12 @@ async def get_my_unlocks(
     """Get user's unlock history."""
     try:
         history = service.get_user_unlock_history(user_id=current_user_id)
-        return UnlockHistoryResponse(history=history)
+        # Convert Dict to UnlockHistoryItem objects
+        from app.schemas import UnlockHistoryItem
+        history_items = [
+            UnlockHistoryItem(**item) if isinstance(item, dict) else item
+            for item in history        ]
+        return UnlockHistoryResponse(history=history_items)
     except ValueError as e:
         handle_service_errors(e)
     except Exception as e:
@@ -267,9 +278,4 @@ async def upgrade_access(
         raise HTTPException(status_code=500, detail="Internal server error upgrading access.")
 
 # --- Health Check ---
-
-@router.get("/health")
-async def health_check():
-    """Health check endpoint for adult content service. No authentication required."""
-    return {"status": "healthy", "service": "adult_content"}
 

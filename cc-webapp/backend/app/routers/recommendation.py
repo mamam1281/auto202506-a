@@ -65,13 +65,10 @@ async def get_personalized_recommendations_endpoint(
     except Exception as e: # Catch all other unexpected errors
         logger.error(f"Router: Unexpected error processing emotion data for user {request_data.user_id}: {e}", exc_info=True)
         raise HTTPException(status_code=400, detail=f"Unexpected error in current_emotion_data: {str(e)}")
-
-
     try:
         recommendation_service = RecommendationService(db=db)
-        recommendations = await recommendation_service.get_personalized_recommendations(
-            user_id=request_data.user_id, current_emotion=current_emotion,
-            context=request_data.context, limit=request_data.limit
+        recommendations = recommendation_service.get_personalized_recommendations(
+            user_id=request_data.user_id, emotion=None  # 감정 데이터는 요청의 current_emotion_data로 이미 처리됨
         )
     except Exception as e:
         logger.exception(f"Error generating recommendations for user {request_data.user_id}")
@@ -103,10 +100,8 @@ async def get_personalized_recommendations(
     try:
         # 현재 사용자 권한 확인
         if user_id != current_user["user_id"]:
-            raise HTTPException(status_code=403, detail="Not authorized to access this resource")
-        
-        # 추천 서비스 호출
-        recommendations = service.get_personalized_recommendations(user_id, emotion)
+            raise HTTPException(status_code=403, detail="Not authorized to access this resource")        # 추천 서비스 호출 - 올바른 매개변수 사용
+        recommendations = service.get_personalized_recommendations(user_id=user_id, emotion=emotion)
         
         return {
             "success": True,
