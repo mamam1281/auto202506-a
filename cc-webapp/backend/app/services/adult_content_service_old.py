@@ -90,9 +90,7 @@ class AdultContentService:
             
             if not user_segment:
                 logger.warning(f"No segment found for user {user_id}, defaulting to Low")
-                return USER_SEGMENT_ACCESS_ORDER["Low"]
-            
-            # Extract string value from SQLAlchemy column safely
+                return USER_SEGMENT_ACCESS_ORDER["Low"]            # Extract string value from SQLAlchemy column safely
             rfm_group = getattr(user_segment, 'rfm_group', None)
             name = getattr(user_segment, 'name', None)
             segment_name = rfm_group or name or "Low"
@@ -118,8 +116,8 @@ class AdultContentService:
             if not highest_access:
                 return StageIndex.TEASER.value
                 
-            # Map access_tier to stage order - safely extract from SQLAlchemy column
-            access_tier = getattr(highest_access, 'access_tier', None) or "Teaser"
+            # Map access_tier to stage order - convert SQLAlchemy column to string
+            access_tier = str(highest_access.access_tier) if highest_access.access_tier else "Teaser"
             tier_mapping = {
                 "Teaser": StageIndex.TEASER.value,
                 "Basic": StageIndex.BASIC.value,
@@ -209,12 +207,12 @@ class AdultContentService:
             ]
 
             return AdultContentDetail(
-                id=getattr(content, 'id', 0),
-                title=getattr(content, 'name', ''),
-                description=getattr(content, 'description', None) or "No description available",
-                content_url=getattr(content, 'media_url', None) or "https://example.com/content",
+                id=int(content.id),
+                title=str(content.name),
+                description=str(content.description or "No description available"),
+                content_url=str(content.media_url or "https://example.com/content"),
                 type=ContentStageEnum.BASIC.value,  # Default type
-                unlock_level=getattr(content, 'required_segment_level', 1),
+                unlock_level=int(content.required_segment_level),
                 prerequisites=["age_verified"],
                 stages=stages,
                 user_current_access_level=current_stage
@@ -240,7 +238,7 @@ class AdultContentService:
                 )
                 
             # Check age verification
-            user_id = getattr(user, 'id', 0)
+            user_id = int(user.id)
             if not self._is_user_age_verified(user_id):
                 return ContentUnlockResponse(
                     success=False,
@@ -270,7 +268,7 @@ class AdultContentService:
             cost = STAGE_DETAILS[stage]["cost"]
             
             # Check if user has enough tokens
-            user_balance = getattr(user, 'cyber_token_balance', 0)
+            user_balance = int(user.cyber_token_balance)
             if user_balance < cost:
                 return ContentUnlockResponse(
                     success=False,
@@ -318,7 +316,7 @@ class AdultContentService:
             return ContentUnlockResponse(
                 success=True,
                 status="success",
-                content_url=getattr(content, 'media_url', None) or "https://example.com/content",
+                content_url=str(content.media_url or "https://example.com/content"),
                 message="Stage unlocked successfully",
                 unlocked_stage=stage_index,
                 tokens_spent=cost,
@@ -363,7 +361,7 @@ class AdultContentService:
             upgrade_cost = base_cost * level_diff
             
             # Check tokens
-            user_balance = getattr(user, 'cyber_token_balance', 0)
+            user_balance = int(user.cyber_token_balance)
             if user_balance < upgrade_cost:
                 return AccessUpgradeResponse(
                     success=False,
@@ -373,7 +371,7 @@ class AdultContentService:
                 )
                 
             # Deduct tokens
-            user_id = getattr(user, 'id', 0)
+            user_id = int(user.id)
             if self.token_service:
                 new_balance = self.token_service.deduct_tokens(user_id, upgrade_cost)
                 if new_balance is None:
@@ -405,7 +403,7 @@ class AdultContentService:
             )
             
         except Exception as e:
-            logger.error(f"Error upgrading access for user {getattr(user, 'id', 'unknown')}: {e}")
+            logger.error(f"Error upgrading access for user {user.id}: {e}")
             return AccessUpgradeResponse(
                 success=False,
                 new_level=request.current_level,
@@ -448,17 +446,17 @@ class AdultContentService:
             current_stage = self._get_user_unlocked_stage_order(user_id, content_id)
             
             return ContentPreviewResponse(
-                id=getattr(content, 'id', content_id),
-                title=getattr(content, 'name', ''),
+                id=int(content.id),
+                title=str(content.name),
                 preview_data={
-                    "thumbnail": getattr(content, 'thumbnail_url', None) or "https://example.com/thumb.jpg",
-                    "description": getattr(content, 'description', None) or ""
+                    "thumbnail": str(content.thumbnail_url or "https://example.com/thumb.jpg"),
+                    "description": str(content.description or "")
                 },
                 unlock_requirements={
-                    "min_level": getattr(content, 'required_segment_level', 1), 
+                    "min_level": int(content.required_segment_level), 
                     "tokens": STAGE_DETAILS[ContentStageEnum.BASIC]["cost"]
                 },
-                preview_url=getattr(content, 'thumbnail_url', None) or "https://example.com/preview.jpg",
+                preview_url=str(content.thumbnail_url or "https://example.com/preview.jpg"),
                 current_stage_accessed=current_stage
             )
             
@@ -514,13 +512,13 @@ class AdultContentService:
             
             gallery_items = []
             for content in contents:
-                current_access = self._get_user_unlocked_stage_order(user_id, getattr(content, 'id', 0))
+                current_access = self._get_user_unlocked_stage_order(user_id, int(content.id))
                 
                 gallery_items.append(AdultContentGalleryItem(
-                    id=getattr(content, 'id', 0),
-                    title=getattr(content, 'name', ''),
-                    thumbnail_url=getattr(content, 'thumbnail_url', None) or "https://example.com/thumb.jpg",
-                    description=getattr(content, 'description', None) or "No description",
+                    id=int(content.id),
+                    title=str(content.name),
+                    thumbnail_url=str(content.thumbnail_url or "https://example.com/thumb.jpg"),
+                    preview_text=str(content.description or "No description"),
                     is_unlocked=current_access >= StageIndex.BASIC.value,
                     unlock_cost=STAGE_DETAILS[ContentStageEnum.BASIC]["cost"],
                     user_access_level=current_access
@@ -551,12 +549,12 @@ class AdultContentService:
             history_items = []
             for log, content in access_logs:
                 history_items.append(UnlockHistoryItem(
-                    content_id=getattr(content, 'id', 0),
-                    content_title=getattr(content, 'name', ''),
-                    stage_unlocked=getattr(log, 'access_tier', ''),
-                    tokens_spent=getattr(log, 'tokens_spent', 0) or 0,
-                    unlocked_at=getattr(log, 'accessed_at', datetime.utcnow()),
-                    content_url=getattr(content, 'media_url', None) or ""
+                    content_id=int(content.id),
+                    content_title=str(content.name),
+                    stage_unlocked=str(log.access_tier),
+                    tokens_spent=int(log.tokens_spent or 0),
+                    unlocked_at=log.accessed_at,
+                    content_url=str(content.media_url or "")
                 ))
                 
             return history_items

@@ -1,5 +1,6 @@
 """Adult Content Router - VIP token-driven adult content unlocking system."""
 
+import logging
 from fastapi import APIRouter, HTTPException, Depends, Body, Path, Query
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -15,6 +16,8 @@ from app.schemas import (
     AccessUpgradeRequest, AccessUpgradeResponse
 )
 from app.models import User
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/v1/adult", tags=["Adult Content"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
@@ -80,6 +83,7 @@ async def get_gallery(
     except ValueError as e:
         handle_service_errors(e)
     except Exception as e:
+        logger.error(f"Gallery error: {e}")
         raise HTTPException(status_code=500, detail="Internal server error getting gallery.")
 
 @router.get("/{content_id}", response_model=AdultContentDetail)

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 import logging
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from jose import jwt, JWTError
 from passlib.context import CryptContext
@@ -50,12 +50,11 @@ class TokenResponse(BaseModel):
 
 
 class UserMe(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     nickname: str
     cyber_token_balance: int
-
-    class Config:
-        from_attributes = True
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:

@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import desc # Correct import for desc
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 import logging # For logging
 
@@ -22,15 +22,14 @@ def get_user_service(db: Session = Depends(get_db)) -> UserService:
 
 # --- Pydantic Models ---
 class UnlockResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     stage: int
     name: str # Added name from AdultContent
     description: str | None # Added description
     thumbnail_url: str | None
     media_url: str | None
     # message: str | None = None # Optional: for any accompanying message
-
-    class Config:
-        from_attributes = True
 
 # --- Helper Functions ---
 def get_segment_level(rfm_group: str | None) -> int:

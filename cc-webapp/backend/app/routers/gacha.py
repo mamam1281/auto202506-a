@@ -8,7 +8,7 @@ import logging
 from ..services.gacha_service import GachaService
 from ..models import User # To verify user exists
 from ..database import get_db # Original get_db from database.py
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

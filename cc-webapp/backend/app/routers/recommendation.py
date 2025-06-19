@@ -25,7 +25,9 @@ class PersonalizedRecommendationRequest(BaseModel):
     user_id: int
     current_emotion_data: Dict[str, Any]
     context: Optional[Dict[str, Any]] = None
-    limit: int = Field(default=5, gt=0, le=20)    @field_validator('current_emotion_data', mode='before')
+    limit: int = Field(default=5, gt=0, le=20)
+    
+    @field_validator('current_emotion_data', mode='before')
     @classmethod
     def parse_emotion_data(cls, v_dict): # Removed values parameter as it's not needed in V2
         if not v_dict: # Handle case where current_emotion_data might be optional or empty

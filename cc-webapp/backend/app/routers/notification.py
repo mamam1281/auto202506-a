@@ -1,7 +1,7 @@
 # cc-webapp/backend/app/routers/notification.py
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import datetime
 
@@ -22,13 +22,12 @@ def get_user_service(db: Session = Depends(get_db)):
 
 # Pydantic model for the pending notification response
 class PendingNotificationResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: Optional[int] = None
     message: Optional[str] = None
     created_at: Optional[datetime] = None
     sent_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True # Pydantic V2
 
 
 @router.get(
