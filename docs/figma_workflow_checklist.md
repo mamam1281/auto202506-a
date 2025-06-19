@@ -88,15 +88,15 @@ Properties:
 ### ✅ **Card Components**
 ```
 Card System:
-- [ ] card-base (기본 카드)
-- [ ] card-game (게임용 카드)
-- [ ] card-mission (미션 카드)
-- [ ] card-reward (보상 카드)
+- [✅] card-base (기본 카드)
+- [✅] card-game (게임용 카드)
+- [✅] card-mission (미션 카드)
+- [✅] card-reward (보상 카드)
 
 Properties:
-- [ ] Type: Base/Game/Mission/Reward
-- [ ] State: Default/Hover/Active
-- [ ] Content: True/False
+- [✅] Type: Base/Game/Mission/Reward
+- [✅] State: Default/Hover/Active
+- [✅] Content: True/False
 ```
 
 ---
@@ -106,29 +106,29 @@ Properties:
 ### ✅ **Token Balance Widget**
 ```
 컴포넌트 생성: token-balance
-- [ ] 토큰 아이콘 (Auto Layout)
-- [ ] 수치 텍스트 (Monospace)
-- [ ] 변화 인디케이터 (+/-)
-- [ ] 경고 상태 (부족 시 주황색)
+- [✅] 토큰 아이콘 (Auto Layout)
+- [✅] 수치 텍스트 (Monospace)
+- [✅] 변화 인디케이터 (+/-)
+- [✅] 경고 상태 (부족 시 주황색)
 
 Properties:
-- [ ] Amount: 숫자 값
-- [ ] Status: Normal/Warning/Critical
-- [ ] Change: None/Increase/Decrease
+- [✅] Amount: 숫자 값
+- [✅] Status: Normal/Warning/Critical
+- [✅] Change: None/Increase/Decrease
 ```
 
 ### ✅ **CJ AI Chat Bubble**
 ```
 컴포넌트 생성: cj-chat
-- [ ] AI 아바타 (원형, 애니메이션)
-- [ ] 채팅 버블 (동적 크기)
-- [ ] 타이핑 인디케이터
-- [ ] 음성 토글 버튼
+- [✅] AI 아바타 (원형, 애니메이션)
+- [✅] 채팅 버블 (동적 크기)
+- [✅] 타이핑 인디케이터
+- [✅] 음성 토글 버튼
 
 Properties:
-- [ ] State: Idle/Typing/Speaking
-- [ ] Message: Text Content
-- [ ] Avatar: Mood State
+- [✅] State: Idle/Typing/Speaking
+- [✅] Message: Text Content
+- [✅] Avatar: Mood State
 ```
 
 ### ✅ **게임별 컴포넌트**

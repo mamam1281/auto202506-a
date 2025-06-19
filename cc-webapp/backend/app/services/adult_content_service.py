@@ -23,6 +23,7 @@ class ContentStageEnum(Enum):
     PREMIUM = "premium"
     VIP = "vip"
     EXCLUSIVE = "exclusive"
+    FULL = "full"  # 누락된 값 추가
 
 
 # Stage details configuration
@@ -61,6 +62,13 @@ STAGE_DETAILS = {
         "token_cost": 100,
         "description": "Ultra-exclusive content",
         "min_segment_order": 4
+    },
+    ContentStageEnum.FULL: {
+        "index": 5,
+        "order": 5,
+        "token_cost": 2000,
+        "description": "Full lifetime access",
+        "min_segment_order": 5
     }
 }
 

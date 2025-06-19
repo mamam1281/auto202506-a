@@ -20,6 +20,7 @@ from app.models import User
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/v1/adult", tags=["Adult Content"])
+public_router = APIRouter(prefix="/v1/adult", tags=["Adult Content - Public"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 # Authentication dependency - simplified for this implementation
@@ -65,9 +66,15 @@ def handle_service_errors(e: ValueError):
     if "age verification required" in error_message:
         raise HTTPException(status_code=403, detail=str(e))
     if "segment level too low" in error_message:
-        raise HTTPException(status_code=403, detail=str(e))
-    # Default for other ValueErrors
+        raise HTTPException(status_code=403, detail=str(e))    # Default for other ValueErrors
     raise HTTPException(status_code=400, detail=str(e))
+
+# --- Public Endpoints (No Authentication Required) ---
+
+@public_router.get("/health")
+async def health_check():
+    """Health check endpoint for adult content service."""
+    return {"status": "healthy", "service": "adult_content"}
 
 # --- Content Retrieval Endpoints ---
 
@@ -85,6 +92,20 @@ async def get_gallery(
     except Exception as e:
         logger.error(f"Gallery error: {e}")
         raise HTTPException(status_code=500, detail="Internal server error getting gallery.")
+
+@router.get("/content/preview")
+async def get_content_gallery_preview(
+    current_user_id: int = Depends(get_current_user_id),
+    service: AdultContentService = Depends(get_adult_content_service)
+):
+    """Get content gallery preview for authenticated user."""
+    try:
+        items = service.get_gallery_for_user(user_id=current_user_id)
+        return {"items": items}
+    except ValueError as e:
+        handle_service_errors(e)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Internal server error getting gallery preview.")
 
 @router.get("/{content_id}", response_model=AdultContentDetail)
 async def get_content_details(
@@ -154,24 +175,9 @@ async def get_unlock_history(
     try:
         history = service.get_user_unlock_history(user_id=current_user_id)
         return UnlockHistoryResponse(history=history)
-    except ValueError as e:
-        handle_service_errors(e)
+    except ValueError as e:        handle_service_errors(e)
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal server error getting unlock history.")
-
-@router.get("/content/preview")
-async def get_content_gallery_preview(
-    current_user_id: int = Depends(get_current_user_id),
-    service: AdultContentService = Depends(get_adult_content_service)
-):
-    """Get content gallery preview for authenticated user."""
-    try:
-        items = service.get_gallery_for_user(user_id=current_user_id)
-        return {"items": items}
-    except ValueError as e:
-        handle_service_errors(e)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Internal server error getting gallery preview.")
 
 @router.post("/content/unlock")
 async def unlock_content(

@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 from fastapi import FastAPI
 from unittest.mock import Mock
 
-from app.routers.adult_content import router
+from app.routers.adult_content import router, public_router
 
 
 @pytest.fixture
@@ -60,14 +60,15 @@ def client(app, mock_services):
 
 class TestHealthCheck:
     """헬스체크 테스트"""
-
+    
     def test_health_check_no_auth(self):
         """헬스체크는 인증 없이 접근 가능해야 함"""
         app = FastAPI()
-        app.include_router(router)
+        app.include_router(public_router)  # public_router 사용
         client = TestClient(app)
         
         response = client.get("/v1/adult/health")
+        print(f"Health check response: {response.status_code}, {response.text}")  # 디버그 추가
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "healthy"
@@ -156,16 +157,23 @@ class TestContentUnlock:
 
 class TestAuthentication:
     """인증 테스트"""
-
-    def test_auth_required_gallery(self, client):
+    
+    @pytest.fixture
+    def auth_test_client(self, app):
+        """인증 테스트용 클라이언트 - dependency override 없이"""
+        return TestClient(app)
+    
+    def test_auth_required_gallery(self, auth_test_client):
         """갤러리는 인증이 필요함"""
-        response = client.get("/v1/adult/gallery")
+        response = auth_test_client.get("/v1/adult/gallery")
         # 인증 없이 접근 시 오류
         assert response.status_code in [400, 401, 422]
 
-    def test_auth_required_vip(self, client):
+    def test_auth_required_vip(self, auth_test_client):
         """VIP 정보는 인증이 필요함"""  
-        response = client.get("/v1/adult/vip/info")
+        response = auth_test_client.get("/v1/adult/vip/info")
+        print(f"VIP Response status: {response.status_code}")
+        print(f"VIP Response content: {response.text}")
         assert response.status_code in [400, 401, 422]
 
 
