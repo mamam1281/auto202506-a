@@ -139,8 +139,7 @@ export {
   SidebarContent, 
   SidebarFooter, 
   SidebarTrigger, 
-  SidebarInset,
-  useSidebar 
+  SidebarInset 
 } from './Sidebar';
 
 export { 
@@ -176,6 +175,9 @@ export type { TokenBalanceWidgetProps } from './TokenBalanceWidget';
 
 export { default as CJChatBubble } from './CJChatBubble';
 export type { CJChatBubbleProps, Message } from './CJChatBubble';
+
+export { CJAIChatBubble } from './CJAIChatBubble';
+export type { CJAIChatBubbleProps, Message as CJAIMessage } from './CJAIChatBubble';
 
 export { default as SlotMachine } from './SlotMachine';
 export type { SlotMachineProps } from './SlotMachine';

@@ -4,58 +4,95 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send, 
+  Bot, 
+  User, 
+  Loader2, 
   MessageCircle, 
   X, 
-  User,
-  Loader2
+  Sparkles,
+  Zap
 } from 'lucide-react';
-import styles from './CJChatBubble.module.css';
+import styles from './CJAIChatBubble.module.css';
+
+// Standard animation configurations from unified guides
+const animationConfig = {
+  entrance: { 
+    initial: { opacity: 0, y: 20 }, 
+    animate: { opacity: 1, y: 0 }, 
+    transition: { duration: 0.5, ease: "easeOut" } 
+  },
+  entranceFast: { 
+    initial: { opacity: 0, y: 10 }, 
+    animate: { opacity: 1, y: 0 }, 
+    transition: { duration: 0.3, ease: "easeOut" } 
+  },
+  exit: { 
+    initial: { opacity: 1, scale: 1 }, 
+    exit: { opacity: 0, scale: 0.95 }, 
+    transition: { duration: 0.2, ease: "easeIn" } 
+  }
+};
+
+const interactionAnimations = {
+  scale: { 
+    whileHover: { scale: 1.05 }, 
+    whileTap: { scale: 0.95 }, 
+    transition: { type: "spring" as const, stiffness: 400, damping: 17 } 
+  },
+  scaleSubtle: { 
+    whileHover: { scale: 1.02 }, 
+    whileTap: { scale: 0.98 }, 
+    transition: { type: "spring" as const, stiffness: 300, damping: 20 } 
+  },
+  scaleBold: { 
+    whileHover: { scale: 1.1 }, 
+    whileTap: { scale: 0.9 }, 
+    transition: { type: "spring" as const, stiffness: 500, damping: 15 } 
+  }
+};
+
+const loopAnimations = {
+  pulse: { 
+    animate: { scale: [1, 1.05, 1], opacity: [1, 0.8, 1] }, 
+    transition: { duration: 2, ease: "easeInOut" as const, repeat: Infinity } 
+  },
+  pulseSubtle: { 
+    animate: { scale: [1, 1.02, 1] }, 
+    transition: { duration: 3, ease: "easeInOut" as const, repeat: Infinity } 
+  }
+};
 
 export interface Message {
   id: string;
   text: string;
-  sender: 'user' | 'system';
+  sender: 'user' | 'ai';
   timestamp: Date;
   isTyping?: boolean;
 }
 
-export interface CJChatBubbleProps {
+export interface CJAIChatBubbleProps {
   className?: string;
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   onSendMessage?: (message: string) => Promise<string>;
-  messages?: Message[];
-  placeholder?: string;
-  title?: string;
-  theme?: 'default' | 'neon' | 'minimal';
-  disabled?: boolean;
 }
 
-export function CJChatBubble({ 
+export function CJAIChatBubble({ 
   className = '', 
   position = 'bottom-right',
-  onSendMessage,
-  messages: externalMessages,
-  placeholder = '메시지를 입력하세요...',
-  title = 'CJ Chat',
-  theme = 'default',
-  disabled = false
-}: CJChatBubbleProps) {
+  onSendMessage 
+}: CJAIChatBubbleProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [internalMessages, setInternalMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: '안녕하세요! 무엇을 도와드릴까요?',
-      sender: 'system',
+      text: '안녕하세요! CJ AI 어시스턴트입니다. 무엇을 도와드릴까요? 😊',
+      sender: 'ai',
       timestamp: new Date(),
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Use external messages if provided, otherwise use internal state
-  const messages = externalMessages || internalMessages;
-  const setMessages = externalMessages ? () => {} : setInternalMessages;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -64,7 +101,6 @@ export function CJChatBubble({
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
   const getPositionClasses = () => {
     switch (position) {
       case 'bottom-left':
@@ -78,19 +114,8 @@ export function CJChatBubble({
     }
   };
 
-  const getThemeClasses = () => {
-    switch (theme) {
-      case 'neon':
-        return styles.neonTheme;
-      case 'minimal':
-        return styles.minimalTheme;
-      default:
-        return styles.defaultTheme;
-    }
-  };
-
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading || disabled) return;
+    if (!inputValue.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -99,54 +124,45 @@ export function CJChatBubble({
       timestamp: new Date(),
     };
 
-    if (!externalMessages) {
-      setMessages(prev => [...prev, userMessage]);
-    }
-    
+    setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
 
-    // Add typing indicator only for internal messages
-    if (!externalMessages) {
-      const typingMessage: Message = {
-        id: 'typing',
-        text: '...',
-        sender: 'system',
-        timestamp: new Date(),
-        isTyping: true,
-      };
-      setMessages(prev => [...prev, typingMessage]);
-    }
+    // Add typing indicator
+    const typingMessage: Message = {
+      id: 'typing',
+      text: '...',
+      sender: 'ai',
+      timestamp: new Date(),
+      isTyping: true,
+    };
+    setMessages(prev => [...prev, typingMessage]);
 
     try {
       const response = onSendMessage 
         ? await onSendMessage(inputValue)
-        : `메시지를 받았습니다: "${inputValue}"`;
+        : `네, "${inputValue}"에 대해 도움을 드릴 수 있습니다. CJ AI가 최선을 다해 답변드리겠습니다! ✨`;
 
-      if (!externalMessages) {
-        // Remove typing indicator and add real response
-        setMessages(prev => {
-          const filtered = prev.filter(m => m.id !== 'typing');
-          return [...filtered, {
-            id: Date.now().toString(),
-            text: response,
-            sender: 'system',
-            timestamp: new Date(),
-          }];
-        });
-      }
+      // Remove typing indicator and add real response
+      setMessages(prev => {
+        const filtered = prev.filter(m => m.id !== 'typing');
+        return [...filtered, {
+          id: Date.now().toString(),
+          text: response,
+          sender: 'ai',
+          timestamp: new Date(),
+        }];
+      });
     } catch (error) {
-      if (!externalMessages) {
-        setMessages(prev => {
-          const filtered = prev.filter(m => m.id !== 'typing');
-          return [...filtered, {
-            id: Date.now().toString(),
-            text: '죄송합니다. 일시적인 오류가 발생했습니다.',
-            sender: 'system',
-            timestamp: new Date(),
-          }];
-        });
-      }
+      setMessages(prev => {
+        const filtered = prev.filter(m => m.id !== 'typing');
+        return [...filtered, {
+          id: Date.now().toString(),
+          text: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요.',
+          sender: 'ai',
+          timestamp: new Date(),
+        }];
+      });
     } finally {
       setIsLoading(false);
     }
@@ -158,12 +174,10 @@ export function CJChatBubble({
       handleSendMessage();
     }
   };
-
   return (
-    <div className={`${styles.chatBubble} ${getPositionClasses()} ${getThemeClasses()} ${className}`}>
+    <div className={`${styles.chatBubble} ${getPositionClasses()} ${className}`}>
       <AnimatePresence>
-        {isOpen && (
-          <motion.div
+        {isOpen && (          <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -173,23 +187,33 @@ export function CJChatBubble({
             {/* Header */}
             <div className={styles.header}>
               <div className={styles.headerContent}>
-                <div className={styles.titleContainer}>
-                  <h3 className={styles.title}>{title}</h3>
-                  <p className={styles.status}>온라인</p>
+                <div className={styles.avatarContainer}>
+                  <div className={styles.avatarWrapper}>
+                    <div className={styles.avatar}>
+                      <Bot className="w-4 h-4 text-white" />
+                    </div>                    <motion.div
+                      animate={{ scale: [1, 1.02, 1] }}
+                      transition={{ duration: 3, ease: "easeInOut", repeat: Infinity }}
+                      className={styles.statusIndicator}
+                    />
+                  </div>
+                  <div className={styles.userInfo}>
+                    <h3>CJ AI Assistant</h3>
+                    <p>온라인</p>
+                  </div>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
                   className={styles.closeButton}
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 text-slate-400" />
                 </button>
               </div>
             </div>
 
             {/* Messages */}
             <div className={styles.messagesContainer}>
-              {messages.map((message) => (
-                <motion.div
+              {messages.map((message) => (                <motion.div
                   key={message.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -198,7 +222,11 @@ export function CJChatBubble({
                 >
                   <div className={`${styles.messageContent} ${styles[message.sender]}`}>
                     <div className={`${styles.messageAvatar} ${styles[message.sender]}`}>
-                      <User className="w-3 h-3 text-white" />
+                      {message.sender === 'user' ? (
+                        <User className="w-3 h-3 text-white" />
+                      ) : (
+                        <Sparkles className="w-3 h-3 text-white" />
+                      )}
                     </div>
                     <div className={`${styles.messageBubble} ${styles[message.sender]}`}>
                       {message.isTyping ? (
@@ -238,17 +266,16 @@ export function CJChatBubble({
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder={placeholder}
-                    disabled={isLoading || disabled}
+                    placeholder="메시지를 입력하세요..."
+                    disabled={isLoading}
                     className={styles.inputField}
                   />
-                </div>
-                <motion.button
+                </div>                <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   onClick={handleSendMessage}
-                  disabled={!inputValue.trim() || isLoading || disabled}
+                  disabled={!inputValue.trim() || isLoading}
                   className={styles.sendButton}
                 >
                   {isLoading ? (
@@ -263,14 +290,12 @@ export function CJChatBubble({
         )}
       </AnimatePresence>
 
-      {/* Chat Toggle Button */}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      {/* Chat Button */}      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 500, damping: 15 }}
         onClick={() => setIsOpen(!isOpen)}
-        disabled={disabled}
-        className={`${styles.toggleButton} ${disabled ? styles.disabled : ''}`}
+        className={styles.toggleButton}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -290,21 +315,29 @@ export function CJChatBubble({
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.2 }}
+              className={styles.iconWrapper}
             >
-              <MessageCircle className="w-6 h-6 text-white" />
+              <MessageCircle className="w-6 h-6 text-white" />              <motion.div
+                animate={{ scale: [1, 1.02, 1] }}
+                transition={{ duration: 3, ease: "easeInOut", repeat: Infinity }}
+                className={styles.notificationBadge}
+              />
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Pulse Effect */}
         <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0, 0.3] }}
+          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
           className={styles.pulseEffect}
         />
+
+        {/* Hover Effect */}
+        <div className={styles.hoverOverlay} />
       </motion.button>
     </div>
   );
 }
 
-export default CJChatBubble;
+export default CJAIChatBubble;

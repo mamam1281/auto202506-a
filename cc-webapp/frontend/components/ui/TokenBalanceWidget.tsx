@@ -1,161 +1,174 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
-import styles from './TokenBalanceWidget.module.css';
+import { TrendingUp, TrendingDown, Coins, AlertTriangle } from 'lucide-react';
 
 export interface TokenBalanceWidgetProps {
-  /** 토큰 수량 */
   amount: number;
-  
-  /** 상태 (통합 가이드 기준) */
   status?: 'normal' | 'warning' | 'critical';
-  
-  /** 변화 방향 */
   change?: 'none' | 'increase' | 'decrease';
-  
-  /** 변화량 (선택적) */
-  changeAmount?: number;
-  
-  /** 크기 */
-  size?: 'sm' | 'md' | 'lg';
-  
-  /** 클릭 이벤트 핸들러 */
-  onClick?: () => void;
-  
-  /** 추가 CSS 클래스명 */
   className?: string;
 }
 
-const TokenBalanceWidget: React.FC<TokenBalanceWidgetProps> = ({
-  amount,
-  status,
+export function TokenBalanceWidget({ 
+  amount, 
+  status = 'normal', 
   change = 'none',
-  changeAmount,
-  size = 'md',
-  onClick,
-  className = ''
-}) => {
-  // 자동 상태 결정 (status가 명시적으로 제공되지 않은 경우)
-  const determineStatus = (amount: number): 'normal' | 'warning' | 'critical' => {
-    if (amount < 100000) return 'critical';
-    if (amount < 1000000) return 'warning';
-    return 'normal';
+  className = '' 
+}: TokenBalanceWidgetProps) {
+  const formatAmount = (num: number) => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toLocaleString();
   };
 
-  const currentStatus = status || determineStatus(amount);
-
-  // 숫자 포맷팅 (Monospace 적용)
-  const formatAmount = (amount: number): string => {
-    return amount.toLocaleString();
+  const getStatusColor = () => {
+    switch (status) {
+      case 'warning':
+        return {
+          bg: 'bg-amber-500/10',
+          border: 'border-amber-500/30',
+          text: 'text-amber-400',
+          glow: 'shadow-amber-500/20'
+        };
+      case 'critical':
+        return {
+          bg: 'bg-red-500/10',
+          border: 'border-red-500/30',
+          text: 'text-red-400',
+          glow: 'shadow-red-500/20'
+        };
+      default:
+        return {
+          bg: 'bg-emerald-500/10',
+          border: 'border-emerald-500/30',
+          text: 'text-emerald-400',
+          glow: 'shadow-emerald-500/20'
+        };
+    }
   };
 
-  // 변화량 포맷팅
-  const formatChange = (change: 'none' | 'increase' | 'decrease', amount?: number): string => {
-    if (change === 'none' || !amount) return '';
-    const prefix = change === 'increase' ? '+' : '-';
-    return `${prefix}${amount.toLocaleString()}`;
+  const getChangeIcon = () => {
+    switch (change) {
+      case 'increase':
+        return <TrendingUp className="w-4 h-4 text-emerald-400" />;
+      case 'decrease':
+        return <TrendingDown className="w-4 h-4 text-red-400" />;
+      default:
+        return null;
+    }
   };
 
-  // 애니메이션 설정 (통합 가이드 기준)
-  const containerVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    hover: { scale: 1.02, y: -2 },
-    tap: { scale: 0.98 }
+  const getStatusIcon = () => {
+    switch (status) {
+      case 'warning':
+      case 'critical':
+        return <AlertTriangle className="w-5 h-5" />;
+      default:
+        return <Coins className="w-5 h-5" />;
+    }
   };
 
-  const iconVariants = {
-    increase: { rotate: [0, 15, 0], scale: [1, 1.2, 1] },
-    decrease: { rotate: [0, -15, 0], scale: [1, 1.2, 1] },
-    normal: { scale: [1, 1.1, 1] }
-  };
-
-  const containerClassNames = [
-    styles.container,
-    styles[size],
-    styles[currentStatus],
-    onClick && styles.clickable,
-    className
-  ].filter(Boolean).join(' ');
+  const colors = getStatusColor();
+  const changeIcon = getChangeIcon();
+  const statusIcon = getStatusIcon();
 
   return (
     <motion.div
-      className={containerClassNames}
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
-      whileHover={onClick ? "hover" : undefined}
-      whileTap={onClick ? "tap" : undefined}
-      onClick={onClick}
-      transition={{
-        duration: 0.3,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`relative overflow-hidden ${className}`}
     >
-      {/* 토큰 아이콘 (Auto Layout) */}
-      <div className={styles.iconContainer}>
-        <motion.div
-          className={styles.tokenIcon}
-          variants={iconVariants}
-          animate={change !== 'none' ? change : 'normal'}
-          transition={{
-            duration: 0.5,
-            ease: "easeOut",
-            repeat: change !== 'none' ? 1 : 0
-          }}
-        >
-          💎
-        </motion.div>
-      </div>
+      {/* Glassmorphism Background */}
+      <div className={`
+        relative backdrop-blur-xl bg-slate-900/80 
+        border ${colors.border} rounded-2xl p-6
+        shadow-xl ${colors.glow}
+        before:absolute before:inset-0 before:rounded-2xl
+        before:bg-gradient-to-br before:from-white/5 before:to-transparent
+        before:pointer-events-none
+      `}>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <motion.div
+              animate={{ rotate: change === 'increase' ? 360 : 0 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+              className={`p-2 rounded-lg ${colors.bg} ${colors.text}`}
+            >
+              {statusIcon}
+            </motion.div>
+            <div>
+              <h3 className="text-slate-100 font-medium">Token Balance</h3>
+              <p className="text-slate-400 text-sm">Available Tokens</p>
+            </div>
+          </div>
+          
+          {changeIcon && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+            >
+              {changeIcon}
+            </motion.div>
+          )}
+        </div>
 
-      {/* 수치 텍스트 (Monospace) */}
-      <div className={styles.amountContainer}>
+        {/* Balance Amount */}
         <motion.div
-          className={styles.amount}
           key={amount}
-          initial={{ scale: 1.1, opacity: 0.8 }}
+          initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+          className="mb-4"
         >
-          {formatAmount(amount)}
+          <div className={`text-4xl md:text-5xl font-bold ${colors.text} mb-1`}>
+            {formatAmount(amount)}
+          </div>
+          <div className="text-slate-400 text-sm">
+            {amount.toLocaleString()} tokens
+          </div>
         </motion.div>
-        <div className={styles.label}>TOKENS</div>
+
+        {/* Status Bar */}
+        <div className="relative h-2 bg-slate-800 rounded-full overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${status === 'critical' ? 20 : status === 'warning' ? 60 : 100}%` }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className={`h-full rounded-full ${
+              status === 'critical' ? 'bg-red-500' :
+              status === 'warning' ? 'bg-amber-500' : 
+              'bg-emerald-500'
+            }`}
+          />
+        </div>
+
+        {/* Status Message */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="mt-4 text-sm text-slate-400"
+        >
+          {status === 'critical' && 'Critical: Token balance is very low'}
+          {status === 'warning' && 'Warning: Token balance is running low'}
+          {status === 'normal' && 'Balance is healthy'}
+        </motion.div>
+
+        {/* Animated Background Elements */}
+        <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-xl" />
+        <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-tr from-emerald-500/10 to-cyan-500/10 rounded-full blur-xl" />
       </div>
-
-      {/* 변화 인디케이터 (+/-) */}
-      {change !== 'none' && changeAmount && (
-        <motion.div
-          className={`${styles.changeIndicator} ${styles[change]}`}
-          initial={{ opacity: 0, x: change === 'increase' ? 10 : -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-        >
-          <span className={styles.changeIcon}>
-            {change === 'increase' ? '↗️' : '↘️'}
-          </span>
-          <span className={styles.changeAmount}>
-            {formatChange(change, changeAmount)}
-          </span>
-        </motion.div>
-      )}
-
-      {/* 경고 상태 (부족 시 주황색) */}
-      {currentStatus !== 'normal' && (
-        <motion.div
-          className={styles.statusIndicator}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-        >
-          <span className={styles.statusIcon}>
-            {currentStatus === 'critical' ? '⚠️' : '⚡'}
-          </span>
-          <span className={styles.statusText}>
-            {currentStatus === 'critical' ? 'Low Balance' : 'Running Low'}
-          </span>
-        </motion.div>
-      )}
     </motion.div>
   );
-};
+}
 
 export default TokenBalanceWidget;
