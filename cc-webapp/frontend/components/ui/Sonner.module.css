@@ -1,0 +1,222 @@
+.toaster {
+  position: fixed;
+  z-index: 9999;
+  max-width: 420px;
+  pointer-events: none;
+}
+
+/* Position variants */
+.toaster.topleft {
+  top: var(--grid-4);
+  left: var(--grid-4);
+}
+
+.toaster.topcenter {
+  top: var(--grid-4);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toaster.topright {
+  top: var(--grid-4);
+  right: var(--grid-4);
+}
+
+.toaster.bottomleft {
+  bottom: var(--grid-4);
+  left: var(--grid-4);
+}
+
+.toaster.bottomcenter {
+  bottom: var(--grid-4);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toaster.bottomright {
+  bottom: var(--grid-4);
+  right: var(--grid-4);
+}
+
+.toaster.expand {
+  max-width: 600px;
+}
+
+.toast {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: var(--grid-2);
+  padding: var(--padding-md);
+  background: var(--color-slate-800);
+  border: 1px solid var(--color-slate-700);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+              0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--grid-3);
+  position: relative;
+  overflow: hidden;
+}
+
+.toast::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--color-slate-600);
+}
+
+.toastContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.toastTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-slate-200);
+  line-height: var(--line-height-sm);
+  margin-bottom: var(--grid-1);
+}
+
+.toastDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-slate-400);
+  line-height: var(--line-height-sm);
+}
+
+.toastAction {
+  background: var(--color-neon-purple-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--padding-xs) var(--padding-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  flex-shrink: 0;
+}
+
+.toastAction:hover {
+  background: var(--color-neon-purple-light);
+}
+
+.toastClose {
+  position: absolute;
+  top: var(--grid-2);
+  right: var(--grid-2);
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  color: var(--color-slate-400);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  line-height: 1;
+  transition: var(--transition-smooth);
+}
+
+.toastClose:hover {
+  background: var(--color-slate-700);
+  color: var(--color-slate-200);
+}
+
+/* Type variants */
+.toast.success::before {
+  background: var(--color-success);
+}
+
+.toast.success.richColors {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--color-success);
+}
+
+.toast.error::before {
+  background: var(--color-error);
+}
+
+.toast.error.richColors {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--color-error);
+}
+
+.toast.warning::before {
+  background: var(--color-warning);
+}
+
+.toast.warning.richColors {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--color-warning);
+}
+
+.toast.info::before {
+  background: var(--color-info);
+}
+
+.toast.info.richColors {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--color-info);
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .toaster {
+    left: var(--grid-2) !important;
+    right: var(--grid-2) !important;
+    max-width: none;
+    transform: none !important;
+  }
+  
+  .toast {
+    max-width: none;
+  }
+}
+
+/* 애니메이션 */
+.toast {
+  animation: var(--animation-slide-up) 0.3s var(--timing-ease-out);
+}
+
+/* 호버 시 일시정지 표시 */
+.toast:hover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-neon-purple-primary);
+  animation: pause-indicator 0.3s var(--timing-ease-out) forwards;
+}
+
+@keyframes pause-indicator {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+/* 접근성 */
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+  
+  .toast:hover::after {
+    animation: none;
+  }
+}

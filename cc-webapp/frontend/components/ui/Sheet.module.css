@@ -1,0 +1,232 @@
+.sheetOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  animation: var(--animation-fade-in) 0.2s var(--timing-ease-out);
+}
+
+.sheetContent {
+  position: fixed;
+  z-index: 1001;
+  background: var(--color-slate-800);
+  border: 1px solid var(--color-slate-700);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+/* Side variants */
+.sheetContent.top {
+  top: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid var(--color-slate-700);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  max-height: 80vh;
+}
+
+.sheetContent.bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--color-slate-700);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  max-height: 80vh;
+}
+
+.sheetContent.left {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 400px;
+  max-width: 90vw;
+  border-right: 1px solid var(--color-slate-700);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+.sheetContent.right {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 400px;
+  max-width: 90vw;
+  border-left: 1px solid var(--color-slate-700);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+.sheetHeader {
+  padding: var(--padding-lg);
+  border-bottom: 1px solid var(--color-slate-700);
+  background: var(--color-slate-800);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--grid-4);
+  flex-shrink: 0;
+}
+
+.sheetTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-slate-200);
+  margin: 0;
+}
+
+.sheetDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-slate-400);
+  margin: var(--grid-2) 0 0 0;
+  line-height: var(--line-height-sm);
+}
+
+.sheetBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--padding-lg);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-slate-600) transparent;
+}
+
+.sheetBody::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sheetBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sheetBody::-webkit-scrollbar-thumb {
+  background: var(--color-slate-600);
+  border-radius: 3px;
+}
+
+.sheetBody::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-500);
+}
+
+.sheetFooter {
+  padding: var(--padding-lg);
+  border-top: 1px solid var(--color-slate-700);
+  background: var(--color-slate-800);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--grid-3);
+  flex-shrink: 0;
+}
+
+.sheetClose {
+  position: absolute;
+  top: var(--grid-3);
+  right: var(--grid-3);
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--color-slate-400);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: 18px;
+  line-height: 1;
+  transition: var(--transition-smooth);
+  z-index: 10;
+}
+
+.sheetClose:hover {
+  background: var(--color-slate-700);
+  color: var(--color-slate-200);
+}
+
+.sheetClose:focus-visible {
+  outline: 2px solid var(--color-neon-purple-primary);
+  outline-offset: 2px;
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .sheetContent.left,
+  .sheetContent.right {
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+  }
+  
+  .sheetContent.top,
+  .sheetContent.bottom {
+    border-radius: 0;
+  }
+  
+  .sheetHeader,
+  .sheetBody,
+  .sheetFooter {
+    padding: var(--padding-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .sheetContent.top,
+  .sheetContent.bottom {
+    max-height: 90vh;
+  }
+}
+
+/* 애니메이션 */
+.sheetContent {
+  animation-duration: 0.3s;
+  animation-timing-function: var(--timing-ease-out);
+  animation-fill-mode: forwards;
+}
+
+.sheetContent.top {
+  animation-name: var(--animation-slide-in-top);
+}
+
+.sheetContent.bottom {
+  animation-name: var(--animation-slide-in-bottom);
+}
+
+.sheetContent.left {
+  animation-name: var(--animation-slide-in-left);
+}
+
+.sheetContent.right {
+  animation-name: var(--animation-slide-in-right);
+}
+
+/* 종료 애니메이션 */
+.sheetContent.exiting.top {
+  animation-name: var(--animation-slide-out-top);
+}
+
+.sheetContent.exiting.bottom {
+  animation-name: var(--animation-slide-out-bottom);
+}
+
+.sheetContent.exiting.left {
+  animation-name: var(--animation-slide-out-left);
+}
+
+.sheetContent.exiting.right {
+  animation-name: var(--animation-slide-out-right);
+}
+
+/* 접근성 */
+@media (prefers-reduced-motion: reduce) {
+  .sheetOverlay,
+  .sheetContent {
+    animation: none;
+  }
+}
+
+/* 포커스 트랩 */
+.sheetContent:focus {
+  outline: none;
+}

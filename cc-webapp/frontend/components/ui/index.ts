@@ -131,6 +131,45 @@ export type { ResizableProps } from './Resizable';
 export { default as ScrollArea } from './ScrollArea';
 export type { ScrollAreaProps } from './ScrollArea';
 
+// 새로 추가된 컴포넌트들
+export { 
+  Sidebar, 
+  SidebarProvider, 
+  SidebarHeader, 
+  SidebarContent, 
+  SidebarFooter, 
+  SidebarTrigger, 
+  SidebarInset,
+  useSidebar 
+} from './Sidebar';
+
+export { 
+  Table, 
+  TableHeader, 
+  TableBody, 
+  TableFooter, 
+  TableRow, 
+  TableHead, 
+  TableCell, 
+  TableCaption 
+} from './Table';
+
+export { Toggle } from './Toggle';
+
+export { ToggleGroup, ToggleGroupItem } from './ToggleGroup';
+
+export { 
+  ToasterProvider, 
+  useToast, 
+  toast 
+} from './Sonner';
+
+// 유틸리티 훅들
+export { useMobile, useMediaQuery, useBreakpoint, useOrientation, useViewport } from './use-mobile';
+
+// 유틸리티 함수들
+export { cn, formatNumber, delay, debounce, throttle, storage, generateId, removeEmpty, chunk, shuffle } from './utils';
+
 // 게임 전용 컴포넌트 (체크리스트 요구사항)
 export { default as TokenBalanceWidget } from './TokenBalanceWidget';
 export type { TokenBalanceWidgetProps } from './TokenBalanceWidget';
