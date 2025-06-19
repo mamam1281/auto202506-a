@@ -20,7 +20,20 @@ export type { TokenDisplayProps } from './TokenDisplay';
 export { default as Layout } from './Layout';
 export type { LayoutProps } from './Layout';
 
+// 게임 전용 컴포넌트 (체크리스트 요구사항)
+export { default as TokenBalanceWidget } from './TokenBalanceWidget';
+export type { TokenBalanceWidgetProps } from './TokenBalanceWidget';
+
+export { default as CJChatBubble } from './CJChatBubble';
+export type { CJChatBubbleProps, Message } from './CJChatBubble';
+
+export { default as SlotMachine } from './SlotMachine';
+export type { SlotMachineProps } from './SlotMachine';
+
 // 추후 추가될 컴포넌트들
+// export { default as RouletteWheel } from './RouletteWheel';
+// export { default as GachaBox } from './GachaBox';
+// export { default as RPSGame } from './RPSGame';
 // export { default as Modal } from './Modal';
 // export { default as Toast } from './Toast';
 // export { default as Badge } from './Badge';

@@ -1,0 +1,84 @@
+/* Checkbox 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.container {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  cursor: pointer;
+  transition: opacity var(--duration-fast) var(--easing-ease-out);
+}
+
+.container.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-slate-600);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  transition: all var(--duration-fast) var(--easing-ease-out);
+}
+
+/* === 크기별 스타일 === */
+.checkbox.sm {
+  width: 16px;
+  height: 16px;
+}
+
+.checkbox.md {
+  width: 20px;
+  height: 20px;
+}
+
+.checkbox.lg {
+  width: 24px;
+  height: 24px;
+}
+
+/* === 체크된 상태 === */
+.checkbox.checked {
+  background-color: var(--color-neon-blue);
+  border-color: var(--color-neon-blue);
+}
+
+.checkmark {
+  color: white;
+  font-size: calc(var(--font-size-xs) * 0.8);
+  font-weight: bold;
+  line-height: 1;
+}
+
+.checkbox.sm .checkmark {
+  font-size: calc(var(--font-size-xs) * 0.6);
+}
+
+.checkbox.lg .checkmark {
+  font-size: var(--font-size-xs);
+}
+
+/* === 라벨 === */
+.label {
+  font-size: var(--font-size-sm);
+  color: var(--color-slate-200);
+  user-select: none;
+}
+
+/* === 호버 효과 === */
+.container:hover:not(.disabled) .checkbox {
+  border-color: var(--color-neon-blue);
+}
+
+.container:hover:not(.disabled) .checkbox.checked {
+  background-color: var(--color-neon-blue);
+}

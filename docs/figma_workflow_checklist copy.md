@@ -140,76 +140,76 @@ Properties 설정:
 ### **Input Components (통합 가이드 기준)**
 ```
 Input Variants:
-- [ ] text (기본 텍스트 입력)
-- [ ] password (비밀번호, 토글 아이콘)
-- [ ] search (검색, 검색 아이콘)
-- [ ] number (숫자, 모노스페이스 폰트)
+- [x] text (기본 텍스트 입력)
+- [x] password (비밀번호, 토글 아이콘)
+- [x] search (검색, 검색 아이콘)
+- [x] number (숫자, 모노스페이스 폰트)
 
 Input Sizes:
-- [ ] sm: height 32px, padding 8px 12px
-- [ ] md: height 40px, padding 12px 16px
-- [ ] lg: height 48px, padding 16px 20px
+- [x] sm: height 32px, padding 8px 12px
+- [x] md: height 40px, padding 12px 16px
+- [x] lg: height 48px, padding 16px 20px
 
 Input States:
-- [ ] default (기본 상태)
-- [ ] focus (포커스 - 네온 테두리)
-- [ ] error (오류 - 빨간 테두리)
-- [ ] disabled (비활성)
-- [ ] success (성공 - 초록 테두리)
+- [x] default (기본 상태)
+- [x] focus (포커스 - 네온 테두리)
+- [x] error (오류 - 빨간 테두리)
+- [x] disabled (비활성)
+- [x] success (성공 - 초록 테두리)
 
 Input Features:
-- [ ] label (라벨 텍스트)
-- [ ] placeholder (플레이스홀더)
-- [ ] helperText (도움말 텍스트)
-- [ ] errorText (오류 메시지)
-- [ ] leftIcon (왼쪽 아이콘)
-- [ ] rightIcon (오른쪽 아이콘)
+- [x] label (라벨 텍스트)
+- [x] placeholder (플레이스홀더)
+- [x] helperText (도움말 텍스트)
+- [x] errorText (오류 메시지)
+- [x] leftIcon (왼쪽 아이콘)
+- [x] rightIcon (오른쪽 아이콘)
 
 Properties:
-- [ ] variant: text/password/search/number
-- [ ] size: sm/md/lg
-- [ ] state: default/focus/error/disabled/success
-- [ ] leftIcon: boolean
-- [ ] rightIcon: boolean
-- [ ] required: boolean
+- [x] variant: text/password/search/number
+- [x] size: sm/md/lg
+- [x] state: default/focus/error/disabled/success
+- [x] leftIcon: boolean
+- [x] rightIcon: boolean
+- [x] required: boolean
 ```
 
 ### **Card Components (통합 가이드 기준)**
 ```
 Card Types:
-- [ ] CardBase (기본 카드 - 범용)
-- [ ] CardGame (게임용 카드 - 게임 썸네일/정보)
-- [ ] CardMission (미션 카드 - 목표/보상)
-- [ ] CardReward (보상 카드 - 아이템/토큰)
+- [x] CardBase (기본 카드 - 범용)
+- [x] CardGame (게임용 카드 - 게임 썸네일/정보)
+- [x] CardMission (미션 카드 - 목표/보상)
+- [x] CardReward (보상 카드 - 아이템/토큰)
 
 Card States:
-- [ ] default (기본 상태)
-- [ ] hover (호버 - 살짝 떠오르는 효과)
-- [ ] active (선택됨 - 네온 테두리)
-- [ ] disabled (비활성 - 흐려짐)
-- [ ] loading (로딩 - 스켈레톤 UI)
+- [x] default (기본 상태)
+- [x] hover (호버 - 살짝 떠오르는 효과)
+- [x] active (선택됨 - 네온 테두리)
+- [x] disabled (비활성 - 흐려짐)
+- [x] loading (로딩 - 스켈레톤 UI)
 
 Card Features:
-- [ ] header (제목 영역)
-- [ ] content (내용 영역)
-- [ ] footer (하단 액션 영역)
-- [ ] thumbnail (썸네일 이미지)
-- [ ] badge (상태 배지)
-- [ ] progress (진행률 바)
+- [x] header (제목 영역)
+- [x] content (내용 영역)
+- [x] footer (하단 액션 영역)
+- [x] thumbnail (썸네일 이미지)
+- [x] badge (상태 배지)
+- [x] progress (진행률 바)
 
 Card Sizes:
-- [ ] sm: 280px width, auto height
-- [ ] md: 320px width, auto height
-- [ ] lg: 400px width, auto height
-- [ ] full: 100% width, auto height
+- [x] sm: 280px width, auto height
+- [x] md: 320px width, auto height
+- [x] lg: 400px width, auto height
+- [x] full: 100% width, auto height
 
 Properties:
-- [ ] type: base/game/mission/reward
-- [ ] size: sm/md/lg/full
-- [ ] state: default/hover/active/disabled/loading
-- [ ] showThumbnail: boolean
-- [ ] showBadge: boolean
-- [ ] showProgress: boolean
+- [x] type: base/game/mission/reward
+- [x] size: sm/md/lg/full
+- [x] state: default/hover/active/disabled/loading
+- [x] showThumbnail: boolean
+- [x] showBadge: boolean
+- [x] showProgress: boolean
 ```
 
 ---
@@ -219,29 +219,29 @@ Properties:
 ### **Token Balance Widget**
 ```
 컴포넌트 생성: token-balance
-- [ ] 토큰 아이콘 (Auto Layout)
-- [ ] 수치 텍스트 (Monospace)
-- [ ] 변화 인디케이터 (+/-)
-- [ ] 경고 상태 (부족 시 주황색)
+- [x] 토큰 아이콘 (Auto Layout)
+- [x] 수치 텍스트 (Monospace)
+- [x] 변화 인디케이터 (+/-)
+- [x] 경고 상태 (부족 시 주황색)
 
 Properties:
-- [ ] Amount: 숫자 값
-- [ ] Status: Normal/Warning/Critical
-- [ ] Change: None/Increase/Decrease
+- [x] Amount: 숫자 값
+- [x] Status: Normal/Warning/Critical
+- [x] Change: None/Increase/Decrease
 ```
 
 ### **CJ AI Chat Bubble**
 ```
 컴포넌트 생성: cj-chat
-- [ ] AI 아바타 (원형, 애니메이션)
-- [ ] 채팅 버블 (동적 크기)
-- [ ] 타이핑 인디케이터
-- [ ] 음성 토글 버튼
+- [x] AI 아바타 (원형, 애니메이션)
+- [x] 채팅 버블 (동적 크기)
+- [x] 타이핑 인디케이터
+- [x] 음성 토글 버튼
 
 Properties:
-- [ ] State: Idle/Typing/Speaking
-- [ ] Message: Text Content
-- [ ] Avatar: Mood State
+- [x] State: Idle/Typing/Speaking
+- [x] Message: Text Content
+- [x] Avatar: Mood State
 ```
 
 ### **게임별 컴포넌트**

@@ -1,0 +1,447 @@
+/* SlotMachine 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--grid-6);
+  background: var(--color-slate-800);
+  border: 2px solid var(--color-slate-600);
+  border-radius: var(--radius-3xl);
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  
+  /* 네온 그라데이션 배경 */
+  background: linear-gradient(135deg, 
+    var(--color-slate-800) 0%, 
+    rgba(123, 41, 205, 0.1) 50%,
+    var(--color-slate-800) 100%);
+  
+  /* 기본 글로우 */
+  box-shadow: var(--shadow-default);
+  
+  /* 애니메이션 */
+  transition: all var(--duration-normal) var(--easing-ease-out);
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, 
+    rgba(123, 41, 205, 0.1) 0%, 
+    transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--easing-ease-out);
+}
+
+.container.spinning::before {
+  opacity: 1;
+  animation: spinGlow 2s infinite;
+}
+
+.container.winner {
+  border-color: var(--color-success);
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+  animation: winnerGlow 1s ease-in-out;
+}
+
+@keyframes spinGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes winnerGlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* === 헤더 === */
+.header {
+  text-align: center;
+  margin-bottom: var(--grid-4);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-slate-100);
+  margin-bottom: var(--grid-1);
+  text-shadow: var(--text-glow);
+}
+
+.subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-slate-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* === 릴 컨테이너 === */
+.reelsContainer {
+  display: flex;
+  gap: var(--grid-2);
+  margin-bottom: var(--grid-4);
+  padding: var(--grid-3);
+  background: var(--color-slate-900);
+  border: 1px solid var(--color-slate-700);
+  border-radius: var(--radius-xl);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.reel {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  background: var(--color-slate-800);
+  border: 2px solid var(--color-slate-600);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  
+  /* 내부 글로우 */
+  box-shadow: inset 0 0 10px rgba(123, 41, 205, 0.2);
+}
+
+.symbolWindow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.symbol {
+  font-size: var(--font-size-3xl);
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(123, 41, 205, 0.5));
+}
+
+/* === 결과 표시 === */
+.resultDisplay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: var(--grid-4);
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: var(--radius-2xl);
+  backdrop-filter: blur(16px);
+  z-index: 10;
+  min-width: 200px;
+}
+
+.winResult {
+  border: 2px solid var(--color-success);
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+}
+
+.loseResult {
+  border: 2px solid var(--color-slate-600);
+}
+
+.winText {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-success);
+  margin-bottom: var(--grid-2);
+  animation: celebrate 0.5s ease-out;
+}
+
+.payoutText {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-slate-100);
+  text-shadow: var(--text-glow);
+}
+
+.loseText {
+  font-size: var(--font-size-lg);
+  color: var(--color-slate-400);
+}
+
+@keyframes celebrate {
+  0% { transform: scale(0.8) rotate(-5deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* === 베팅 컨트롤 === */
+.betControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--grid-2);
+  margin-bottom: var(--grid-4);
+  padding: var(--grid-3);
+  background: var(--color-slate-700);
+  border-radius: var(--radius-xl);
+  min-width: 200px;
+}
+
+.betLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-slate-400);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.betContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--grid-3);
+}
+
+.betButton {
+  width: 40px;
+  height: 40px;
+  background: var(--neon-gradient-1);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--easing-ease-out);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.betButton:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: var(--glow-medium);
+}
+
+.betButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.betAmount {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-slate-100);
+  min-width: 80px;
+  text-align: center;
+  text-shadow: var(--text-glow);
+}
+
+.betLimits {
+  font-size: var(--font-size-xs);
+  color: var(--color-slate-500);
+  text-align: center;
+}
+
+/* === 스핀 버튼 === */
+.spinButton {
+  width: 120px;
+  height: 60px;
+  background: var(--neon-gradient-2);
+  border: none;
+  border-radius: var(--radius-2xl);
+  color: white;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  margin-bottom: var(--grid-4);
+  position: relative;
+  overflow: hidden;
+  
+  /* 기본 글로우 */
+  box-shadow: var(--glow-medium);
+  
+  /* 애니메이션 */
+  transition: all var(--duration-normal) var(--easing-ease-out);
+}
+
+.spinButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.3), 
+    transparent);
+  transition: left var(--duration-slow) var(--easing-ease-out);
+}
+
+.spinButton:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.spinButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-strong);
+}
+
+.spinButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinnerIcon {
+  font-size: var(--font-size-xl);
+}
+
+/* === 배당표 === */
+.payoutTable {
+  width: 100%;
+  max-width: 250px;
+  padding: var(--grid-3);
+  background: var(--color-slate-700);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-slate-600);
+}
+
+.payoutTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-slate-300);
+  text-align: center;
+  margin-bottom: var(--grid-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.payoutGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--grid-1);
+}
+
+.payoutRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--grid-1) var(--grid-2);
+  background: var(--color-slate-800);
+  border-radius: var(--radius-base);
+}
+
+.payoutSymbol {
+  font-size: var(--font-size-sm);
+  line-height: 1;
+}
+
+.payoutMultiplier {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neon-blue);
+}
+
+/* === 반응형 스타일 === */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--grid-4);
+    max-width: 350px;
+  }
+  
+  .title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .reel {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .symbol {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .betContainer {
+    gap: var(--grid-2);
+  }
+  
+  .betAmount {
+    font-size: var(--font-size-lg);
+    min-width: 60px;
+  }
+  
+  .spinButton {
+    width: 100px;
+    height: 50px;
+    font-size: var(--font-size-base);
+  }
+  
+  .resultDisplay {
+    min-width: 180px;
+    padding: var(--grid-3);
+  }
+  
+  .winText {
+    font-size: var(--font-size-lg);
+  }
+  
+  .payoutText {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* === 접근성 === */
+@media (prefers-reduced-motion: reduce) {
+  .container,
+  .reel,
+  .spinButton,
+  .betButton {
+    transition: none;
+    animation: none;
+  }
+  
+  .container.spinning::before,
+  .container.winner,
+  .winText {
+    animation: none;
+  }
+  
+  .spinButton:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .betButton:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* === 고대비 모드 === */
+@media (prefers-contrast: high) {
+  .container {
+    border-width: 3px;
+    background: var(--color-slate-900);
+  }
+  
+  .reel {
+    border-width: 2px;
+    background: var(--color-slate-900);
+  }
+  
+  .spinButton {
+    border: 2px solid var(--color-slate-400);
+  }
+  
+  .betButton {
+    border: 2px solid var(--color-slate-400);
+  }
+}
