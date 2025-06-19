@@ -1,0 +1,468 @@
+/* Input 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--grid-1);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* === 라벨 === */
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-slate-200);
+  margin-bottom: var(--grid-1);
+}
+
+.required {
+  color: var(--color-error);
+  margin-left: var(--grid-0-5);
+}
+
+/* === 입력 래퍼 === */
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* === 입력 필드 기본 스타일 === */
+.input {
+  /* 기본 스타일 */
+  width: 100%;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-normal);
+  background-color: var(--color-slate-800);
+  color: var(--color-slate-200);
+  border: 1px solid var(--color-slate-600);
+  border-radius: var(--radius-button);
+  
+  /* 애니메이션 */
+  transition: all var(--duration-fast) var(--easing-ease-out);
+  
+  /* 상태 초기화 */
+  appearance: none;
+  outline: none;
+}
+
+/* === 크기별 스타일 (통합 가이드 기준) === */
+.input.sm {
+  height: 32px;
+  padding: 8px 12px;
+  font-size: var(--font-size-sm);
+}
+
+.input.md {
+  height: 40px;
+  padding: 12px 16px;
+  font-size: var(--font-size-base);
+}
+
+.input.lg {
+  height: 48px;
+  padding: 16px 20px;
+  font-size: var(--font-size-lg);
+}
+
+/* === 상태별 스타일 (통합 가이드 기준) === */
+.input.default {
+  border-color: var(--color-slate-600);
+}
+
+.input.focus {
+  border-color: var(--color-neon-blue);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.input.error {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.input.success {
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.input.disabled {
+  background-color: var(--color-slate-700);
+  color: var(--color-slate-500);
+  border-color: var(--color-slate-600);
+  cursor: not-allowed;
+}
+
+/* === 변형별 스타일 === */
+.input.text {
+  /* 기본 텍스트 입력 */
+  text-align: left;
+}
+
+.input.password {
+  /* 비밀번호 입력 */
+  letter-spacing: 0.1em;
+}
+
+.input.search {
+  /* 검색 입력 */
+  padding-left: var(--grid-6);
+}
+
+.input.number {
+  /* 숫자 입력 - 모노스페이스 폰트 */
+  text-align: right;
+}
+
+.monospace {
+  font-family: var(--font-family-mono);
+  text-align: right;
+}
+
+.input::placeholder {
+  color: var(--color-slate-400);
+}
+
+/* === 아이콘이 있는 경우 패딩 조정 === */
+.hasLeftIcon.sm {
+  padding-left: calc(32px + var(--grid-1));
+}
+
+.hasLeftIcon.md {
+  padding-left: calc(40px + var(--grid-1));
+}
+
+.hasLeftIcon.lg {
+  padding-left: calc(48px + var(--grid-1));
+}
+
+.hasRightIcon.sm {
+  padding-right: calc(32px + var(--grid-1));
+}
+
+.hasRightIcon.md {
+  padding-right: calc(40px + var(--grid-1));
+}
+
+.hasRightIcon.lg {
+  padding-right: calc(48px + var(--grid-1));
+}
+
+/* === 아이콘 컨테이너 === */
+.leftIcon,
+.rightIcon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--color-slate-400);
+  font-size: var(--font-size-base);
+  z-index: 1;
+}
+
+.leftIcon {
+  left: var(--grid-2);
+}
+
+.rightIcon {
+  right: var(--grid-2);
+}
+
+/* === 비밀번호 토글 버튼 === */
+.passwordToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--grid-1);
+  color: var(--color-slate-400);
+  font-size: var(--font-size-base);
+  transition: color var(--duration-fast) var(--easing-ease-out);
+  pointer-events: auto;
+}
+
+.passwordToggle:hover {
+  color: var(--color-slate-200);
+}
+
+.passwordToggle:focus {
+  outline: 2px solid var(--color-neon-blue);
+  outline-offset: 2px;
+}
+
+/* === 도움말 및 오류 텍스트 === */
+.helperText,
+.errorText {
+  font-size: var(--font-size-xs);
+  margin-top: var(--grid-1);
+}
+
+.helperText {
+  color: var(--color-slate-400);
+}
+
+.errorText {
+  color: var(--color-error);
+}
+
+/* === 호버 효과 === */
+.input:hover:not(:disabled) {
+  border-color: var(--color-slate-500);
+}
+
+/* === 포커스 효과 === */
+.input:focus {
+  border-color: var(--color-neon-blue);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.input:focus.error {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.input:focus.success {
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+/* === 반응형 스타일 === */
+@media (max-width: 768px) {
+  .input.lg {
+    height: 44px;
+    padding: 14px 18px;
+  }
+  
+  .input.md {
+    height: 40px;
+    padding: 12px 16px;
+  }
+  
+  .input.sm {
+    height: 36px;
+    padding: 10px 14px;
+  }
+}
+
+.hasLeftIcon.md {
+  padding-left: calc(var(--btn-height-md) + var(--grid-1));
+}
+
+.hasLeftIcon.lg {
+  padding-left: calc(var(--btn-height-lg) + var(--grid-1));
+}
+
+.hasRightIcon.sm {
+  padding-right: calc(var(--btn-height-sm) + var(--grid-1));
+}
+
+.hasRightIcon.md {
+  padding-right: calc(var(--btn-height-md) + var(--grid-1));
+}
+
+.hasRightIcon.lg {
+  padding-right: calc(var(--btn-height-lg) + var(--grid-1));
+}
+
+/* === 변형별 스타일 === */
+
+/* Default */
+.default {
+  background-color: var(--color-slate-800);
+  border-color: var(--color-slate-600);
+}
+
+.default:hover {
+  border-color: var(--color-slate-400);
+}
+
+.default:focus {
+  border-color: var(--neon-purple-2);
+  box-shadow: 0 0 0 3px rgba(123, 41, 205, 0.1);
+}
+
+/* Search */
+.search {
+  background-color: var(--color-slate-700);
+  border-color: var(--color-slate-500);
+}
+
+.search:hover {
+  background-color: var(--color-slate-600);
+  border-color: var(--color-slate-400);
+}
+
+.search:focus {
+  background-color: var(--color-slate-800);
+  border-color: var(--neon-purple-2);
+  box-shadow: 0 0 0 3px rgba(123, 41, 205, 0.1);
+}
+
+/* Success */
+.success {
+  border-color: var(--color-success);
+}
+
+.success:focus {
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Error */
+.error {
+  border-color: var(--color-error) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.error:focus {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* === 비활성화 상태 === */
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-slate-700);
+  border-color: var(--color-slate-600);
+}
+
+.input:disabled::placeholder {
+  color: var(--color-slate-500);
+}
+
+/* === 아이콘 스타일 === */
+.leftIcon,
+.rightIcon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-slate-400);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.leftIcon {
+  left: var(--grid-3);
+}
+
+.rightIcon {
+  right: var(--grid-3);
+}
+
+/* 크기별 아이콘 */
+.sm .leftIcon svg,
+.sm .rightIcon svg {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+}
+
+.md .leftIcon svg,
+.md .rightIcon svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+.lg .leftIcon svg,
+.lg .rightIcon svg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+
+/* === 도움말 텍스트 === */
+.helperText {
+  font-size: var(--font-size-xs);
+  color: var(--color-slate-400);
+  margin-top: var(--grid-1);
+}
+
+.errorText {
+  font-size: var(--font-size-xs);
+  color: var(--color-error);
+  margin-top: var(--grid-1);
+  display: flex;
+  align-items: center;
+  gap: var(--grid-1);
+}
+
+/* === 포커스 시 아이콘 색상 변경 === */
+.input:focus ~ .leftIcon,
+.input:focus ~ .rightIcon {
+  color: var(--neon-purple-2);
+}
+
+.error:focus ~ .leftIcon,
+.error:focus ~ .rightIcon {
+  color: var(--color-error);
+}
+
+.success:focus ~ .leftIcon,
+.success:focus ~ .rightIcon {
+  color: var(--color-success);
+}
+
+/* === 자동완성 스타일 === */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus {
+  border-color: var(--neon-purple-2);
+  -webkit-text-fill-color: var(--color-slate-200);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-slate-800) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* === 타입별 특수 스타일 === */
+
+/* Number Input */
+.input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.input[type="number"]::-webkit-outer-spin-button,
+.input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Password Input */
+.input[type="password"] {
+  font-family: var(--font-family-mono);
+  letter-spacing: 0.1em;
+}
+
+/* Search Input */
+.input[type="search"] {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.input[type="search"]::-webkit-search-decoration,
+.input[type="search"]::-webkit-search-cancel-button,
+.input[type="search"]::-webkit-search-results-button,
+.input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
+
+/* === 반응형 === */
+@media (max-width: 768px) {
+  .sm {
+    height: 36px;
+    padding: var(--grid-2) var(--grid-3);
+  }
+  
+  .md {
+    height: 44px;
+    padding: var(--grid-3) var(--grid-4);
+  }
+  
+  .lg {
+    height: 52px;
+    padding: var(--grid-4) var(--grid-5);
+  }
+}

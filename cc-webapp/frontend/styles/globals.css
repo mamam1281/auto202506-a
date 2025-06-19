@@ -1,0 +1,243 @@
+/* 🎨 글로벌 스타일 - 통합 가이드 기준 */
+
+@import './variables.css';
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100%;
+  background-color: var(--color-slate-900);
+  color: var(--color-slate-200);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  font-weight: var(--font-weight-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 유틸리티 클래스 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus 스타일 */
+.focus-visible {
+  outline: 2px solid var(--neon-purple-2);
+  outline-offset: 2px;
+}
+
+/* 텍스트 선택 */
+::selection {
+  background-color: var(--neon-purple-2);
+  color: var(--color-slate-200);
+}
+
+/* 스크롤바 스타일 (Webkit) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-slate-800);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-slate-600);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-400);
+}
+
+/* 기본 요소 스타일 */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-slate-200);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5 {
+  font-size: var(--font-size-base);
+}
+
+h6 {
+  font-size: var(--font-size-sm);
+}
+
+p {
+  margin-bottom: var(--spacing-2);
+}
+
+a {
+  color: var(--neon-purple-2);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--easing-ease-out);
+}
+
+a:hover {
+  color: var(--neon-purple-1);
+  text-decoration: underline;
+}
+
+/* 입력 요소 기본 스타일 */
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background-color: var(--color-slate-800);
+  border: 1px solid var(--color-slate-600);
+  border-radius: var(--radius-button);
+  padding: var(--padding-md);
+  transition: all var(--duration-fast) var(--easing-ease-out);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--neon-purple-2);
+  box-shadow: 0 0 0 3px rgba(123, 41, 205, 0.1);
+}
+
+/* 플렉스 유틸리티 */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+/* 간격 유틸리티 */
+.gap-1 { gap: var(--grid-1); }
+.gap-2 { gap: var(--grid-2); }
+.gap-3 { gap: var(--grid-3); }
+.gap-4 { gap: var(--grid-4); }
+.gap-6 { gap: var(--grid-6); }
+.gap-8 { gap: var(--grid-8); }
+
+/* 마진/패딩 유틸리티 */
+.p-2 { padding: var(--grid-2); }
+.p-4 { padding: var(--grid-4); }
+.p-6 { padding: var(--grid-6); }
+.p-8 { padding: var(--grid-8); }
+
+.m-2 { margin: var(--grid-2); }
+.m-4 { margin: var(--grid-4); }
+.m-6 { margin: var(--grid-6); }
+.m-8 { margin: var(--grid-8); }
+
+/* 텍스트 유틸리티 */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+/* 색상 유틸리티 */
+.text-slate-200 { color: var(--color-slate-200); }
+.text-slate-400 { color: var(--color-slate-400); }
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+.text-error { color: var(--color-error); }
+.text-info { color: var(--color-info); }
+
+/* 반응형 유틸리티 */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.min-h-screen { min-height: 100vh; }
+
+/* 위치 유틸리티 */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+/* 오버플로우 유틸리티 */
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+
+/* 애니메이션 유틸리티 */
+.transition-all {
+  transition: all var(--duration-fast) var(--easing-ease-out);
+}
+
+.transition-colors {
+  transition: color var(--duration-fast) var(--easing-ease-out),
+              background-color var(--duration-fast) var(--easing-ease-out),
+              border-color var(--duration-fast) var(--easing-ease-out);
+}
+
+.transition-transform {
+  transition: transform var(--duration-fast) var(--easing-ease-out);
+}
+
+/* 호버 효과 */
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-glow:hover {
+  box-shadow: var(--shadow-neon);
+}

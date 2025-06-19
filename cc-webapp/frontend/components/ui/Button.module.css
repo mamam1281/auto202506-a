@@ -1,0 +1,278 @@
+/* Button 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.button {
+  /* 기본 스타일 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--grid-2);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  vertical-align: middle;
+  position: relative;
+  overflow: hidden;
+  
+  /* 애니메이션 */
+  transition: all var(--duration-fast) var(--easing-ease-out);
+  
+  /* 최소 터치 영역 보장 */
+  min-height: var(--min-touch-area);
+  min-width: var(--min-touch-area);
+}
+
+/* 기본 상태 호버 효과 */
+.button:hover:not(.disabled):not(.loading) {
+  transform: scale(1.02);
+}
+
+.button:active:not(.disabled):not(.loading) {
+  transform: scale(0.98);
+}
+
+/* === 크기별 스타일 === */
+.xs {
+  height: var(--btn-height-xs);
+  padding: var(--btn-padding-xs);
+  font-size: var(--font-size-xs);
+  min-width: var(--btn-height-xs);
+}
+
+.sm {
+  height: var(--btn-height-sm);
+  padding: var(--btn-padding-sm);
+  font-size: var(--font-size-sm);
+  min-width: var(--btn-height-sm);
+}
+
+.md {
+  height: var(--btn-height-md);
+  padding: var(--btn-padding-md);
+  font-size: var(--font-size-base);
+  min-width: var(--btn-height-md);
+}
+
+.lg {
+  height: var(--btn-height-lg);
+  padding: var(--btn-padding-lg);
+  font-size: var(--font-size-lg);
+  min-width: var(--btn-height-lg);
+}
+
+.xl {
+  height: var(--btn-height-xl);
+  padding: var(--btn-padding-xl);
+  font-size: var(--font-size-xl);
+  min-width: var(--btn-height-xl);
+}
+
+/* === 변형별 스타일 === */
+
+/* Primary - 네온 퍼플 그라데이션 */
+.primary {
+  background: var(--neon-gradient-1);
+  color: var(--color-slate-200);
+  box-shadow: var(--shadow-md);
+}
+
+.primary:hover:not(.disabled):not(.loading) {
+  background: var(--neon-gradient-2);
+  box-shadow: var(--shadow-neon);
+}
+
+/* Secondary - 슬레이트 배경 */
+.secondary {
+  background-color: var(--color-slate-700);
+  color: var(--color-slate-200);
+  border: 1px solid var(--color-slate-600);
+}
+
+.secondary:hover:not(.disabled):not(.loading) {
+  background-color: var(--color-slate-600);
+  border-color: var(--color-slate-400);
+}
+
+/* Outline - 테두리만 */
+.outline {
+  background-color: transparent;
+  color: var(--neon-purple-2);
+  border: 1px solid var(--neon-purple-2);
+}
+
+.outline:hover:not(.disabled):not(.loading) {
+  background-color: var(--neon-purple-2);
+  color: var(--color-slate-200);
+  box-shadow: var(--shadow-neon);
+}
+
+/* Ghost - 배경 없음 */
+.ghost {
+  background-color: transparent;
+  color: var(--color-slate-400);
+}
+
+.ghost:hover:not(.disabled):not(.loading) {
+  background-color: var(--color-slate-800);
+  color: var(--color-slate-200);
+}
+
+/* Gradient - 네온/골드 그라데이션 */
+.gradient {
+  background: var(--gradient-gold);
+  color: var(--color-slate-900);
+  font-weight: var(--font-weight-semibold);
+  box-shadow: var(--shadow-lg);
+}
+
+.gradient:hover:not(.disabled):not(.loading) {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+}
+
+/* Success */
+.success {
+  background-color: var(--color-success);
+  color: var(--color-slate-200);
+}
+
+.success:hover:not(.disabled):not(.loading) {
+  background-color: #059669;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Warning */
+.warning {
+  background-color: var(--color-warning);
+  color: var(--color-slate-900);
+}
+
+.warning:hover:not(.disabled):not(.loading) {
+  background-color: #d97706;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+
+/* Error */
+.error {
+  background-color: var(--color-error);
+  color: var(--color-slate-200);
+}
+
+.error:hover:not(.disabled):not(.loading) {
+  background-color: #dc2626;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+/* === 상태별 스타일 === */
+
+/* 전체 너비 */
+.fullWidth {
+  width: 100%;
+}
+
+/* 아이콘만 */
+.iconOnly {
+  padding: 0;
+  aspect-ratio: 1;
+}
+
+/* 비활성화 */
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* 로딩 상태 */
+.loading {
+  cursor: wait;
+  position: relative;
+}
+
+.loading * {
+  opacity: 0.7;
+}
+
+/* 로딩 스피너 */
+.spinner {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  margin-left: var(--grid-1);
+}
+
+/* 아이콘 크기 조정 */
+.xs .spinner,
+.xs svg {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+}
+
+.sm .spinner,
+.sm svg {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+}
+
+.md .spinner,
+.md svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+.lg .spinner,
+.lg svg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+
+.xl .spinner,
+.xl svg {
+  width: var(--icon-xl);
+  height: var(--icon-xl);
+}
+
+/* 포커스 스타일 */
+.button:focus-visible {
+  outline: 2px solid var(--neon-purple-2);
+  outline-offset: 2px;
+}
+
+/* 애니메이션 정의 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 리플 효과 (선택적) */
+.button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width var(--duration-fast), height var(--duration-fast);
+}
+
+.button:active::before {
+  width: 100%;
+  height: 100%;
+}

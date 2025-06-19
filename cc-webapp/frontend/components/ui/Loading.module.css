@@ -1,0 +1,347 @@
+/* Loading 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--grid-2);
+}
+
+.centered {
+  justify-content: center;
+  min-height: 200px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-modal);
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* === 기본 로딩 스타일 === */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === Spinner === */
+.spinner {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  animation: spin var(--duration-slow) linear infinite;
+}
+
+.spinner.primary {
+  border-top-color: var(--neon-purple-2);
+  border-right-color: var(--neon-purple-2);
+}
+
+.spinner.secondary {
+  border-top-color: var(--color-slate-400);
+  border-right-color: var(--color-slate-400);
+}
+
+.spinner.neon {
+  border-top-color: var(--neon-purple-1);
+  border-right-color: var(--neon-purple-3);
+}
+
+.spinner.white {
+  border-top-color: var(--color-slate-200);
+  border-right-color: var(--color-slate-200);
+}
+
+/* === Dots === */
+.dots {
+  gap: var(--grid-1);
+}
+
+.dot {
+  border-radius: 50%;
+  animation: dotPulse 1.4s ease-in-out infinite both;
+}
+
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+.dot:nth-child(3) { animation-delay: 0s; }
+
+.dots.primary .dot {
+  background-color: var(--neon-purple-2);
+}
+
+.dots.secondary .dot {
+  background-color: var(--color-slate-400);
+}
+
+.dots.neon .dot {
+  background-color: var(--neon-purple-1);
+  box-shadow: 0 0 8px var(--neon-glow);
+}
+
+.dots.white .dot {
+  background-color: var(--color-slate-200);
+}
+
+/* === Pulse === */
+.pulse {
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.pulse.primary {
+  background-color: var(--neon-purple-2);
+}
+
+.pulse.secondary {
+  background-color: var(--color-slate-400);
+}
+
+.pulse.neon {
+  background-color: var(--neon-purple-1);
+  box-shadow: 0 0 20px var(--neon-glow);
+}
+
+.pulse.white {
+  background-color: var(--color-slate-200);
+}
+
+/* === Skeleton === */
+.skeleton {
+  flex-direction: column;
+  gap: var(--grid-2);
+  width: 100%;
+  max-width: 300px;
+}
+
+.skeletonLine {
+  height: 16px;
+  border-radius: var(--grid-1);
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+.skeletonLine:nth-child(1) {
+  width: 100%;
+}
+
+.skeletonLine:nth-child(2) {
+  width: 80%;
+}
+
+.skeletonLine:nth-child(3) {
+  width: 60%;
+}
+
+.skeleton.primary .skeletonLine {
+  background: linear-gradient(
+    90deg,
+    var(--color-slate-700) 25%, 
+    var(--color-slate-600) 50%, 
+    var(--color-slate-700) 75%
+  );
+  background-size: 200% 100%;
+}
+
+.skeleton.secondary .skeletonLine {
+  background: linear-gradient(
+    90deg,
+    var(--color-slate-800) 25%, 
+    var(--color-slate-700) 50%, 
+    var(--color-slate-800) 75%
+  );
+  background-size: 200% 100%;
+}
+
+.skeleton.neon .skeletonLine {
+  background: linear-gradient(
+    90deg,
+    var(--color-slate-700) 25%, 
+    rgba(123, 41, 205, 0.2) 50%, 
+    var(--color-slate-700) 75%
+  );
+  background-size: 200% 100%;
+}
+
+.skeleton.white .skeletonLine {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.1) 25%, 
+    rgba(226, 232, 240, 0.2) 50%, 
+    rgba(226, 232, 240, 0.1) 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* === 크기별 스타일 === */
+
+/* Small */
+.sm.spinner {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  border-width: 2px;
+}
+
+.sm.dots .dot {
+  width: 6px;
+  height: 6px;
+}
+
+.sm.pulse {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+}
+
+.sm.skeleton .skeletonLine {
+  height: 12px;
+}
+
+/* Medium */
+.md.spinner {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  border-width: 3px;
+}
+
+.md.dots .dot {
+  width: 8px;
+  height: 8px;
+}
+
+.md.pulse {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+
+.md.skeleton .skeletonLine {
+  height: 16px;
+}
+
+/* Large */
+.lg.spinner {
+  width: var(--icon-xl);
+  height: var(--icon-xl);
+  border-width: 4px;
+}
+
+.lg.dots .dot {
+  width: 12px;
+  height: 12px;
+}
+
+.lg.pulse {
+  width: var(--icon-xl);
+  height: var(--icon-xl);
+}
+
+.lg.skeleton .skeletonLine {
+  height: 20px;
+}
+
+/* Extra Large */
+.xl.spinner {
+  width: 48px;
+  height: 48px;
+  border-width: 5px;
+}
+
+.xl.dots .dot {
+  width: 16px;
+  height: 16px;
+}
+
+.xl.pulse {
+  width: 48px;
+  height: 48px;
+}
+
+.xl.skeleton .skeletonLine {
+  height: 24px;
+}
+
+/* === 텍스트 === */
+.text {
+  font-size: var(--font-size-sm);
+  color: var(--color-slate-400);
+  text-align: center;
+  margin-top: var(--grid-1);
+}
+
+/* === 애니메이션 === */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes skeletonPulse {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* === 접근성 === */
+@media (prefers-reduced-motion: reduce) {
+  .spinner,
+  .dot,
+  .pulse,
+  .skeletonLine {
+    animation: none;
+  }
+  
+  .spinner {
+    border-color: var(--neon-purple-2) transparent transparent transparent;
+  }
+  
+  .dot {
+    opacity: 0.7;
+  }
+  
+  .pulse {
+    opacity: 0.8;
+  }
+  
+  .skeletonLine {
+    background: var(--color-slate-700);
+  }
+}
