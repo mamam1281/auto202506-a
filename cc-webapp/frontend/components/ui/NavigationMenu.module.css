@@ -1,0 +1,115 @@
+/* NavigationMenu 컴포넌트 스타일 */
+
+.navigationMenu {
+  background: var(--color-primary-charcoal, #2d2d2d);
+  border: 1px solid var(--color-neutral-dark-gray, #333333);
+  border-radius: var(--radius-lg, 8px);
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: var(--spacing-1, 8px);
+  display: flex;
+}
+
+.horizontal .navList {
+  flex-direction: row;
+  gap: var(--spacing-1, 8px);
+}
+
+.vertical .navList {
+  flex-direction: column;
+  gap: var(--spacing-0-5, 2px);
+}
+
+.navItem {
+  position: relative;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1, 8px);
+  padding: var(--spacing-1-5, 6px) var(--spacing-2, 16px);
+  border-radius: var(--radius-base, 4px);
+  
+  font-family: var(--font-family-sans, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--color-neutral-white, #ffffff);
+  text-decoration: none;
+  
+  cursor: pointer;
+  transition: all 0.15s var(--ease-out-cubic, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+.navLink:hover:not(.disabled) {
+  background: rgba(123, 41, 205, 0.1);
+}
+
+.navLink.active {
+  background: rgba(123, 41, 205, 0.15);
+  color: var(--neon-purple-1, #7b29cd);
+}
+
+.navLink.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.submenu {
+  position: absolute;
+  z-index: var(--z-modal, 30);
+  min-width: 200px;
+  
+  background: var(--color-primary-charcoal, #2d2d2d);
+  border: 1px solid var(--color-neutral-dark-gray, #333333);
+  border-radius: var(--radius-lg, 8px);
+  box-shadow: var(--shadow-lg);
+  
+  list-style: none;
+  margin: 0;
+  padding: var(--spacing-1, 8px);
+}
+
+.horizontal .submenu {
+  top: 100%;
+  left: 0;
+  margin-top: var(--spacing-1, 8px);
+}
+
+.vertical .submenu {
+  top: 0;
+  left: 100%;
+  margin-left: var(--spacing-1, 8px);
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .horizontal .navList {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .navLink {
+    min-width: 44px;
+    padding: var(--spacing-1, 8px);
+  }
+  
+  .vertical .label {
+    display: none;
+  }
+}

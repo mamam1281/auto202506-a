@@ -1,0 +1,200 @@
+.tableWrapper {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-slate-700);
+  background: var(--color-slate-800);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+  width: 100%;
+  caption-side: bottom;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+}
+
+.tableHeader {
+  border-bottom: 1px solid var(--color-slate-700);
+  background: var(--color-slate-800);
+}
+
+.tableBody {
+  background: var(--color-slate-900);
+}
+
+.tableFooter {
+  border-top: 1px solid var(--color-slate-700);
+  background: var(--color-slate-800);
+  font-weight: var(--font-weight-medium);
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--color-slate-700);
+  transition: var(--transition-smooth);
+}
+
+.tableRow:hover {
+  background: var(--color-slate-800);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableHead {
+  height: 48px;
+  padding: var(--padding-md);
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-slate-200);
+  background: var(--color-slate-800);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tableHead:first-child {
+  padding-left: var(--padding-lg);
+}
+
+.tableHead:last-child {
+  padding-right: var(--padding-lg);
+}
+
+.tableCell {
+  padding: var(--padding-md);
+  color: var(--color-slate-300);
+  vertical-align: top;
+}
+
+.tableCell:first-child {
+  padding-left: var(--padding-lg);
+}
+
+.tableCell:last-child {
+  padding-right: var(--padding-lg);
+}
+
+.tableCaption {
+  margin-top: var(--padding-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-slate-400);
+  text-align: center;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .tableWrapper {
+    font-size: var(--font-size-xs);
+  }
+  
+  .tableHead,
+  .tableCell {
+    padding: var(--padding-sm);
+  }
+  
+  .tableHead:first-child,
+  .tableCell:first-child {
+    padding-left: var(--padding-md);
+  }
+  
+  .tableHead:last-child,
+  .tableCell:last-child {
+    padding-right: var(--padding-md);
+  }
+}
+
+/* 스크롤바 스타일링 */
+.tableWrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tableWrapper::-webkit-scrollbar-track {
+  background: var(--color-slate-800);
+  border-radius: var(--radius-sm);
+}
+
+.tableWrapper::-webkit-scrollbar-thumb {
+  background: var(--color-slate-600);
+  border-radius: var(--radius-sm);
+}
+
+.tableWrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-500);
+}
+
+/* 선택 가능한 행 스타일 */
+.tableRow[data-selectable="true"] {
+  cursor: pointer;
+}
+
+.tableRow[data-selected="true"] {
+  background: var(--color-neon-purple-primary);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.tableRow[data-selected="true"]:hover {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+/* 정렬 가능한 헤더 스타일 */
+.tableHead[data-sortable="true"] {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.tableHead[data-sortable="true"]:hover {
+  background: var(--color-slate-700);
+}
+
+.tableHead[data-sorted="asc"]::after {
+  content: '▲';
+  position: absolute;
+  right: var(--padding-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--font-size-xs);
+  color: var(--color-neon-purple-primary);
+}
+
+.tableHead[data-sorted="desc"]::after {
+  content: '▼';
+  position: absolute;
+  right: var(--padding-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--font-size-xs);
+  color: var(--color-neon-purple-primary);
+}
+
+/* 고정 컬럼 스타일 */
+.tableHead[data-sticky="left"],
+.tableCell[data-sticky="left"] {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background: inherit;
+  box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.tableHead[data-sticky="right"],
+.tableCell[data-sticky="right"] {
+  position: sticky;
+  right: 0;
+  z-index: 5;
+  background: inherit;
+  box-shadow: -2px 0 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* 애니메이션 */
+.tableRow {
+  animation: var(--animation-fade-in) 0.2s var(--timing-ease-out);
+}
+
+.tableWrapper {
+  animation: var(--animation-slide-up) 0.3s var(--timing-ease-out);
+}

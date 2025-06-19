@@ -142,9 +142,9 @@ Properties:
 - [✅] bet-control (베팅 조절)
 
 Properties:
-- [ ] State: Idle/Spinning/Result
-- [ ] Symbols: [7, BAR, Cherry, Bell, Diamond]
-- [ ] Bet Amount: 숫자
+- [✅ ] State: Idle/Spinning/Result
+- [✅ ] Symbols: [7, BAR, Cherry, Bell, Diamond]
+- [✅ ] Bet Amount: 숫자
 ```
 
 #### **룰렛**
@@ -164,31 +164,44 @@ Properties:
 #### **가챠**
 ```
 컴포넌트 생성: gacha-box
-- [ ] gacha-container (3D 박스)
-- [ ] pull-button (큰 버튼)
-- [ ] ticket-counter (티켓 수량)
-- [ ] result-modal (결과 표시)
+- [✅ ] gacha-container (3D 박스)
+- [✅ ] pull-button (큰 버튼)
+- [ ✅] ticket-counter (티켓 수량)
+- [✅ ] result-modal (결과 표시)
 
 Properties:
-- [ ] State: Ready/Pulling/Reveal
-- [ ] Tier: Common/Rare/Epic/Legendary
-- [ ] Tickets: 숫자
+- [✅ ] State: Ready/Pulling/Reveal
+- [✅ ] Tier: Common/Rare/Epic/Legendary
+- [✅ ] Tickets: 숫자
 ```
 
 #### **가위바위보**
 ```
 컴포넌트 생성: rps-game
-- [ ] choice-buttons (3개 선택)
-- [ ] opponent-display (AI 상대)
-- [ ] result-screen (승부 결과)
+- [✅ ] choice-buttons (3개 선택)
+- [✅ ] opponent-display (AI 상대)
+- [✅ ] result-screen (승부 결과)
 
 Properties:
-- [ ] Player Choice: Rock/Paper/Scissors
-- [ ] AI Choice: Rock/Paper/Scissors
-- [ ] Result: Win/Lose/Draw
+- [✅ ] Player Choice: Rock/Paper/Scissors
+- [✅ ] AI Choice: Rock/Paper/Scissors
+- [✅ ] Result: Win/Lose/Draw
 ```
 
 ---
+
+sheet.tsx
+sidebar.tsx
+sonner.tsx
+table.tsx
+toggle-group.tsx
+toggle.tsx
+use-mobile.ts
+utils.ts
+progress.tsx
+label.tsx
+
+
 
 ## 📅 **Day 13-15: 화면 디자인 (Mobile)**
 

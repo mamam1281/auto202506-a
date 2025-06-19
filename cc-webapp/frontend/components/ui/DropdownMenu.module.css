@@ -1,0 +1,153 @@
+/* DropdownMenu 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.dropdownMenu {
+  position: relative;
+  display: inline-block;
+}
+
+.trigger {
+  cursor: pointer;
+}
+
+.menu {
+  position: absolute;
+  z-index: var(--z-modal, 30);
+  min-width: 200px;
+  
+  background: var(--color-primary-charcoal, #2d2d2d);
+  border: 1px solid var(--color-neutral-dark-gray, #333333);
+  border-radius: var(--radius-lg, 8px);
+  
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px);
+  
+  padding: var(--spacing-1, 8px);
+  
+  animation: dropdownEnter 0.15s ease-out;
+}
+
+@keyframes dropdownEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.menu.bottomStart {
+  top: 100%;
+  left: 0;
+  margin-top: var(--spacing-1, 8px);
+}
+
+.menu.bottomEnd {
+  top: 100%;
+  right: 0;
+  margin-top: var(--spacing-1, 8px);
+}
+
+.menu.topStart {
+  bottom: 100%;
+  left: 0;
+  margin-bottom: var(--spacing-1, 8px);
+}
+
+.menu.topEnd {
+  bottom: 100%;
+  right: 0;
+  margin-bottom: var(--spacing-1, 8px);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2, 16px);
+  padding: var(--spacing-1-5, 6px) var(--spacing-2, 16px);
+  min-height: 32px;
+  
+  border-radius: var(--radius-base, 4px);
+  cursor: pointer;
+  user-select: none;
+  
+  transition: all 0.15s var(--ease-out-cubic, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+.menuItem:hover:not(.disabled) {
+  background: rgba(123, 41, 205, 0.1);
+}
+
+.menuItem.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.itemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: var(--font-size-sm, 14px);
+  flex-shrink: 0;
+}
+
+.itemLabel {
+  flex: 1;
+  font-family: var(--font-family-sans, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--color-neutral-white, #ffffff);
+  line-height: 1.4;
+}
+
+.separator {
+  height: 1px;
+  background: var(--color-neutral-dark-gray, #333333);
+  margin: var(--spacing-1, 8px) 0;
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .menu {
+    min-width: 160px;
+  }
+  
+  .menuItem {
+    padding: var(--spacing-1, 8px) var(--spacing-1-5, 6px);
+    gap: var(--spacing-1-5, 6px);
+    min-height: 40px;
+  }
+}
+
+/* 접근성 */
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    animation: none;
+  }
+  
+  .menuItem {
+    transition: none;
+  }
+}
+
+/* 터치 최적화 */
+.dropdownMenu {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menuItem {
+  min-height: 44px;
+}
+
+@media (hover: none) {
+  .menuItem:hover {
+    background: transparent;
+  }
+  
+  .menuItem:active:not(.disabled) {
+    background: rgba(123, 41, 205, 0.1);
+  }
+}

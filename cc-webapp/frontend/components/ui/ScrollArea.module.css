@@ -1,0 +1,102 @@
+/* ScrollArea 컴포넌트 스타일 */
+
+.scrollArea {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg, 8px);
+  border: 1px solid var(--color-neutral-dark-gray, #333333);
+}
+
+.scrollContent {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: var(--scrollbar-size, 8px);
+  scrollbar-color: var(--color-neutral-dark-gray, #333333) transparent;
+}
+
+.scrollContent::-webkit-scrollbar {
+  width: var(--scrollbar-size, 8px);
+}
+
+.scrollContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollContent::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-dark-gray, #333333);
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.scrollContent::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-gray, #9CA3AF);
+  background-clip: content-box;
+}
+
+.autoHide::-webkit-scrollbar {
+  width: 0;
+}
+
+.autoHide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--scrollbar-size, 8px);
+  background: transparent;
+  pointer-events: none;
+}
+
+.scrollThumb {
+  position: absolute;
+  right: 0;
+  background: var(--color-neutral-dark-gray, #333333);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color 0.2s ease;
+}
+
+.scrollThumb:hover {
+  background: var(--color-neutral-gray, #9CA3AF);
+}
+
+.scrollThumb:active {
+  background: var(--neon-purple-1, #7b29cd);
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .scrollContent {
+    --scrollbar-size: 6px;
+  }
+  
+  .scrollbar {
+    width: 6px;
+  }
+}
+
+/* 접근성 */
+@media (prefers-reduced-motion: reduce) {
+  .scrollThumb {
+    transition: none;
+  }
+}
+
+/* 터치 디바이스 */
+@media (hover: none) {
+  .scrollbar {
+    display: none;
+  }
+  
+  .scrollContent {
+    -webkit-overflow-scrolling: touch;
+  }
+}

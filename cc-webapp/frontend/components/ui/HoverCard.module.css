@@ -1,0 +1,220 @@
+/* HoverCard 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.hoverCard {
+  position: relative;
+  display: inline-block;
+}
+
+.trigger {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.card {
+  position: absolute;
+  z-index: var(--z-tooltip, 40);
+  
+  background: var(--color-primary-charcoal, #2d2d2d);
+  border: 1px solid var(--color-neutral-dark-gray, #333333);
+  border-radius: var(--radius-lg, 8px);
+  
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px);
+  
+  max-width: 300px;
+  min-width: 200px;
+  
+  transition: all 0.15s var(--ease-out-cubic, cubic-bezier(0.33, 1, 0.68, 1));
+  transform-origin: center;
+}
+
+.card.open {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.card.closed {
+  opacity: 0;
+  transform: scale(0.95) translateY(-4px);
+  pointer-events: none;
+}
+
+/* 위치별 스타일 */
+.card.top {
+  bottom: 100%;
+  left: 50%;
+  transform-origin: bottom center;
+  margin-bottom: var(--spacing-1, 8px);
+  transform: translateX(-50%);
+}
+
+.card.top.open {
+  transform: translateX(-50%) scale(1) translateY(0);
+}
+
+.card.top.closed {
+  transform: translateX(-50%) scale(0.95) translateY(4px);
+}
+
+.card.bottom {
+  top: 100%;
+  left: 50%;
+  transform-origin: top center;
+  margin-top: var(--spacing-1, 8px);
+  transform: translateX(-50%);
+}
+
+.card.bottom.open {
+  transform: translateX(-50%) scale(1) translateY(0);
+}
+
+.card.bottom.closed {
+  transform: translateX(-50%) scale(0.95) translateY(-4px);
+}
+
+.card.left {
+  right: 100%;
+  top: 50%;
+  transform-origin: right center;
+  margin-right: var(--spacing-1, 8px);
+  transform: translateY(-50%);
+}
+
+.card.left.open {
+  transform: translateY(-50%) scale(1) translateX(0);
+}
+
+.card.left.closed {
+  transform: translateY(-50%) scale(0.95) translateX(4px);
+}
+
+.card.right {
+  left: 100%;
+  top: 50%;
+  transform-origin: left center;
+  margin-left: var(--spacing-1, 8px);
+  transform: translateY(-50%);
+}
+
+.card.right.open {
+  transform: translateY(-50%) scale(1) translateX(0);
+}
+
+.card.right.closed {
+  transform: translateY(-50%) scale(0.95) translateX(-4px);
+}
+
+/* 화살표 */
+.card::before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--color-primary-charcoal, #2d2d2d);
+  border: 1px solid var(--color-neutral-dark-gray, #333333);
+  transform: rotate(45deg);
+}
+
+.card.top::before {
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  border-top: none;
+  border-left: none;
+}
+
+.card.bottom::before {
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  border-bottom: none;
+  border-right: none;
+}
+
+.card.left::before {
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border-left: none;
+  border-bottom: none;
+}
+
+.card.right::before {
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border-right: none;
+  border-top: none;
+}
+
+.content {
+  padding: var(--spacing-3, 24px);
+  font-family: var(--font-family-sans, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-neutral-white, #ffffff);
+  line-height: 1.5;
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .card {
+    max-width: 250px;
+    min-width: 180px;
+  }
+  
+  .content {
+    padding: var(--spacing-2, 16px);
+    font-size: var(--font-size-xs, 12px);
+  }
+}
+
+/* 접근성 */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: opacity 0.15s ease;
+  }
+  
+  .card.open {
+    transform: scale(1) translateY(0);
+  }
+  
+  .card.closed {
+    transform: scale(1) translateY(0);
+  }
+  
+  .card.top.open,
+  .card.top.closed {
+    transform: translateX(-50%) scale(1) translateY(0);
+  }
+  
+  .card.bottom.open,
+  .card.bottom.closed {
+    transform: translateX(-50%) scale(1) translateY(0);
+  }
+  
+  .card.left.open,
+  .card.left.closed {
+    transform: translateY(-50%) scale(1) translateX(0);
+  }
+  
+  .card.right.open,
+  .card.right.closed {
+    transform: translateY(-50%) scale(1) translateX(0);
+  }
+}
+
+/* 터치 디바이스에서는 호버카드 비활성화 */
+@media (hover: none) {
+  .hoverCard {
+    pointer-events: none;
+  }
+  
+  .trigger {
+    pointer-events: auto;
+  }
+  
+  .card {
+    display: none;
+  }
+}

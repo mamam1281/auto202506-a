@@ -94,6 +94,43 @@ export type { TokenDisplayProps } from './TokenDisplay';
 export { default as Tooltip } from './Tooltip';
 export type { TooltipProps } from './Tooltip';
 
+// 추가 UI 컴포넌트들
+export { default as Carousel } from './Carousel';
+export type { CarouselProps, CarouselItem } from './Carousel';
+
+export { default as Chart } from './Chart';
+export type { ChartProps, ChartDataPoint } from './Chart';
+
+export { default as Command } from './Command';
+export type { CommandProps, CommandItem } from './Command';
+
+export { default as ContextMenu } from './ContextMenu';
+export type { ContextMenuProps, ContextMenuItem } from './ContextMenu';
+
+export { default as Drawer } from './Drawer';
+export type { DrawerProps } from './Drawer';
+
+export { default as DropdownMenu } from './DropdownMenu';
+export type { DropdownMenuProps, DropdownMenuItem } from './DropdownMenu';
+
+export { default as HoverCard } from './HoverCard';
+export type { HoverCardProps } from './HoverCard';
+
+export { default as Menubar } from './Menubar';
+export type { MenubarProps, MenubarItem } from './Menubar';
+
+export { default as NavigationMenu } from './NavigationMenu';
+export type { NavigationMenuProps, NavigationMenuItem } from './NavigationMenu';
+
+export { default as Pagination } from './Pagination';
+export type { PaginationProps } from './Pagination';
+
+export { default as Resizable } from './Resizable';
+export type { ResizableProps } from './Resizable';
+
+export { default as ScrollArea } from './ScrollArea';
+export type { ScrollAreaProps } from './ScrollArea';
+
 // 게임 전용 컴포넌트 (체크리스트 요구사항)
 export { default as TokenBalanceWidget } from './TokenBalanceWidget';
 export type { TokenBalanceWidgetProps } from './TokenBalanceWidget';
