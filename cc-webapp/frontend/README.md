@@ -1,10 +1,77 @@
 # CC Webapp - Frontend
 
-This directory contains the Next.js frontend for the CC Webapp.
+This directory contains the Next.js frontend for the CC Webapp built with TypeScript/TSX for type safety and maintainability.
 
 ## Prerequisites
 - Node.js (version 18.x or as specified in `.nvmrc` if present, or `frontend/Dockerfile`)
 - npm (comes with Node.js)
+
+## Technology Stack
+- **Next.js 15+**: React framework with App Router
+- **TypeScript/TSX**: Strict type checking and enhanced developer experience
+- **ESLint with TypeScript**: Enforced code quality and type safety rules
+- **Tailwind CSS**: Utility-first CSS framework
+- **Jest & React Testing Library**: Unit and component testing
+- **Cypress**: End-to-end testing
+
+## Environment Configuration
+
+Before starting development, create a `.env.local` file in the frontend directory to configure environment variables:
+
+```bash
+# .env.local
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+**Important:** 
+- Environment variables starting with `NEXT_PUBLIC_` are exposed to the browser
+- Never include sensitive data in `NEXT_PUBLIC_` variables
+- The `.env.local` file is ignored by git for security
+
+## TypeScript Configuration
+
+This project uses strict TypeScript configuration for enhanced type safety:
+
+### Key TypeScript Features:
+- **Strict Mode**: Enabled for maximum type safety
+- **No Implicit Any**: All variables must have explicit types
+- **Unused Variables Check**: Prevents unused imports and variables
+- **Path Mapping**: Clean imports using `@/` prefix for root directory
+
+### Type Definitions:
+- `types/card.ts`: Card component interfaces
+- `types/api.ts`: Backend API response types
+- `utils/api.ts`: Type-safe API client
+
+### TypeScript Commands:
+```bash
+# Type checking (without compilation)
+npm run type-check
+
+# Watch mode for continuous type checking
+npm run type-check:watch
+```
+
+## Code Quality & Linting
+
+### ESLint Configuration
+The project enforces strict TypeScript rules through ESLint:
+
+```bash
+# Run linting
+npm run lint
+
+# Fix auto-fixable issues
+npm run lint:fix
+```
+
+### Enforced Rules:
+- **@typescript-eslint/no-unused-vars**: Prevents unused variables
+- **@typescript-eslint/no-explicit-any**: Discourages use of `any` type
+- **@typescript-eslint/prefer-const**: Enforces const for non-reassigned variables
+- **@typescript-eslint/no-non-null-assertion**: Prevents risky non-null assertions
+
+**Note:** TypeScript rules are NOT to be disabled or removed. If you encounter linting errors, fix the underlying code issue rather than disabling the rule.
 
 ## Local Development
 
@@ -13,12 +80,29 @@ This directory contains the Next.js frontend for the CC Webapp.
     cd cc-webapp/frontend
     # Or from project root: cd frontend
     ```
-2.  Install dependencies:
+
+2.  Create environment configuration:
+    ```bash
+    # Create .env.local file with required environment variables
+    echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+    ```
+
+3.  Install dependencies:
     ```bash
     npm install
-    # Or 'npm ci' for cleaner installs if package-lock.json is up-to-date and you want to match it exactly
+    # Or 'npm ci' for cleaner installs if package-lock.json is up-to-date
     ```
-3.  Run the Next.js development server:
+
+4.  Verify TypeScript and linting setup:
+    ```bash
+    # Check for type errors
+    npm run type-check
+    
+    # Check for linting issues
+    npm run lint
+    ```
+
+5.  Run the Next.js development server:
     ```bash
     npm run dev
     ```
@@ -97,36 +181,150 @@ Alternatively, tools like `audit-ci` or `better-npm-audit` can be integrated int
 
 Regularly review the audit output and update packages as necessary, paying attention to breaking changes.
 
-## Backend Interaction
+## Backend API Integration
 
-The frontend application interacts with the backend services, which are expected to be running on `http://localhost:8000` during local development when the frontend is run via `npm run dev`.
+### Type-Safe API Client
 
-The backend provides various API endpoints for game logic, user data, actions, rewards, content unlocking, recommendations, notifications, etc. Key backend monitoring endpoints that the frontend might indirectly benefit from (or that developers should be aware of) include:
+The frontend uses a type-safe API client located in `utils/api.ts`:
 
--   `GET /health`: Provides the health status of the backend API.
--   `GET /metrics`: Exposes application metrics in Prometheus format for monitoring the backend.
+```typescript
+import { apiClient } from '@/utils/api';
+import type { ApiResponse, UserProfile } from '@/types/api';
 
-Frontend API calls are generally directed to `http://localhost:8000/api/...`. Refer to backend documentation or OpenAPI schema (`http://localhost:8000/docs`) for full API details.
-
-### Example Login Request
-
-To authenticate a user, send a JSON payload to the login endpoint:
-
-```bash
-curl -X POST http://localhost:8000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"nickname": "testuser", "password": "password", "invite_code": "INVITE"}'
+// Example API call with type safety
+const fetchUserProfile = async (): Promise<UserProfile> => {
+  const response = await apiClient.get<ApiResponse<UserProfile>>('/api/user/profile');
+  return response.data;
+};
 ```
+
+### Environment Variables
+
+The API client automatically uses the `NEXT_PUBLIC_API_URL` environment variable:
+
+```typescript
+// Configured in utils/api.ts
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+```
+
+### Backend API Endpoints
+
+The frontend application interacts with the backend services running on the configured API URL (default: `http://localhost:8000`).
+
+Key API endpoints include:
+-   `GET /health`: Backend health status
+-   `GET /metrics`: Application metrics (Prometheus format)
+-   `POST /api/auth/login`: User authentication
+-   `GET /api/user/profile`: User profile data
+-   Additional game logic, rewards, and notification endpoints
+
+For full API documentation, visit `http://localhost:8000/docs` when the backend is running.
+
+### Example API Usage
+
+```typescript
+// Type-safe login request
+import { apiClient } from '@/utils/api';
+import type { LoginRequest, LoginResponse } from '@/types/api';
+
+const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
+  const response = await apiClient.post<LoginResponse>('/api/auth/login', credentials);
+  return response.data;
+};
+```
+
+## Backend Interaction
 
 ## Project Structure
 
--   `app/`: Contains page components (App Router structure).
--   `components/`: Shared React components used across pages.
--   `hooks/`: Custom React hooks.
--   `utils/`: Utility functions.
--   `public/`: Static assets (images, sounds, etc.).
--   `__tests__/`: Jest unit/component tests.
--   `cypress/`: Cypress E2E tests.
--   `jest.config.js`, `jest.setup.js`: Configuration for Jest.
--   `cypress.json` (or `cypress.config.js`): Configuration for Cypress.
--   `tailwind.config.js`, `postcss.config.js`: Configuration for Tailwind CSS.
+-   `app/`: Next.js App Router pages and layouts (TypeScript/TSX)
+-   `components/`: Shared React components with TypeScript interfaces
+-   `hooks/`: Custom React hooks with TypeScript
+-   `types/`: TypeScript type definitions and interfaces
+    -   `card.ts`: Card component interfaces
+    -   `api.ts`: Backend API response types
+-   `utils/`: Utility functions and API client
+    -   `api.ts`: Type-safe HTTP client for backend communication
+-   `public/`: Static assets (images, sounds, etc.)
+-   `__tests__/`: Jest unit/component tests (TypeScript)
+-   `cypress/`: Cypress E2E tests
+-   `jest.config.js`, `jest.setup.js`: Configuration for Jest
+-   `cypress.json` (or `cypress.config.js`): Configuration for Cypress
+-   `tailwind.config.js`, `postcss.config.mjs`: Configuration for Tailwind CSS
+-   `tsconfig.json`: TypeScript configuration with strict rules
+-   `.eslintrc.json`: ESLint configuration with TypeScript rules
+-   `.env.local`: Environment variables (not tracked in git)
+
+## Development Guidelines
+
+### TypeScript Best Practices
+1. **Always define explicit types** - Avoid `any` type
+2. **Use interfaces for component props** - Create reusable type definitions
+3. **Leverage type inference** - Let TypeScript infer types when possible
+4. **Use strict null checks** - Handle undefined/null cases explicitly
+
+### ESLint Compliance
+- **Never disable TypeScript rules** - Fix code issues instead
+- **Run linting before commits** - Ensure clean code quality
+- **Address warnings promptly** - Don't let technical debt accumulate
+
+### Environment Variables
+- **Use NEXT_PUBLIC_ prefix** for client-side variables
+- **Never commit .env.local** - Keep sensitive data secure
+- **Document required variables** - Update this README when adding new env vars
+
+### API Integration
+- **Use the type-safe API client** - Located in `utils/api.ts`
+- **Define response types** - Add interfaces to `types/api.ts`
+- **Handle errors gracefully** - Implement proper error handling
+
+## New Developer Onboarding
+
+### Quick Start Checklist
+1. ✅ **Clone the repository** and navigate to `cc-webapp/frontend`
+2. ✅ **Create `.env.local`** with `NEXT_PUBLIC_API_URL=http://localhost:8000`
+3. ✅ **Install dependencies** with `npm install`
+4. ✅ **Verify setup** with `npm run type-check` and `npm run lint`
+5. ✅ **Start development** with `npm run dev`
+
+### Common Setup Issues
+
+**TypeScript Errors:**
+```bash
+# If you see TypeScript errors, run:
+npm run type-check
+# Fix any type issues before proceeding
+```
+
+**ESLint Errors:**
+```bash
+# Check and fix linting issues:
+npm run lint
+npm run lint:fix  # Auto-fix when possible
+```
+
+**Environment Variables Missing:**
+```bash
+# Ensure .env.local exists with:
+echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+```
+
+**Backend Connection Issues:**
+- Ensure backend is running on `http://localhost:8000`
+- Check network connectivity and firewall settings
+- Verify API endpoints in browser: `http://localhost:8000/health`
+
+### Code Quality Standards
+
+All code must pass these checks before commit:
+```bash
+# Required checks
+npm run type-check     # No TypeScript errors
+npm run lint          # No ESLint errors
+npm test             # All tests passing
+```
+
+**Remember:** 
+- TypeScript rules are enforced and should NOT be disabled
+- Use type-safe API client for all backend communication
+- Follow the established project structure and naming conventions
