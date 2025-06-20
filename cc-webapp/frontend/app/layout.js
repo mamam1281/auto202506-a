@@ -1,12 +1,9 @@
 // cc-webapp/frontend/app/layout.js
-'use client'; // Required if RootLayout itself uses client-side hooks or state, though NotificationBanner is client-side.
-               // Or, keep RootLayout as Server Component and wrap NotificationBanner if it needs context.
-               // For simplicity with userId prop, making layout client-side for now.
+'use client'; // Required if RootLayout itself uses client-side hooks or state
 
 import { GeistSans } from 'geist/font/sans'; // Updated import for Geist font
 import { GeistMono } from 'geist/font/mono';
 import './globals.css'; // Your global styles
-import NotificationBanner from '@/components/archive/NotificationBanner'; // Adjust path if needed
 
 // export const metadata = { // Metadata API is for Server Components
 //   title: 'CC Webapp',
@@ -14,10 +11,6 @@ import NotificationBanner from '@/components/archive/NotificationBanner'; // Adj
 // };
 
 export default function RootLayout({ children }) {
-  // In a real app, userId would come from a session or auth context provider
-  // which would typically wrap {children} or be accessible globally.
-  const userIdForBanner = 1; // Placeholder, as per instructions
-
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <head>
@@ -27,7 +20,6 @@ export default function RootLayout({ children }) {
         <meta name="description" content="Emotion-driven gamified adult-content webapp" />
       </head>
       <body className="antialiased bg-gray-100 dark:bg-gray-900"> {/* Added basic body bg */}
-        <NotificationBanner userId={userIdForBanner} />
         {/* Add padding-top to main content area if banner is fixed and has a known height.
             The banner is ~52px high (p-3 + text-sm + icon). Let's use pt-16 to be safe.
             Alternatively, the banner could push content down if not fixed.

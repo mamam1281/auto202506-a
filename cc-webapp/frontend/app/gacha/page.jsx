@@ -1,8 +1,8 @@
 // cc-webapp/frontend/app/gacha/page.jsx
 'use client';
 
-import React from 'react'; // React import for clarity
-import Gacha from '@/components/archive/Gacha';
+import React, { useEffect } from 'react'; // React import for clarity
+// import Gacha from '@/components/archive/Gacha'; // TODO: 재구현 필요
 // import { useAuth } from '@/context/AuthContext'; // Example if using auth context
 // import Head from 'next/head'; // next/head is for Pages Router. For App Router, use metadata export.
 
@@ -49,10 +49,14 @@ export default function GachaPage() {
             className="text-md sm:text-lg text-gray-300 mt-3 max-w-md mx-auto"
           >
             Test your luck and win exclusive rewards! What wonders will fate bestow upon you?
-          </motion.p>
-        </header>
+          </motion.p>        </header>
         <main className="w-full flex justify-center">
-          <Gacha userId={currentUserId} />
+          {/* <Gacha userId={currentUserId} /> */}
+          {/* TODO: Gacha 컴포넌트 재구현 필요 */}
+          <div className="text-center py-20">
+            <h2 className="text-xl text-gray-400 mb-4">🎰 Under Construction 🎰</h2>
+            <p className="text-gray-500">Gacha 게임 컴포넌트를 재구현 중입니다.</p>
+          </div>
         </main>
         <footer className="text-center mt-10 sm:mt-12 text-xs text-gray-500 pb-8">
           <p>Gacha results are determined by chance. Please play responsibly.</p>

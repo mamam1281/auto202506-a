@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react'; // React import for clarity
-import Roulette from '@/components/archive/Roulette';
+// import Roulette from '@/components/archive/Roulette'; // TODO: 재구현 필요
 // import Head from 'next/head'; // For Pages Router. App Router uses metadata export.
 import { useEffect } from 'react'; // For setting document title if needed in client component
 import { motion } from 'framer-motion';
@@ -41,9 +41,13 @@ export default function RoulettePage() {
           >
             Spin the wheel for dazzling prizes and test your luck!
           </motion.p>
-        </header>
-        <main className="w-full flex justify-center">
-          <Roulette userId={currentUserId} />
+        </header>        <main className="w-full flex justify-center">
+          {/* <Roulette userId={currentUserId} /> */}
+          {/* TODO: Roulette 컴포넌트 재구현 필요 */}
+          <div className="text-center py-20">
+            <h2 className="text-xl text-gray-400 mb-4">🎲 Under Construction 🎲</h2>
+            <p className="text-gray-500">Roulette 게임 컴포넌트를 재구현 중입니다.</p>
+          </div>
         </main>
         <footer className="text-center mt-10 sm:mt-12 text-xs text-gray-500 pb-8">
           <p>Fortune favors the bold! All outcomes are determined by chance.</p>

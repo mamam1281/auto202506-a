@@ -1,171 +1,209 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { BaseCardProps } from '../../../types/card';
+import React, { forwardRef } from 'react';
+import { motion, HTMLMotionProps } from 'framer-motion';
 
-const cardVariants = {
-  default: { 
-    scale: 1, 
-    y: 0,
-    boxShadow: '0 2px 10px rgba(123, 41, 205, 0.08), 0 0 0 1px rgba(123, 41, 205, 0.1)'
-  },
-  hover: { 
-    scale: 1.01, 
-    y: -3,
-    boxShadow: '0 8px 20px rgba(123, 41, 205, 0.15), 0 0 0 1px rgba(123, 41, 205, 0.2), 0 0 8px rgba(123, 41, 205, 0.1)'
-  },
-  active: { 
-    scale: 0.99, 
-    y: 0,
-    boxShadow: '0 4px 15px rgba(135, 13, 209, 0.2), 0 0 0 2px rgba(135, 13, 209, 0.3)'
-  }
-};
+export interface CardBaseProps {
+  /** 카드 제목 */
+  title: string;
+  
+  /** 카드 설명 */
+  description?: string;
+  
+  /** 카드 이미지 URL */
+  image?: string;
+  
+  /** 카드 변형 */
+  variant?: 'default' | 'gaming' | 'cosmic' | 'minimal';
+  
+  /** 카드 크기 */
+  size?: 'sm' | 'md' | 'lg';
+  
+  /** 글로우 효과 활성화 */
+  glow?: boolean;
+  
+  /** 호버 효과 활성화 */
+  hover?: boolean;
+  
+  /** 클릭 이벤트 핸들러 */
+  onClick?: () => void;
+  
+  /** 추가 CSS 클래스 */
+  className?: string;
+  
+  /** 자식 요소 */
+  children?: React.ReactNode;
+}
 
-export function CardBase({ 
+// Framer Motion props와 CardBase props 결합
+type CardBaseMotionProps = CardBaseProps & Omit<HTMLMotionProps<"div">, keyof CardBaseProps>;
+
+const CardBase = forwardRef<HTMLDivElement, CardBaseMotionProps>(({
   title, 
   description, 
   image, 
+  variant = 'default',
+  size = 'md',
+  glow = true,
+  hover = true,
+  onClick,
   className = '', 
-  onClick 
-}: BaseCardProps) {
+  children,
+  ...motionProps
+}, ref) => {
+  
+  // 반응형 크기 클래스 (통합_반응형_가이드.md 기준)
+  const getSizeClasses = () => {
+    const sizes = {
+      sm: {
+        height: 'min-h-[240px] sm:min-h-[260px]',
+        padding: 'p-4 sm:p-5',
+        image: 'h-24 sm:h-28',
+        title: 'text-base sm:text-lg',
+        description: 'text-xs sm:text-sm',
+      },
+      md: {
+        height: 'min-h-[280px] sm:min-h-[320px] lg:min-h-[360px]',
+        padding: 'p-4 sm:p-6',
+        image: 'h-32 sm:h-36 lg:h-40',
+        title: 'text-lg sm:text-xl',
+        description: 'text-sm sm:text-base',
+      },
+      lg: {
+        height: 'min-h-[320px] sm:min-h-[380px] lg:min-h-[420px]',
+        padding: 'p-6 sm:p-8',
+        image: 'h-40 sm:h-44 lg:h-48',
+        title: 'text-xl sm:text-2xl',
+        description: 'text-base sm:text-lg',
+      },
+    };
+    return sizes[size];
+  };
+
+  // 변형별 스타일
+  const getVariantStyles = () => {
+    const variants = {
+      default: {
+        background: 'from-gray-900/90 to-gray-800/90',
+        border: 'border-gray-600/30',
+        glowColor: 'rgba(99, 102, 241, 0.1)',
+        textPrimary: 'text-white',
+        textSecondary: 'text-gray-300',
+      },
+      gaming: {
+        background: 'from-purple-900/90 to-pink-900/90',
+        border: 'border-purple-500/30',
+        glowColor: 'rgba(147, 51, 234, 0.15)',
+        textPrimary: 'text-white',
+        textSecondary: 'text-purple-200',
+      },
+      cosmic: {
+        background: 'from-indigo-900/90 to-purple-900/90',
+        border: 'border-indigo-400/30',
+        glowColor: 'rgba(123, 41, 205, 0.15)',
+        textPrimary: 'text-white',
+        textSecondary: 'text-indigo-200',
+      },
+      minimal: {
+        background: 'from-slate-100 to-white',
+        border: 'border-slate-200',
+        glowColor: 'rgba(0, 0, 0, 0.05)',
+        textPrimary: 'text-slate-900',
+        textSecondary: 'text-slate-600',
+      },
+    };
+    return variants[variant];
+  };
+
+  const sizeClasses = getSizeClasses();
+  const variantStyles = getVariantStyles();
+
+  // 애니메이션 설정
+  const cardVariants = {
+    default: { 
+      scale: 1, 
+      y: 0,
+      rotateX: 0,
+    },
+    hover: { 
+      scale: hover ? 1.02 : 1, 
+      y: hover ? -4 : 0,
+      rotateX: hover ? 5 : 0,
+    },
+    tap: { 
+      scale: 0.98, 
+      y: 0,
+      rotateX: 0,
+    }
+  };
+
   return (
     <motion.div
+      ref={ref}
       className={`
         relative overflow-hidden rounded-2xl cursor-pointer group
-        bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d]
-        border border-[#7b29cd]/20
-        min-h-[320px] h-full
+        bg-gradient-to-br ${variantStyles.background}
+        border ${variantStyles.border}
+        ${sizeClasses.height} h-full
         flex flex-col
+        backdrop-blur-sm
         transition-all duration-300
+        touch-target
         ${className}
       `}
       variants={cardVariants}
       initial="default"
-      whileHover="hover"
-      whileTap="active"
+      whileHover={hover ? "hover" : "default"}
+      whileTap="tap"
       onClick={onClick}
-      layout
+      style={{
+        transformPerspective: '1000px',
+        boxShadow: glow ? `0 4px 20px ${variantStyles.glowColor}, 0 0 0 1px ${variantStyles.glowColor}` : undefined,
+      }}
+      {...motionProps}
     >
-      {/* 보라색 글로우 배경 애니메이션 - 강도 약화 */}
-      <motion.div 
-        className="absolute inset-0 bg-gradient-to-br from-[#7b29cd]/3 via-[#870dd1]/2 to-[#5b30f6]/3 pointer-events-none"
-        animate={{
-          opacity: [0.2, 0.4, 0.2],
-          background: [
-            'radial-gradient(circle at 30% 30%, rgba(123, 41, 205, 0.03), transparent 70%)',
-            'radial-gradient(circle at 70% 70%, rgba(135, 13, 209, 0.05), transparent 70%)',
-            'radial-gradient(circle at 30% 30%, rgba(123, 41, 205, 0.03), transparent 70%)'
-          ]
-        }}
-        transition={{
-          duration: 6,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
+      {/* 글로우 효과 배경 */}
+      {glow && (
+        <>
+          <motion.div 
+            className="absolute -top-1 -left-1 -right-1 -bottom-1 rounded-2xl opacity-20"
+            style={{
+              background: `linear-gradient(45deg, ${variantStyles.glowColor}, transparent, ${variantStyles.glowColor})`
+            }}
+            animate={{
+              rotate: [0, 360],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+          
+          {/* 애니메이션 테두리 */}
+          <motion.div
+            className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent"
+            animate={{
+              x: ['-100%', '100%'],
+              opacity: [0, 0.6, 0]
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+        </>
+      )}
       
-      {/* 호버 시 네온 테두리 - 블러 제거 */}
-      <motion.div
-        className="absolute -inset-0.5 bg-gradient-to-r from-[#7b29cd] via-[#870dd1] to-[#5b30f6] rounded-2xl opacity-0 group-hover:opacity-100"
-        style={{
-          boxShadow: '0 0 15px rgba(123, 41, 205, 0.4), inset 0 0 15px rgba(123, 41, 205, 0.2)'
-        }}
-        animate={{
-          opacity: [0, 0.15, 0],
-          scale: [1, 1.01, 1],
-          boxShadow: [
-            '0 0 10px rgba(123, 41, 205, 0.3), inset 0 0 10px rgba(123, 41, 205, 0.1)',
-            '0 0 20px rgba(123, 41, 205, 0.5), inset 0 0 20px rgba(123, 41, 205, 0.3)',
-            '0 0 10px rgba(123, 41, 205, 0.3), inset 0 0 10px rgba(123, 41, 205, 0.1)'
-          ]
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-      
-      {/* 모서리 액센트 라인 - 효과 약화 */}
-      <div className="absolute top-0 left-0 w-8 h-8">
-        <motion.div 
-          className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#7b29cd] to-transparent"
-          animate={{
-            opacity: [0.3, 0.6, 0.3],
-            boxShadow: [
-              '0 0 3px rgba(123, 41, 205, 0.3)',
-              '0 0 8px rgba(123, 41, 205, 0.5)',
-              '0 0 3px rgba(123, 41, 205, 0.3)'
-            ]
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div 
-          className="absolute top-0 left-0 h-full w-0.5 bg-gradient-to-b from-[#7b29cd] to-transparent"
-          animate={{
-            opacity: [0.3, 0.6, 0.3],
-            boxShadow: [
-              '0 0 3px rgba(123, 41, 205, 0.3)',
-              '0 0 8px rgba(123, 41, 205, 0.5)',
-              '0 0 3px rgba(123, 41, 205, 0.3)'
-            ]
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </div>
-      <div className="absolute bottom-0 right-0 w-8 h-8">
-        <motion.div 
-          className="absolute bottom-0 right-0 w-full h-0.5 bg-gradient-to-l from-[#8054f2] to-transparent"
-          animate={{
-            opacity: [0.3, 0.6, 0.3],
-            boxShadow: [
-              '0 0 3px rgba(128, 84, 242, 0.3)',
-              '0 0 8px rgba(128, 84, 242, 0.5)',
-              '0 0 3px rgba(128, 84, 242, 0.3)'
-            ]
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1.5
-          }}
-        />
-        <motion.div 
-          className="absolute bottom-0 right-0 h-full w-0.5 bg-gradient-to-t from-[#8054f2] to-transparent"
-          animate={{
-            opacity: [0.3, 0.6, 0.3],
-            boxShadow: [
-              '0 0 3px rgba(128, 84, 242, 0.3)',
-              '0 0 8px rgba(128, 84, 242, 0.5)',
-              '0 0 3px rgba(128, 84, 242, 0.3)'
-            ]
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1.5
-          }}
-        />
-      </div>
-      
-      <div className="relative z-10 p-6 flex flex-col h-full">
-        {/* 이미지 영역 - 표준 높이 */}
-        <div className="mb-4 h-40 flex-shrink-0">
-          {image ? (
+      <div className={`relative z-10 ${sizeClasses.padding} flex flex-col h-full`}>
+        {/* 이미지 영역 */}
+        {image && (
+          <div className={`mb-4 ${sizeClasses.image} flex-shrink-0`}>
             <motion.div 
               className="h-full rounded-xl overflow-hidden relative"
               whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.3 }}
             >
               <img
                 src={image}
@@ -173,18 +211,28 @@ export function CardBase({
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a]/60 via-transparent to-[#7b29cd]/10" />
+              <div 
+                className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"
+                style={{
+                  background: `linear-gradient(to top, ${variantStyles.glowColor}, transparent)`
+                }}
+              />
             </motion.div>
-          ) : (
-            <div className="h-full rounded-xl border-2 border-dashed border-[#7b29cd]/20 flex items-center justify-center">
+          </div>
+        )}
+        
+        {/* 기본 이미지 플레이스홀더 */}
+        {!image && (
+          <div className={`mb-4 ${sizeClasses.image} flex-shrink-0`}>
+            <div className={`h-full rounded-xl border-2 border-dashed ${variantStyles.border} flex items-center justify-center`}>
               <motion.div
-                className="text-4xl opacity-70"
+                className={`text-4xl opacity-60 ${variantStyles.textSecondary}`}
                 animate={{
                   scale: [1, 1.05, 1],
                   rotate: [0, 5, -5, 0]
                 }}
                 transition={{
-                  duration: 8,
+                  duration: 4,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
@@ -192,61 +240,55 @@ export function CardBase({
                 ⭐
               </motion.div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
         
-        {/* 컨텐츠 영역 - 플렉스 확장 */}
+        {/* 컨텐츠 영역 */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="flex-1 flex flex-col"
         >
-          <h3 className="mb-2 text-white font-semibold text-lg min-h-[28px] flex items-center">
+          <h3 className={`mb-2 ${variantStyles.textPrimary} font-semibold ${sizeClasses.title} leading-tight`}>
             {title}
           </h3>
           
-          <div className="flex-1">
-            {description && (
-              <p className="text-[#D1D5DB] text-sm leading-relaxed">
-                {description}
-              </p>
-            )}
-          </div>
+          {description && (
+            <p className={`${variantStyles.textSecondary} ${sizeClasses.description} leading-relaxed flex-1`}>
+              {description}
+            </p>
+          )}
+          
+          {children && (
+            <div className="mt-4">
+              {children}
+            </div>
+          )}
         </motion.div>
       </div>
       
-      {/* 하단 네온 액센트 - 강도 약화 */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#7b29cd] via-[#870dd1] to-[#8054f2]"
-        animate={{
-          opacity: [0.2, 0.5, 0.2],
-          boxShadow: [
-            '0 0 5px rgba(123, 41, 205, 0.2)',
-            '0 0 10px rgba(123, 41, 205, 0.4)',
-            '0 0 5px rgba(123, 41, 205, 0.2)'
-          ]
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-      
-      {/* 애니메이션 라이트 스위프 */}
-      <motion.div
-        className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent"
-        animate={{
-          x: ['-100%', '100%'],
-          opacity: [0, 0.6, 0]
-        }}
-        transition={{
-          duration: 6,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-      />
+      {/* 하단 네온 액센트 */}
+      {glow && (
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-1"
+          style={{
+            background: `linear-gradient(to right, ${variantStyles.glowColor}, transparent, ${variantStyles.glowColor})`
+          }}
+          animate={{
+            opacity: [0.3, 0.8, 0.3],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      )}
     </motion.div>
   );
-}
+});
+
+CardBase.displayName = 'CardBase';
+
+export default CardBase;

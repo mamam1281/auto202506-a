@@ -1,7 +1,8 @@
 {
   "name": "cc-webapp-frontend-nextjs",
   "version": "0.1.0",
-  "private": true,  "scripts": {
+  "private": true,
+  "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -27,13 +28,15 @@
     "axios": "^1.9.0",
     "canvas-confetti": "^1.9.3",
     "framer-motion": "^12.16.0",
+    "geist": "^1.4.2",
     "lucide-react": "^0.511.0",
     "next": "15.3.3",
     "postcss": "^8.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "use-sound": "^5.0.0"
-  },  "devDependencies": {
+  },
+  "devDependencies": {
     "@babel/preset-env": "^7.27.2",
     "@babel/preset-react": "^7.27.1",
     "@storybook/addon-a11y": "^8.6.10",

@@ -5,6 +5,12 @@ export type { AlertProps } from './Alert';
 export { default as AlertDialog } from './AlertDialog';
 export type { AlertDialogProps } from './AlertDialog';
 
+export { default as Modal } from './Modal';
+export type { ModalProps } from './Modal';
+
+export { default as NotificationBanner } from './NotificationBanner';
+export type { NotificationBannerProps } from './NotificationBanner';
+
 export { default as Toast } from './Toast';
 export type { ToastProps } from './Toast';
 

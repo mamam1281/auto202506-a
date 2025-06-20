@@ -1,0 +1,221 @@
+/* Modal 컴포넌트 스타일 - 통합 가이드 기준 */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2xl);
+}
+
+/* === 크기별 스타일 === */
+.modal.sm {
+  max-width: 320px;
+}
+
+.modal.md {
+  max-width: 480px;
+}
+
+.modal.lg {
+  max-width: 640px;
+}
+
+.modal.xl {
+  max-width: 800px;
+}
+
+.modal.full {
+  max-width: 95vw;
+  max-height: 95vh;
+}
+
+/* === 모달 타입별 스타일 === */
+.modal.default {
+  background-color: var(--color-slate-800);
+  border: 1px solid var(--color-slate-600);
+}
+
+.modal.glass {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+}
+
+.modal.neon {
+  background-color: var(--color-slate-900);
+  border: 2px solid var(--color-cyan-500);
+  box-shadow: 
+    0 0 20px rgba(6, 182, 212, 0.3),
+    inset 0 0 20px rgba(6, 182, 212, 0.1);
+}
+
+.modal.game {
+  background: linear-gradient(135deg, 
+    var(--color-purple-900) 0%, 
+    var(--color-slate-900) 50%, 
+    var(--color-purple-900) 100%);
+  border: 2px solid var(--color-purple-500);
+  box-shadow: 
+    0 0 30px rgba(168, 85, 247, 0.4),
+    inset 0 0 30px rgba(168, 85, 247, 0.1);
+}
+
+/* === 헤더 === */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--spacing-6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.headerContent {
+  flex: 1;
+  margin-right: var(--spacing-4);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--color-white);
+  line-height: 1.25;
+}
+
+.description {
+  margin: var(--spacing-2) 0 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-slate-300);
+  line-height: 1.5;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--color-slate-400);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.closeButton:hover {
+  background-color: var(--color-slate-700);
+  color: var(--color-white);
+}
+
+.closeButton:focus {
+  outline: 2px solid var(--color-cyan-500);
+  outline-offset: 2px;
+}
+
+/* === 콘텐츠 === */
+.content {
+  flex: 1;
+  padding: var(--spacing-6);
+  overflow-y: auto;
+  color: var(--color-white);
+}
+
+/* 스크롤바 스타일 */
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--color-slate-600);
+  border-radius: var(--radius-full);
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-500);
+}
+
+/* === 반응형 === */
+@media (max-width: 640px) {
+  .overlay {
+    padding: var(--spacing-2);
+  }
+  
+  .modal {
+    max-height: 95vh;
+  }
+  
+  .modal.sm,
+  .modal.md,
+  .modal.lg,
+  .modal.xl {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .header {
+    padding: var(--spacing-4);
+  }
+  
+  .content {
+    padding: var(--spacing-4);
+  }
+  
+  .title {
+    font-size: var(--text-lg);
+  }
+}
+
+/* === 접근성 === */
+@media (prefers-reduced-motion: reduce) {
+  .modal {
+    transition: none;
+  }
+}
+
+/* === 게임 모달 특수 효과 === */
+.modal.game::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, 
+    var(--color-purple-500), 
+    var(--color-cyan-500), 
+    var(--color-purple-500));
+  border-radius: var(--radius-xl);
+  z-index: -1;
+  opacity: 0.3;
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
