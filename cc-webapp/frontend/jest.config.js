@@ -17,8 +17,8 @@ module.exports = {
   transform: {
     // Use Babel for transforming JS/JSX/TS/TSX files, leveraging Next.js's Babel preset
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
-  },  // Ignore Next.js build artifacts, node_modules, and Cypress files
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/cypress/'],
+  },  // Ignore Next.js build artifacts, node_modules, Cypress files, and test utility files
+  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/cypress/', '<rootDir>/__tests__/test-utils.tsx'],
   // transformIgnorePatterns might be needed if you have ES modules in node_modules that need transformation
   // Default: '/node_modules/'
   // If encountering issues with packages like framer-motion, you might need to adjust this:
