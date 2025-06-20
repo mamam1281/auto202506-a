@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Card, { CardProps } from './Card';
+import Card, { CardProps } from '../../data-display/Card';
 
 export interface MotionCardProps extends Omit<CardProps, 'onClick'> {
   /** 클릭 이벤트 핸들러 */

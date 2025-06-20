@@ -107,8 +107,7 @@ const Carousel: React.FC<CarouselProps> = ({
         <div 
           className={styles.carouselTrack}
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {items.map((item, index) => (
+        >          {items.map((item, _index) => (
             <div key={item.id} className={styles.carouselSlide}>
               {item.content}
             </div>

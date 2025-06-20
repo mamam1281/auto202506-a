@@ -1,8 +1,11 @@
 'use client';
 
 import React, { forwardRef } from 'react';
-import { cn } from './utils';
 import styles from './Table.module.css';
+
+// Simple className utility
+const cn = (...classes: (string | undefined | null | false)[]) => 
+  classes.filter(Boolean).join(' ');
 
 interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
   className?: string;

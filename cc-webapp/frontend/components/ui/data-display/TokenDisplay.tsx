@@ -3,11 +3,11 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 import { 
-  Coins, 
+  // Coins, // Currently unused
   TrendingUp, 
   TrendingDown, 
   Minus, 
-  AlertTriangle, 
+  AlertTriangle,
   AlertCircle, 
   CheckCircle,
   Activity,
@@ -479,4 +479,6 @@ const TokenDisplayAdvanced = forwardRef<HTMLDivElement, TokenDisplayMotionProps>
 
 TokenDisplayAdvanced.displayName = 'TokenDisplayAdvanced';
 
+const TokenDisplay = TokenDisplayAdvanced;
 export default TokenDisplayAdvanced;
+export { TokenDisplay };

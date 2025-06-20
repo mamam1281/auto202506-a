@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useEffect } from 'react'; // React import for clarity
+import { motion } from 'framer-motion'; // Import motion for animations
 // import Gacha from '@/components/archive/Gacha'; // TODO: 재구현 필요
 // import { useAuth } from '@/context/AuthContext'; // Example if using auth context
 // import Head from 'next/head'; // next/head is for Pages Router. For App Router, use metadata export.

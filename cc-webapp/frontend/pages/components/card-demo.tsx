@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Card from '../components/ui/data-display/Card';
+import Card from '../../components/ui/data-display/Card';
 
 const CardTestDemo = () => {
   const [clickCount, setClickCount] = useState(0);

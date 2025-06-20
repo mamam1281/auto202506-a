@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable react/jsx-no-duplicate-props */
+
 import { motion } from 'framer-motion';
 import { RewardCardProps } from '../../../types/card';
 import { Coins, Star, Gift, Sparkles } from 'lucide-react';
@@ -107,11 +109,15 @@ export function CardReward({
     >
       {/* Floating neon particles - 수량 감소 */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(4)].map((_, i) => (
-          <motion.div
+        {[...Array(4)].map((_, i) => (          <motion.div
             key={i}
             className="absolute w-0.5 h-0.5 rounded-full opacity-60"
-            style={{ backgroundColor: rewardStyle.color }}
+            style={{ 
+              backgroundColor: rewardStyle.color,
+              left: `${20 + i * 20}%`,
+              top: `${40 + i * 10}%`,
+              filter: `drop-shadow(0 0 2px ${rewardStyle.color})`
+            }}
             animate={{
               x: [0, 100, 0],
               y: [0, -80, 0],
@@ -123,11 +129,6 @@ export function CardReward({
               repeat: Infinity,
               delay: i * 1.5,
               ease: "easeInOut"
-            }}
-            style={{
-              left: `${20 + i * 20}%`,
-              top: `${40 + i * 10}%`,
-              filter: `drop-shadow(0 0 2px ${rewardStyle.color})`
             }}
           />
         ))}

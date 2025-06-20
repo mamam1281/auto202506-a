@@ -2,8 +2,23 @@
 
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from './utils';
 import styles from './Sonner.module.css';
+
+// Simple className utility
+const cn = (...classes: (string | undefined | null | false | Record<string, boolean>)[]) => {
+  return classes
+    .map(cls => {
+      if (typeof cls === 'object' && cls !== null) {
+        return Object.entries(cls)
+          .filter(([, value]) => value)
+          .map(([key]) => key)
+          .join(' ');
+      }
+      return cls;
+    })
+    .filter(Boolean)
+    .join(' ');
+};
 
 interface Toast {
   id: string;

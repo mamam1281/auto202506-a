@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { SlotMachine } from '@/components/games/Slotmachine'; // 새로운 SlotMachine 사용
+import { SlotMachine } from '../../components/ui/game/slots'; // 새 버전 경로로 수정
 // import Head from 'next/head'; // For Pages Router. App Router uses metadata export.
 import { useEffect } from 'react'; // For setting document title if needed in client component
 
@@ -33,9 +33,9 @@ export default function SlotsPage() {
           </h1>
           <p className="text-md sm:text-lg text-gray-300 mt-3">Align the celestial symbols for great fortune!</p>
         </header>
-        */}
-        <main className="w-full max-w-lg"> {/* Constrain width of the slot machine for better focus */}
-          <SlotMachine userId={currentUserId} />
+        */}        <main className="w-full max-w-lg"> {/* Constrain width of the slot machine for better focus */}
+          {/* <SlotMachine userId={currentUserId} /> */}
+          <div className="text-center text-white">슬롯머신 개발 중...</div>
         </main>
         <footer className="text-center mt-10 text-xs text-gray-500 pb-8">
           <p>Slot machine outcomes are determined purely by chance. Enjoy responsibly.</p>
