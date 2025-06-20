@@ -15,7 +15,7 @@ export default function ResponsiveLearningPage() {
     { id: 4, title: '고급 최적화', description: '성능과 사용자 경험 최적화' }
   ];
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-slate-900)' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#0f172a' }}>
       <ResponsiveDebugger />
       
       <ResponsiveContainer maxWidth="2xl" className="py-8">
@@ -61,18 +61,17 @@ export default function ResponsiveLearningPage() {
                   currentStage === stage.id
                     ? 'text-white shadow-lg'
                     : 'text-slate-300 hover:text-white'
-                }`}
-                style={{
-                  background: currentStage === stage.id 
-                    ? 'linear-gradient(45deg, var(--neon-purple-1), var(--neon-purple-3))'
-                    : 'rgba(15, 23, 42, 0.6)',
-                  border: currentStage === stage.id 
-                    ? '1px solid rgba(168, 85, 247, 0.3)'
-                    : '1px solid rgba(71, 85, 105, 0.3)',
-                  boxShadow: currentStage === stage.id 
-                    ? '0 0 20px rgba(168, 85, 247, 0.3)'
-                    : 'none'
-                }}
+                }`}                    style={{
+                      background: currentStage === stage.id 
+                        ? 'linear-gradient(45deg, #7b29cd, #3730a3)'
+                        : 'rgba(15, 23, 42, 0.6)',
+                      border: currentStage === stage.id 
+                        ? '1px solid rgba(168, 85, 247, 0.3)'
+                        : '1px solid rgba(71, 85, 105, 0.3)',
+                      boxShadow: currentStage === stage.id 
+                        ? '0 0 20px rgba(168, 85, 247, 0.3)'
+                        : 'none'
+                    }}
                 whileHover={{ 
                   scale: 1.05,
                   boxShadow: '0 0 25px rgba(168, 85, 247, 0.4)'
@@ -133,17 +132,15 @@ export default function ResponsiveLearningPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
-              >
-                <h3 className="text-xl font-bold mb-6 text-center" style={{ color: 'var(--color-purple-400)' }}>
+              >                <h3 className="text-xl font-bold mb-6 text-center" style={{ color: '#a855f7' }}>
                   ⚡ 프리미엄 반응형 버튼 시스템
                 </h3>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {/* Primary Gradient Button */}
                   <motion.button
-                    className="relative px-6 py-4 rounded-xl font-bold text-white overflow-hidden group"
-                    style={{
-                      background: 'linear-gradient(45deg, var(--neon-purple-1), var(--neon-purple-3))',
+                    className="relative px-6 py-4 rounded-xl font-bold text-white overflow-hidden group"                    style={{
+                      background: 'linear-gradient(45deg, #7b29cd, #3730a3)',
                       boxShadow: '0 4px 20px rgba(123, 41, 205, 0.3)'
                     }}
                     whileHover={{ 
@@ -163,9 +160,8 @@ export default function ResponsiveLearningPage() {
 
                   {/* Success Button */}
                   <motion.button
-                    className="relative px-6 py-4 rounded-xl font-bold text-white overflow-hidden"
-                    style={{
-                      background: 'linear-gradient(45deg, var(--color-emerald-500), #059669)',
+                    className="relative px-6 py-4 rounded-xl font-bold text-white overflow-hidden"                    style={{
+                      background: 'linear-gradient(45deg, #10b981, #059669)',
                       boxShadow: '0 4px 20px rgba(16, 185, 129, 0.3)'
                     }}
                     whileHover={{ 
@@ -179,9 +175,8 @@ export default function ResponsiveLearningPage() {
 
                   {/* Warning Button */}
                   <motion.button
-                    className="relative px-6 py-4 rounded-xl font-bold text-white overflow-hidden"
-                    style={{
-                      background: 'linear-gradient(45deg, var(--color-amber-500), #d97706)',
+                    className="relative px-6 py-4 rounded-xl font-bold text-white overflow-hidden"                    style={{
+                      background: 'linear-gradient(45deg, #f59e0b, #d97706)',
                       boxShadow: '0 4px 20px rgba(245, 158, 11, 0.3)'
                     }}
                     whileHover={{ 
@@ -191,15 +186,14 @@ export default function ResponsiveLearningPage() {
                     whileTap={{ scale: 0.95 }}
                   >
                     경고 알림
-                  </motion.button>
-
-                  {/* Outline Button */}
+                  </motion.button>                  {/* Outline Button */}
                   <motion.button
-                    className="relative px-6 py-4 rounded-xl font-bold text-purple-300 overflow-hidden"
+                    className="relative px-6 py-4 rounded-xl font-bold overflow-hidden"
                     style={{
                       background: 'rgba(15, 23, 42, 0.6)',
-                      border: '2px solid var(--neon-purple-2)',
-                      boxShadow: '0 0 15px rgba(123, 41, 205, 0.2)'
+                      border: '2px solid #7b29cd',
+                      boxShadow: '0 0 15px rgba(123, 41, 205, 0.2)',
+                      color: '#c4b5fd'
                     }}
                     whileHover={{ 
                       scale: 1.05,
@@ -210,15 +204,16 @@ export default function ResponsiveLearningPage() {
                     whileTap={{ scale: 0.95 }}
                   >
                     아웃라인 스타일
-                  </motion.button>
-
-                  {/* Text Button */}
+                  </motion.button>{/* Text Button */}
                   <motion.button
-                    className="relative px-6 py-4 rounded-xl font-bold text-slate-300 overflow-hidden"
-                    style={{ background: 'transparent' }}
+                    className="relative px-6 py-4 rounded-xl font-bold overflow-hidden"
+                    style={{ 
+                      background: 'rgba(15, 23, 42, 0)', 
+                      color: '#cbd5e1' 
+                    }}
                     whileHover={{ 
                       scale: 1.05,
-                      color: 'var(--color-purple-400)',
+                      color: '#a855f7',
                       background: 'rgba(123, 41, 205, 0.1)'
                     }}
                     whileTap={{ scale: 0.95 }}
@@ -228,9 +223,8 @@ export default function ResponsiveLearningPage() {
 
                   {/* Full Width Responsive */}
                   <motion.button
-                    className="relative px-6 py-4 rounded-xl font-bold text-white overflow-hidden sm:col-span-2 lg:col-span-1"
-                    style={{
-                      background: 'linear-gradient(45deg, var(--color-blue-500), var(--color-purple-500))',
+                    className="relative px-6 py-4 rounded-xl font-bold text-white overflow-hidden sm:col-span-2 lg:col-span-1"                    style={{
+                      background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
                       boxShadow: '0 4px 20px rgba(59, 130, 246, 0.3)'
                     }}
                     whileHover={{ 
@@ -332,37 +326,168 @@ export default function ResponsiveLearningPage() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </section>
+              </div>            </div>
+          </motion.section>
+        </AnimatePresence>
         )}
 
         {/* Stage 2: 컨테이너 & 그리드 */}
         {currentStage === 2 && (
           <section className="space-y-8">
             <h2 className="text-2xl font-bold text-center mb-6">🎮 Stage 2: 컨테이너 & 그리드</h2>
+            
+            {/* 컨테이너 예시 */}
             <div className="bg-slate-800 rounded-lg p-6">
-              <p className="text-center text-slate-400">Stage 2 콘텐츠 구현 예정</p>
+              <h3 className="text-xl font-semibold mb-4">📦 반응형 컨테이너</h3>
+              <div className="space-y-4">
+                <ResponsiveContainer maxWidth="sm" className="bg-blue-900/20 border border-blue-500 p-4 rounded-lg">
+                  <p className="text-center">Small Container (640px)</p>
+                </ResponsiveContainer>
+                <ResponsiveContainer maxWidth="lg" className="bg-green-900/20 border border-green-500 p-4 rounded-lg">
+                  <p className="text-center">Large Container (1024px)</p>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* 그리드 시스템 */}
+            <div className="bg-slate-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">🎯 그리드 시스템</h3>
+              
+              <div className="mb-6">
+                <h4 className="font-medium mb-2">기본 그리드 (1→2→4열)</h4>
+                <ResponsiveGrid columns={{ base: 1, sm: 2, lg: 4 }} gap={4}>
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="bg-slate-700 p-4 rounded-lg text-center">
+                      아이템 {i + 1}
+                    </div>
+                  ))}
+                </ResponsiveGrid>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="font-medium mb-2">게임 카드 그리드</h4>
+                <GameGrid>
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="bg-purple-900/30 border border-purple-500 p-6 rounded-lg text-center">
+                      <div className="text-2xl mb-2">🎮</div>
+                      <p>게임 {i + 1}</p>
+                    </div>
+                  ))}
+                </GameGrid>
+              </div>
+            </div>
+
+            <div className="bg-green-800 p-4 rounded-lg">
+              <p className="font-medium">✅ 실습 과제</p>
+              <p className="text-green-200">브라우저 크기 조절하며 그리드 변화 관찰하기</p>
             </div>
           </section>
-        )}
-
-        {/* Stage 3: 컴포넌트 반응형 */}
+        )}{/* Stage 3: 컴포넌트 반응형 */}
         {currentStage === 3 && (
           <section className="space-y-8">
             <h2 className="text-2xl font-bold text-center mb-6">🎯 Stage 3: 컴포넌트 반응형</h2>
+            
+            {/* 반응형 카드 컴포넌트 */}
             <div className="bg-slate-800 rounded-lg p-6">
-              <p className="text-center text-slate-400">Stage 3 콘텐츠 구현 예정</p>
+              <h3 className="text-xl font-semibold mb-4">💎 프리미엄 카드 컴포넌트</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="bg-gradient-to-br from-purple-900 to-blue-900 p-6 rounded-xl border border-purple-500/50 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-500/20 transition-all">
+                  <div className="text-3xl mb-3">🎮</div>
+                  <h4 className="font-bold text-lg mb-2">게임 카드</h4>
+                  <p className="text-slate-300 text-sm">호버 시 글로우 효과</p>
+                </div>
+                <div className="bg-gradient-to-br from-green-900 to-emerald-900 p-6 rounded-xl border border-green-500/50 hover:border-green-400 hover:shadow-lg hover:shadow-green-500/20 transition-all">
+                  <div className="text-3xl mb-3">💰</div>
+                  <h4 className="font-bold text-lg mb-2">리워드 카드</h4>
+                  <p className="text-slate-300 text-sm">부드러운 애니메이션</p>
+                </div>
+                <div className="bg-gradient-to-br from-orange-900 to-red-900 p-6 rounded-xl border border-orange-500/50 hover:border-orange-400 hover:shadow-lg hover:shadow-orange-500/20 transition-all">
+                  <div className="text-3xl mb-3">🏆</div>
+                  <h4 className="font-bold text-lg mb-2">성과 카드</h4>
+                  <p className="text-slate-300 text-sm">그라데이션 배경</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 반응형 폼 */}
+            <div className="bg-slate-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">📝 반응형 폼 레이아웃</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <input className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all" placeholder="이름" />
+                  <input className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all" placeholder="이메일" />
+                </div>
+                <div className="space-y-4">
+                  <textarea className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all" rows={4} placeholder="메시지"></textarea>
+                </div>
+              </div>
+              <button className="mt-4 w-full lg:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-lg hover:scale-105 transition-transform">
+                전송
+              </button>
             </div>
           </section>
-        )}
-
-        {/* Stage 4: 고급 최적화 */}
+        )}        {/* Stage 4: 고급 최적화 */}
         {currentStage === 4 && (
           <section className="space-y-8">
             <h2 className="text-2xl font-bold text-center mb-6">🚀 Stage 4: 고급 최적화</h2>
+            
+            {/* 성능 최적화 예시 */}
             <div className="bg-slate-800 rounded-lg p-6">
-              <p className="text-center text-slate-400">Stage 4 콘텐츠 구현 예정</p>
+              <h3 className="text-xl font-semibold mb-4">⚡ 성능 최적화 기법</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="bg-slate-700 p-4 rounded-lg">
+                    <h4 className="font-semibold text-green-400 mb-2">✅ 이미지 최적화</h4>
+                    <p className="text-sm text-slate-300">WebP, AVIF 포맷 사용</p>
+                    <p className="text-sm text-slate-300">lazy loading 적용</p>
+                  </div>
+                  <div className="bg-slate-700 p-4 rounded-lg">
+                    <h4 className="font-semibold text-blue-400 mb-2">📱 모바일 우선 설계</h4>
+                    <p className="text-sm text-slate-300">Mobile-first CSS</p>
+                    <p className="text-sm text-slate-300">터치 친화적 UI</p>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="bg-slate-700 p-4 rounded-lg">
+                    <h4 className="font-semibold text-purple-400 mb-2">🎯 CSS 최적화</h4>
+                    <p className="text-sm text-slate-300">Critical CSS 인라인</p>
+                    <p className="text-sm text-slate-300">불필요한 스타일 제거</p>
+                  </div>
+                  <div className="bg-slate-700 p-4 rounded-lg">
+                    <h4 className="font-semibold text-orange-400 mb-2">🔧 번들 최적화</h4>
+                    <p className="text-sm text-slate-300">코드 스플리팅</p>
+                    <p className="text-sm text-slate-300">Tree shaking</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 접근성 가이드 */}
+            <div className="bg-slate-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">♿ 접근성 체크리스트</h3>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <span className="text-green-400">✅</span>
+                  <span>키보드 내비게이션 지원</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-green-400">✅</span>
+                  <span>스크린 리더 호환성</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-green-400">✅</span>
+                  <span>색상 대비 4.5:1 이상</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-green-400">✅</span>
+                  <span>포커스 표시 명확화</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-green-800 p-4 rounded-lg text-center">
+              <p className="font-bold">🎉 축하합니다!</p>
+              <p className="text-green-200">반응형 웹 개발 온보딩을 완료했습니다!</p>
             </div>
           </section>
         )}
