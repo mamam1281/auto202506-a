@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { BaseCardProps } from '../types/card';
+import { BaseCardProps } from '../../../types/card';
 
 const cardVariants = {
   default: { 

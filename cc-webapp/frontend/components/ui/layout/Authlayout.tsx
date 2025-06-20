@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Container } from "./Container";
-import { cn } from "../ui/utils";
+import { cn } from "../utils/utils";
 
 interface AuthLayoutProps {
   children: ReactNode;

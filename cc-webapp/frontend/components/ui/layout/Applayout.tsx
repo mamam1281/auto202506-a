@@ -6,9 +6,9 @@ import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { Footer } from './Footer';
 import { Container } from './Container';
-import { useLayout } from '../../contexts/AppContext';
-import { cn } from '../ui/utils';
-import { pageVariants } from '../../lib/animations';
+import { useLayout } from '../../../contexts/AppContext';
+import { cn } from '../utils/utils';
+import { pageVariants } from '../../../lib/animations';
 
 interface AppLayoutProps {
   children: ReactNode;

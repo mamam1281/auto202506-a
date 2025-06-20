@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { cn } from '../ui/utils';
+import { cn } from '../utils/utils';
 
 interface ContainerProps {
   children: ReactNode;

@@ -21,12 +21,15 @@ def register_with_invite_code(
     db: Session = Depends(get_db)
 ):
     """초대코드로 즉시 가입 - 모든 서비스 바로 이용 가능"""
-    user = SimpleAuth.register_with_invite_code(
-        invite_code=user_data.invite_code,
-        nickname=user_data.nickname,
-        db=db
-    )
-    return user
+    try:
+        user = SimpleAuth.register_with_invite_code(
+            invite_code=user_data.invite_code,
+            nickname=user_data.nickname,
+            db=db
+        )
+        return user
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/invite-codes", response_model=List[InviteCodeResponse])
 def create_invite_codes(

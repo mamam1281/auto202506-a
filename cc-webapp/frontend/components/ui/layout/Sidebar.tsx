@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from './utils';
+import { cn } from '../utils/utils';
 import styles from './Sidebar.module.css';
 
 interface SidebarContextType {

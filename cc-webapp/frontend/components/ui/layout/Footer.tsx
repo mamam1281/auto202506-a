@@ -1,5 +1,5 @@
 import { Container } from "./Container";
-import { Separator } from "../ui/separator";
+import { Separator } from "../Separator";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();

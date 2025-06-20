@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { RewardCardProps } from '../types/card';
+import { RewardCardProps } from '../../../types/card';
 import { Coins, Star, Gift, Sparkles } from 'lucide-react';
 
 const rewardTypeStyles = {

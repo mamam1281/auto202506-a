@@ -4,10 +4,10 @@ import { memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X, Coins, User, Settings, Search, Bell } from 'lucide-react';
 import { Container } from './Container';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { useAuth, useLayout, useNotifications } from '../../contexts/AppContext';
-import { buttonVariants, cardVariants } from '../../lib/animations';
+import { Button } from '../button';
+import { Badge } from '../badge';
+import { useAuth, useLayout, useNotifications } from '../../../contexts/AppContext';
+import { buttonVariants, cardVariants } from '../../../lib/animations';
 
 interface HeaderProps {
   className?: string;

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MissionCardProps } from '../types/card';
+import { MissionCardProps } from '../../../types/card';
 import { Clock, Target, Trophy, ChevronRight } from 'lucide-react';
 
 const cardVariants = {
@@ -28,7 +28,7 @@ const progressVariants = {
     width: `${progress}%`,
     transition: {
       duration: 1.5,
-      ease: "easeOut",
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
       delay: 0.3
     }
   })

@@ -141,6 +141,23 @@
   --easing-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
+  /* === Transition 시스템 === */
+  --transition-smooth: all 0.3s var(--easing-ease-out);
+  --transition-fast: all 0.15s var(--easing-ease-out);
+  --transition-slow: all 0.5s var(--easing-ease-out);
+
+  /* === 애니메이션 키프레임 === */
+  --animation-fade-in: fadeIn 0.3s var(--easing-ease-out);
+  --animation-slide-in-left: slideInLeft 0.3s var(--easing-ease-out);
+  --animation-slide-in-right: slideInRight 0.3s var(--easing-ease-out);
+  --animation-slide-out-left: slideOutLeft 0.3s var(--easing-ease-out);
+  --animation-slide-out-right: slideOutRight 0.3s var(--easing-ease-out);
+
+  /* === Timing Functions === */
+  --timing-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --timing-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --timing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
   /* === Z-Index === */
   --z-dropdown: 1000;
   --z-sticky: 1020;

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GameCardProps } from '../types/card';
+import { GameCardProps } from '../../../types/card';
 
 const gameStyles = {
   roulette: {
