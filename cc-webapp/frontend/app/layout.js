@@ -6,7 +6,7 @@
 import { GeistSans } from 'geist/font/sans'; // Updated import for Geist font
 import { GeistMono } from 'geist/font/mono';
 import './globals.css'; // Your global styles
-import NotificationBanner from '@/components/NotificationBanner'; // Adjust path if needed
+import NotificationBanner from '@/components/archive/NotificationBanner'; // Adjust path if needed
 
 // export const metadata = { // Metadata API is for Server Components
 //   title: 'CC Webapp',

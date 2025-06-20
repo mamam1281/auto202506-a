@@ -384,7 +384,7 @@ Easing Functions:
 
 Duration Presets:
 - [ ] --duration-instant: 0.1s
-- [ ] --duration-fast: 0.2s
+- [ ] --duration-fast: 0.2s`
 - [ ] --duration-normal: 0.3s
 - [ ] --duration-slow: 0.5s
 - [ ] --duration-slower: 0.8s

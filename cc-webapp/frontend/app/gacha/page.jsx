@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react'; // React import for clarity
-import Gacha from '@/components/Gacha';
+import Gacha from '@/components/archive/Gacha';
 // import { useAuth } from '@/context/AuthContext'; // Example if using auth context
 // import Head from 'next/head'; // next/head is for Pages Router. For App Router, use metadata export.
 

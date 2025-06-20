@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import SlotMachine from '@/components/SlotMachine';
+import SlotMachine from '@/components/archive/SlotMachine';
 // import Head from 'next/head'; // For Pages Router. App Router uses metadata export.
 import { useEffect } from 'react'; // For setting document title if needed in client component
 

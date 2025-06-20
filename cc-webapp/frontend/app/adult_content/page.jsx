@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react'; // React import for clarity
-import AdultContentViewer from '@/components/AdultContentViewer';
+import AdultContentViewer from '@/components/archive/AdultContentViewer';
 import Link from 'next/link';
 import Head from 'next/head'; // For older Next.js versions or specific client-side title updates
 import { Home, ArrowLeft } from 'lucide-react';

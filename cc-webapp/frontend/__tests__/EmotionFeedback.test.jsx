@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react'; // Removed 'act' as it's not used in these tests
 import '@testing-library/jest-dom';
-import EmotionFeedback from '@/components/EmotionFeedback'; // Using alias from jest.config.js
+import EmotionFeedback from '@/components/archive/EmotionFeedback'; // Using alias from jest.config.js
 // AnimatePresence is part of the component's internal structure, not usually wrapped at test level unless testing complex presence toggling.
 // import { AnimatePresence } from 'framer-motion';
 

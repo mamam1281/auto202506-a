@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react'; // React import for clarity
-import Roulette from '@/components/Roulette';
+import Roulette from '@/components/archive/Roulette';
 // import Head from 'next/head'; // For Pages Router. App Router uses metadata export.
 import { useEffect } from 'react'; // For setting document title if needed in client component
 import { motion } from 'framer-motion';

@@ -29,8 +29,8 @@ export function CardBase({
   onClick 
 }: BaseCardProps) {
   return (
-<motion.div
-    className={`
+    <motion.div
+      className={`
         relative overflow-hidden rounded-2xl cursor-pointer group
         bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d]
         border border-[#7b29cd]/20
