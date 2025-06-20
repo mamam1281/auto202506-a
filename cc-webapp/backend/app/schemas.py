@@ -5,6 +5,33 @@ from typing import Optional, List, Dict, Union
 from enum import Enum
 from datetime import datetime
 
+# User related schemas - 단순 초대코드 기반 시스템
+class UserRegister(BaseModel):
+    """초대코드로 간단 가입"""
+    invite_code: str = Field(..., min_length=6, max_length=6)
+    nickname: str = Field(..., min_length=2, max_length=50)
+
+class UserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    id: int
+    nickname: str
+    rank: str  # VIP, PREMIUM, STANDARD
+    cyber_token_balance: int
+    created_at: datetime
+
+class InviteCodeCreate(BaseModel):
+    """관리자용 초대코드 생성"""
+    count: int = Field(default=1, ge=1, le=100)
+
+class InviteCodeResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    id: int
+    code: str
+    is_used: bool
+    created_at: datetime
+
 # Game related schemas
 class GameType(str, Enum):
     SLOT = "slot"

@@ -10,24 +10,20 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True, nullable=False)
-    nickname = Column(String(50), unique=True, nullable=True)
-    password_hash = Column(String(255), nullable=True)
-    invite_code = Column(String(6), nullable=True)
+    nickname = Column(String(50), unique=True, nullable=False)
+    invite_code = Column(String(6), nullable=False, index=True)  # 초대코드로 가입
     cyber_token_balance = Column(Integer, default=200)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    segment_label = Column(String(20), default="Low")
+    created_at = Column(DateTime, default=datetime.utcnow)    # 랭크 시스템 - VIP, PREMIUM, STANDARD 등
+    rank = Column(String(20), default="STANDARD", nullable=False)
 
     actions = relationship("UserAction", back_populates="user")
-    segment = relationship("UserSegment", uselist=False, back_populates="user") # One-to-one
     rewards = relationship("UserReward", back_populates="user")
     site_visits = relationship("SiteVisit", back_populates="user")
-    notifications = relationship("Notification", back_populates="user") # Added for Notification
+    notifications = relationship("Notification", back_populates="user")
 
     # Relationships for new models
     flash_offers = relationship("FlashOffer", back_populates="user")
     vip_access_logs = relationship("VIPAccessLog", back_populates="user")
-    age_verification_records = relationship("AgeVerificationRecord", back_populates="user")
 
 class UserAction(Base):
     __tablename__ = "user_actions"
@@ -36,21 +32,7 @@ class UserAction(Base):
     user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
     action_type = Column(String, index=True, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, index=True)
-    value = Column(Float, default=0.0) # For monetary value in RFM
-
-    user = relationship("User", back_populates="actions")
-
-class UserSegment(Base):
-    __tablename__ = "user_segments"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    rfm_group = Column(String(50), nullable=False)
-    risk_profile = Column(String(50), nullable=False)
-    name = Column(String(50), nullable=True)  # Add missing column
-
-    # Relationship
-    user = relationship("User", back_populates="segment", uselist=False) # One-to-one
+    value = Column(Float, default=0.0) # For monetary value in RFM    user = relationship("User", back_populates="actions")
 
 class SiteVisit(Base):
     __tablename__ = "site_visits"
@@ -94,9 +76,8 @@ class AdultContent(Base):
     description = Column(String(255), nullable=True)
     thumbnail_url = Column(String(255), nullable=True)
     media_url = Column(String(255), nullable=True) # Video or full-res image
-    # Defines the minimum segment level required to unlock this content.
-    # This level is derived from UserSegment.rfm_group (e.g., Low=1, Medium=2, Whale=3).
-    required_segment_level = Column(Integer, default=1, nullable=False)
+    # 랭크 기반 접근 제어 - STANDARD, PREMIUM, VIP 등
+    required_rank = Column(String(20), default="STANDARD", nullable=False)
     # Add any other relevant fields like 'duration', 'tags', etc.
 
 class Notification(Base):
@@ -144,19 +125,6 @@ class VIPAccessLog(Base):
 
     user = relationship("User", back_populates="vip_access_logs")
     adult_content = relationship("AdultContent") # Assuming one-way relationship for now
-
-class AgeVerificationRecord(Base):
-    __tablename__ = "age_verification_records"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    verification_method = Column(String(50)) # "document", "phone", "ipin"
-    verified_at = Column(DateTime, default=datetime.utcnow)
-    verification_data = Column(JSON)  # Encrypted verification data
-    is_valid = Column(Boolean, default=True)
-
-    user = relationship("User", back_populates="age_verification_records")
-
 
 class GameLog(Base):
     __tablename__ = "game_logs"

@@ -23,11 +23,18 @@ router = APIRouter(prefix="/v1/adult", tags=["Adult Content"])
 public_router = APIRouter(prefix="/v1/adult", tags=["Adult Content - Public"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
-# Authentication dependency - simplified for this implementation
-async def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:
-    """Get current user ID from JWT token. Placeholder implementation."""
-    # In production, decode JWT and validate
-    return 1  # Placeholder user ID
+# Authentication dependency - 단순 닉네임 기반 인증
+async def get_current_user(nickname: str, db: Session = Depends(get_db)) -> User:
+    """닉네임으로 사용자 인증 - 초대코드로 가입한 사용자"""
+    user = db.query(User).filter(User.nickname == nickname).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다")
+    return user
+
+def check_rank_access(user: User, required_rank: str) -> bool:
+    """랭크 기반 접근 제어"""
+    from app.auth.simple_auth import SimpleAuth
+    return SimpleAuth.check_rank_access(str(user.rank), required_rank)
 
 # Service dependencies
 def get_token_service(db: Session = Depends(get_db)) -> TokenService:
