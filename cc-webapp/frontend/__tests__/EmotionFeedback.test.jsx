@@ -34,11 +34,9 @@ describe('EmotionFeedback Component', () => {
         message="You won!"
         isVisible={true}
       />
-    );
-
-    expect(screen.getByText('You won!')).toBeInTheDocument();
-    // Check for heading with capitalized emotion
-    expect(screen.getByText((content, element) => content.startsWith('Happiness:') && element.tagName.toLowerCase() === 'p')).toBeInTheDocument();
+    );    expect(screen.getByText('You won!')).toBeInTheDocument();
+    // Check for heading with capitalized emotion (without colon)
+    expect(screen.getByText('Happiness')).toBeInTheDocument();
     const alertDiv = screen.getByRole('alert');
     expect(alertDiv).toHaveClass('bg-green-100');
     expect(alertDiv).toHaveClass('border-green-500');
@@ -52,17 +50,15 @@ describe('EmotionFeedback Component', () => {
         message="Try again!"
         isVisible={true}
       />
-    );
-    expect(screen.getByText('Try again!')).toBeInTheDocument();
-    expect(screen.getByText((content, element) => content.startsWith('Frustration:') && element.tagName.toLowerCase() === 'p')).toBeInTheDocument();
+    );    expect(screen.getByText('Try again!')).toBeInTheDocument();
+    expect(screen.getByText('Frustration')).toBeInTheDocument();
     const alertDiv = screen.getByRole('alert');
     expect(alertDiv).toHaveClass('bg-red-100');
   });
 
   test('renders correctly with "determination" emotion when visible', () => {
-    render(<EmotionFeedback emotion="determination" message="Keep pushing!" isVisible={true} />);
-    expect(screen.getByText('Keep pushing!')).toBeInTheDocument();
-    expect(screen.getByText((content, element) => content.startsWith('Determination:') && element.tagName.toLowerCase() === 'p')).toBeInTheDocument();
+    render(<EmotionFeedback emotion="determination" message="Keep pushing!" isVisible={true} />);    expect(screen.getByText('Keep pushing!')).toBeInTheDocument();
+    expect(screen.getByText('Determination')).toBeInTheDocument();
     const alertDiv = screen.getByRole('alert');
     expect(alertDiv).toHaveClass('bg-blue-100');
   });

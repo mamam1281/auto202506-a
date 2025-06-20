@@ -109,47 +109,39 @@ const Card: React.FC<CardProps> = ({
         duration: 0.3
       }}
       {...motionProps}
-    >
-      {/* 네온 글로우 배경 애니메이션 */}
+    >      {/* 네온 글로우 배경 애니메이션 */}
       {neonEffect && (
         <motion.div 
           className={styles.neonBackground}
           animate={{
-            opacity: [0.2, 0.4, 0.2],
+            opacity: [0.3, 0.6, 0.3],
             background: [
-              'radial-gradient(circle at 30% 30%, rgba(123, 41, 205, 0.03), transparent 70%)',
-              'radial-gradient(circle at 70% 70%, rgba(135, 13, 209, 0.05), transparent 70%)',
-              'radial-gradient(circle at 30% 30%, rgba(123, 41, 205, 0.03), transparent 70%)'
-            ]
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      )}
-      
-      {/* 호버 시 네온 테두리 */}
-      {neonEffect && (
-        <motion.div
-          className={styles.neonBorder}
-          style={{
-            boxShadow: '0 0 15px rgba(123, 41, 205, 0.4), inset 0 0 15px rgba(123, 41, 205, 0.2)'
-          }}
-          animate={{
-            opacity: [0, 0.15, 0],
-            scale: [1, 1.01, 1],
-            boxShadow: [
-              '0 0 10px rgba(123, 41, 205, 0.3), inset 0 0 10px rgba(123, 41, 205, 0.1)',
-              '0 0 20px rgba(123, 41, 205, 0.5), inset 0 0 20px rgba(123, 41, 205, 0.3)',
-              '0 0 10px rgba(123, 41, 205, 0.3), inset 0 0 10px rgba(123, 41, 205, 0.1)'
+              'radial-gradient(circle at 30% 30%, rgba(123, 41, 205, 0.08), transparent 70%)',
+              'radial-gradient(circle at 70% 70%, rgba(135, 13, 209, 0.12), transparent 70%)',
+              'radial-gradient(circle at 30% 30%, rgba(123, 41, 205, 0.08), transparent 70%)'
             ]
           }}
           transition={{
             duration: 4,
             repeat: Infinity,
             ease: "easeInOut"
+          }}
+        />
+      )}
+      
+      {/* 호버 시 글래스 네온 테두리 */}
+      {neonEffect && (
+        <motion.div
+          className={styles.neonBorder}
+          initial={{ opacity: 0 }}
+          whileHover={{ 
+            opacity: [0, 1, 0.8],
+            scale: [1, 1.01, 1],
+            rotate: [0, 1, 0]
+          }}
+          transition={{
+            duration: 0.6,
+            ease: "easeOut"
           }}
         />
       )}
@@ -254,19 +246,19 @@ const Card: React.FC<CardProps> = ({
           }}
         />
       )}
-      
-      {/* 애니메이션 라이트 스위프 */}
+        {/* 글래스모피즘 라이트 스위프 */}
       {neonEffect && (
         <motion.div
           className={styles.lightSwipe}
           animate={{
-            x: ['-100%', '100%'],
-            opacity: [0, 0.6, 0]
+            x: ['-150%', '150%'],
+            opacity: [0, 0.8, 0]
           }}
           transition={{
-            duration: 6,
+            duration: 3,
             repeat: Infinity,
-            ease: "linear"
+            ease: "easeInOut",
+            repeatDelay: 2
           }}
         />
       )}

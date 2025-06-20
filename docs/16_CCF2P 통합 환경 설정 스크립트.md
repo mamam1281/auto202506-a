@@ -53,9 +53,7 @@ cat > package.json << 'EOF'
     "react-redux": "^9.1.0",
     "@reduxjs/toolkit": "^2.2.0"
   },
-  "devDependencies": {
-    "vite": "^5.1.0",
-    "@vitejs/plugin-react": "^4.2.1"
+
   }
 }
 EOF

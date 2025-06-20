@@ -1,53 +1,28 @@
 // jest.setup.js
 import '@testing-library/jest-dom'; // Extends Jest with custom matchers for DOM elements
+import React from 'react';
 
-// You can add other global setups here, for example:
-// - Mocking global objects (localStorage, fetch)
-// - Setting up a global server for MSW (Mock Service Worker)
-// - Global test timeouts if needed
+// jest.setup.js
+import '@testing-library/jest-dom'; // Extends Jest with custom matchers for DOM elements
 
-// Example: Mocking localStorage
-// const localStorageMock = (function() {
-//   let store = {};
-//   return {
-//     getItem: function(key) {
-//       return store[key] || null;
-//     },
-//     setItem: function(key, value) {
-//       store[key] = value.toString();
-//     },
-//     removeItem: function(key) {
-//       delete store[key];
-//     },
-//     clear: function() {
-//       store = {};
-//     }
-//   };
-// })();
-// Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-
-// Example: Basic mock for next/navigation's useRouter
-// This is a very basic mock. For more complex navigation testing, you might need a more detailed one.
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    refresh: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-    prefetch: jest.fn(),
-    // Add other router properties/methods if your components use them
-    // pathname: '/',
-    // query: {},
-    // asPath: '/',
-    // events: {
-    //   on: jest.fn(),
-    //   off: jest.fn(),
-    //   emit: jest.fn(),
-    // },
-  }),
-  usePathname: () => '/', // Example pathname
-  useSearchParams: () => new URLSearchParams(), // Example search params
+// Framer Motion 모킹 - 외부 변수 참조 없이 안전하게 처리
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }) => {
+      // framer motion 속성들을 제거하고 나머지 props만 전달
+      const { whileHover, whileTap, animate, initial, exit, transition, ...restProps } = props;
+      return require('react').createElement('div', restProps, children);
+    },
+    button: ({ children, ...props }) => {
+      const { whileHover, whileTap, animate, initial, exit, transition, ...restProps } = props;
+      return require('react').createElement('button', restProps, children);
+    },
+    span: ({ children, ...props }) => {
+      const { whileHover, whileTap, animate, initial, exit, transition, ...restProps } = props;
+      return require('react').createElement('span', restProps, children);
+    },
+  },
+  AnimatePresence: ({ children }) => children,
 }));
 
 // Mock canvas confetti as it might not work well in JSDOM
