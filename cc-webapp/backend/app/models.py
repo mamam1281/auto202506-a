@@ -17,6 +17,7 @@ class User(Base):
     rank = Column(String(20), default="STANDARD", nullable=False)
 
     actions = relationship("UserAction", back_populates="user")
+    segment = relationship("UserSegment", uselist=False, back_populates="user") # One-to-one
     rewards = relationship("UserReward", back_populates="user")
     site_visits = relationship("SiteVisit", back_populates="user")
     notifications = relationship("Notification", back_populates="user")
@@ -33,6 +34,18 @@ class UserAction(Base):
     action_type = Column(String, index=True, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, index=True)
     value = Column(Float, default=0.0) # For monetary value in RFM    user = relationship("User", back_populates="actions")
+
+class UserSegment(Base):
+    __tablename__ = "user_segments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    rfm_group = Column(String(50), nullable=False)
+    risk_profile = Column(String(50), nullable=False)
+    name = Column(String(50), nullable=True)
+
+    # Relationship
+    user = relationship("User", back_populates="segment", uselist=False) # One-to-one
 
 class SiteVisit(Base):
     __tablename__ = "site_visits"
@@ -78,6 +91,8 @@ class AdultContent(Base):
     media_url = Column(String(255), nullable=True) # Video or full-res image
     # 랭크 기반 접근 제어 - STANDARD, PREMIUM, VIP 등
     required_rank = Column(String(20), default="STANDARD", nullable=False)
+    # RFM 세그먼트 기반 접근 제어 (기존 유지)
+    required_segment_level = Column(Integer, default=1, nullable=False)
     # Add any other relevant fields like 'duration', 'tags', etc.
 
 class Notification(Base):

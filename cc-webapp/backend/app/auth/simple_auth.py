@@ -50,8 +50,7 @@ class SimpleAuth:
         db.refresh(user)
         
         return user
-    
-    @staticmethod
+      @staticmethod
     def check_rank_access(user_rank: str, required_rank: str) -> bool:
         """랭크 기반 접근 제어"""
         rank_hierarchy = {
@@ -64,3 +63,12 @@ class SimpleAuth:
         required_level = rank_hierarchy.get(required_rank, 1)
         
         return user_level >= required_level
+    
+    @staticmethod
+    def check_combined_access(user_rank: str, user_segment_level: int, 
+                            required_rank: str, required_segment_level: int) -> bool:
+        """랭크 + RFM 세그먼트 조합 접근 제어"""
+        rank_ok = SimpleAuth.check_rank_access(user_rank, required_rank)
+        segment_ok = user_segment_level >= required_segment_level
+        
+        return rank_ok and segment_ok
