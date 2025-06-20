@@ -1,7 +1,7 @@
-"""
-프론트엔드 초대코드 인증 시스템 테스트
-useUser 훅 및 InviteCodeRegister 컴포넌트 테스트
-"""
+/**
+ * 프론트엔드 초대코드 인증 시스템 테스트
+ * useUser 훅 및 InviteCodeRegister 컴포넌트 테스트
+ */
 
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { UserProvider, useUser, hasRankAccess } from '../hooks/useUser';

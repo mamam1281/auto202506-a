@@ -16,6 +16,7 @@ from app.schemas import (
     AccessUpgradeRequest, AccessUpgradeResponse
 )
 from app.models import User
+from app.auth.simple_auth import get_current_user_id
 
 logger = logging.getLogger(__name__)
 

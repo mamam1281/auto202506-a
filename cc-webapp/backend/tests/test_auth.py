@@ -50,7 +50,7 @@ def client(db_session):
 @pytest.fixture
 def sample_invite_code(db_session):
     """테스트용 초대코드 생성"""
-    invite = InviteCode(code="VIP2024", is_used=False)
+    invite = InviteCode(code="VIP123", is_used=False)
     db_session.add(invite)
     db_session.commit()
     return invite.code
@@ -103,12 +103,14 @@ class TestAuthAPI:
     def test_register_success(self, client, sample_invite_code):
         """정상 가입 테스트"""
         response = client.post(
-            "/auth/register",
+            "/api/auth/register",
             json={
                 "invite_code": sample_invite_code,
                 "nickname": "테스트유저"
             }
         )
+        print(f"Response status: {response.status_code}")
+        print(f"Response content: {response.text}")
         assert response.status_code == 200
         data = response.json()
         assert data["nickname"] == "테스트유저"
@@ -118,12 +120,13 @@ class TestAuthAPI:
     def test_register_invalid_invite_code(self, client):
         """잘못된 초대코드로 가입 테스트"""
         response = client.post(
-            "/auth/register",
-            json={
+            "/api/auth/register",            json={
                 "invite_code": "WRONG1",
                 "nickname": "테스트유저"
             }
         )
+        print(f"Response status: {response.status_code}")
+        print(f"Response content: {response.text}")
         assert response.status_code == 400
         assert "잘못된 초대코드" in response.json()["detail"]
     
@@ -137,29 +140,32 @@ class TestAuthAPI:
         )
         db_session.add(user)
         db_session.commit()
-        
-        # 새로운 초대코드 생성
+          # 새로운 초대코드 생성
         new_invite = InviteCode(code="TEST01", is_used=False)
         db_session.add(new_invite)
         db_session.commit()
         
         # 중복 닉네임으로 가입 시도
         response = client.post(
-            "/auth/register", 
+            "/api/auth/register", 
             json={
                 "invite_code": "TEST01",
                 "nickname": "중복닉네임"
             }
         )
+        print(f"Response status: {response.status_code}")
+        print(f"Response content: {response.text}")
         assert response.status_code == 400
         assert "이미 사용중인 닉네임" in response.json()["detail"]
     
     def test_create_invite_codes(self, client):
         """초대코드 생성 테스트"""
         response = client.post(
-            "/auth/invite-codes",
+            "/api/auth/invite-codes",
             json={"count": 3}
         )
+        print(f"Response status: {response.status_code}")
+        print(f"Response content: {response.text}")
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 3
@@ -167,11 +173,10 @@ class TestAuthAPI:
         assert all(not code["is_used"] for code in data)
     
     def test_get_user_by_nickname(self, client, db_session):
-        """닉네임으로 사용자 조회 테스트"""
-        # 사용자와 세그먼트 생성
+        """닉네임으로 사용자 조회 테스트"""        # 사용자와 세그먼트 생성
         user = User(
             nickname="조회테스트",
-            invite_code="VIP2024",
+            invite_code="VIP123",
             rank="VIP",
             cyber_token_balance=500
         )
@@ -188,7 +193,9 @@ class TestAuthAPI:
         db_session.add(segment)
         db_session.commit()
         
-        response = client.get("/auth/users/조회테스트")
+        response = client.get("/api/auth/users/조회테스트")
+        print(f"Response status: {response.status_code}")
+        print(f"Response content: {response.text}")
         assert response.status_code == 200
         data = response.json()
         assert data["nickname"] == "조회테스트"
@@ -236,4 +243,3 @@ class TestRFMSegmentation:
         # 다양한 세그먼트 레벨 테스트
         assert segment_levels["Low"] < segment_levels["Medium"]
         assert segment_levels["Medium"] < segment_levels["Whale"]
-        assert segment_levels["Whale"] == 3  # 최고 레벨

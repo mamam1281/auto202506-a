@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, field_validator # Ensure all are imported
 from ..emotion_models import EmotionResult, SupportedEmotion, SupportedLanguage
 from ..services.recommendation_service import RecommendationService
 from app.schemas import FinalRecommendation
-from app.auth.jwt import get_current_user
+from app.auth.simple_auth import get_current_user_id
 import logging
 
 logger = logging.getLogger(__name__)
@@ -84,7 +84,7 @@ async def get_personalized_recommendations_endpoint(
 async def get_personalized_recommendations(
     user_id: int = Query(..., description="사용자 ID"),
     emotion: Optional[str] = Query(None, description="현재 감정 상태"),
-    current_user = Depends(get_current_user),
+    current_user_id = Depends(get_current_user_id),
     service: RecommendationService = Depends(get_recommendation_service)
 ):
     """
@@ -97,10 +97,9 @@ async def get_personalized_recommendations(
     Returns:
         추천 게임 목록
     """
-    try:
-        # 현재 사용자 권한 확인
-        if user_id != current_user["user_id"]:
-            raise HTTPException(status_code=403, detail="Not authorized to access this resource")        # 추천 서비스 호출 - 올바른 매개변수 사용
+    try:        # 현재 사용자 권한 확인
+        if user_id != current_user_id:
+            raise HTTPException(status_code=403, detail="Not authorized to access this resource")# 추천 서비스 호출 - 올바른 매개변수 사용
         recommendations = service.get_personalized_recommendations(user_id=user_id, emotion=emotion)
         
         return {

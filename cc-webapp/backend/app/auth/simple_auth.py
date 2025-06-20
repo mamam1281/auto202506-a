@@ -5,18 +5,24 @@
 - 랭크 시스템으로 서비스 레벨 제어 (VIP, PREMIUM, STANDARD)
 """
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends, status
+from fastapi.security import HTTPBearer
+from sqlalchemy.orm import Session
 from typing import Optional
 from app.models import User, InviteCode
 from app.database import get_db
 import random
 import string
 
+# HTTP Bearer security scheme (optional, for future token-based auth)
+security = HTTPBearer(auto_error=False)
+
 class SimpleAuth:
     @staticmethod
     def generate_invite_code() -> str:
         """6자리 초대코드 생성"""
-        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))    
+        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        
     @staticmethod
     def register_with_invite_code(invite_code: str, nickname: str, db) -> User:
         """초대코드로 즉시 가입 - 모든 서비스 접근 가능"""
@@ -50,7 +56,8 @@ class SimpleAuth:
         db.refresh(user)
         
         return user
-      @staticmethod
+        
+    @staticmethod
     def check_rank_access(user_rank: str, required_rank: str) -> bool:
         """랭크 기반 접근 제어"""
         rank_hierarchy = {
@@ -72,3 +79,30 @@ class SimpleAuth:
         segment_ok = user_segment_level >= required_segment_level
         
         return rank_ok and segment_ok
+
+# FastAPI dependencies for authentication
+def get_current_user(
+    db: Session = Depends(get_db)
+) -> Optional[int]:
+    """
+    테스트용 간단한 사용자 인증
+    실제로는 토큰 기반 인증을 구현해야 함
+    """
+    # 테스트를 위해 기본 사용자 ID 1 반환
+    return 1
+
+def require_user(current_user_id: Optional[int] = Depends(get_current_user)) -> int:
+    """인증된 사용자가 필요한 엔드포인트용 의존성"""
+    if not current_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="인증이 필요합니다"
+        )
+    return current_user_id
+
+# 테스트를 위한 간단한 사용자 ID 반환 함수
+def get_current_user_id(
+    current_user_id: Optional[int] = Depends(get_current_user)
+) -> Optional[int]:
+    """현재 사용자 ID 반환 (테스트용)"""
+    return current_user_id

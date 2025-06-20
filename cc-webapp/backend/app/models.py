@@ -28,12 +28,14 @@ class User(Base):
 
 class UserAction(Base):
     __tablename__ = "user_actions"
-
+    
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
     action_type = Column(String, index=True, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, index=True)
-    value = Column(Float, default=0.0) # For monetary value in RFM    user = relationship("User", back_populates="actions")
+    value = Column(Float, default=0.0) # For monetary value in RFM
+    
+    user = relationship("User", back_populates="actions")
 
 class UserSegment(Base):
     __tablename__ = "user_segments"

@@ -45,14 +45,14 @@ def test_get_user_segment_default(db_session):
     assert repo.get_user_segment(db_session, 999) == "Low"
 
 def test_get_user_segment_existing(db_session):
-    user = User(id=1, email="u@example.com")
+    user = User(id=1, nickname="test_user", invite_code="TEST01", rank="STANDARD")
     seg = UserSegment(user_id=1, rfm_group="Whale", risk_profile="low")
     db_session.add_all([user, seg])
     db_session.commit()
     assert repo.get_user_segment(db_session, 1) == "Whale"
 
 def test_record_action_success(db_session):
-    user = User(id=2, email="r@example.com")
+    user = User(id=2, nickname="test_user2", invite_code="TEST02", rank="STANDARD")
     db_session.add(user)
     db_session.commit()
     action = repo.record_action(db_session, 2, "PLAY", 1.0)
