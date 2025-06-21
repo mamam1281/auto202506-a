@@ -16,38 +16,93 @@
   user-select: none;
   vertical-align: middle;
   position: relative;
-  overflow: hidden;
-  /* 애니메이션 - 피그마 테스트 앱 방식 */
-  transition: all 200ms ease-out;
-    /* 최소 터치 영역 보장 */
+  overflow: hidden;  /* 애니메이션 - 4종 이펙트 최적화 */
+  transition: all 200ms ease-out, 
+              box-shadow 200ms ease-out, 
+              background 200ms ease-out, 
+              border 200ms ease-out;
+  /* 최소 터치 영역 보장 */
   min-height: var(--min-touch-area);
   min-width: var(--min-touch-area);
   
-  /* 타원/리플 효과 완전 제거 */
+  /* 타원/리플 효과만 제거 (배경은 유지) */
   outline: none !important;
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
   -webkit-user-select: none !important;
 }
 
-/* 기본 상태 호버/클릭 효과 - 피그마 테스트 앱 방식 */
+/* 연쇄 인터랙티브 효과 - 단계별 */
+
+/* 1단계: Hover - 준비 상태 */
 .button:hover:not(.disabled):not(.loading) {
-  transform: scale(1.01);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-lg);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
 }
 
+/* 2단계: Focus - 집중 상태 */
+.button:focus:not(.disabled):not(.loading) {
+  transform: scale(1.03);
+  box-shadow: var(--shadow-xl);
+  border: 2px solid var(--neon-purple-2);
+}
+
+/* 3단계: Active - 실행 상태 */
 .button:active:not(.disabled):not(.loading) {
-  transform: scale(0.99);
+  transform: scale(0.97);
+  box-shadow: var(--shadow-sm);
+  border: 3px solid var(--neon-purple-1);
 }
 
-/* Focus 상태 타원 효과 제거 */
-.button:focus {
-  outline: none !important;
-  box-shadow: none !important;
+/* 파티클 효과를 위한 의사 요소 */
+.button::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent, var(--neon-purple-1), transparent);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
 }
 
-.button:focus-visible {
+.button:hover::before {
+  opacity: 0.3;
+}
+
+.button:active::before {
+  opacity: 0.8;
+  animation: pulse 200ms ease-out;
+}
+
+/* 모든 상태에서 타원/리플 효과만 제거 */
+.button:focus,
+.button:focus-visible,
+.button:focus-within,
+.button:hover,
+.button:active,
+.button:visited,
+.button:target {
   outline: none !important;
-  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* 의사 요소를 통한 리플 효과 차단 */
+.button::before,
+.button::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* 머티리얼 디자인 리플 차단 */
+.button:not(.disabled):not(.loading):active {
+  outline: none !important;
 }
 
 /* === 크기별 스타일 === */
@@ -96,8 +151,13 @@
 }
 
 .primary:hover:not(.disabled):not(.loading) {
-  filter: brightness(1.1);
-  box-shadow: var(--shadow-md);
+  /* Color Shift: 더 강한 그라데이션으로 변화 */
+  background: var(--neon-gradient-2);
+}
+
+.primary:active:not(.disabled):not(.loading),
+.primary:focus:not(.disabled):not(.loading) {
+  outline: none !important;
 }
 
 /* Secondary - 슬레이트 배경 */
@@ -108,7 +168,13 @@
 }
 
 .secondary:hover:not(.disabled):not(.loading) {
-  filter: brightness(1.2);
+  /* Color Shift: 더 밝은 슬레이트로 변화 */
+  background-color: var(--color-slate-600);
+}
+
+.secondary:active:not(.disabled):not(.loading),
+.secondary:focus:not(.disabled):not(.loading) {
+  outline: none !important;
 }
 
 /* Outline - 테두리만 */
@@ -119,8 +185,15 @@
 }
 
 .outline:hover:not(.disabled):not(.loading) {
-  background-color: rgba(139, 13, 209, 0.1);
+  /* Color Shift: 배경 채우기 + 네온 보더 */
+  background-color: rgba(139, 13, 209, 0.2);
   border-color: var(--neon-purple-1);
+  color: var(--color-slate-200);
+}
+
+.outline:active:not(.disabled):not(.loading),
+.outline:focus:not(.disabled):not(.loading) {
+  outline: none !important;
 }
 
 /* Ghost - 배경 없음 */
@@ -134,6 +207,11 @@
   color: var(--color-slate-200);
 }
 
+.ghost:active:not(.disabled):not(.loading),
+.ghost:focus:not(.disabled):not(.loading) {
+  outline: none !important;
+}
+
 /* Gradient - 네온/골드 그라데이션 */
 .gradient {
   background: var(--gradient-gold);
@@ -143,7 +221,14 @@
 }
 
 .gradient:hover:not(.disabled):not(.loading) {
-  filter: brightness(1.1);
+  /* Color Shift: 네온 그라데이션으로 변화 */
+  background: var(--gradient-neon);
+  color: var(--color-slate-200);
+}
+
+.gradient:active:not(.disabled):not(.loading),
+.gradient:focus:not(.disabled):not(.loading) {
+  outline: none !important;
 }
 
 /* Success */
@@ -156,6 +241,11 @@
   filter: brightness(1.1);
 }
 
+.success:active:not(.disabled):not(.loading),
+.success:focus:not(.disabled):not(.loading) {
+  outline: none !important;
+}
+
 /* Warning */
 .warning {
   background-color: var(--color-warning);
@@ -166,6 +256,11 @@
   filter: brightness(1.1);
 }
 
+.warning:active:not(.disabled):not(.loading),
+.warning:focus:not(.disabled):not(.loading) {
+  outline: none !important;
+}
+
 /* Error */
 .error {
   background-color: var(--color-error);
@@ -174,6 +269,11 @@
 
 .error:hover:not(.disabled):not(.loading) {
   filter: brightness(1.1);
+}
+
+.error:active:not(.disabled):not(.loading),
+.error:focus:not(.disabled):not(.loading) {
+  outline: none !important;
 }
 
 /* === 상태별 스타일 === */
@@ -267,6 +367,65 @@
   }
 }
 
+/* === 연쇄 인터랙티브 애니메이션 === */
+
+/* 펄스 효과 */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+}
+
+/* 파티클 효과 */
+@keyframes particle {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) rotate(360deg);
+  }
+}
+
+/* 기본 그림자 애니메이션 */
+@keyframes shadowPulse {
+  0%, 100% {
+    box-shadow: var(--shadow-lg);
+  }
+  50% {
+    box-shadow: var(--shadow-xl);
+  }
+}
+
+/* 툴팁 나타남 애니메이션 */
+@keyframes tooltipAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* 리플 효과 (선택적) */
 .button::before {
   content: '';
@@ -284,4 +443,160 @@
 .button:active::before {
   width: 100%;
   height: 100%;
+}
+
+/* === 전역 리플/타원 효과 완전 차단 === */
+/* 모든 브라우저와 프레임워크의 기본 리플 효과 차단 */
+.button *,
+.button *::before,
+.button *::after {
+  background-image: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* 터치 디바이스에서 리플 효과만 차단 */
+@media (hover: none) and (pointer: coarse) {
+  .button {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+  
+  .button:active {
+    outline: none !important;
+  }
+}
+
+/* Material Design 스타일 차단 */
+.button[class*="ripple"],
+.button[class*="Ripple"],
+.button[class*="wave"],
+.button[class*="Wave"] {
+  overflow: hidden !important;
+}
+
+.button[class*="ripple"]::before,
+.button[class*="ripple"]::after,
+.button[class*="Ripple"]::before,
+.button[class*="Ripple"]::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* === 툴팁/팝오버 효과 === */
+.tooltipWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: absolute;
+  background: var(--color-slate-800);
+  color: var(--color-slate-200);
+  padding: var(--grid-2) var(--grid-3);
+  border-radius: var(--radius-button);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  z-index: var(--z-tooltip);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--neon-purple-2);
+  
+  /* 기본적으로 숨김 */
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.9);
+  transition: all 200ms ease-out;
+  /* 기본 그림자만 */
+  box-shadow: var(--shadow-lg);
+}
+
+.tooltipWrapper:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  animation: tooltipAppear 200ms ease-out;
+}
+
+/* 툴팁 위치별 스타일 */
+.tooltip-top {
+  bottom: calc(100% + var(--grid-2));
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+}
+
+.tooltip-top::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--color-slate-800);
+}
+
+.tooltip-bottom {
+  top: calc(100% + var(--grid-2));
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+}
+
+.tooltip-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: var(--color-slate-800);
+}
+
+.tooltip-left {
+  right: calc(100% + var(--grid-2));
+  top: 50%;
+  transform: translateY(-50%) scale(0.9);
+}
+
+.tooltip-left::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-left-color: var(--color-slate-800);
+}
+
+.tooltip-right {
+  left: calc(100% + var(--grid-2));
+  top: 50%;
+  transform: translateY(-50%) scale(0.9);
+}
+
+.tooltip-right::after {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right-color: var(--color-slate-800);
+}
+
+.tooltipWrapper:hover .tooltip-top {
+  transform: translateX(-50%) scale(1);
+}
+
+.tooltipWrapper:hover .tooltip-bottom {
+  transform: translateX(-50%) scale(1);
+}
+
+.tooltipWrapper:hover .tooltip-left {
+  transform: translateY(-50%) scale(1);
+}
+
+.tooltipWrapper:hover .tooltip-right {
+  transform: translateY(-50%) scale(1);
 }

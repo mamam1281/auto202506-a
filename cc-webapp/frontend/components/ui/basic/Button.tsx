@@ -24,9 +24,14 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   
   /** 아이콘만 표시 (정사각형) */
   iconOnly?: boolean;
-  
-  /** 로딩 텍스트 */
+    /** 로딩 텍스트 */
   loadingText?: string;
+  
+  /** 툴팁 텍스트 */
+  tooltip?: string;
+  
+  /** 툴팁 위치 */
+  tooltipPosition?: 'top' | 'bottom' | 'left' | 'right';
   
   /** 커스텀 CSS 클래스 */
   className?: string;
@@ -41,6 +46,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   iconPosition = 'left',
   iconOnly = false,
   loadingText,
+  tooltip,
+  tooltipPosition = 'top',
   className = '',
   children,
   disabled,
@@ -59,26 +66,33 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
     isDisabled && styles.disabled,
     className
   ].filter(Boolean).join(' ');
-
   return (
-    <button
-      ref={ref}
-      className={buttonClasses}
-      disabled={isDisabled}
-      {...props}
-    >
-      {loading && <div className={styles.spinner} />}
+    <div className={tooltip ? styles.tooltipWrapper : undefined}>
+      <button
+        ref={ref}
+        className={buttonClasses}
+        disabled={isDisabled}
+        {...props}
+      >
+        {loading && <div className={styles.spinner} />}
+        
+        {!loading && icon && iconPosition === 'left' && icon}
+        
+        {!loading && !iconOnly && children}
+        
+        {!loading && icon && iconPosition === 'right' && icon}
+        
+        {loading && loadingText && (
+          <span className={styles.loadingText}>{loadingText}</span>
+        )}
+      </button>
       
-      {!loading && icon && iconPosition === 'left' && icon}
-      
-      {!loading && !iconOnly && children}
-      
-      {!loading && icon && iconPosition === 'right' && icon}
-      
-      {loading && loadingText && (
-        <span className={styles.loadingText}>{loadingText}</span>
+      {tooltip && (
+        <div className={`${styles.tooltip} ${styles[`tooltip-${tooltipPosition}`]}`}>
+          {tooltip}
+        </div>
       )}
-    </button>
+    </div>
   );
 });
 

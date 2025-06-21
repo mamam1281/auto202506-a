@@ -28,6 +28,51 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* === 전역 버튼 리플 효과만 차단 === */
+/* 모든 버튼 요소에서 브라우저 기본 리플/타원 효과만 제거 */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  outline: none !important;
+}
+
+button:active,
+[role="button"]:active,
+button:focus,
+[role="button"]:focus {
+  outline: none !important;
+}
+
+/* 특히 터치 디바이스에서 */
+@media (hover: none) and (pointer: coarse) {
+  button, [role="button"] {
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  button:active, [role="button"]:active {
+    outline: none !important;
+  }
+}
+
+/* Storybook이나 다른 프레임워크 리플 효과만 차단 */
+button[class*="ripple"],
+button[class*="Ripple"],
+[role="button"][class*="ripple"],
+[role="button"][class*="Ripple"] {
+  overflow: hidden !important;
+}
+
+button::before,
+button::after,
+[role="button"]::before,
+[role="button"]::after {
+  background: none !important;
+}
+
 /* 유틸리티 클래스 */
 .sr-only {
   position: absolute;
