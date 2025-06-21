@@ -2,14 +2,16 @@ import '../styles/globals.css';
 import type { Preview } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import React from 'react';
-import { StorybookMockProvider } from '../contexts/StorybookMockProvider';
+import { AppProvider } from '../contexts/AppContext';
 
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <StorybookMockProvider>
-        <Story />
-      </StorybookMockProvider>
+      <AppProvider>
+        <div className="h-screen flex flex-col">
+          <Story />
+        </div>
+      </AppProvider>
     ),
   ],
   parameters: {
