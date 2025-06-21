@@ -17,22 +17,37 @@
   vertical-align: middle;
   position: relative;
   overflow: hidden;
-  
-  /* 애니메이션 */
-  transition: all var(--duration-fast) var(--easing-ease-out);
-  
-  /* 최소 터치 영역 보장 */
+  /* 애니메이션 - 피그마 테스트 앱 방식 */
+  transition: all 200ms ease-out;
+    /* 최소 터치 영역 보장 */
   min-height: var(--min-touch-area);
   min-width: var(--min-touch-area);
+  
+  /* 타원/리플 효과 완전 제거 */
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
 }
 
-/* 기본 상태 호버 효과 */
+/* 기본 상태 호버/클릭 효과 - 피그마 테스트 앱 방식 */
 .button:hover:not(.disabled):not(.loading) {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 .button:active:not(.disabled):not(.loading) {
-  transform: scale(0.98);
+  transform: scale(0.99);
+}
+
+/* Focus 상태 타원 효과 제거 */
+.button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* === 크기별 스타일 === */
@@ -81,8 +96,8 @@
 }
 
 .primary:hover:not(.disabled):not(.loading) {
-  background: var(--neon-gradient-2);
-  box-shadow: var(--shadow-neon);
+  filter: brightness(1.1);
+  box-shadow: var(--shadow-md);
 }
 
 /* Secondary - 슬레이트 배경 */
@@ -93,8 +108,7 @@
 }
 
 .secondary:hover:not(.disabled):not(.loading) {
-  background-color: var(--color-slate-600);
-  border-color: var(--color-slate-400);
+  filter: brightness(1.2);
 }
 
 /* Outline - 테두리만 */
@@ -105,9 +119,8 @@
 }
 
 .outline:hover:not(.disabled):not(.loading) {
-  background-color: var(--neon-purple-2);
-  color: var(--color-slate-200);
-  box-shadow: var(--shadow-neon);
+  background-color: rgba(139, 13, 209, 0.1);
+  border-color: var(--neon-purple-1);
 }
 
 /* Ghost - 배경 없음 */
@@ -130,8 +143,7 @@
 }
 
 .gradient:hover:not(.disabled):not(.loading) {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24);
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+  filter: brightness(1.1);
 }
 
 /* Success */
@@ -141,8 +153,7 @@
 }
 
 .success:hover:not(.disabled):not(.loading) {
-  background-color: #059669;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  filter: brightness(1.1);
 }
 
 /* Warning */
@@ -152,8 +163,7 @@
 }
 
 .warning:hover:not(.disabled):not(.loading) {
-  background-color: #d97706;
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  filter: brightness(1.1);
 }
 
 /* Error */
@@ -163,8 +173,7 @@
 }
 
 .error:hover:not(.disabled):not(.loading) {
-  background-color: #dc2626;
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  filter: brightness(1.1);
 }
 
 /* === 상태별 스타일 === */
