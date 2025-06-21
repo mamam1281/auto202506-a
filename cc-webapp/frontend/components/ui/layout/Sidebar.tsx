@@ -57,8 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   className,
   collapsible = 'offcanvas',
 }) => {
-  const { isOpen } = useSidebar();
-  const variants = {
+  const { isOpen } = useSidebar();  const variants = {
     open: {
       x: 0,
       opacity: 1,
@@ -80,13 +79,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.aside
+    <AnimatePresence mode="wait">      <motion.aside
         className={cn(
           styles.sidebar,
           styles[side],
           styles[collapsible],
           { [styles.open]: isOpen },
+          "bg-[#121225] border-r border-[#2a2b3e] backdrop-blur-md",
           className
         )}
         variants={variants}

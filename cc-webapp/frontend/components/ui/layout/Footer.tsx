@@ -10,13 +10,12 @@ export function Footer() {
     계정: ["내 프로필", "게임 기록", "결제 내역", "설정"],
     지원: ["고객 센터", "문의하기", "버그 신고", "제안하기"],
   };
-
   return (
-    <footer className="border-t bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/30">
+    <footer className="border-t bg-background/90 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 mt-auto">
       <Container>
-        <div className="py-12">
+        <div className="py-8 md:py-12">
           {/* 메인 푸터 컨텐츠 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-8">
             {Object.entries(footerLinks).map(
               ([category, links]) => (
                 <div key={category}>

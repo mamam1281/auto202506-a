@@ -3,7 +3,7 @@
 import { ReactNode, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from './Header';
-import { Sidebar } from './Sidebar';
+import { Sidebar, SidebarProvider } from './Sidebar';
 import { Footer } from './Footer';
 import { Container } from './Container';
 import { useLayout } from '../../../contexts/AppContext';
@@ -46,12 +46,15 @@ export function AppLayout({
   theme = 'dark',
   className 
 }: AppLayoutProps) {
-  const { sidebarOpen, toggleSidebar } = useLayout();  // 배경 스타일 클래스
+  const { sidebarOpen, toggleSidebar } = useLayout();
+  
+  // 배경 스타일 클래스
   const variantClasses = {
     default: 'bg-background text-foreground',
     dark: 'bg-[#0f0f23] text-white',
     game: 'bg-gradient-to-br from-[#0f0f23] via-[#2a1758] to-[#0f0f23] text-white'
   };
+  
   // 테마 적용
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -75,7 +78,6 @@ export function AppLayout({
       };
     }
   }, [theme]);
-
   return (
     <AnimatePresence mode="wait">
       <motion.div 
@@ -88,44 +90,50 @@ export function AppLayout({
         animate="animate"
         exit="exit"
       >
-        {/* 헤더 */}
-        <Header />
-
-        <div className="flex flex-1">          {/* 사이드바 */}
-          {showSidebar && (
-            <Sidebar>
-              <div className="p-4">
-                <h3 className="font-medium mb-2">메뉴</h3>
-                <div className="space-y-1">
-                  <div className="p-2 bg-primary/10 rounded">홈</div>
-                  <div className="p-2 hover:bg-muted/50 rounded">게임</div>
-                  <div className="p-2 hover:bg-muted/50 rounded">프로필</div>
-                  <div className="p-2 hover:bg-muted/50 rounded">설정</div>
+        <SidebarProvider defaultOpen={sidebarOpen}>
+          {/* 헤더 */}
+          <Header />
+          
+          <div className="flex flex-1 relative">
+            {/* 사이드바 - fixed position */}
+            {showSidebar && (
+              <Sidebar className="mt-16 h-[calc(100vh-4rem)]">
+                <div className="p-4">
+                  <h3 className="font-medium mb-2">메뉴</h3>
+                  <div className="space-y-1">
+                    <div className="p-2 bg-primary/10 rounded">홈</div>
+                    <div className="p-2 hover:bg-muted/50 rounded">게임</div>
+                    <div className="p-2 hover:bg-muted/50 rounded">프로필</div>
+                    <div className="p-2 hover:bg-muted/50 rounded">설정</div>
+                  </div>
                 </div>
-              </div>
-            </Sidebar>
-          )}          {/* 메인 컨텐츠 */}
-          <motion.main 
-            className={cn(
-              "flex-1 min-h-[calc(100vh-4rem)] transition-all duration-300",
-              showSidebar && sidebarOpen && "md:ml-64",
-              className
+              </Sidebar>
             )}
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <Container 
-              size={containerSize} 
-              className="py-6 min-h-full"
+            
+            {/* 메인 컨텐츠 */}
+            <motion.main 
+              className={cn(
+                "flex-1 min-h-[calc(100vh-4rem)] transition-all duration-300",
+                showSidebar && sidebarOpen && "ml-0 md:ml-[280px]",
+                className
+              )}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
             >
-              {/* 자식 컴포넌트 렌더링 */}
-              {children}
-            </Container>
-          </motion.main>
-        </div>        {/* 푸터 */}
-        {showFooter && <Footer />}
-      </motion.div>
+              <Container 
+                size={containerSize} 
+                className="py-6 min-h-full"
+              >
+                {/* 자식 컴포넌트 렌더링 */}
+                {children}
+              </Container>
+            </motion.main>
+          </div>
+          
+          {/* 푸터 */}
+          {showFooter && <Footer />}
+        </SidebarProvider>      </motion.div>
     </AnimatePresence>
   );
 }
