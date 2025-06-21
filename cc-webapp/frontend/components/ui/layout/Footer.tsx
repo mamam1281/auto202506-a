@@ -11,7 +11,7 @@ export function Footer() {
     지원: ["고객 센터", "문의하기", "버그 신고", "제안하기"],
   };
   return (
-    <footer className="border-t bg-background/90 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 mt-auto">
+    <footer className="border-t bg-background/90 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 w-full mt-auto z-10">
       <Container>
         <div className="py-8 md:py-12">
           {/* 메인 푸터 컨텐츠 */}

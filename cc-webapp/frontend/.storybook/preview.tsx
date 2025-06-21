@@ -2,14 +2,14 @@ import '../styles/globals.css';
 import type { Preview } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import React from 'react';
-import { AppProvider } from '../contexts/AppContext';
+import { StorybookMockProvider } from '../contexts/StorybookMockProvider';
 
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <AppProvider>
+      <StorybookMockProvider>
         <Story />
-      </AppProvider>
+      </StorybookMockProvider>
     ),
   ],
   parameters: {

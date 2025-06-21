@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Header } from './Header';
-// AppProvider가 전역 데코레이터로 등록되어 있으므로 여기서 제거
 
 const meta: Meta<typeof Header> = {
   title: 'UI/Layout/Header',
@@ -12,8 +11,8 @@ const meta: Meta<typeof Header> = {
         component: '앱 상단의 헤더 컴포넌트'
       }
     }
-  },  tags: ['autodocs'],  // 전역 데코레이터에서 이미 AppProvider를 사용하므로 여기서는 제거
-  // decorators: [],
+  },
+  tags: ['autodocs'],
 };
 
 export default meta;

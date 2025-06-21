@@ -77,8 +77,7 @@ export function AppLayout({
         root.classList.remove('light', 'dark');
       };
     }
-  }, [theme]);
-  return (
+  }, [theme]);  return (
     <AnimatePresence mode="wait">
       <motion.div 
         className={cn(
@@ -94,10 +93,9 @@ export function AppLayout({
           {/* 헤더 */}
           <Header />
           
-          <div className="flex flex-1 relative">
-            {/* 사이드바 - fixed position */}
-            {showSidebar && (
-              <Sidebar className="mt-16 h-[calc(100vh-4rem)]">
+          <div className="flex flex-1">
+            {/* 사이드바 */}            {showSidebar && (
+              <Sidebar>
                 <div className="p-4">
                   <h3 className="font-medium mb-2">메뉴</h3>
                   <div className="space-y-1">
@@ -110,11 +108,10 @@ export function AppLayout({
               </Sidebar>
             )}
             
-            {/* 메인 컨텐츠 */}
-            <motion.main 
+            {/* 메인 컨텐츠 */}            <motion.main 
               className={cn(
-                "flex-1 min-h-[calc(100vh-4rem)] transition-all duration-300",
-                showSidebar && sidebarOpen && "ml-0 md:ml-[280px]",
+                "flex-1 min-h-[calc(100vh-8rem)] transition-all duration-300",
+                showSidebar && sidebarOpen && "md:ml-[280px]",
                 className
               )}
               variants={containerVariants}

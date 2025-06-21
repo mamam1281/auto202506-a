@@ -1,5 +1,7 @@
 .sidebarProvider {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 .sidebar {

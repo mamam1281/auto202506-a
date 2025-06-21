@@ -77,9 +77,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       },
     },
   };
-
   return (
-    <AnimatePresence mode="wait">      <motion.aside
+    <AnimatePresence mode="wait">
+      <motion.aside
         className={cn(
           styles.sidebar,
           styles[side],
