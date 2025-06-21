@@ -6,7 +6,11 @@ import { AppProvider } from '../contexts/AppContext';
 
 const preview: Preview = {
   decorators: [
-    (Story) => React.createElement(AppProvider, null, React.createElement(Story, null))
+    (Story) => (
+      <AppProvider>
+        <Story />
+      </AppProvider>
+    ),
   ],
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -15,7 +19,8 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/,
       },
-    },    backgrounds: {
+    },
+    backgrounds: {
       default: 'dark',
       values: [
         {

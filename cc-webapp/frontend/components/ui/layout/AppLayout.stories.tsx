@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AppLayout } from './Applayout';
-import { AppProvider } from '../../../contexts/AppContext';
+import { AppLayout } from './Applayout'; // Applayout.tsx 파일에서 컴포넌트를 가져옴
 
 const meta: Meta<typeof AppLayout> = {
   title: 'UI/Layout/AppLayout',
@@ -17,13 +16,6 @@ const meta: Meta<typeof AppLayout> = {
     }
   },
   tags: ['autodocs'],
-  decorators: [
-    (Story) => (
-      <AppProvider>
-        <Story />
-      </AppProvider>
-    ),
-  ],
   argTypes: {
     showSidebar: {
       control: 'boolean',
@@ -57,10 +49,10 @@ type Story = StoryObj<typeof AppLayout>;
 export const Default: Story = {
   args: {
     children: (
-      <div className="p-6 bg-gray-800/80 backdrop-blur-sm rounded-xl border border-gray-700 shadow-xl">
+      <div className="p-6 bg-[#1a1b2e] backdrop-blur-sm rounded-xl border border-[#2a2b3e] shadow-xl">
         <h1 className="text-2xl font-bold mb-4 text-white">기본 앱 레이아웃</h1>
-        <p className="mb-2 text-gray-200">이 영역에 페이지 컨텐츠가 들어갑니다.</p>
-        <p className="text-gray-200">다양한 레이아웃 옵션을 사용해서 앱 디자인을 구성할 수 있습니다.</p>
+        <p className="mb-2 text-gray-100">이 영역에 페이지 컨텐츠가 들어갑니다.</p>
+        <p className="text-gray-100">다양한 레이아웃 옵션을 사용해서 앱 디자인을 구성할 수 있습니다.</p>
       </div>
     ),
     showSidebar: true,
@@ -74,10 +66,10 @@ export const Default: Story = {
 export const NoSidebar: Story = {
   args: {
     children: (
-      <div className="p-6 bg-gray-800/80 backdrop-blur-sm rounded-xl border border-gray-700 shadow-xl">
+      <div className="p-6 bg-[#1a1b2e] backdrop-blur-sm rounded-xl border border-[#2a2b3e] shadow-xl">
         <h1 className="text-2xl font-bold mb-4 text-white">사이드바 없는 레이아웃</h1>
-        <p className="mb-2 text-gray-200">사이드바를 제외한 레이아웃입니다.</p>
-        <p className="text-gray-200">전체 너비를 활용해 컨텐츠를 표시합니다.</p>
+        <p className="mb-2 text-gray-100">사이드바를 제외한 레이아웃입니다.</p>
+        <p className="text-gray-100">전체 너비를 활용해 컨텐츠를 표시합니다.</p>
       </div>
     ),
     showSidebar: false,

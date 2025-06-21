@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Sidebar, SidebarProvider } from './Sidebar';
-import { MockAppProvider } from '../../../contexts/MockAppContext';
+import { AppProvider } from '../../../contexts/AppContext';
 
 const meta: Meta<typeof Sidebar> = {
   title: 'UI/Layout/Sidebar',
@@ -15,7 +15,7 @@ const meta: Meta<typeof Sidebar> = {
   },
   tags: ['autodocs'],  decorators: [
     (Story) => (
-      <MockAppProvider>
+      <AppProvider>
         <SidebarProvider defaultOpen={true}>
           <div className="h-screen flex">
             <Story />
@@ -25,7 +25,7 @@ const meta: Meta<typeof Sidebar> = {
             </div>
           </div>
         </SidebarProvider>
-      </MockAppProvider>
+      </AppProvider>
     ),
   ],
   argTypes: {

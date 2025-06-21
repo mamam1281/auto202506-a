@@ -49,8 +49,8 @@ export function AppLayout({
   const { sidebarOpen, toggleSidebar } = useLayout();  // 배경 스타일 클래스
   const variantClasses = {
     default: 'bg-background text-foreground',
-    dark: 'bg-gray-900 text-white',
-    game: 'bg-gradient-to-br from-slate-900 via-purple-900/70 to-slate-900 text-white'
+    dark: 'bg-[#0f0f23] text-white',
+    game: 'bg-gradient-to-br from-[#0f0f23] via-[#2a1758] to-[#0f0f23] text-white'
   };
   // 테마 적용
   useEffect(() => {
