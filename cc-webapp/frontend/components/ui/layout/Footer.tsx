@@ -9,13 +9,12 @@ export function Footer() {
     커뮤니티: ["공지사항", "이벤트", "가이드", "FAQ"],
     계정: ["내 프로필", "게임 기록", "결제 내역", "설정"],
     지원: ["고객 센터", "문의하기", "버그 신고", "제안하기"],
-  };
-  return (
-    <footer className="border-t bg-background/90 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 w-full mt-auto z-10">
-      <Container>
-        <div className="py-8 md:py-12">
+  };  return (
+    <footer className="border-t bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/30">
+      <Container size="xl">
+        <div className="py-12">
           {/* 메인 푸터 컨텐츠 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             {Object.entries(footerLinks).map(
               ([category, links]) => (
                 <div key={category}>
@@ -24,10 +23,8 @@ export function Footer() {
                   </h3>
                   <ul className="space-y-2">
                     {links.map((link) => (
-                      <li key={link}>                        <a
-                          href="#"
-                          className="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
-                        >
+                      <li key={link}>
+                        <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                           {link}
                         </a>
                       </li>

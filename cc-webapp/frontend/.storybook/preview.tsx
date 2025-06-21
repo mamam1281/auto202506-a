@@ -3,14 +3,17 @@ import type { Preview } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import React from 'react';
 import { AppProvider } from '../contexts/AppContext';
+import { SidebarProvider } from '../components/ui/layout/Sidebar';
 
 const preview: Preview = {
   decorators: [
     (Story) => (
       <AppProvider>
-        <div className="h-screen flex flex-col">
-          <Story />
-        </div>
+        <SidebarProvider defaultOpen={true}>
+          <div className="h-screen flex flex-col">
+            <Story />
+          </div>
+        </SidebarProvider>
       </AppProvider>
     ),
   ],
@@ -60,7 +63,6 @@ const preview: Preview = {
       },
     },
   },
-  
   globalTypes: {
     theme: {
       description: 'Global theme for components',

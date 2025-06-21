@@ -55,23 +55,21 @@ export function Container({
   variant = 'default',
   responsive = true,
   layoutId
-}: ContainerProps) {
-  // 크기별 클래스 맵핑
+}: ContainerProps) {  // 크기별 클래스 맵핑 (실제 디바이스 크기 기준)
   const sizeClasses = {
-    sm: 'max-w-md',    // 448px
-    md: 'max-w-2xl',   // 672px
-    lg: 'max-w-4xl',   // 896px
-    xl: 'max-w-6xl',   // 1152px
-    '2xl': 'max-w-7xl', // 1280px
+    sm: 'max-w-sm',           // 384px (모바일)
+    md: 'max-w-screen-md',    // 768px (태블릿)
+    lg: 'max-w-screen-lg',    // 1024px (작은 데스크톱)
+    xl: 'max-w-screen-xl',    // 1280px (데스크톱)
+    '2xl': 'max-w-screen-2xl', // 1536px (큰 데스크톱)
     full: 'max-w-full'
   };
-  
-  // 패딩 클래스
+    // 패딩 클래스 (실제 웹사이트 표준)
   const paddingClasses: Record<string, string> = {
-    'true': 'px-4 sm:px-6 lg:px-8',
-    'sm': 'px-2 sm:px-3',
-    'md': 'px-4 sm:px-5',
-    'lg': 'px-5 sm:px-8 lg:px-10',
+    'true': 'px-4 md:px-6 lg:px-8',  // 모바일 16px, 태블릿 24px, 데스크톱 32px
+    'sm': 'px-2 md:px-3',            // 작은 패딩
+    'md': 'px-4 md:px-6',            // 중간 패딩
+    'lg': 'px-6 md:px-8 lg:px-12',   // 큰 패딩
     'false': ''
   };
   
@@ -119,11 +117,10 @@ export function Container({
   };
   // 선택된 variants
   const selectedVariants = animate ? getAnimationVariant() : undefined;
-  
-  // 패딩 클래스 결정
+    // 패딩 클래스 결정
   const paddingClass = typeof padding === 'boolean' 
     ? (padding ? paddingClasses.true : paddingClasses.false)
-    : paddingClasses[padding];
+    : paddingClasses[padding] || paddingClasses.true;
 
   // 공통 클래스
   const containerClass = cn(

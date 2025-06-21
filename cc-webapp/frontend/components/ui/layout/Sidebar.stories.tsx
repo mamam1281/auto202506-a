@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Sidebar } from './Sidebar';
+import { Sidebar, SidebarProvider } from './Sidebar';
 
 const meta: Meta<typeof Sidebar> = {
   title: 'UI/Layout/Sidebar',
@@ -15,13 +15,15 @@ const meta: Meta<typeof Sidebar> = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div className="h-screen flex">
-        <Story />
-        <div className="flex-1 p-4 bg-slate-100 dark:bg-slate-900">
-          <h1 className="text-2xl font-bold">메인 컨텐츠 영역</h1>
-          <p className="mt-2">사이드바와 함께 사용되는 메인 컨텐츠 예시입니다.</p>
+      <SidebarProvider defaultOpen={true}>
+        <div className="h-screen flex">
+          <Story />
+          <div className="flex-1 p-4 bg-slate-100 dark:bg-slate-900">
+            <h1 className="text-2xl font-bold">메인 컨텐츠 영역</h1>
+            <p className="mt-2">사이드바와 함께 사용되는 메인 컨텐츠 예시입니다.</p>
+          </div>
         </div>
-      </div>
+      </SidebarProvider>
     ),
   ],
   argTypes: {
