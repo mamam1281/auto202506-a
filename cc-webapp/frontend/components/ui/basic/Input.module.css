@@ -1,47 +1,28 @@
-/* Input 컴포넌트 스타일 - 성능 최적화 및 표준화 */
+/* Input 컴포넌트 스타일 - 통합 가이드 기준 적용 */
+/* 피그마_002Splash Screen Application 참조 스타일 반영 */
 
-/* ============================================
-   원치 않는 효과 완전 제거 (Button과 동일)
-   ============================================ */
-.input,
-.input *,
-.input::before,
-.input::after {
-  /* 모든 기본 브라우저 효과 제거 */
-  outline: none !important;
-  box-shadow: none !important;
-  background-attachment: initial !important;
-  background-blend-mode: normal !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  
-  /* 모바일 탭 하이라이트 제거 */
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-touch-callout: none !important;
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
-  user-select: none !important;
-}
-
-.input {
-  user-select: text !important; /* 입력 필드는 텍스트 선택 가능 */
-}
-
-/* ============================================
-   기본 컨테이너 및 레이아웃
-   ============================================ */
-
+/* === 기본 컨테이너 === */
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--grid-1, 0.5rem);
+  gap: var(--spacing-1-5, 6px);
+}
+
+.fullWidth {
   width: 100%;
 }
 
+/* === 라벨 === */
+.label {
+  font-family: var(--font-family-sans, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--color-slate-200, #e2e8f0);
+  margin-bottom: var(--spacing-0-5, 2px);
+  transition: color var(--duration-fast, 0.15s) var(--easing-ease-out);
+}
+
+/* === 인풋 래퍼 === */
 .inputWrapper {
   position: relative;
   display: flex;
@@ -49,312 +30,265 @@
   width: 100%;
 }
 
-.fullWidth {
-  width: 100%;
-}
-
-/* ============================================
-   메인 Input 스타일 (2가지 효과만 적용)
-   ============================================ */
-
+/* === 인풋 기본 스타일 === */
 .input {
   width: 100%;
-  font-family: var(--font-family-base, inherit);
-  font-weight: var(--font-weight-normal, 400);
+  font-family: var(--font-family-sans, 'Inter', sans-serif);
+  font-size: var(--font-size-base, 16px);
+  line-height: var(--line-height-normal, 1.5);
+  color: var(--color-slate-200, #e2e8f0);
   background-color: var(--color-slate-800, #1e293b);
-  color: var(--color-slate-200, #e2e8f0);
-  border: 2px solid var(--color-slate-600, #475569);
-  border-radius: var(--radius-button, 0.5rem);
-  
-  /* 2가지 효과만: Border Animation + Color Shift */
-  transition: 
-    border-color var(--duration-fast, 0.25s) var(--easing-ease-out, cubic-bezier(0.4, 0, 0.2, 1)),
-    background-color var(--duration-fast, 0.25s) var(--easing-ease-out, cubic-bezier(0.4, 0, 0.2, 1)),
-    color var(--duration-fast, 0.25s) var(--easing-ease-out, cubic-bezier(0.4, 0, 0.2, 1));
-}
-
-.input::placeholder {
-  color: var(--color-slate-400, #94a3b8);
-  opacity: 1;
-  transition: opacity var(--duration-fast, 0.25s) ease-in-out;
-}
-
-/* ============================================
-   상호작용 효과 1: Border Animation (Focus)
-   ============================================ */
-
-.input:focus {
-  border-color: var(--color-primary-500, #3b82f6);
-  position: relative;
-}
-
-/* 테두리 애니메이션 효과 */
-.input:focus::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  border-radius: inherit;
-  background: linear-gradient(45deg, 
-    var(--color-primary-500, #3b82f6), 
-    var(--color-primary-400, #60a5fa),
-    var(--color-primary-500, #3b82f6)
-  );
-  background-size: 200% 200%;
-  animation: borderFlow 2s linear infinite;
-  z-index: -1;
-  opacity: 0.3;
-}
-
-@keyframes borderFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* ============================================
-   상호작용 효과 2: Color Shift (상태별)
-   ============================================ */
-
-/* 포커스 색상 변화 */
-.input:focus {
-  background-color: var(--color-slate-750, #0f172a);
-  color: var(--color-primary-200, #bfdbfe);
-}
-
-.input:focus::placeholder {
-  opacity: 0.5;
-}
-
-/* 에러 상태 색상 변화 */
-.input.error {
-  border-color: var(--color-red-500, #ef4444);
-  background-color: var(--color-red-950, #450a0a);
-  color: var(--color-red-200, #fecaca);
-}
-
-.input.error:focus {
-  border-color: var(--color-red-500, #ef4444);
-  background-color: var(--color-red-900, #7f1d1d);
-}
-
-/* 성공 상태 색상 변화 */
-.input.success {
-  border-color: var(--color-green-500, #10b981);
-  background-color: var(--color-green-950, #064e3b);
-  color: var(--color-green-200, #bbf7d0);
-}
-
-.input.success:focus {
-  border-color: var(--color-green-500, #10b981);
-  background-color: var(--color-green-900, #14532d);
-}
-
-/* 비활성화 상태 */
-.input:disabled,
-.input.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background-color: var(--color-slate-700, #334155);
-  color: var(--color-slate-400, #94a3b8);
-  border-color: var(--color-slate-600, #475569);
-}
-
-/* ============================================
-   크기별 스타일
-   ============================================ */
-
-.input.sm {
-  height: 32px;
-  padding: 8px 12px;
-  font-size: var(--font-size-sm, 0.875rem);
-}
-
-.input.md {
-  height: 40px;
+  border: 1px solid var(--color-slate-600, #475569);
+  border-radius: var(--radius-button, 12px);
   padding: 12px 16px;
-  font-size: var(--font-size-base, 1rem);
+  transition: all var(--duration-normal, 0.3s) var(--easing-ease-out);
+  outline: none;
 }
 
-.input.lg {
-  height: 48px;
-  padding: 16px 20px;
-  font-size: var(--font-size-lg, 1.125rem);
+/* === 사이즈 변형 === */
+.sm {
+  padding: 8px 12px;
+  font-size: var(--font-size-xs, 12px);
+  border-radius: var(--radius-base, 4px);
 }
 
-/* ============================================
-   라벨 및 메시지
-   ============================================ */
-
-.label {
-  font-size: var(--font-size-sm, 0.875rem);
-  font-weight: var(--font-weight-medium, 500);
-  color: var(--color-slate-200, #e2e8f0);
-  margin-bottom: var(--grid-1, 0.5rem);
-  transition: color var(--duration-fast, 0.25s) ease-in-out;
+.md {
+  padding: 12px 16px;
+  font-size: var(--font-size-sm, 14px);
+  border-radius: var(--radius-md, 6px);
 }
 
-.errorText {
-  font-size: var(--font-size-xs, 0.75rem);
-  color: var(--color-red-400, #f87171);
-  margin-top: var(--grid-1, 0.5rem);
-  font-weight: var(--font-weight-medium, 500);
+.lg {
+  padding: 14px 18px;
+  font-size: var(--font-size-base, 16px);
+  border-radius: var(--radius-lg, 8px);
 }
 
-.successText {
-  font-size: var(--font-size-xs, 0.75rem);
-  color: var(--color-green-400, #4ade80);
-  margin-top: var(--grid-1, 0.5rem);
-  font-weight: var(--font-weight-medium, 500);
+/* === 아이콘 처리 === */
+.leftIcon,
+.rightIcon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-slate-400, #94a3b8);
+  transition: color var(--duration-fast, 0.15s) var(--easing-ease-out);
+  z-index: 1;
+  width: 20px; /* 아이콘 너비 고정 */
+  height: 20px; /* 아이콘 높이 고정 */
 }
-
-/* ============================================
-   아이콘 스타일
-   ============================================ */
 
 .leftIcon {
-  position: absolute;
-  left: 12px;
-  color: var(--color-slate-400, #94a3b8);
-  pointer-events: none;
-  z-index: 1;
-  transition: color var(--duration-fast, 0.25s) ease-in-out;
+  left: var(--spacing-2-5, 10px);
 }
 
 .rightIcon {
-  position: absolute;
-  right: 12px;
-  color: var(--color-slate-400, #94a3b8);
-  pointer-events: none;
-  z-index: 1;
-  transition: color var(--duration-fast, 0.25s) ease-in-out;
-}
-
-.input:focus ~ .leftIcon,
-.input:focus ~ .rightIcon {
-  color: var(--color-primary-400, #60a5fa);
+  right: var(--spacing-2-5, 10px);
 }
 
 .withLeftIcon {
-  padding-left: 2.5rem;
+  padding-left: 44px; /* 간격 늘림 */
 }
 
 .withRightIcon {
-  padding-right: 2.5rem;
+  padding-right: 44px; /* 간격 늘림 */
 }
 
-/* ============================================
-   패스워드 토글
-   ============================================ */
-
+/* === 패스워드 토글 버튼 === */
 .passwordToggle {
-  background: none;
+  background: transparent;
   border: none;
+  padding: 0;
+  margin: 0;
   cursor: pointer;
-  padding: 0.25rem;
   color: var(--color-slate-400, #94a3b8);
-  transition: all var(--duration-fast, 0.25s) ease-in-out;
-  pointer-events: auto;
-  border-radius: var(--radius-sm, 0.25rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--duration-fast, 0.15s) var(--easing-ease-out);
 }
 
 .passwordToggle:hover {
-  color: var(--color-primary-400, #60a5fa);
-  background-color: var(--color-primary-900, rgba(59, 130, 246, 0.1));
+  color: var(--color-slate-200, #e2e8f0);
 }
 
-.passwordToggle:focus {
-  outline: 2px solid var(--color-primary-500, #3b82f6);
-  outline-offset: 2px;
+/* === 효과 1: Border Animation === */
+.input:focus {
+  border-color: var(--neon-purple-2, #870dd1);
+  box-shadow: 0 0 0 1px var(--neon-purple-2, #870dd1); /* thin border glow */
 }
 
-/* ============================================
-   타이핑 효과용 플레이스홀더
-   ============================================ */
-
-.typingPlaceholder {
+/* 포커스 시 animated border */
+.input:focus::after {
+  content: '';
   position: absolute;
-  left: 16px;
-  color: var(--color-slate-400, #94a3b8);
-  pointer-events: none;
-  font-size: inherit;
-  line-height: inherit;
-  transition: opacity var(--duration-fast, 0.25s) ease-in-out;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace, inherit;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: linear-gradient(to right, 
+    var(--neon-purple-1, #7b29cd), 
+    var(--neon-purple-2, #870dd1), 
+    var(--neon-purple-3, #5b30f6), 
+    var(--neon-purple-4, #8054f2)
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 3s ease infinite;
 }
 
-.input:focus + .typingPlaceholder,
-.input:not(:placeholder-shown) + .typingPlaceholder {
-  opacity: 0;
+/* === 효과 2: Color Shift === */
+.focused {
+  border-color: var(--neon-purple-2, #870dd1);
+  color: var(--color-slate-100, #f1f5f9);
 }
 
-/* ============================================
-   툴팁 (성능 최적화)
-   ============================================ */
+.focused + .leftIcon,
+.focused + .rightIcon {
+  color: var(--neon-purple-2, #870dd1);
+}
 
+/* 에러 상태 색상 전환 */
+.error {
+  border-color: var(--color-error, #ef4444);
+  color: var(--color-slate-100, #f1f5f9);
+}
+
+.error:focus {
+  border-color: var(--color-error, #ef4444);
+  box-shadow: 0 0 0 1px var(--color-error, #ef4444);
+}
+
+/* 성공 상태 색상 전환 */
+.success {
+  border-color: var(--color-success, #10b981);
+  color: var(--color-slate-100, #f1f5f9);
+}
+
+.success:focus {
+  border-color: var(--color-success, #10b981);
+  box-shadow: 0 0 0 1px var(--color-success, #10b981);
+}
+
+/* 비활성 상태 */
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--color-slate-700, #334155);
+  border-color: var(--color-slate-600, #475569);
+}
+
+.disabled + .leftIcon,
+.disabled + .rightIcon {
+  opacity: 0.6;
+}
+
+/* === 에러/성공 텍스트 === */
+.errorText {
+  font-size: var(--font-size-xs, 12px);
+  color: var(--color-error, #ef4444);
+  margin-top: var(--spacing-1, 4px);
+}
+
+.successText {
+  font-size: var(--font-size-xs, 12px);
+  color: var(--color-success, #10b981);
+  margin-top: var(--spacing-1, 4px);
+}
+
+/* === 툴팁 === */
 .tooltip {
   position: absolute;
-  background: var(--color-slate-900, #0f172a);
-  color: var(--color-slate-200, #e2e8f0);
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-sm, 0.375rem);
-  font-size: var(--font-size-xs, 0.75rem);
-  font-weight: var(--font-weight-medium, 500);
-  white-space: nowrap;
-  z-index: 50;
-  pointer-events: none;
-  opacity: 0;
-  transform: scale(0.95);
-  transition: 
-    opacity var(--duration-fast, 0.2s) var(--easing-ease-out, cubic-bezier(0.4, 0, 0.2, 1)), 
-    transform var(--duration-fast, 0.2s) var(--easing-ease-out, cubic-bezier(0.4, 0, 0.2, 1));
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  background-color: var(--color-slate-900, #0f172a);
   border: 1px solid var(--color-slate-700, #334155);
+  border-radius: var(--radius-md, 6px);
+  padding: var(--spacing-1, 8px) var(--spacing-2, 16px);
+  font-size: var(--font-size-xs, 12px);
+  color: var(--color-slate-200, #e2e8f0);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-tooltip, 40);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--duration-normal, 0.3s) var(--easing-ease-out);
+  pointer-events: none;
 }
 
 .tooltip.show {
   opacity: 1;
-  transform: scale(1);
 }
 
 .tooltip.top {
-  bottom: calc(100% + 0.5rem);
+  bottom: calc(100% + 8px);
   left: 50%;
-  transform: translateX(-50%) scale(0.95);
-}
-
-.tooltip.top.show {
-  transform: translateX(-50%) scale(1);
+  transform: translateX(-50%);
 }
 
 .tooltip.bottom {
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 8px);
   left: 50%;
-  transform: translateX(-50%) scale(0.95);
-}
-
-.tooltip.bottom.show {
-  transform: translateX(-50%) scale(1);
+  transform: translateX(-50%);
 }
 
 .tooltip.left {
-  right: calc(100% + 0.5rem);
+  right: calc(100% + 8px);
   top: 50%;
-  transform: translateY(-50%) scale(0.95);
-}
-
-.tooltip.left.show {
-  transform: translateY(-50%) scale(1);
+  transform: translateY(-50%);
 }
 
 .tooltip.right {
-  left: calc(100% + 0.5rem);
+  left: calc(100% + 8px);
   top: 50%;
-  transform: translateY(-50%) scale(0.95);
+  transform: translateY(-50%);
 }
 
-.tooltip.right.show {
-  transform: translateY(-50%) scale(1);
+/* === 애니메이션 키프레임 === */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* === 반응형 최적화 === */
+@media (max-width: 640px) {
+  .input {
+    font-size: var(--font-size-sm, 14px);
+  }
+  
+  .lg {
+    padding: 12px 16px;
+  }
+}
+
+/* === 접근성 === */
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .input:focus,
+  .tooltip,
+  .leftIcon,
+  .rightIcon {
+    transition: none;
+  }
+  
+  .input:focus::after {
+    animation: none;
+    background: var(--neon-purple-2, #870dd1);
+  }
+}
+
+/* === 고대비 모드 === */
+@media (prefers-contrast: high) {
+  .input {
+    border: 2px solid var(--color-slate-400, #94a3b8);
+  }
+  
+  .input:focus {
+    border: 2px solid #fff;
+    box-shadow: none;
+  }
+  
+  .error {
+    border: 2px solid #ff0000;
+  }
+  
+  .success {
+    border: 2px solid #00ff00;
+  }
 }
