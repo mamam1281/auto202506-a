@@ -1,0 +1,315 @@
+@import "tailwindcss";
+
+/* 카지노 다크테마를 기본값으로 설정 */
+:root {
+  /* 다크테마 색상을 기본값으로 */
+  --background: #0a0a0f;
+  --foreground: #f8f9fa;
+  --card: #151525;
+  --card-foreground: #f1f3f4;
+  --popover: #1a1a2e;
+  --popover-foreground: #f1f3f4;
+  --primary: #870dd1;
+  --primary-foreground: #f8f9fa;
+  --secondary: #2d2d4a;
+  --secondary-foreground: #e6e8eb;
+  --muted: #333349;
+  --muted-foreground: #a6a8b0;
+  --accent: #8054f2;
+  --accent-foreground: #f8f9fa;
+  --destructive: #ef4444;
+  --destructive-foreground: #f8f9fa;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #5b30f6;
+  
+  /* 카지노 전용 색상 */
+  --neon-purple-1: #7b29cd;
+  --neon-purple-2: #870dd1;
+  --neon-purple-3: #5b30f6;
+  --neon-purple-4: #8054f2;
+  --game-gold: #FFD700;
+  --game-success: #10b981;
+  --game-warning: #f59e0b;
+  --game-error: #ef4444;
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #151525;
+  --bg-tertiary: #1a1a2e;
+  --surface-glass: rgba(255, 255, 255, 0.08);
+  --surface-glass-strong: rgba(255, 255, 255, 0.12);
+  
+  /* 반지름 */
+  --radius: 0.5rem;
+}
+
+/* 라이트 테마 (사용하지 않음) */
+.light {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+}
+
+@layer base {
+  * {
+    border-color: theme(colors.border);
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+  
+  body {
+    background-color: theme(colors.background);
+    color: theme(colors.foreground);
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "cv11", "ss01";
+    font-variation-settings: "opsz" 32;
+    antialiased: true;
+  }
+}
+
+@layer utilities {
+  /* 네온 글로우 효과 */
+  .neon-glow {
+    box-shadow: 
+      0 0 10px rgb(91 48 246 / 0.5),
+      0 0 20px rgb(91 48 246 / 0.3),
+      0 0 30px rgb(91 48 246 / 0.2);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .neon-glow:hover {
+    box-shadow: 
+      0 0 15px rgb(91 48 246 / 0.7),
+      0 0 25px rgb(91 48 246 / 0.5),
+      0 0 35px rgb(91 48 246 / 0.3),
+      0 0 45px rgb(91 48 246 / 0.1);
+  }
+  
+  .neon-glow-gold {
+    box-shadow: 
+      0 0 10px rgb(255 215 0 / 0.5),
+      0 0 20px rgb(255 215 0 / 0.3),
+      0 0 30px rgb(255 215 0 / 0.2);
+  }
+  
+  .neon-glow-red {
+    box-shadow: 
+      0 0 10px rgb(220 38 38 / 0.5),
+      0 0 20px rgb(220 38 38 / 0.3),
+      0 0 30px rgb(220 38 38 / 0.2);
+  }
+  
+  /* 네온 텍스트 효과 */
+  .neon-text {
+    text-shadow: 
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 15px currentColor,
+      0 0 20px currentColor;
+    animation: neon-flicker 3s ease-in-out infinite alternate;
+  }
+  
+  @keyframes neon-flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+      text-shadow: 
+        0 0 5px currentColor,
+        0 0 10px currentColor,
+        0 0 15px currentColor,
+        0 0 20px currentColor;
+    }
+    20%, 24%, 55% {
+      text-shadow: 
+        0 0 2px currentColor,
+        0 0 5px currentColor,
+        0 0 8px currentColor,
+        0 0 12px currentColor;
+    }
+  }
+  
+  /* 글래스 서피스 */
+  .glass-surface {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-surface-strong {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  
+  /* 카지노 그라디언트 */
+  .casino-gradient {
+    background: linear-gradient(135deg, 
+      #151525 0%, 
+      #0a0a0f 50%, 
+      #1a1a2e 100%);
+  }
+  
+  .gold-gradient {
+    background: linear-gradient(135deg, 
+      #FFD700 0%, 
+      #FFA500 50%, 
+      #FF8C00 100%);
+  }
+  
+  /* 카지노 애니메이션 */
+  .casino-pulse {
+    animation: casino-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes casino-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.02);
+    }
+  }
+  
+  .casino-spin {
+    animation: casino-spin 1s linear infinite;
+  }
+  
+  @keyframes casino-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  /* 호버 효과 */
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* 카지노 특수 효과 */
+  .chip-glow {
+    box-shadow: 
+      0 0 20px rgba(255, 215, 0, 0.3),
+      0 0 40px rgba(255, 215, 0, 0.1);
+  }
+  
+  .table-felt {
+    background: radial-gradient(ellipse at center, 
+      #1a5c3a 0%, 
+      #0f3d26 70%, 
+      #0a2818 100%);
+  }
+  
+  /* 스크롤바 스타일 */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #5b30f6 #1a1a2e;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #1a1a2e;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #5b30f6;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #870dd1;
+  }
+}
+
+/* 다크테마가 기본이므로 모든 요소에 다크 스타일 적용 */
+@layer base {
+  input, textarea, select {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #f8f9fa;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: #a6a8b0;
+  }
+  
+  /* 버튼 기본 스타일 */
+  button {
+    transition: all 0.2s ease;
+  }
+  
+  /* 카드 기본 스타일 */
+  [data-card] {
+    background-color: #151525;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .neon-text {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 768px) {
+  .glass-surface {
+    backdrop-filter: blur(15px);
+  }
+  
+  .neon-glow {
+    box-shadow: 
+      0 0 8px rgb(91 48 246 / 0.4),
+      0 0 16px rgb(91 48 246 / 0.2);
+  }
+}
+
+@media (max-width: 480px) {
+  .casino-gradient {
+    background: #0a0a0f;
+  }
+}
+
+/* 고해상도 디스플레이 최적화 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .neon-text {
+    text-shadow: 
+      0 0 3px currentColor,
+      0 0 6px currentColor,
+      0 0 9px currentColor,
+      0 0 12px currentColor;
+  }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+  .neon-flicker, .casino-pulse, .casino-spin {
+    animation: none;
+  }
+}
+
+/* 프린트 스타일 */
+@media print {
+  .neon-glow, .neon-text, .glass-surface {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background: white !important;
+    color: black !important;
+  }
+}
