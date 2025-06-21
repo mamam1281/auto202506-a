@@ -1,59 +1,36 @@
 'use client';
 
-import React, { forwardRef, useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { forwardRef, useState } from 'react';
+import { motion, type HTMLMotionProps } from 'framer-motion';
+import { Eye, EyeOff, Search, User, Mail, Lock } from 'lucide-react';
 import { cn } from '../utils/utils';
 
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  /** 입력 필드 변형 */
-  variant?: 'default' | 'outline' | 'filled' | 'neon' | 'glass' | 'premium' | 'gaming' | 'luxury' | 'minimal' | 'floating' | 'retro' | 'cosmic';
-  
-  /** 입력 필드 크기 */
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  
-  /** 입력 필드 상태 */
-  state?: 'default' | 'focus' | 'error' | 'disabled' | 'success' | 'warning' | 'loading';
-  
-  /** 라벨 */
+export type InputVariant = 
+  | 'default' 
+  | 'search' 
+  | 'email' 
+  | 'password'
+  | 'text'
+  | 'gradient'
+  | 'neon';
+
+export type InputSize = 'sm' | 'md' | 'lg';
+
+export type InputState = 'default' | 'focused' | 'error' | 'disabled' | 'success';
+
+export interface InputProps extends Omit<HTMLMotionProps<'input'>, 'size'> {
+  variant?: InputVariant;
+  size?: InputSize;
+  state?: InputState;
   label?: string;
-  
-  /** 플레이스홀더 애니메이션 */
-  animatedPlaceholder?: boolean;
-  
-  /** 도움말 텍스트 */
-  helperText?: string;
-  
-  /** 오류 메시지 */
-  errorText?: string;
-  
-  /** 좌측 아이콘 */
+  error?: string;
+  success?: string;
+  disabled?: boolean;
   leftIcon?: React.ReactNode;
-  
-  /** 우측 아이콘 */
   rightIcon?: React.ReactNode;
-  
-  /** 전체 너비 사용 */
+  showPasswordToggle?: boolean;
   fullWidth?: boolean;
-  
-  /** 필수 여부 */
-  required?: boolean;
-  
-  /** 네온 효과 활성화 */
-  neonEffect?: boolean;
-  
-  /** 글래스모피즘 효과 */
-  glassMorphism?: boolean;
-  
-  /** 로딩 상태 */
-  loading?: boolean;
-  
-  /** 로딩 텍스트 */
-  loadingText?: string;
-  
-  /** 커스텀 CSS 클래스 */
   className?: string;
-  
-  /** 컨테이너 CSS 클래스 */
   containerClassName?: string;
 }
 
@@ -62,165 +39,284 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
   size = 'md',
   state = 'default',
   label,
-  animatedPlaceholder = false,
-  helperText,
-  errorText,
+  error,
+  success,
+  disabled = false,
   leftIcon,
   rightIcon,
+  showPasswordToggle = false,
   fullWidth = false,
-  required = false,
-  neonEffect = false,
-  glassMorphism = false,
-  loading = false,
-  loadingText = '로딩 중...',
   className = '',
   containerClassName = '',
+  type: propType = 'text',
   ...props
 }, ref) => {
+  
   const [isFocused, setIsFocused] = useState(false);
-  const [animatedText, setAnimatedText] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [inputValue, setInputValue] = useState(props.value || '');
 
-  // Variant별 스타일 매핑
+  // 패스워드 타입일 때 실제 type 결정
+  const inputType = propType === 'password' && showPassword ? 'text' : propType;
+
+  // 8px Grid System 기반 정확한 크기 정의
+  const sizeConfig = {
+    sm: {
+      height: 'h-8',           // 32px
+      padding: 'px-3 py-1',    // 12px horizontal, 4px vertical
+      fontSize: 'text-sm',     // 14px
+      iconSize: 16,
+      iconLeft: 'left-3',      // 12px from left
+      iconRight: 'right-3',    // 12px from right
+      paddingWithIcon: {
+        left: 'pl-9',          // 36px (icon + gap)
+        right: 'pr-9',         // 36px (icon + gap)
+      },
+    },
+    md: {
+      height: 'h-10',          // 40px
+      padding: 'px-4 py-2',    // 16px horizontal, 8px vertical
+      fontSize: 'text-base',   // 16px
+      iconSize: 20,
+      iconLeft: 'left-4',      // 16px from left
+      iconRight: 'right-4',    // 16px from right
+      paddingWithIcon: {
+        left: 'pl-11',         // 44px (icon + gap)
+        right: 'pr-11',        // 44px (icon + gap)
+      },
+    },
+    lg: {
+      height: 'h-12',          // 48px
+      padding: 'px-5 py-3',    // 20px horizontal, 12px vertical
+      fontSize: 'text-lg',     // 18px
+      iconSize: 24,
+      iconLeft: 'left-5',      // 20px from left
+      iconRight: 'right-5',    // 20px from right
+      paddingWithIcon: {
+        left: 'pl-13',         // 52px (icon + gap)
+        right: 'pr-13',        // 52px (icon + gap)
+      },
+    },
+  };
+
+  const config = sizeConfig[size];
+
+  // 기본 스타일
+  const baseStyles = cn(
+    // 기본 구조
+    config.height,
+    config.fontSize,
+    fullWidth ? 'w-full' : 'w-auto',
+    
+    // 패딩 (아이콘 여부에 따라 결정)
+    leftIcon ? config.paddingWithIcon.left : config.padding.split(' ')[0],
+    rightIcon || showPasswordToggle ? config.paddingWithIcon.right : config.padding.split(' ')[0],
+    'py-' + config.padding.split(' ')[1].replace('py-', ''),
+    
+    // 기본 스타일
+    'border rounded-lg transition-all duration-200 outline-none',
+    'placeholder:text-gray-400',
+    
+    // 배경과 텍스트
+    'bg-white text-gray-900',
+    'dark:bg-gray-800 dark:text-gray-100',
+    
+    // 포커스 상태 기본
+    'focus:ring-2 focus:ring-offset-1',
+    
+    // 비활성화 상태
+    disabled && 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-700'
+  );
+
+  // variant별 스타일
   const variantStyles = {
-    default: 'border border-gray-300 bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
-    outline: 'border-2 border-gray-300 bg-transparent text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
-    filled: 'border-0 bg-gray-100 text-gray-900 focus:bg-gray-50 focus:ring-2 focus:ring-blue-500/20',
-    neon: 'border-2 border-purple-500/50 bg-black/50 text-purple-100 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.3)]',
-    glass: 'border border-white/20 bg-white/10 backdrop-blur-md text-white placeholder:text-white/60 focus:border-white/40 focus:ring-2 focus:ring-white/20',
-    premium: 'border-2 border-yellow-400/50 bg-gradient-to-br from-amber-50 to-yellow-50 text-gray-900 focus:border-yellow-500',
-    gaming: 'border-2 border-green-500/50 bg-black/80 text-green-400 font-mono focus:border-green-400 focus:ring-2 focus:ring-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.3)]',
-    luxury: 'border-2 border-purple-400/50 bg-gradient-to-br from-purple-900/20 to-pink-900/20 text-white focus:border-purple-300 focus:ring-2 focus:ring-purple-400/50',
-    minimal: 'border-0 border-b-2 border-gray-300 bg-transparent text-gray-900 rounded-none focus:border-blue-500 focus:ring-0',
-    floating: 'border border-gray-300 bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 pt-6',
-    retro: 'border-4 border-yellow-400 bg-yellow-100 text-gray-900 font-mono focus:border-yellow-500 focus:ring-2 focus:ring-yellow-400/50 shadow-[4px_4px_0px_rgb(251,191,36)]',
-    cosmic: 'border-2 border-cyan-500/50 bg-gradient-to-br from-blue-900/50 to-purple-900/50 text-cyan-100 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.3)]'
+    default: cn(
+      'border-gray-300 dark:border-gray-600',
+      !disabled && 'hover:border-gray-400 dark:hover:border-gray-500',
+      isFocused && 'border-blue-500 dark:border-blue-400 ring-blue-500/20 dark:ring-blue-400/20',
+      state === 'error' && 'border-red-500 ring-red-500/20',
+      state === 'success' && 'border-green-500 ring-green-500/20'
+    ),
+    search: cn(
+      'border-gray-300 dark:border-gray-600',
+      'bg-gray-50 dark:bg-gray-700/50',
+      !disabled && 'hover:bg-gray-100 dark:hover:bg-gray-700',
+      isFocused && 'border-blue-500 dark:border-blue-400 ring-blue-500/20 bg-white dark:bg-gray-800'
+    ),
+    email: cn(
+      'border-blue-300 dark:border-blue-600',
+      !disabled && 'hover:border-blue-400 dark:hover:border-blue-500',
+      isFocused && 'border-blue-500 dark:border-blue-400 ring-blue-500/20'
+    ),
+    password: cn(
+      'border-purple-300 dark:border-purple-600',
+      !disabled && 'hover:border-purple-400 dark:hover:border-purple-500',
+      isFocused && 'border-purple-500 dark:border-purple-400 ring-purple-500/20'
+    ),
+    text: cn(
+      'border-gray-300 dark:border-gray-600',
+      !disabled && 'hover:border-gray-400 dark:hover:border-gray-500',
+      isFocused && 'border-blue-500 dark:border-blue-400 ring-blue-500/20'
+    ),    gradient: cn(
+      'border-0 bg-gradient-to-r from-purple-500 to-pink-500 p-[1px]',
+      'focus:from-purple-600 focus:to-pink-600'
+    ),
+    neon: cn(
+      'border-purple-400 dark:border-purple-500',
+      'bg-purple-50/50 dark:bg-purple-900/20',
+      'shadow-[0_0_10px_rgba(168,85,247,0.3)] dark:shadow-[0_0_15px_rgba(168,85,247,0.4)]',
+      !disabled && 'hover:border-purple-500 dark:hover:border-purple-400',
+      !disabled && 'hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] dark:hover:shadow-[0_0_20px_rgba(168,85,247,0.5)]',
+      isFocused && 'border-purple-500 dark:border-purple-400 ring-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.5)]'
+    ),
   };
 
-  // 크기별 스타일 매핑
-  const sizeStyles = {
-    xs: 'h-8 px-2 text-xs',
-    sm: 'h-9 px-3 text-sm',
-    md: 'h-10 px-4 text-base',
-    lg: 'h-12 px-5 text-lg',
-    xl: 'h-14 px-6 text-xl',
-    '2xl': 'h-16 px-8 text-2xl'
+  // 아이콘 자동 선택
+  const getDefaultIcon = () => {
+    switch (variant) {
+      case 'search': return <Search size={config.iconSize} />;
+      case 'email': return <Mail size={config.iconSize} />;
+      case 'password': return <Lock size={config.iconSize} />;
+      case 'text': return <User size={config.iconSize} />;
+      default: return null;
+    }
   };
 
-  // 상태별 스타일 매핑
-  const stateStyles = {
-    default: '',
-    focus: 'ring-2 ring-blue-500/20',
-    error: 'border-red-500 ring-2 ring-red-500/20 text-red-900',
-    disabled: 'opacity-50 cursor-not-allowed bg-gray-100',
-    success: 'border-green-500 ring-2 ring-green-500/20 text-green-900',
-    warning: 'border-yellow-500 ring-2 ring-yellow-500/20 text-yellow-900',
-    loading: 'opacity-75 cursor-wait'
+  const displayLeftIcon = leftIcon || getDefaultIcon();
+  const displayRightIcon = rightIcon || (showPasswordToggle && propType === 'password' ? (
+    <button
+      type="button"
+      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+      onClick={() => setShowPassword(!showPassword)}
+      tabIndex={-1}
+    >
+      {showPassword ? <EyeOff size={config.iconSize} /> : <Eye size={config.iconSize} />}
+    </button>
+  ) : null);
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(true);
+    props.onFocus?.(e);
   };
 
-  const currentState = errorText ? 'error' : state;
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false);
+    props.onBlur?.(e);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    props.onChange?.(e);
+  };
+
+  const containerClasses = cn(
+    'relative',
+    fullWidth && 'w-full',
+    containerClassName
+  );
+
+  const inputClasses = cn(
+    baseStyles,
+    variantStyles[variant],
+    className
+  );
+
+  const iconClasses = cn(
+    'absolute top-1/2 transform -translate-y-1/2 text-gray-400',
+    'pointer-events-none'
+  );
+
+  const InputComponent = variant === 'gradient' ? (
+    <div className={cn(variantStyles[variant], 'rounded-lg')}>
+      <motion.input
+        ref={ref}
+        type={inputType}
+        disabled={disabled}
+        className={cn(
+          baseStyles.replace(variantStyles[variant], ''),
+          'border-0 bg-white dark:bg-gray-800 rounded-lg',
+          className
+        )}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onChange={handleChange}
+        value={inputValue}
+        whileFocus={{ scale: 1.02 }}
+        transition={{ duration: 0.2 }}
+        {...props}
+      />
+    </div>
+  ) : (
+    <motion.input
+      ref={ref}
+      type={inputType}
+      disabled={disabled}
+      className={inputClasses}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onChange={handleChange}
+      value={inputValue}
+      whileFocus={{ scale: 1.01 }}
+      transition={{ duration: 0.2 }}
+      {...props}
+    />
+  );
 
   return (
-    <div
-      className={cn(
-        'relative',
-        fullWidth ? 'w-full' : 'w-auto',
-        containerClassName
-      )}
-    >
-      {/* 라벨 */}
+    <div className={containerClasses}>
       {label && (
-        <label
-          className={cn(
-            'block mb-2 text-sm font-medium transition-colors duration-200',
-            currentState === 'error' ? 'text-red-600' : 'text-gray-700',
-            required && "after:content-['*'] after:text-red-500 after:ml-1"
-          )}
-        >
+        <label className={cn(
+          'block text-sm font-medium mb-2',
+          'text-gray-700 dark:text-gray-300',
+          state === 'error' && 'text-red-600 dark:text-red-400',
+          state === 'success' && 'text-green-600 dark:text-green-400',
+          disabled && 'opacity-50'
+        )}>
           {label}
         </label>
       )}
-
-      {/* 입력 필드 컨테이너 */}
+      
       <div className="relative">
-        {/* 좌측 아이콘 */}
-        {leftIcon && (
-          <div className={cn(
-            'absolute left-3 top-1/2 transform -translate-y-1/2 z-10',
-            'text-gray-400',
-            sizeStyles[size].includes('text-xs') ? 'w-3 h-3' :
-            sizeStyles[size].includes('text-sm') ? 'w-4 h-4' :
-            sizeStyles[size].includes('text-lg') ? 'w-6 h-6' :
-            sizeStyles[size].includes('text-xl') ? 'w-7 h-7' :
-            sizeStyles[size].includes('text-2xl') ? 'w-8 h-8' : 'w-5 h-5'
-          )}>
-            {leftIcon}
+        {displayLeftIcon && (
+          <div className={cn(iconClasses, config.iconLeft)}>
+            {displayLeftIcon}
           </div>
         )}
-
-        {/* 입력 필드 */}
-        <input
-          ref={ref}
-          className={cn(
-            'w-full rounded-lg transition-all duration-300 ease-in-out',
-            'placeholder:text-gray-400 placeholder:transition-opacity placeholder:duration-300',
-            'focus:outline-none focus:transition-all focus:duration-300',
-            variantStyles[variant],
-            sizeStyles[size],
-            stateStyles[currentState],
-            leftIcon && 'pl-10',
-            rightIcon && 'pr-10',
-            glassMorphism && 'backdrop-blur-md',
-            className
-          )}
-          disabled={loading || props.disabled}
-          onFocus={(e) => {
-            setIsFocused(true);
-            props.onFocus?.(e);
-          }}
-          onBlur={(e) => {
-            setIsFocused(false);
-            props.onBlur?.(e);
-          }}
-          {...props}
-        />
-
-        {/* 우측 아이콘 또는 로딩 */}
-        {(rightIcon || loading) && (
+        
+        {InputComponent}
+        
+        {displayRightIcon && (
           <div className={cn(
-            'absolute right-3 top-1/2 transform -translate-y-1/2 z-10',
-            'text-gray-400',
-            sizeStyles[size].includes('text-xs') ? 'w-3 h-3' :
-            sizeStyles[size].includes('text-sm') ? 'w-4 h-4' :
-            sizeStyles[size].includes('text-lg') ? 'w-6 h-6' :
-            sizeStyles[size].includes('text-xl') ? 'w-7 h-7' :
-            sizeStyles[size].includes('text-2xl') ? 'w-8 h-8' : 'w-5 h-5'
+            iconClasses.replace('pointer-events-none', ''),
+            config.iconRight,
+            showPasswordToggle && 'cursor-pointer pointer-events-auto'
           )}>
-            {loading ? (
-              <div
-                className="border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"
-                style={{ width: '100%', height: '100%' }}
-              />
-            ) : rightIcon}
+            {displayRightIcon}
           </div>
         )}
       </div>
-
-      {/* 도움말 및 오류 메시지 */}
-      {(helperText || errorText) && (
-        <div className="mt-1">
-          {errorText ? (
-            <p className="text-sm text-red-600 flex items-center gap-1">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {errorText}
-            </p>
-          ) : (
-            <p className="text-sm text-gray-500">
-              {helperText}
-            </p>
-          )}
-        </div>
+      
+      {/* 에러/성공 메시지 */}
+      {error && (
+        <motion.p 
+          className="mt-1 text-sm text-red-600 dark:text-red-400"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {error}
+        </motion.p>
+      )}
+      
+      {success && !error && (
+        <motion.p 
+          className="mt-1 text-sm text-green-600 dark:text-green-400"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {success}
+        </motion.p>
       )}
     </div>
   );

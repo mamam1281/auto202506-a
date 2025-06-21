@@ -27,17 +27,30 @@ export function TokenBalanceWidget({
   animated = true,
   onRecharge,
   className = '' 
-}: TokenBalanceProps) {  const formatAmount = (num: number) => {
-    if (num === undefined || num === null || isNaN(num)) {
+}: TokenBalanceProps) {
+  const formatAmount = (num: number | undefined | null) => {
+    // 더 엄격한 유효성 검사
+    if (num === undefined || num === null || isNaN(Number(num)) || typeof num !== 'number') {
       return '0';
     }
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
+    
+    const safeNum = Number(num);
+    if (isNaN(safeNum)) {
+      return '0';
     }
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K';
+    
+    if (safeNum >= 1000000) {
+      return (safeNum / 1000000).toFixed(1) + 'M';
     }
-    return num.toLocaleString();
+    if (safeNum >= 1000) {
+      return (safeNum / 1000).toFixed(1) + 'K';
+    }
+    
+    try {
+      return safeNum.toLocaleString();
+    } catch (error) {
+      return safeNum.toString();
+    }
   };
 
   const getTokenConfig = () => {
@@ -290,9 +303,8 @@ export function TokenBalanceWidget({
         >
           <div className={cn(colors.text, 'font-bold', sizeStyles.text, 'tracking-tight')}>
             {formatAmount(amount)}
-          </div>
-          <div className={cn('text-gray-400', sizeStyles.subtext, 'mt-1')}>
-            정확한 잔고: {amount.toLocaleString()}
+          </div>          <div className={cn('text-gray-400', sizeStyles.subtext, 'mt-1')}>
+            정확한 잔고: {formatAmount(amount)}
           </div>
         </motion.div>
 

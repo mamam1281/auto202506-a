@@ -121,9 +121,8 @@ export default function HomePage() {
         <motion.div 
           className="flex flex-wrap justify-center gap-4 mb-12"
           variants={itemVariants}
-        >
-          <TokenBalanceWidget
-            balance={coins}
+        >          <TokenBalanceWidget
+            amount={coins}
             tokenType="coin"
             variant="neon"
             size="lg"
@@ -131,7 +130,7 @@ export default function HomePage() {
             onRecharge={() => setCoins(prev => prev + 100)}
           />
           <TokenBalanceWidget
-            balance={gems}
+            amount={gems}
             tokenType="gem"
             variant="premium"
             size="lg"
@@ -139,7 +138,7 @@ export default function HomePage() {
             onRecharge={() => setGems(prev => prev + 10)}
           />
           <TokenBalanceWidget
-            balance={xp}
+            amount={xp}
             tokenType="xp"
             variant="gaming"
             size="lg"
