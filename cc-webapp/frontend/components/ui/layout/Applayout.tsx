@@ -46,32 +46,34 @@ export function AppLayout({
   theme = 'dark',
   className 
 }: AppLayoutProps) {
-  const { sidebarOpen, toggleSidebar } = useLayout();
-
-  // 배경 스타일 클래스
+  const { sidebarOpen, toggleSidebar } = useLayout();  // 배경 스타일 클래스
   const variantClasses = {
-    default: 'bg-background',
-    dark: 'bg-slate-900',
-    game: 'bg-gradient-to-br from-slate-900 via-[var(--neon-purple-1)] to-slate-900'
+    default: 'bg-background text-foreground',
+    dark: 'bg-gray-900 text-white',
+    game: 'bg-gradient-to-br from-slate-900 via-purple-900/70 to-slate-900 text-white'
   };
-
   // 테마 적용
   useEffect(() => {
-    const root = window.document.documentElement;
-    
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches 
-        ? 'dark' 
-        : 'light';
-        
-      root.classList.add(systemTheme);
-    } else {
-      root.classList.add(theme);
-    }
-    
-    return () => {
+    if (typeof window !== 'undefined') {
+      const root = window.document.documentElement;
+      
+      // 기존 테마 클래스 제거
       root.classList.remove('light', 'dark');
-    };
+      
+      if (theme === 'system') {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches 
+          ? 'dark' 
+          : 'light';
+          
+        root.classList.add(systemTheme);
+      } else {
+        root.classList.add(theme);
+      }
+      
+      return () => {
+        root.classList.remove('light', 'dark');
+      };
+    }
   }, [theme]);
 
   return (
@@ -89,27 +91,35 @@ export function AppLayout({
         {/* 헤더 */}
         <Header />
 
-        <div className="flex flex-1">
-          {/* 사이드바 */}
-          {showSidebar && <Sidebar />}
-
-          {/* 메인 컨텐츠 */}
+        <div className="flex flex-1">          {/* 사이드바 */}
+          {showSidebar && (
+            <Sidebar>
+              <div className="p-4">
+                <h3 className="font-medium mb-2">메뉴</h3>
+                <div className="space-y-1">
+                  <div className="p-2 bg-primary/10 rounded">홈</div>
+                  <div className="p-2 hover:bg-muted/50 rounded">게임</div>
+                  <div className="p-2 hover:bg-muted/50 rounded">프로필</div>
+                  <div className="p-2 hover:bg-muted/50 rounded">설정</div>
+                </div>
+              </div>
+            </Sidebar>
+          )}          {/* 메인 컨텐츠 */}
           <motion.main 
             className={cn(
               "flex-1 min-h-[calc(100vh-4rem)] transition-all duration-300",
-              showSidebar && "md:ml-64",
+              showSidebar && sidebarOpen && "md:ml-64",
               className
             )}
             variants={containerVariants}
             initial="hidden"
-            animate="visible"            style={{
-              marginLeft: showSidebar && sidebarOpen ? '16rem' : showSidebar ? '0' : '0'
-            }}
+            animate="visible"
           >
             <Container 
               size={containerSize} 
               className="py-6 min-h-full"
-            >              {/* 자식 컴포넌트 렌더링 */}
+            >
+              {/* 자식 컴포넌트 렌더링 */}
               {children}
             </Container>
           </motion.main>

@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import type { Preview } from '@storybook/react';
+import { themes } from '@storybook/theming';
 
 const preview: Preview = {
   parameters: {
@@ -9,8 +10,7 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/,
       },
-    },
-    backgrounds: {
+    },    backgrounds: {
       default: 'dark',
       values: [
         {
@@ -22,6 +22,14 @@ const preview: Preview = {
           value: '#ffffff',
         },
       ],
+    },
+    darkMode: {
+      dark: { ...themes.dark, appBg: '#0f0f23' },
+      light: { ...themes.light, appBg: '#ffffff' },
+      current: 'dark'
+    },
+    docs: {
+      theme: themes.dark,
     },
     viewport: {
       viewports: {

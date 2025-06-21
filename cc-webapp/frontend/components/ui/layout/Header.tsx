@@ -4,8 +4,8 @@ import { memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X, Coins, User, Settings, Search, Bell } from 'lucide-react';
 import { Container } from './Container';
-import { Button } from '../button';
-import { Badge } from '../badge';
+import Button from '../basic/Button';
+import Badge from '../basic/Badge';
 import { useAuth, useLayout, useNotifications } from '../../../contexts/AppContext';
 import { buttonVariants, cardVariants } from '../../../lib/animations';
 
