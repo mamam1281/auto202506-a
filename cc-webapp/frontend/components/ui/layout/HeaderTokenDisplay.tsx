@@ -72,7 +72,7 @@ export function HeaderTokenDisplay({
       )}      type="button"
       aria-label={`토큰 잔액: ${amount}`}
     >
-      <Coins className="w-5 h-5 text-yellow-400" />
+      <Coins className="h-5 w-5 text-yellow-400" />
       <span className="text-slate-100">
         {formatAmount(amount)}
       </span>

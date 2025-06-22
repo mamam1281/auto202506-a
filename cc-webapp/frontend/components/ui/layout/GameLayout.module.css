@@ -752,3 +752,11 @@
     max-height: 24px;
   }
 }
+
+.tokenCost {
+  font-size: 0.75rem;
+  color: var(--color-slate-400);
+  text-align: center;
+  margin-top: 0.25rem;
+  line-height: 1.2;
+}

@@ -119,17 +119,16 @@ export function Sidebar({
               )}
             </div>
           )}
-          
-          {/* 닫기 버튼 (모바일) */}
+            {/* 닫기 버튼 (모바일) */}
           {!isCollapsed && onToggle && (
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               onClick={onToggle}
               className={cn(styles.closeButton, 'md:hidden')}
               aria-label="사이드바 닫기"
             >
-              <X className="w-5 h-5" />
+              <X className="h-5 w-5" />
             </Button>
           )}
         </div>
@@ -172,13 +171,11 @@ export function Sidebar({
           <div className={styles.customContent}>
             {children}
           </div>
-        )}
-
-        {/* 축소/확장 토글 (데스크톱만) */}
+        )}        {/* 축소/확장 토글 (데스크톱만) */}
         {onCollapseToggle && (
           <div className={styles.collapseToggle}>
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               onClick={onCollapseToggle}
               className={styles.collapseButton}

@@ -81,12 +81,17 @@ export function GameLayout({
           </div>
         </div>
 
-        <div className={styles.headerRight}>
+        <div className={styles.headerCenter}>
           <div className={styles.tokenDisplay}>
             <span className={styles.tokenAmount}>{tokenBalance.toLocaleString()}</span>
             <span className={styles.tokenLabel}>토큰</span>
           </div>
-            <Button
+          <div className={styles.tokenCost}>
+            플레이 비용: {tokenCost} 토큰
+          </div>
+        </div>
+
+        <div className={styles.headerRight}>          <Button
             variant="secondary"
             size="sm"
             onClick={() => setIsMuted(!isMuted)}
@@ -94,7 +99,18 @@ export function GameLayout({
           >
             {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
           </Button>
-
+          
+          {showCJAI && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowCJPanel(!showCJPanel)}
+              className={styles.iconButton}
+            >
+              <MessageCircle className="h-5 w-5" />
+            </Button>
+          )}
+          
           <Button
             variant="secondary"
             size="sm"
@@ -117,19 +133,61 @@ export function GameLayout({
           {/* 성인 콘텐츠 언락 상태 */}
           {showUnlockStatus && (
             <div className={styles.unlockPanel}>
-              <h3>콘텐츠 언락</h3>
-              <div className={styles.unlockStages}>
-                <div className={styles.unlockStage}>
-                  <span>Stage 1</span>
-                  <span className={styles.unlockCost}>200 토큰</span>
+              <h3>🔞 성인 콘텐츠 언락</h3>
+              <div className={styles.unlockProgress}>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{ width: '60%' }} />
                 </div>
-                <div className={styles.unlockStage}>
-                  <span>Stage 2</span>
-                  <span className={styles.unlockCost}>500 토큰</span>
+                <span>3/5 단계 완료</span>
+              </div>
+              <p>2단계 더 플레이하면 새로운 콘텐츠를 언락할 수 있습니다!</p>
+            </div>
+          )}
+
+          {/* CJ AI 채팅 패널 */}
+          {showCJAI && showCJPanel && (
+            <div className={styles.cjPanel}>
+              <div className={styles.cjHeader}>                <h3>🤖 CJ AI 어시스턴트</h3>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setShowCJPanel(false)}
+                  className={styles.closeButton}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className={styles.cjMessages}>
+                <div className={styles.cjMessage}>
+                  <strong>CJ:</strong> 안녕하세요! 오늘 운이 좋아 보이는데요? 😊
                 </div>
-                <div className={styles.unlockStage}>
-                  <span>Stage 3</span>
-                  <span className={styles.unlockCost}>1,000 토큰</span>
+                <div className={styles.cjMessage}>
+                  <strong>CJ:</strong> 이 게임에서 승률을 높이려면 베팅 패턴을 조절해보세요!
+                </div>
+              </div>
+              <div className={styles.cjInput}>
+                <input type="text" placeholder="CJ AI에게 질문하세요..." />
+                <Button size="sm">전송</Button>
+              </div>
+            </div>
+          )}
+
+          {/* 게임 히스토리 */}
+          {showHistory && (
+            <div className={styles.historyPanel}>
+              <h3>📊 게임 히스토리</h3>
+              <div className={styles.historyList}>
+                <div className={styles.historyItem}>
+                  <span>승리</span>
+                  <span>+50 토큰</span>
+                </div>
+                <div className={styles.historyItem}>
+                  <span>패배</span>
+                  <span>-20 토큰</span>
+                </div>
+                <div className={styles.historyItem}>
+                  <span>승리</span>
+                  <span>+30 토큰</span>
                 </div>
               </div>
             </div>
@@ -138,71 +196,31 @@ export function GameLayout({
           {/* 확률 정보 */}
           {showProbability && (
             <div className={styles.probabilityPanel}>
-              <h3>확률 정보</h3>
+              <h3>🎯 확률 정보</h3>
               <div className={styles.probabilityList}>
                 <div className={styles.probabilityItem}>
-                  <span>당첨</span>
+                  <span>대박:</span>
+                  <span>5%</span>
+                </div>
+                <div className={styles.probabilityItem}>
+                  <span>중박:</span>
                   <span>15%</span>
                 </div>
                 <div className={styles.probabilityItem}>
-                  <span>대박</span>
-                  <span>2%</span>
-                </div>
-                <div className={styles.probabilityItem}>
-                  <span>잭팟</span>
-                  <span>0.1%</span>
+                  <span>소박:</span>
+                  <span>30%</span>
                 </div>
               </div>
             </div>
           )}
         </div>
-      </main>      {/* CJ AI 채팅 버튼 */}
-      {showCJAI && (
-        <Button
-          onClick={() => setShowCJPanel(!showCJPanel)}
-          className={styles.cjAIButton}
-        >
-          <MessageCircle className="h-5 w-5" />
-          <span>CJ AI</span>
-        </Button>
-      )}
+      </main>
 
-      {/* CJ AI 채팅 패널 */}
-      {showCJAI && showCJPanel && (
-        <div className={styles.cjAIPanel}>          <div className={styles.cjAIHeader}>
-            <h3>CJ AI 어시스턴트</h3>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setShowCJPanel(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className={styles.cjAIContent}>
-            <div className={styles.chatMessages}>
-              <div className={styles.aiMessage}>
-                <span>🤖</span>
-                <p>안녕하세요! 게임에 도움이 필요하시면 언제든 말씀해주세요.</p>
-              </div>
-            </div>
-            <div className={styles.chatInput}>
-              <input 
-                type="text" 
-                placeholder="메시지를 입력하세요..."
-                className={styles.messageInput}
-              />
-              <Button size="sm">전송</Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 게임 부족 토큰 알림 */}
+      {/* 토큰 부족 경고 */}
       {tokenBalance < tokenCost && (
-        <div className={styles.insufficientTokens}>
-          <div className={styles.alertContent}>
-            <h4>토큰이 부족합니다!</h4>
+        <div className={styles.tokenWarning}>
+          <div className={styles.warningContent}>
+            <h3>⚠️ 토큰이 부족합니다!</h3>
             <p>기업 사이트에서 토큰을 충전하세요.</p>
           </div>
           <Button className={styles.chargeButton}>

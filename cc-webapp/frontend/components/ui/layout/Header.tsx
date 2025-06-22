@@ -73,13 +73,12 @@ export function Header({
             variant="secondary"
             size="sm"
             onClick={onMenuToggle}
-            className={cn(styles.menuButton, isMenuOpen && styles.menuButtonActive)}
-            aria-label={isMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            className={cn(styles.menuButton, isMenuOpen && styles.menuButtonActive)}            aria-label={isMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
           >
             {isMenuOpen ? (
-              <X className="h-5 w-5" />
+              <X />
             ) : (
-              <Menu className="h-5 w-5" />
+              <Menu />
             )}
           </Button>
           
@@ -91,10 +90,9 @@ export function Header({
           </div>
         </div>
 
-        {/* 중앙: 검색 (데스크톱) */}
-        {showSearch && (          <div className={styles.searchContainer}>
+        {/* 중앙: 검색 (데스크톱) */}        {showSearch && (          <div className={styles.searchContainer}>
             <div className={styles.searchWrapper}>
-              <Search className="h-4 w-4 text-slate-400" />
+              <Search className="text-slate-400" />
               <input
                 type="text"
                 placeholder="게임 검색..."
@@ -119,9 +117,8 @@ export function Header({
               variant="secondary"
               size="sm"
               className={styles.iconButton}
-              aria-label="알림"
-            >
-              <Bell className="h-5 w-5" />
+              aria-label="알림"            >
+              <Bell />
             </Button>
           )}
 
@@ -130,10 +127,9 @@ export function Header({
             <Button
               variant="secondary"
               size="sm"
-              className={styles.iconButton}
-              aria-label="사용자 메뉴"
+              className={styles.iconButton}            aria-label="사용자 메뉴"
             >
-              <User className="h-5 w-5" />
+              <User />
             </Button>
           )}
 
@@ -142,10 +138,9 @@ export function Header({
         </div>
       </div>
 
-      {/* 모바일 검색 (토글) */}
-      {showSearch && (        <div className={styles.mobileSearch}>
+      {/* 모바일 검색 (토글) */}      {showSearch && (        <div className={styles.mobileSearch}>
           <div className={styles.searchWrapper}>
-            <Search className="h-4 w-4 text-slate-400" />
+            <Search className="text-slate-400" />
             <input
               type="text"
               placeholder="게임 검색..."
