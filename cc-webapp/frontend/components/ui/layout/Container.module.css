@@ -2,8 +2,8 @@
 
 .container {
   width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 0.75rem; /* 12px - 모바일 최적화 */
+  padding-right: 0.75rem;
 }
 
 .containerCenter {
@@ -41,39 +41,55 @@
   max-width: none;
 }
 
-/* 반응형 패딩 조정 */
+/* 반응형 패딩 및 크기 조정 */
+/* 작은 모바일 (384px max-width) */
+@media (max-width: 480px) {
+  .container:not(.containerNoPadding) {
+    padding-left: 0.75rem; /* 12px */
+    padding-right: 0.75rem;
+  }
+  
+  .container:not(.containerFluid) {
+    max-width: 384px; /* 모바일 표준 크기 */
+  }
+}
+
+/* 큰 모바일 */
+@media (min-width: 480px) {
+  .container:not(.containerNoPadding) {
+    padding-left: 1rem; /* 16px */
+    padding-right: 1rem;
+  }
+}
+
+/* 태블릿 */
 @media (min-width: 640px) {
   .container:not(.containerNoPadding) {
-    padding-left: 1.5rem;
+    padding-left: 1.5rem; /* 24px */
     padding-right: 1.5rem;
   }
 }
 
+/* 작은 데스크톱 */
 @media (min-width: 768px) {
   .container:not(.containerNoPadding) {
-    padding-left: 2rem;
+    padding-left: 2rem; /* 32px */
     padding-right: 2rem;
   }
 }
 
+/* 중간 데스크톱 */
 @media (min-width: 1024px) {
   .container:not(.containerNoPadding) {
-    padding-left: 2.5rem;
+    padding-left: 2.5rem; /* 40px */
     padding-right: 2.5rem;
   }
 }
 
+/* 큰 데스크톱 */
 @media (min-width: 1280px) {
   .container:not(.containerNoPadding) {
-    padding-left: 3rem;
+    padding-left: 3rem; /* 48px */
     padding-right: 3rem;
-  }
-}
-
-/* 작은 화면에서의 최소 패딩 보장 */
-@media (max-width: 480px) {
-  .container:not(.containerNoPadding) {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
   }
 }

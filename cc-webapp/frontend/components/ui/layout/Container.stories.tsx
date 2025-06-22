@@ -6,9 +6,9 @@ import { Container } from './Container';
  * 
  * Figma 003 게임 플랫폼 레이아웃 시스템 기준으로 제작된 Container 컴포넌트의
  * 다양한 변형과 사용 사례를 보여줍니다.
- * 
- * ## 주요 특징
+ *  * ## 주요 특징
  * - **반응형 크기**: sm, md, lg, xl, full 크기 옵션
+ * - **모바일 우선 패딩**: 12px → 16px → 24px → 32px (모바일 → 데스크톱)
  * - **패딩 제어**: noPadding 옵션으로 패딩 제거
  * - **중앙 정렬**: center 옵션으로 자동 중앙 정렬
  * - **유동 너비**: fluid 옵션으로 최대 너비 제한 해제
@@ -29,6 +29,12 @@ Container 컴포넌트는 콘텐츠를 감싸고 반응형 레이아웃을 제�
 - **lg**: 1024px
 - **xl**: 1280px
 - **full**: 100% (제한 없음)
+
+### 모바일 우선 패딩 시스템
+- **모바일 (0-479px)**: 12px (0.75rem)
+- **큰 모바일 (480-639px)**: 16px (1rem)
+- **태블릿 (640-1023px)**: 24px (1.5rem)
+- **데스크톱 (1024px+)**: 32px (2rem)
 
 ### 사용 예시
 \`\`\`tsx
@@ -290,5 +296,100 @@ export const ResponsiveDemo: Story = {
         ))}
       </div>
     </Container>
+  )
+};
+
+/**
+ * ## 모바일 패딩 최적화
+ * 새롭게 최적화된 모바일 우선 패딩 시스템을 보여줍니다.
+ * 
+ * - 모바일 (0-479px): 12px
+ * - 큰 모바일 (480-639px): 16px  
+ * - 태블릿 (640-1023px): 24px
+ * - 데스크톱 (1024px+): 32px
+ */
+export const MobilePaddingOptimized: Story = {
+  args: {
+    children: <div>Default content</div>
+  },
+  render: () => (
+    <div style={{ padding: '1rem 0' }}>
+      <Container size="lg">
+        <div style={{ 
+          padding: '1.5rem',
+          background: 'var(--color-slate-800, #1e293b)',
+          borderRadius: '8px',
+          border: '1px solid var(--color-slate-700, #334155)',
+          position: 'relative'
+        }}>
+          <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: '600' }}>
+            🔥 모바일 패딩 최적화
+          </h3>
+          <p style={{ margin: '0 0 1rem 0', color: 'var(--color-slate-400, #94a3b8)', lineHeight: '1.6' }}>
+            브라우저 창 크기를 조정해보세요! Container의 패딩이 화면 크기에 맞춰 자동으로 조정됩니다.
+          </p>
+          
+          <div style={{
+            display: 'grid',
+            gap: '0.75rem',
+            fontSize: '0.875rem',
+            fontFamily: 'monospace'
+          }}>
+            <div style={{ 
+              padding: '0.5rem',
+              background: 'var(--color-slate-700, #334155)',
+              borderRadius: '4px',
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}>
+              <span>📱 모바일 (0-479px)</span>
+              <span style={{ color: 'var(--neon-green-3, #22c55e)' }}>12px</span>
+            </div>
+            <div style={{ 
+              padding: '0.5rem',
+              background: 'var(--color-slate-700, #334155)',
+              borderRadius: '4px',
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}>
+              <span>📱+ 큰 모바일 (480-639px)</span>
+              <span style={{ color: 'var(--neon-blue-3, #3b82f6)' }}>16px</span>
+            </div>
+            <div style={{ 
+              padding: '0.5rem',
+              background: 'var(--color-slate-700, #334155)',
+              borderRadius: '4px',
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}>
+              <span>📟 태블릿 (640-1023px)</span>
+              <span style={{ color: 'var(--neon-purple-3, #8b5cf6)' }}>24px</span>
+            </div>
+            <div style={{ 
+              padding: '0.5rem',
+              background: 'var(--color-slate-700, #334155)',
+              borderRadius: '4px',
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}>
+              <span>🖥️ 데스크톱 (1024px+)</span>
+              <span style={{ color: 'var(--neon-orange-3, #f97316)' }}>32px</span>
+            </div>
+          </div>
+          
+          <div style={{
+            marginTop: '1rem',
+            padding: '0.75rem',
+            background: 'var(--color-slate-900, #0f172a)',
+            borderRadius: '4px',
+            border: '1px solid var(--neon-green-3, #22c55e)',
+            fontSize: '0.75rem',
+            color: 'var(--neon-green-3, #22c55e)'
+          }}>
+            ✨ 이전: 모바일에서 16px 패딩 → 현재: 12px 패딩 (25% 감소)
+          </div>
+        </div>
+      </Container>
+    </div>
   )
 };

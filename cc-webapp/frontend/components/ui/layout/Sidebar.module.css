@@ -45,17 +45,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px; /* 크기 줄임 */
-  height: 32px;
+  width: 28px; /* 모바일에서 작게 */
+  height: 28px;
   background: var(--neon-gradient-1);
-  border-radius: var(--radius-md, 6px); /* 둥글기 줄임 */
+  border-radius: var(--radius-md, 6px);
   flex-shrink: 0;
 }
 
 .brandIconText {
   color: white;
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 0.875rem; /* 모바일에서 작게 */
+}
+
+.brandName {
+  font-weight: 600;
+  font-size: 1rem; /* 모바일에서 작게 */
+  color: white;
+  opacity: 1;
+  transition: opacity var(--transition-fast, 0.15s) ease;
 }
 
 .brandName {
@@ -119,17 +127,29 @@
 }
 
 .navIcon {
-  width: 20px;
-  height: 20px;
+  width: 18px; /* 모바일에서 작게 */
+  height: 18px;
   flex-shrink: 0;
 }
 
 .navLabel {
   flex: 1;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8rem; /* 모바일에서 작게 */
   opacity: 1;
   transition: opacity var(--transition-fast, 0.15s) ease;
+}
+
+/* 태블릿 이상에서 크기 확대 */
+@media (min-width: 768px) {
+  .navIcon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .navLabel {
+    font-size: 0.875rem;
+  }
 }
 
 .navBadge {
@@ -168,6 +188,60 @@
 .collapseButton:hover {
   color: white;
   background: var(--color-slate-800);
+}
+
+/* 사이드바 헤더 */
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.2);
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; /* 모바일에서 작게 */
+  height: 28px;
+  color: var(--color-slate-400);
+  transition: all var(--transition-fast, 0.15s) ease;
+  border-radius: var(--radius-md, 6px);
+}
+
+.closeButton:hover {
+  color: white;
+  background: rgba(71, 85, 105, 0.3);
+}
+
+.closeButton > svg,
+.closeButton > img {
+  width: 18px; /* 모바일에서 더 작게 */
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  max-width: 18px;
+  max-height: 18px;
+  display: block;
+}
+
+/* 태블릿 이상에서 크기 확대 */
+@media (min-width: 768px) {
+  .closeButton {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .closeButton > svg,
+  .closeButton > img {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    max-width: 24px;
+    max-height: 24px;
+  }
 }
 
 /* 축소 상태 스타일 */

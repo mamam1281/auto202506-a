@@ -22,6 +22,9 @@ export { Sheet } from './sheet';
 export { default as ScrollArea } from './ScrollArea';
 export type { ScrollAreaProps } from './ScrollArea';
 
+export { HeaderTokenDisplay } from './HeaderTokenDisplay';
+export type { HeaderTokenDisplayProps } from './HeaderTokenDisplay';
+
 // AuthLayout (파일명 수정 필요: Authlayout.tsx → AuthLayout.tsx)
 // export { AuthLayout } from './AuthLayout';
 // export type { AuthLayoutProps } from './AuthLayout';

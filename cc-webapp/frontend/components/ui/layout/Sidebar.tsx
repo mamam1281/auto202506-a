@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Home, Gamepad2, Trophy, Gift, Settings, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, Gamepad2, Trophy, Gift, Settings, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import Button from '../basic/Button';
 import { cn } from '../utils/utils';
 import styles from './Sidebar.module.css';
@@ -105,19 +105,34 @@ export function Sidebar({
         styles.sidebar,
         isOpen && styles.sidebarOpen,
         isCollapsed && styles.sidebarCollapsed,
-        className
-      )}>
-        {/* 브랜드 영역 */}
-        {showBrand && (
-          <div className={styles.brand}>
-            <div className={styles.brandIcon}>
-              <span className={styles.brandIconText}>G</span>
+        className      )}>
+        {/* 사이드바 헤더 */}
+        <div className={styles.sidebarHeader}>
+          {/* 브랜드 영역 */}
+          {showBrand && (
+            <div className={styles.brand}>
+              <div className={styles.brandIcon}>
+                <span className={styles.brandIconText}>G</span>
+              </div>
+              {!isCollapsed && (
+                <span className={styles.brandName}>GamePlatform</span>
+              )}
             </div>
-            {!isCollapsed && (
-              <span className={styles.brandName}>GamePlatform</span>
-            )}
-          </div>
-        )}
+          )}
+          
+          {/* 닫기 버튼 (모바일) */}
+          {!isCollapsed && onToggle && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggle}
+              className={cn(styles.closeButton, 'md:hidden')}
+              aria-label="사이드바 닫기"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          )}
+        </div>
 
         {/* 네비게이션 메뉴 */}
         <nav className={styles.nav}>

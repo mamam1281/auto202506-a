@@ -184,6 +184,14 @@ export const GradientCard: Story = {
 
 // 크기별 카드
 export const Sizes: Story = {
+  args: {
+    size: 'sm',
+    // other props that are required for the story
+  },
+  /**
+   * @description
+   * 크기별 카드 예시입니다. small, medium, large 3가지 크기의 카드가 표시됩니다.
+   */
   render: () => (
     <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
       <Card size="sm">

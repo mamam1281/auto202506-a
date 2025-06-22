@@ -3,7 +3,7 @@
 import React from 'react';
 import { Menu, X, Search, Bell, User } from 'lucide-react';
 import Button from '../basic/Button';
-import { TokenBalanceWidget } from '../game/shared/TokenBalanceWidget';
+import { HeaderTokenDisplay } from './HeaderTokenDisplay';
 import { cn } from '../utils/utils';
 import styles from './Header.module.css';
 
@@ -69,9 +69,8 @@ export function Header({
     <header className={cn(styles.header, className)}>
       <div className={styles.container}>
         {/* 왼쪽: 메뉴 토글 + 브랜드 */}
-        <div className={styles.left}>
-          <Button
-            variant="ghost"
+        <div className={styles.left}>          <Button
+            variant="secondary"
             size="sm"
             onClick={onMenuToggle}
             className={cn(styles.menuButton, isMenuOpen && styles.menuButtonActive)}
@@ -93,8 +92,7 @@ export function Header({
         </div>
 
         {/* 중앙: 검색 (데스크톱) */}
-        {showSearch && (
-          <div className={styles.searchContainer}>
+        {showSearch && (          <div className={styles.searchContainer}>
             <div className={styles.searchWrapper}>
               <Search className="h-4 w-4 text-slate-400" />
               <input
@@ -109,17 +107,16 @@ export function Header({
         )}
 
         {/* 오른쪽: 토큰 잔액 + 알림 + 사용자 메뉴 */}
-        <div className={styles.right}>          {/* 토큰 잔액 위젯 */}
+        <div className={styles.right}>          {/* 토큰 잔액 헤더 표시 */}
           {showTokenBalance && (
-            <div className={styles.tokenBalance}>
-              <TokenBalanceWidget amount={1000} />
-            </div>
-          )}
-
-          {/* 알림 버튼 */}
+            <HeaderTokenDisplay 
+              amount={1000} 
+              onClick={() => console.log('토큰 상세 정보로 이동')}
+            />
+          )}          {/* 알림 버튼 */}
           {showNotifications && (
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               className={styles.iconButton}
               aria-label="알림"
@@ -131,7 +128,7 @@ export function Header({
           {/* 사용자 메뉴 */}
           {showUserMenu && (
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               className={styles.iconButton}
               aria-label="사용자 메뉴"
@@ -146,8 +143,7 @@ export function Header({
       </div>
 
       {/* 모바일 검색 (토글) */}
-      {showSearch && (
-        <div className={styles.mobileSearch}>
+      {showSearch && (        <div className={styles.mobileSearch}>
           <div className={styles.searchWrapper}>
             <Search className="h-4 w-4 text-slate-400" />
             <input

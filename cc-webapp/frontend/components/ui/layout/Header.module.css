@@ -15,10 +15,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px; /* 모바일에 맞는 더 작은 높이 */
+  height: 52px; /* 모바일 높이 줄임 */
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 0.75rem; /* 모바일에 맞는 작은 패딩 */
+  padding: 0 0.75rem;
 }
 
 /* 태블릿 이상에서 높이와 패딩 확대 */
@@ -39,8 +39,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px; /* 모바일에 맞는 작은 크기 */
-  height: 36px;
+  width: 32px; /* 모바일 최적화 */
+  height: 32px;
   border-radius: var(--radius-md, 6px);
   color: var(--color-slate-400);
   transition: all var(--transition-fast, 0.15s) ease;
@@ -74,8 +74,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px; /* 모바일에서 작게 */
+  height: 28px;
   background: var(--neon-gradient-1);
   border-radius: var(--radius-md, 6px);
 }
@@ -83,13 +83,32 @@
 .brandIconText {
   color: white;
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.75rem; /* 모바일에서 작게 */
+  line-height: 1;
+}
+
+/* 태블릿 이상에서 타이포그래피 확대 */
+@media (min-width: 768px) {
+  .brandIconText {
+    font-size: 0.875rem;
+  }
+  
+  .brandName {
+    font-size: 1.125rem;
+  }
+  
+  .searchInput,
+  .searchInput::placeholder {
+    font-size: 0.875rem;
+  }
 }
 
 .brandName {
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1rem; /* 모바일에서 작게 */
   color: white;
+  line-height: 1.2;
+  letter-spacing: -0.01em; /* 타이포그래피 개선 */
 }
 
 /* 검색 영역 */
@@ -123,11 +142,14 @@
   border: none;
   outline: none;
   color: white;
-  font-size: 0.875rem;
+  font-size: 0.8rem; /* 모바일에서 작게 */
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 .searchInput::placeholder {
   color: var(--color-slate-400);
+  font-size: 0.8rem; /* 플레이스홀더도 작게 */
 }
 
 /* 오른쪽 영역 */
@@ -137,17 +159,13 @@
   gap: 0.5rem;
 }
 
-.tokenBalance {
-  margin-right: 0.5rem;
-}
-
 .iconButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md, 6px);
+  width: 36px; /* 모바일 최적화 */
+  height: 36px;
+  border-radius: var(--radius-md, 1px);
   color: var(--color-slate-400);
   transition: all var(--transition-fast, 0.15s) ease;
 }
@@ -155,6 +173,35 @@
 .iconButton:hover {
   color: white;
   background: var(--color-slate-800);
+}
+
+.iconButton > svg,
+.iconButton > img {
+  width: 20px; /* 모바일에서 더 작게 */
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  max-width: 20px;
+  max-height: 20px;
+  display: block;
+}
+
+/* 태블릿 이상에서 크기 확대 */
+@media (min-width: 768px) {
+  .iconButton {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .iconButton > svg,
+  .iconButton > img {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    max-width: 24px;
+    max-height: 24px;
+  }
 }
 
 /* 모바일 검색 */
@@ -177,13 +224,8 @@
   .mobileSearch {
     display: block;
   }
-
   .brandName {
     display: none;
-  }
-
-  .tokenBalance {
-    margin-right: 0;
   }
 
   .right {
@@ -193,14 +235,13 @@
 
 @media (max-width: 640px) {
   .container {
-    height: 56px;
+    height: 52px;
     padding: 0 0.75rem;
   }
-
   .menuButton,
   .iconButton {
-    width: 36px;
-    height: 36px;
+    width: 32px; /* 모바일에서 더 작게 */
+    height: 32px;
   }
 
   .brandIcon {
@@ -210,5 +251,9 @@
 
   .brandIconText {
     font-size: 0.75rem;
+  }
+  
+  .brandName {
+    font-size: 0.875rem;
   }
 }
