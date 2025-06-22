@@ -75,6 +75,7 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center; /* 중앙 정렬 */
   gap: 0.5rem 2rem;
 }
 
