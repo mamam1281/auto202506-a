@@ -15,10 +15,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 56px; /* 모바일에 맞는 더 작은 높이 */
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 0.75rem; /* 모바일에 맞는 작은 패딩 */
+}
+
+/* 태블릿 이상에서 높이와 패딩 확대 */
+@media (min-width: 768px) {
+  .container {
+    height: 64px;
+    padding: 0 1.5rem;
+  }
 }
 
 .left {
