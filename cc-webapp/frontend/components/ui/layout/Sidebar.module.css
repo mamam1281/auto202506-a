@@ -14,9 +14,10 @@
   left: 0;
   z-index: 50;
   height: 100vh;
-  width: 280px;
-  background: var(--color-slate-900);
-  border-right: 1px solid var(--color-slate-700);
+  width: 240px; /* 더 좁게 */
+  background: rgba(15, 23, 42, 0.95); /* 반투명 배경 */
+  backdrop-filter: blur(12px); /* 블러 효과 강화 */
+  border-right: 1px solid rgba(71, 85, 105, 0.3); /* 투명한 테두리 */
   transform: translateX(-100%);
   transition: transform var(--transition-default, 0.3s) ease;
   display: flex;
@@ -28,26 +29,26 @@
 }
 
 .sidebarCollapsed {
-  width: 80px;
+  width: 70px; /* 접힌 상태도 더 좁게 */
 }
 
 /* 브랜드 영역 */
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1.5rem 1rem;
-  border-bottom: 1px solid var(--color-slate-700);
+  gap: 0.5rem; /* 간격 줄임 */
+  padding: 1rem; /* 패딩 줄임 */
+  border-bottom: 1px solid rgba(71, 85, 105, 0.2); /* 투명한 테두리 */
 }
 
 .brandIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px; /* 크기 줄임 */
+  height: 32px;
   background: var(--neon-gradient-1);
-  border-radius: var(--radius-lg, 8px);
+  border-radius: var(--radius-md, 6px); /* 둥글기 줄임 */
   flex-shrink: 0;
 }
 

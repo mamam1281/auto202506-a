@@ -39,11 +39,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px; /* 모바일에 맞는 작은 크기 */
+  height: 36px;
   border-radius: var(--radius-md, 6px);
   color: var(--color-slate-400);
   transition: all var(--transition-fast, 0.15s) ease;
+}
+
+/* 태블릿 이상에서 크기 확대 */
+@media (min-width: 768px) {
+  .menuButton {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .menuButton:hover {
