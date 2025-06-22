@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react'; // React import for clarity
-// import RPSGame from '@/components/archive/RPSGame'; // TODO: 재구현 필요
+import RPSGame from '@/components/archive/RPSGame';
 // import Head from 'next/head'; // For Pages Router. App Router uses metadata export.
 import { useEffect } from 'react'; // For setting document title if needed in client component
 import { motion } from 'framer-motion';
@@ -41,13 +41,9 @@ export default function RPSPage() {
           >
             Challenge the computer in a classic battle of wits!
           </motion.p>
-        </header>        <main className="w-full flex justify-center">
-          {/* TODO: RPSGame 컴포넌트 재구현 필요 */}
-          <div className="text-center text-white p-8">
-            <h2 className="text-2xl font-bold mb-4">게임 재구현 중</h2>
-            <p className="text-gray-300">새로운 TSX 컴포넌트로 재구현 예정입니다.</p>
-          </div>
-          {/* <RPSGame userId={currentUserId} /> */}
+        </header>
+        <main className="w-full flex justify-center">
+          <RPSGame userId={currentUserId} />
         </main>
         <footer className="text-center mt-10 sm:mt-12 text-xs text-gray-500 pb-8">
           <p>May the best hand win! Outcomes are determined by chance.</p>

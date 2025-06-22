@@ -45,8 +45,8 @@ const Chart: React.FC<ChartProps> = ({
   type,
   data,
   title,
-  // xAxisLabel,
-  // yAxisLabel,
+  xAxisLabel,
+  yAxisLabel,
   showGrid = true,
   showLegend = true,
   animated = true,
@@ -54,7 +54,7 @@ const Chart: React.FC<ChartProps> = ({
   className = ''
 }) => {
   const maxValue = Math.max(...data.map(d => d.value));
-  // const chartId = `chart-${Math.random().toString(36).substr(2, 9)}`;
+  const chartId = `chart-${Math.random().toString(36).substr(2, 9)}`;
 
   const getBarHeight = (value: number) => {
     return (value / maxValue) * 100;

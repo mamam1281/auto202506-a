@@ -1,15 +1,22 @@
 // cc-webapp/frontend/app/adult_content/page.jsx
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react'; // React import for clarity
+import AdultContentViewer from '@/components/archive/AdultContentViewer';
 import Link from 'next/link';
-import Head from 'next/head';
+import Head from 'next/head'; // For older Next.js versions or specific client-side title updates
 import { Home, ArrowLeft } from 'lucide-react';
-import { motion } from 'framer-motion';
-// import AdultContentViewer from '@/components/archive/AdultContentViewer'; // TODO: 재구현 필요
+import { motion } from 'framer-motion'; // Added for animations
+import { useEffect } from 'react'; // For setting document title if needed
+
+// For Next.js 13+ App Router, metadata can be exported for server components:
+// export const metadata = {
+//   title: 'Exclusive Content - CC Webapp',
+//   description: 'View your unlocked adult content stages.',
+// };
 
 export default function AdultContentPage() {
-  const currentUserId = 1;
+  const currentUserId = 1; // As per guideline, use 1 or accept as prop
 
   // If this page must be a Client Component and needs to set the title:
   useEffect(() => {
@@ -53,14 +60,10 @@ export default function AdultContentPage() {
             className="text-sm sm:text-md text-gray-400 mt-2"
           >
             View your unlocked special content below.
-          </motion.p>        </header>
+          </motion.p>
+        </header>
         <main className="w-full">
-          {/* <AdultContentViewer userId={currentUserId} /> */}
-          {/* TODO: AdultContentViewer 컴포넌트 재구현 필요 */}
-          <div className="text-center py-20">
-            <h2 className="text-xl text-gray-400 mb-4">🚧 Under Construction 🚧</h2>
-            <p className="text-gray-500">AdultContentViewer 컴포넌트를 재구현 중입니다.</p>
-          </div>
+          <AdultContentViewer userId={currentUserId} />
         </main>
         <footer className="text-center mt-10 py-6 border-t border-gray-700">
           <Link href="/" legacyBehavior={false}>

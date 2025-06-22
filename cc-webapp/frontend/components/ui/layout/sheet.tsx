@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import styles from './Sheet.module.css';
+import styles from './sheet.module.css';
 
 type SheetSide = 'top' | 'right' | 'bottom' | 'left';
 

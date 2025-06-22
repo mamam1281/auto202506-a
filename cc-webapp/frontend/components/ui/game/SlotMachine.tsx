@@ -1,5 +1,5 @@
-import React, { useState, useEffect, forwardRef } from 'react';
-import { motion, AnimatePresence, HTMLMotionProps } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './SlotMachine.module.css';
 
 export interface SlotMachineProps {
@@ -16,9 +16,6 @@ export interface SlotMachineProps {
   minBet?: number;
   maxBet?: number;
   
-  /** 크기 변형 (통합 반응형 가이드) */
-  size?: 'sm' | 'md' | 'lg';
-  
   /** 스핀 콜백 */
   onSpin?: (betAmount: number) => void;
   
@@ -32,22 +29,17 @@ export interface SlotMachineProps {
   className?: string;
 }
 
-// Framer Motion props와 SlotMachine props 결합 (통합 컴포넌트 가이드)
-type SlotMachineMotionProps = SlotMachineProps & Omit<HTMLMotionProps<"div">, keyof SlotMachineProps>;
-
-const SlotMachine = forwardRef<HTMLDivElement, SlotMachineMotionProps>(({
+const SlotMachine: React.FC<SlotMachineProps> = ({
   state = 'idle',
   symbols = ['🎰', '💎', '🍒', '🔔', '⭐', '💰', '🎯'],
   betAmount = 100,
   minBet = 10,
   maxBet = 1000,
-  size = 'md',
   onSpin,
   onBetChange,
   onResult,
-  className = '',
-  ...motionProps
-}, ref) => {
+  className = ''
+}) => {
   const [currentBet, setCurrentBet] = useState(betAmount);
   const [reelResults, setReelResults] = useState<string[]>(['🎰', '🎰', '🎰']);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -251,101 +243,6 @@ const SlotMachine = forwardRef<HTMLDivElement, SlotMachineMotionProps>(({
       <div className={styles.payoutTable}>
         <div className={styles.payoutTitle}>PAYOUTS</div>
         <div className={styles.payoutGrid}>
-          {symbols.slice(0, 4).map((symbol) => (  return (
-    <motion.div
-      ref={ref}
-      className={containerClassNames}
-      {...motionProps}
-    >
-      {/* ...existing code... */}
-      {/* 슬롯 머신 헤더 */}
-      <div className={styles.header}>
-        <h2 className={styles.title}>🎰 COSMIC SLOTS</h2>
-        <div className={styles.subtitle}>Match 3 symbols to win!</div>
-      </div>
-
-      {/* 릴 컨테이너 */}
-      <div className={styles.reelsContainer}>
-        {reelResults.map((symbol, index) => (
-          <motion.div
-            key={index}
-            className={styles.reel}
-            variants={reelVariants}
-            animate={isSpinning ? 'spinning' : 'result'}
-          >
-            <div className={styles.symbolWindow}>
-              <motion.div
-                className={styles.symbol}
-                key={`${symbol}-${index}-${Date.now()}`}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                {symbol}
-              </motion.div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* 베팅 컨트롤 */}
-      <div className={styles.betControls}>
-        <div className={styles.betLabel}>BET AMOUNT</div>
-        <div className={styles.betContainer}>
-          <button
-            className={styles.betButton}
-            onClick={() => adjustBet(-50)}
-            disabled={currentBet <= minBet}
-          >
-            -
-          </button>
-          <div className={styles.betAmount}>{currentBet}</div>
-          <button
-            className={styles.betButton}
-            onClick={() => adjustBet(50)}
-            disabled={currentBet >= maxBet}
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      {/* 스핀 버튼 */}
-      <motion.button
-        className={`${styles.spinButton} ${isSpinning ? styles.spinning : ''}`}
-        onClick={handleSpin}
-        disabled={isSpinning}
-        whileTap={{ scale: 0.95 }}
-        whileHover={{ scale: 1.02 }}
-      >
-        {isSpinning ? 'SPINNING...' : 'SPIN TO WIN'}
-      </motion.button>
-
-      {/* 결과 표시 */}
-      <AnimatePresence>
-        {lastWin && (
-          <motion.div
-            className={`${styles.resultDisplay} ${lastWin.isWin ? styles.winResult : styles.loseResult}`}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-          >
-            {lastWin.isWin ? (
-              <>
-                <div className={styles.winText}>BIG WIN!</div>
-                <div className={styles.payoutText}>+{lastWin.payout}</div>
-              </>
-            ) : (
-              <div className={styles.loseText}>Try Again!</div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 배당표 */}
-      <div className={styles.paytable}>
-        <h3 className={styles.paytableTitle}>PAYTABLE</h3>
-        <div className={styles.paytableGrid}>
           {symbols.slice(0, 4).map((symbol) => (
             <div key={symbol} className={styles.payoutRow}>
               <span className={styles.payoutSymbol}>{symbol}{symbol}{symbol}</span>
@@ -354,10 +251,8 @@ const SlotMachine = forwardRef<HTMLDivElement, SlotMachineMotionProps>(({
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
-});
-
-SlotMachine.displayName = 'SlotMachine';
+};
 
 export default SlotMachine;
