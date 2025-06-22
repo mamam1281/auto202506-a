@@ -1,225 +1,274 @@
-/* Header.module.css - Figma 003 게임 플랫폼 레이아웃 시스템 */
+/* Header.module.css - 모던 게임 플랫폼 디자인 시스템 */
 
 .header {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: var(--z-header, 50);
   width: 100%;
-  background: var(--color-slate-900);
-  border-bottom: 1px solid var(--color-slate-700);
-  backdrop-filter: blur(8px);
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(10, 10, 15, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  transition: var(--transition-smooth, all 0.3s ease-out);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
 .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px; /* 모바일 높이 줄임 */
-  max-width: 1200px;
+  height: 70px; /* 더 높게 */
+  max-width: var(--container-xl, 1400px); /* 더 넓게 */
   margin: 0 auto;
-  padding: 0 0.75rem;
+  padding: 0 2rem; /* 더 넓은 패딩 */
+  gap: 2rem; /* 더 넓은 간격 */
 }
 
 /* 태블릿 이상에서 높이와 패딩 확대 */
-@media (min-width: 768px) {
+@media (min-width: var(--breakpoint-md, 768px)) {
   .container {
-    height: 64px;
-    padding: 0 1.5rem;
+    height: var(--header-height-desktop, 64px);
+    padding: 0 var(--spacing-6, 1.5rem);
   }
 }
 
 .left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--spacing-3, 0.75rem);
+  flex-shrink: 0;
 }
 
 .menuButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px; /* 모바일 최적화 */
-  height: 32px;
+  width: var(--button-size-mobile, 32px);
+  height: var(--button-size-mobile, 32px);
   border-radius: var(--radius-md, 6px);
-  color: var(--color-slate-400);
-  transition: all var(--transition-fast, 0.15s) ease;
-}
-
-/* 태블릿 이상에서 크기 확대 */
-@media (min-width: 768px) {
-  .menuButton {
-    width: 40px;
-    height: 40px;
-  }
+  color: var(--text-secondary, var(--color-slate-400));
+  transition: var(--transition-fast, all 0.15s ease);
+  background: var(--bg-interactive, transparent);
+  border: 1px solid var(--border-interactive, transparent);
 }
 
 .menuButton:hover {
-  color: white;
-  background: var(--color-slate-800);
+  color: var(--text-primary, var(--color-slate-200));
+  background: var(--bg-interactive-hover, var(--color-slate-800));
+  border-color: var(--border-interactive-hover, var(--color-slate-600));
+  transform: var(--transform-scale-hover, scale(1.02));
+}
+
+.menuButton:active {
+  transform: var(--transform-scale-active, scale(0.98));
+  transition: var(--transition-instant, all 0.1s ease);
 }
 
 .menuButtonActive {
-  color: var(--neon-purple-3);
-  background: var(--color-slate-800);
+  color: var(--color-primary, var(--color-purple-400));
+  background: var(--bg-primary-subtle, var(--color-purple-900/20));
+  border-color: var(--border-primary, var(--color-purple-600));
+}
+
+/* 태블릿 이상에서 크기 확대 */
+@media (min-width: var(--breakpoint-md, 768px)) {
+  .menuButton {
+    width: var(--button-size-desktop, 40px);
+    height: var(--button-size-desktop, 40px);
+  }
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-2, 0.5rem);
+  transition: var(--transition-smooth, all 0.2s ease-out);
+}
+
+.brand:hover {
+  transform: var(--transform-scale-hover, scale(1.02));
 }
 
 .brandIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px; /* 모바일에서 작게 */
-  height: 28px;
-  background: var(--neon-gradient-1);
+  width: var(--brand-icon-size-mobile, 28px);
+  height: var(--brand-icon-size-mobile, 28px);
+  background: var(--gradient-primary, var(--neon-gradient-1));
   border-radius: var(--radius-md, 6px);
+  transition: var(--transition-smooth, all 0.2s ease-out);
+}
+
+.brandIcon:hover {
+  box-shadow: var(--shadow-glow, 0 0 20px rgba(147, 51, 234, 0.4));
 }
 
 .brandIconText {
-  color: white;
-  font-weight: 700;
-  font-size: 0.75rem; /* 모바일에서 작게 */
-  line-height: 1;
-}
-
-/* 태블릿 이상에서 타이포그래피 확대 */
-@media (min-width: 768px) {
-  .brandIconText {
-    font-size: 0.875rem;
-  }
-  
-  .brandName {
-    font-size: 1.125rem;
-  }
-  
-  .searchInput,
-  .searchInput::placeholder {
-    font-size: 0.875rem;
-  }
+  color: var(--text-on-primary, white);
+  font-weight: var(--font-weight-bold, 700);
+  font-size: var(--font-size-xs, 0.75rem);
+  line-height: var(--line-height-tight, 1);
+  letter-spacing: var(--letter-spacing-tight, -0.025em);
 }
 
 .brandName {
-  font-weight: 600;
-  font-size: 1rem; /* 모바일에서 작게 */
-  color: white;
-  line-height: 1.2;
-  letter-spacing: -0.01em; /* 타이포그래피 개선 */
+  color: var(--text-primary, white);
+  font-weight: var(--font-weight-semibold, 600);
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-tight, 1.25);
+  letter-spacing: var(--letter-spacing-tight, -0.025em);
+  transition: var(--transition-fast, color 0.15s ease);
 }
 
-/* 검색 영역 */
+/* 태블릿 이상에서 브랜드 요소 확대 */
+@media (min-width: var(--breakpoint-md, 768px)) {
+  .brandIcon {
+    width: var(--brand-icon-size-desktop, 32px);
+    height: var(--brand-icon-size-desktop, 32px);
+  }
+  
+  .brandIconText {
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+  
+  .brandName {
+    font-size: var(--font-size-lg, 1.125rem);
+  }
+}
+
+/* 검색 컨테이너 */
 .searchContainer {
+  display: none;
   flex: 1;
-  max-width: 400px;
-  margin: 0 2rem;
+  max-width: var(--search-max-width, 480px);
+  margin: 0 var(--spacing-6, 1.5rem);
+}
+
+@media (min-width: var(--breakpoint-md, 768px)) {
+  .searchContainer {
+    display: flex;
+  }
 }
 
 .searchWrapper {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0 1rem;
-  height: 40px;
-  background: var(--color-slate-800);
-  border: 1px solid var(--color-slate-700);
-  border-radius: var(--radius-lg, 8px);
-  transition: all var(--transition-fast, 0.15s) ease;
-}
-
-.searchWrapper:focus-within {
-  border-color: var(--neon-purple-3);
-  box-shadow: 0 0 0 1px var(--neon-purple-3);
+  width: 100%;
 }
 
 .searchInput {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 0.8rem; /* 모바일에서 작게 */
-  font-weight: 400;
-  line-height: 1.4;
+  width: 100%;
+  height: var(--input-height, 40px);
+  padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem) var(--spacing-2, 0.5rem) var(--spacing-10, 2.5rem);
+  background: var(--bg-input, var(--color-slate-800));
+  border: 1px solid var(--border-input, var(--color-slate-600));
+  border-radius: var(--radius-lg, 8px);
+  color: var(--text-primary, white);
+  font-size: var(--font-size-sm, 0.875rem);
+  line-height: var(--line-height-normal, 1.5);
+  transition: var(--transition-fast, all 0.15s ease);
 }
 
 .searchInput::placeholder {
-  color: var(--color-slate-400);
-  font-size: 0.8rem; /* 플레이스홀더도 작게 */
+  color: var(--text-placeholder, var(--color-slate-400));
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.searchInput:focus {
+  border-color: var(--border-focus, var(--color-purple-400));
+  box-shadow: var(--shadow-focus, 0 0 0 2px rgba(147, 51, 234, 0.2));
+}
+
+.searchWrapper > svg {
+  position: absolute;
+  left: var(--spacing-3, 0.75rem);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary, var(--color-slate-400));
+  pointer-events: none;
 }
 
 /* 오른쪽 영역 */
 .right {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-2, 0.5rem);
+  flex-shrink: 0;
 }
 
 .iconButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px; /* 모바일 최적화 */
-  height: 36px;
-  border-radius: var(--radius-md, 1px);
-  color: var(--color-slate-400);
-  transition: all var(--transition-fast, 0.15s) ease;
+  width: var(--button-size-mobile, 32px);
+  height: var(--button-size-mobile, 32px);
+  border-radius: var(--radius-md, 6px);
+  color: var(--text-secondary, var(--color-slate-400));
+  transition: var(--transition-fast, all 0.15s ease);
+  background: var(--bg-interactive, transparent);
+  border: 1px solid var(--border-interactive, transparent);
 }
 
 .iconButton:hover {
-  color: white;
-  background: var(--color-slate-800);
+  color: var(--text-primary, white);
+  background: var(--bg-interactive-hover, var(--color-slate-800));
+  border-color: var(--border-interactive-hover, var(--color-slate-600));
+  transform: var(--transform-scale-hover, scale(1.02));
 }
 
+.iconButton:active {
+  transform: var(--transform-scale-active, scale(0.98));
+  transition: var(--transition-instant, all 0.1s ease);
+}
+
+/* 아이콘 크기 통일 */
 .iconButton > svg,
 .iconButton > img,
 .menuButton > svg,
 .menuButton > img,
 .searchWrapper > svg {
-  width: 20px; /* 모바일에서 더 작게 */
-  height: 20px;
-  min-width: 20px;
-  min-height: 20px;
-  max-width: 20px;
-  max-height: 20px;
+  width: var(--icon-size-mobile, 20px);
+  height: var(--icon-size-mobile, 20px);
+  min-width: var(--icon-size-mobile, 20px);
+  min-height: var(--icon-size-mobile, 20px);
+  max-width: var(--icon-size-mobile, 20px);
+  max-height: var(--icon-size-mobile, 20px);
   display: block;
+  transition: var(--transition-fast, all 0.15s ease);
 }
 
-/* 태블릿 이상에서 크기 확대 */
-@media (min-width: 768px) {
+/* 태블릿 이상에서 버튼과 아이콘 크기 확대 */
+@media (min-width: var(--breakpoint-md, 768px)) {
   .iconButton {
-    width: 40px;
-    height: 40px;
+    width: var(--button-size-desktop, 40px);
+    height: var(--button-size-desktop, 40px);
   }
-    .iconButton > svg,
+  
+  .iconButton > svg,
   .iconButton > img,
   .menuButton > svg,
   .menuButton > img,
   .searchWrapper > svg {
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
-    min-height: 24px;
-    max-width: 24px;
-    max-height: 24px;
+    width: var(--icon-size-desktop, 24px);
+    height: var(--icon-size-desktop, 24px);
+    min-width: var(--icon-size-desktop, 24px);
+    min-height: var(--icon-size-desktop, 24px);
+    max-width: var(--icon-size-desktop, 24px);
+    max-height: var(--icon-size-desktop, 24px);
   }
 }
 
 /* 모바일 검색 */
 .mobileSearch {
   display: none;
-  padding: 0 1rem 1rem;
-  background: var(--color-slate-900);
+  padding: 0 var(--spacing-4, 1rem) var(--spacing-4, 1rem);
+  background: var(--bg-primary, var(--color-slate-900));
+  border-bottom: 1px solid var(--border-subtle, var(--color-slate-700));
 }
 
 /* 반응형 디자인 */
-@media (max-width: 768px) {
+@media (max-width: var(--breakpoint-md, 768px)) {
   .container {
-    padding: 0 1rem;
+    padding: 0 var(--spacing-4, 1rem);
   }
 
   .searchContainer {
@@ -229,36 +278,38 @@
   .mobileSearch {
     display: block;
   }
+  
   .brandName {
     display: none;
   }
 
   .right {
-    gap: 0.25rem;
+    gap: var(--spacing-1, 0.25rem);
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: var(--breakpoint-sm, 640px)) {
   .container {
-    height: 52px;
-    padding: 0 0.75rem;
+    height: var(--header-height-mobile, 52px);
+    padding: 0 var(--spacing-3, 0.75rem);
   }
+  
   .menuButton,
   .iconButton {
-    width: 32px; /* 모바일에서 더 작게 */
-    height: 32px;
+    width: var(--button-size-mobile, 32px);
+    height: var(--button-size-mobile, 32px);
   }
 
   .brandIcon {
-    width: 28px;
-    height: 28px;
+    width: var(--brand-icon-size-mobile, 28px);
+    height: var(--brand-icon-size-mobile, 28px);
   }
 
   .brandIconText {
-    font-size: 0.75rem;
+    font-size: var(--font-size-xs, 0.75rem);
   }
   
   .brandName {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm, 0.875rem);
   }
 }

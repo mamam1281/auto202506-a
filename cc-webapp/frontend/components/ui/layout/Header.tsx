@@ -26,6 +26,16 @@ export interface HeaderProps {
   className?: string;
   /** 자식 요소 (커스텀 컨텐츠) */
   children?: React.ReactNode;
+  /** 검색 쿼리 변경 핸들러 */
+  onSearchChange?: (query: string) => void;
+  /** 검색 제출 핸들러 */
+  onSearchSubmit?: (query: string) => void;
+  /** 알림 버튼 클릭 핸들러 */
+  onNotificationClick?: () => void;
+  /** 사용자 메뉴 클릭 핸들러 */
+  onUserMenuClick?: () => void;
+  /** 로딩 상태 */
+  isLoading?: boolean;
 }
 
 /**
@@ -61,9 +71,31 @@ export function Header({
   showUserMenu = true,
   showTokenBalance = true,
   className,
-  children
+  children,
+  onSearchChange,
+  onSearchSubmit,
+  onNotificationClick,
+  onUserMenuClick,
+  isLoading = false
 }: HeaderProps) {
   const [searchQuery, setSearchQuery] = React.useState('');
+
+  const handleSearchChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    onSearchChange?.(value);
+  }, [onSearchChange]);
+
+  const handleSearchSubmit = React.useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    onSearchSubmit?.(searchQuery);
+  }, [searchQuery, onSearchSubmit]);
+
+  const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit(e as any);
+    }
+  }, [handleSearchSubmit]);
 
   return (
     <header className={cn(styles.header, className)}>
@@ -88,19 +120,22 @@ export function Header({
             </div>
             <span className={styles.brandName}>{brandName}</span>
           </div>
-        </div>
-
-        {/* 중앙: 검색 (데스크톱) */}        {showSearch && (          <div className={styles.searchContainer}>
-            <div className={styles.searchWrapper}>
-              <Search className="text-slate-400" />
+        </div>        {/* 중앙: 검색 (데스크톱) */}
+        {showSearch && (
+          <div className={styles.searchContainer}>
+            <form onSubmit={handleSearchSubmit} className={styles.searchWrapper}>
+              <Search />
               <input
                 type="text"
                 placeholder="게임 검색..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
+                onKeyDown={handleKeyDown}
                 className={styles.searchInput}
+                disabled={isLoading}
+                aria-label="게임 검색"
               />
-            </div>
+            </form>
           </div>
         )}
 
@@ -117,7 +152,10 @@ export function Header({
               variant="secondary"
               size="sm"
               className={styles.iconButton}
-              aria-label="알림"            >
+              onClick={onNotificationClick}
+              disabled={isLoading}
+              aria-label="알림"
+            >
               <Bell />
             </Button>
           )}
@@ -127,7 +165,10 @@ export function Header({
             <Button
               variant="secondary"
               size="sm"
-              className={styles.iconButton}            aria-label="사용자 메뉴"
+              className={styles.iconButton}
+              onClick={onUserMenuClick}
+              disabled={isLoading}
+              aria-label="사용자 메뉴"
             >
               <User />
             </Button>
@@ -136,19 +177,22 @@ export function Header({
           {/* 커스텀 컨텐츠 */}
           {children}
         </div>
-      </div>
-
-      {/* 모바일 검색 (토글) */}      {showSearch && (        <div className={styles.mobileSearch}>
-          <div className={styles.searchWrapper}>
-            <Search className="text-slate-400" />
+      </div>      {/* 모바일 검색 (토글) */}
+      {showSearch && (
+        <div className={styles.mobileSearch}>
+          <form onSubmit={handleSearchSubmit} className={styles.searchWrapper}>
+            <Search />
             <input
               type="text"
               placeholder="게임 검색..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
+              onKeyDown={handleKeyDown}
               className={styles.searchInput}
+              disabled={isLoading}
+              aria-label="게임 검색"
             />
-          </div>
+          </form>
         </div>
       )}
     </header>

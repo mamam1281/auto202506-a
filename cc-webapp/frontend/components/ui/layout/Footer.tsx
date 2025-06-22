@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * @deprecated 이 컴포넌트는 더 이상 사용되지 않습니다. BottomNav 컴포넌트를 대신 사용해 주세요.
+ * Footer는 웹사이트 용도로 개발되었으나, 모바일 앱 UI/UX 표준에 맞게 BottomNav로 전환되었습니다.
+ * 모든 화면에서 일관된 하단 내비게이션을 제공하기 위해 BottomNav.tsx를 사용하십시오.
+ */
+
 import React from 'react';
 import { cn } from '../utils/utils';
 import styles from './Footer.module.css';

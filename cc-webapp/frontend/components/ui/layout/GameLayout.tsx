@@ -5,6 +5,9 @@ import { ArrowLeft, Settings, Volume2, VolumeX, MessageCircle, X } from 'lucide-
 import Button from '../basic/Button';
 import { cn } from '../utils/utils';
 import styles from './GameLayout.module.css';
+import AppBar from './AppBar';
+import Container from './Container';
+import BottomNav from './BottomNav';
 
 export interface GameLayoutProps {
   /** 자식 요소 (게임 컨텐츠) */
@@ -27,6 +30,14 @@ export interface GameLayoutProps {
   showHistory?: boolean;
   /** 확률 정보 표시 여부 */
   showProbability?: boolean;
+  /** AppBar 사용 여부 (기본값: true) */
+  useAppBar?: boolean;
+  /** 바텀 네비게이션 표시 여부 (기본값: false) */
+  showBottomNav?: boolean;
+  /** 컨테이너 크기 */
+  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  /** 콘텐츠 영역 패딩 제거 */
+  noContentPadding?: boolean;
   /** 추가 CSS 클래스 */
   className?: string;
 }
@@ -36,6 +47,57 @@ export interface GameLayoutProps {
  * 
  * 카지노 클럽 F2P 게임에 특화된 레이아웃 컴포넌트입니다.
  * 사이버 토큰 시스템, CJ AI, 성인 콘텐츠 언락 등을 통합 지원합니다.
+ * 
+ * ## 업데이트 내역
+ * - AppBar 컴포넌트 통합 지원
+ * - Container 컴포넌트로 콘텐츠 영역 감싸기 지원
+ * - BottomNav 컴포넌트 통합 지원 (모바일 전용)
+ * - BottomNav 옵션 추가
+ * - 안전 영역(safe-area) 자동 처리
+ * @example
+ * ```tsx
+ * // 기본 사용법
+ * <GameLayout
+ *   gameType="slot"
+ *   gameTitle="슈퍼 슬롯"
+ *   tokenBalance={1000}
+ *   tokenCost={50}
+ *   onBack={() => router.push('/games')}
+ * >
+ *   <SlotGame />
+ * </GameLayout>
+ * ```
+ * 
+ * @example
+ * ```tsx 
+ * // 현대적 스타일 (AppBar 사용)
+ * <GameLayout
+ *   gameType="roulette"
+ *   gameTitle="럭키 룰렛"
+ *   tokenBalance={1000}
+ *   tokenCost={100}
+ *   useAppBar={true}
+ *   containerSize="full"
+ * >
+ *   <RouletteGame />
+ * </GameLayout>
+ * ```
+ * 
+ * @example
+ * ```tsx
+ * // 모바일 레이아웃 (AppBar + BottomNav)
+ * <GameLayout
+ *   gameType="slot"
+ *   gameTitle="모바일 슬롯"
+ *   tokenBalance={2500}
+ *   tokenCost={10}
+ *   useAppBar={true}
+ *   showBottomNav={true}
+ *   containerSize="full"
+ * >
+ *   <RouletteGame />
+ * </GameLayout>
+ * ```
  */
 export function GameLayout({
   children,
@@ -48,6 +110,10 @@ export function GameLayout({
   showUnlockStatus = true,
   showHistory = false,
   showProbability = false,
+  useAppBar = false,
+  showBottomNav = false,
+  containerSize = 'full',
+  noContentPadding = true,
   className
 }: GameLayoutProps) {
   const [isMuted, setIsMuted] = useState(false);
@@ -60,26 +126,66 @@ export function GameLayout({
     rps: '가위바위보',
     gacha: '가챠박스'
   };
+  
+  // 토큰 잔액을 표시하는 중앙 컨텐츠
+  const tokenBalanceDisplay = (
+    <div className="flex flex-col items-center">
+      <span className="text-lg font-bold text-yellow-400">{tokenBalance.toLocaleString()}</span>
+      <span className="text-xs text-slate-300">토큰</span>
+    </div>
+  );
 
   return (
-    <div className={cn(styles.gameLayout, className)}>
-      {/* 게임 헤더 */}
-      <header className={styles.header}>
-        <div className={styles.headerLeft}>          <Button
-            variant="secondary"
-            size="sm"
-            onClick={onBack}
-            className={styles.backButton}
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className={styles.gameInfo}>
-            <h1 className={styles.gameTitle}>
-              {gameTitle || gameTypeLabels[gameType]}
-            </h1>
-            <div className={styles.gameType}>{gameTypeLabels[gameType]}</div>
+    <div className={cn(styles.gameLayout,className)}>
+      {/* Modern AppBar 또는 전통적인 게임 헤더 */}
+      {useAppBar ? (
+        <AppBar
+          title={gameTitle || gameTypeLabels[gameType]}
+          leftContent="back"
+          centerContent={tokenBalanceDisplay}
+          rightContent={
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMuted(!isMuted)}
+                className="min-w-[40px] min-h-[40px]"
+              >
+                {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+              </Button>
+              {showCJAI && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowCJPanel(!showCJPanel)}
+                  className="min-w-[40px] min-h-[40px]"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                </Button>
+              )}
+            </div>
+          }
+          variant="game"
+          onBackClick={onBack}
+        />
+      ) : (
+        <header className={styles.header}>
+          <div className={styles.headerLeft}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onBack}
+              className={styles.backButton}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div className={styles.gameInfo}>
+              <h1 className={styles.gameTitle}>
+                {gameTitle || gameTypeLabels[gameType]}
+              </h1>
+              <div className={styles.gameType}>{gameTypeLabels[gameType]}</div>
+            </div>
           </div>
-        </div>
 
         <div className={styles.headerCenter}>
           <div className={styles.tokenDisplay}>
@@ -118,13 +224,22 @@ export function GameLayout({
             <Settings className="h-5 w-5" />
           </Button>
         </div>
-      </header>
-
-      {/* 메인 게임 영역 */}
-      <main className={styles.mainContent}>
-        <div className={styles.gameArea}>
-          {children}
-        </div>
+      </header>      {/* 메인 게임 영역 */}
+      <main className={cn(
+        styles.mainContent,
+        showBottomNav && styles.withBottomNav
+      )}>
+        {noContentPadding ? (
+          <div className={styles.gameArea}>
+            {children}
+          </div>
+        ) : (
+          <Container size={containerSize}>
+            <div className={styles.gameArea}>
+              {children}
+            </div>
+          </Container>
+        )}
 
         {/* 사이드 패널들 */}
         <div className={styles.sidePanels}>
@@ -211,8 +326,7 @@ export function GameLayout({
               </div>
             </div>
           )}
-        </div>
-      </main>
+        </div>      </main>
 
       {/* 토큰 부족 경고 */}
       {tokenBalance < tokenCost && (
@@ -225,6 +339,10 @@ export function GameLayout({
             토큰 충전하기
           </Button>
         </div>
+      )}
+        {/* 하단 네비게이션 바 (선택적) */}
+      {showBottomNav && (
+        <BottomNav />
       )}
     </div>
   );

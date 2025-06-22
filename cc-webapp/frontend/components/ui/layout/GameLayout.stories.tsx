@@ -13,6 +13,7 @@ import { GameLayout } from './GameLayout';
  * - **성인 콘텐츠 언락**: 단계별 언락 상태 표시 (200/500/1000 토큰)
  * - **카지노 게임 특화**: 슬롯/룰렛/가위바위보/가챠 최적화
  * - **확률 정보**: 투명한 확률 공개 시스템
+ * - **모던 UI 옵션**: AppBar, Container, BottomNav 컴포넌트 통합
  */
 const meta = {
   title: 'Layout/GameLayout',
@@ -25,10 +26,16 @@ const meta = {
 GameLayout은 카지노 클럽 F2P 프로젝트의 게임 플레이에 특화된 레이아웃 컴포넌트입니다.
 
 ### 구성 요소
-- **Game Header**: 게임 정보, 토큰 잔액, CJ AI 버튼
+- **게임 헤더/AppBar**: 게임 정보, 토큰 잔액, CJ AI 버튼 (클래식 헤더 또는 모던 AppBar 선택 가능)
 - **Unlock Status**: 성인 콘텐츠 단계별 언락 상태
-- **Game Content**: 메인 게임 플레이 영역
+- **Game Content**: 메인 게임 플레이 영역 (Container로 감싸기 가능)
 - **CJ AI Panel**: 실시간 감정 피드백
+- **BottomNav**: 옵션으로 하단 네비게이션 통합 가능
+
+### 모던/클래식 모드
+GameLayout은 두 가지 스타일로 사용할 수 있습니다:
+- **클래식 모드**: 기존 게임 헤더 사용
+- **모던 모드**: AppBar, Container, BottomNav 컴포넌트 통합
 - **Token Alert**: 토큰 부족 시 충전 안내
 
 ### 카지노 게임 종류
@@ -316,8 +323,8 @@ const GachaBox = () => (
 );
 
 /**
- * ## 슬롯머신 게임
- * 클래식 3-릴 슬롯머신 게임입니다.
+ * ## 슬롯머신 게임 (클래식 스타일)
+ * 전통적인 헤더를 사용하는 클래식 3-릴 슬롯머신 게임입니다.
  */
 export const SlotGame: Story = {
   args: {
@@ -329,7 +336,24 @@ export const SlotGame: Story = {
 };
 
 /**
- * ## 룰렛 게임
+ * ## 슬롯머신 게임 (모던 스타일)
+ * AppBar와 Container를 사용하는 현대적인 스타일의 슬롯머신 게임입니다.
+ */
+export const ModernSlotGame: Story = {
+  args: {
+    gameType: 'slot',
+    gameTitle: '네온 슬롯',
+    tokenBalance: 1500,
+    tokenCost: 10,
+    children: <SlotMachine />,
+    useAppBar: true,
+    containerSize: 'md',
+    noContentPadding: false
+  }
+};
+
+/**
+ * ## 룰렛 게임 (클래식 스타일)
  * 카지노 룰렛 게임입니다.
  */
 export const RouletteGame: Story = {
@@ -338,6 +362,22 @@ export const RouletteGame: Story = {
     tokenBalance: 800,
     tokenCost: 20,
     children: <Roulette />
+  }
+};
+
+/**
+ * ## 룰렛 게임 (모던 스타일)
+ * AppBar를 사용하는 룰렛 게임입니다.
+ */
+export const ModernRouletteGame: Story = {
+  args: {
+    gameType: 'roulette',
+    gameTitle: '디지털 룰렛',
+    tokenBalance: 800,
+    tokenCost: 20,
+    children: <Roulette />,
+    useAppBar: true,
+    containerSize: 'full'
   }
 };
 
@@ -395,6 +435,23 @@ export const FullFeatures: Story = {
     showHistory: true,
     showProbability: true,
     children: <GachaBox />
+  }
+};
+
+/**
+ * ## 모던 UI + 모바일 네비게이션
+ * AppBar와 BottomNav를 함께 사용하는 완전한 모바일 레이아웃입니다.
+ */
+export const MobileLayout: Story = {
+  args: {
+    gameType: 'slot',
+    gameTitle: '모바일 슬롯',
+    tokenBalance: 2500,
+    tokenCost: 10,
+    children: <SlotMachine />,
+    useAppBar: true,
+    containerSize: 'full',
+    showBottomNav: true
   }
 };
 

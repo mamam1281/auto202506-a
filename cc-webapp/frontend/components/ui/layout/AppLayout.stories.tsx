@@ -5,13 +5,14 @@ import { AppLayout } from './AppLayout';
  * # AppLayout 컴포넌트 스토리북
  * 
  * Figma 003 게임 플랫폼 레이아웃 시스템의 메인 애플리케이션 레이아웃입니다.
- * Header, Sidebar, Footer를 통합한 완전한 앱 레이아웃을 제공합니다.
+ * AppBar, Sidebar, BottomNav를 통합한 완전한 앱 레이아웃을 제공합니다.
  * 
  * ## 주요 특징
- * - **통합 레이아웃**: Header + Sidebar + Footer 완전 통합
+ * - **통합 레이아웃**: AppBar + Sidebar + Main + BottomNav 완전 통합
+ * - **모바일 친화적**: 안전 영역 처리 및 바텀 네비게이션
  * - **반응형 디자인**: 모바일, 태블릿, 데스크톱 최적화
  * - **사이드바 상태 관리**: 확장/축소 상태 자동 관리
- * - **모바일 친화적**: 작은 화면에서 오버레이 모드 지원
+ * - **Safe Area 지원**: 노치 및 하단 제스처 영역 자동 처리
  */
 const meta = {
   title: 'Layout/AppLayout',
@@ -19,15 +20,14 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
     docs: {
-      description: {
-        component: `
+      description: {        component: `
 AppLayout은 게임 플랫폼의 메인 애플리케이션 레이아웃입니다.
 
 ### 구성 요소
-- **Header**: 브랜드, 네비게이션, 검색, 토큰 잔액
+- **AppBar**: 상단 앱바, 페이지 제목, 내비게이션 액션, 시스템 상태바 영역 처리
 - **Sidebar**: 메인 메뉴, 게임 카테고리, 사용자 정보
-- **Footer**: 링크, 소셜 미디어, 저작권 정보
 - **Main**: 페이지별 콘텐츠 영역
+- **BottomNav**: 모바일용 하단 네비게이션 바, 하단 안전 영역 자동 처리
 
 ### 사용 예시
 \`\`\`tsx
@@ -39,26 +39,29 @@ AppLayout은 게임 플랫폼의 메인 애플리케이션 레이아웃입니다
         `
       }
     }
-  },  tags: ['autodocs'],
-  argTypes: {
+  },  tags: ['autodocs'],  argTypes: {
     children: {
       description: '메인 콘텐츠 영역에 들어갈 내용'
     },
-    showHeader: {
+    showAppBar: {
       control: 'boolean',
-      description: '헤더 표시 여부'
+      description: '앱바 표시 여부'
     },
     showSidebar: {
       control: 'boolean', 
       description: '사이드바 표시 여부'
     },
+    showBottomNav: {
+      control: 'boolean',
+      description: '바텀 네비게이션 표시 여부'
+    },
     showFooter: {
       control: 'boolean',
-      description: '푸터 표시 여부'
+      description: '푸터 표시 여부 (레거시 지원)'
     },
     simpleFooter: {
       control: 'boolean',
-      description: '간단한 푸터 모드'
+      description: '간단한 푸터 모드 (레거시 지원)'
     },
     initialSidebarCollapsed: {
       control: 'boolean',
@@ -219,10 +222,59 @@ const SettingsContent = () => (
 /**
  * ## 기본 AppLayout
  * 기본 설정의 AppLayout으로 대시보드 콘텐츠를 표시합니다.
+ * 
+ * - AppBar, Sidebar, BottomNav가 모두 활성화된 상태
  */
 export const Default: Story = {
   args: {
-    children: <DashboardContent />
+    children: <DashboardContent />,
+    showAppBar: true,
+    showSidebar: true,
+    showBottomNav: true,
+    showFooter: false,
+    appBarProps: {
+      title: "카지노 게임",
+      leftContent: "menu",
+      rightContent: "notification"
+    }
+  }
+};
+
+/**
+ * ## 게임 화면 레이아웃
+ * 게임 화면에 최적화된 레이아웃입니다.
+ * 
+ * - 게임 변형 AppBar 사용
+ * - 사이드바 없음
+ * - 전체 컨테이너 사용
+ */
+export const GameScreen: Story = {
+  args: {
+    children: (
+      <div style={{ 
+        background: 'linear-gradient(135deg, #0f172a, #1e293b)',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '2rem',
+        fontWeight: 'bold',
+        color: 'white'
+      }}>
+        🎰 게임 화면
+      </div>
+    ),
+    showAppBar: true,
+    showSidebar: false,
+    showBottomNav: false,
+    containerSize: 'full',
+    noContentPadding: true,
+    appBarProps: {
+      title: "슬롯 게임",
+      leftContent: "back",
+      rightContent: "settings",
+      variant: "game"
+    }
   }
 };
 
@@ -232,31 +284,75 @@ export const Default: Story = {
  */
 export const SettingsPage: Story = {
   args: {
-    children: <SettingsContent />
+    children: <SettingsContent />,
+    showAppBar: true,
+    showSidebar: true,
+    showBottomNav: true,
+    appBarProps: {
+      title: "설정",
+      leftContent: "menu",
+      rightContent: "none"
+    }
   }
 };
 
 /**
- * ## 빈 페이지
- * 최소한의 콘텐츠만 있는 AppLayout입니다.
+ * ## 모바일 전용 보기
+ * 모바일 환경에 최적화된 레이아웃입니다.
+ * 
+ * - 사이드바 없음
+ * - 바텀 네비게이션 사용
  */
-export const EmptyPage: Story = {
+export const MobileView: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile'
+    }
+  },
+  args: {
+    children: <DashboardContent />,
+    showAppBar: true,
+    showSidebar: false,
+    showBottomNav: true,
+    appBarProps: {
+      title: "홈",
+      centerContent: "logo",
+      rightContent: "profile"
+    }
+  }
+};
+
+/**
+ * ## 투명 앱바 
+ * 배경이 있는 페이지에 적합한 투명 앱바 레이아웃입니다.
+ */
+export const TransparentHeader: Story = {
   args: {
     children: (
       <div style={{ 
-        padding: '4rem 2rem',
-        textAlign: 'center',
-        color: 'var(--color-slate-400, #94a3b8)'
+        height: '100%',
+        background: 'linear-gradient(135deg, #4f46e5, #9333ea)',
+        padding: '2rem',
+        color: 'white'
       }}>
-        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎮</div>
-        <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.5rem', fontWeight: '600' }}>
-          페이지가 비어있습니다
-        </h2>
-        <p style={{ margin: '0', fontSize: '1rem' }}>
-          여기에 콘텐츠를 추가해보세요.
+        <h1 style={{ margin: '0 0 1rem 0', fontSize: '2rem', fontWeight: '700' }}>
+          ✨ 투명 앱바 예시
+        </h1>
+        <p>
+          배경 이미지나 그라데이션 위에 콘텐츠를 표시할 때 적합합니다.
         </p>
       </div>
-    )
+    ),
+    containerSize: 'full',
+    noContentPadding: true,
+    showSidebar: false,
+    appBarProps: {
+      title: "투명 앱바",
+      variant: "transparent",
+      leftContent: "back",
+      hasShadow: false,
+      hasBorder: false
+    }
   }
 };
 
@@ -292,6 +388,10 @@ export const LongContent: Story = {
           </div>
         ))}
       </div>
-    )
+    ),
+    appBarProps: {
+      title: "긴 콘텐츠",
+      leftContent: "menu"
+    }
   }
 };

@@ -14,6 +14,7 @@ export interface SidebarItem {
   onClick?: () => void;
   badge?: string;
   active?: boolean;
+  disabled?: boolean;
 }
 
 export interface SidebarProps {
@@ -35,6 +36,10 @@ export interface SidebarProps {
   className?: string;
   /** 자식 요소 (커스텀 컨텐츠) */
   children?: React.ReactNode;
+  /** 메뉴 항목 클릭 핸들러 */
+  onItemClick?: (item: SidebarItem) => void;
+  /** 로딩 상태 */
+  isLoading?: boolean;
 }
 
 const defaultItems: SidebarItem[] = [
