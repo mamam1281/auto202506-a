@@ -3,17 +3,14 @@ import type { Preview } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import React from 'react';
 import { AppProvider } from '../contexts/AppContext';
-import { SidebarProvider } from '../components/ui/layout/Sidebar';
 
 const preview: Preview = {
   decorators: [
     (Story) => (
       <AppProvider>
-        <SidebarProvider defaultOpen={true}>
-          <div className="h-screen flex flex-col">
-            <Story />
-          </div>
-        </SidebarProvider>
+        <div className="h-screen flex flex-col">
+          <Story />
+        </div>
       </AppProvider>
     ),
   ],

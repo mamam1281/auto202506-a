@@ -1,208 +1,167 @@
 'use client';
 
-import { memo, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Menu, X, Coins, User, Settings, Search, Bell } from 'lucide-react';
-import { Container } from './Container';
+import React from 'react';
+import { Menu, X, Search, Bell, User } from 'lucide-react';
 import Button from '../basic/Button';
-import Badge from '../basic/Badge';
-import { useAuth, useLayout, useNotifications } from '../../../contexts/AppContext';
-import { buttonVariants, cardVariants } from '../../../lib/animations';
+import { TokenBalanceWidget } from '../game/shared/TokenBalanceWidget';
+import { cn } from '../utils/utils';
+import styles from './Header.module.css';
 
-interface HeaderProps {
+export interface HeaderProps {
+  /** 왼쪽 네비게이션 토글 핸들러 */
+  onMenuToggle?: () => void;
+  /** 메뉴가 열린 상태인지 */
+  isMenuOpen?: boolean;
+  /** 브랜드명 */
+  brandName?: string;
+  /** 검색 기능 활성화 여부 */
+  showSearch?: boolean;
+  /** 알림 기능 활성화 여부 */
+  showNotifications?: boolean;
+  /** 사용자 메뉴 활성화 여부 */
+  showUserMenu?: boolean;
+  /** 토큰 잔액 위젯 표시 여부 */
+  showTokenBalance?: boolean;
+  /** 추가 CSS 클래스 */
   className?: string;
+  /** 자식 요소 (커스텀 컨텐츠) */
+  children?: React.ReactNode;
 }
 
-const TokenBalance = memo(() => {
-  const { user } = useAuth();
-  
-  if (!user) return null;
+/**
+ * # Header 컴포넌트
+ * 
+ * Figma 003 게임 플랫폼 레이아웃 시스템 기준으로 제작된 헤더 컴포넌트입니다.
+ * 토큰 잔액 위젯과 함께 통합적인 헤더 경험을 제공합니다.
+ * 
+ * ## 특징
+ * - **반응형 디자인**: 모바일/데스크톱 최적화
+ * - **토큰 잔액**: TokenBalanceWidget 통합
+ * - **네비게이션**: 햄버거 메뉴와 사이드바 연동
+ * - **게임 브랜딩**: 네온 퍼플 디자인 시스템
+ * - **검색/알림**: 선택적 기능 활성화
+ * 
+ * @example
+ * ```tsx
+ * <Header 
+ *   onMenuToggle={toggleSidebar}
+ *   isMenuOpen={sidebarOpen}
+ *   brandName="GamePlatform"
+ *   showTokenBalance={true}
+ *   showSearch={true}
+ * />
+ * ```
+ */
+export function Header({
+  onMenuToggle,
+  isMenuOpen = false,
+  brandName = "GamePlatform",
+  showSearch = true,
+  showNotifications = true,
+  showUserMenu = true,
+  showTokenBalance = true,
+  className,
+  children
+}: HeaderProps) {
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   return (
-    <motion.div 
-      className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-[var(--neon-purple-4)] to-[var(--neon-purple-2)] text-white"
-      variants={cardVariants}
-      initial="initial"
-      animate="animate"
-      whileHover="hover"
-    >
-      <Coins className="h-4 w-4" />
-      <span className="font-medium text-sm">
-        {user.tokenBalance.toLocaleString()}
-      </span>
-    </motion.div>
-  );
-});
-
-TokenBalance.displayName = 'TokenBalance';
-
-const NotificationBell = memo(() => {
-  const { notifications } = useNotifications();
-  const unreadCount = notifications.filter(n => !n.read).length;
-
-  return (
-    <motion.div
-      variants={buttonVariants}
-      whileHover="hover"
-      whileTap="tap"
-      className="relative"
-    >
-      <Button variant="ghost" size="sm" className="p-2 relative">
-        <Bell className="h-4 w-4" />
-        {unreadCount > 0 && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute -top-1 -right-1"
+    <header className={cn(styles.header, className)}>
+      <div className={styles.container}>
+        {/* 왼쪽: 메뉴 토글 + 브랜드 */}
+        <div className={styles.left}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onMenuToggle}
+            className={cn(styles.menuButton, isMenuOpen && styles.menuButtonActive)}
+            aria-label={isMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
           >
-            <Badge 
-              variant="destructive" 
-              className="h-5 w-5 flex items-center justify-center p-0 text-xs bg-[var(--game-error)]"
-            >
-              {unreadCount > 9 ? '9+' : unreadCount}
-            </Badge>
-          </motion.div>
-        )}
-      </Button>
-    </motion.div>
-  );
-});
-
-NotificationBell.displayName = 'NotificationBell';
-
-export const Header = memo(({ className }: HeaderProps) => {
-  const { isAuthenticated, user } = useAuth();
-  const { sidebarOpen, toggleSidebar } = useLayout();
-
-  const handleMenuToggle = useCallback(() => {
-    toggleSidebar();
-  }, [toggleSidebar]);
-
-  return (
-    <motion.header 
-      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
-    >
-      <Container>
-        <div className="flex h-16 items-center justify-between">
-          {/* 왼쪽: 로고 & 햄버거 메뉴 */}
-          <div className="flex items-center gap-4">
-            <motion.div
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="md:hidden"
-                onClick={handleMenuToggle}
-                aria-label="메뉴 토글"
-              >
-                <motion.div
-                  animate={{ rotate: sidebarOpen ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {sidebarOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
-                </motion.div>
-              </Button>
-            </motion.div>
-            
-            <motion.div 
-              className="flex items-center gap-2"
-              variants={cardVariants}
-              initial="initial"
-              animate="animate"
-              whileHover="hover"
-            >
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[var(--neon-purple-3)] to-[var(--neon-purple-1)] flex items-center justify-center">
-                <span className="text-white font-bold text-sm">G</span>
-              </div>
-              <span className="font-bold text-lg hidden sm:block">GamePlatform</span>
-            </motion.div>
-          </div>
-
-          {/* 중앙: 검색 (데스크톱) */}
-          <motion.div 
-            className="hidden md:flex flex-1 max-w-md mx-8"
-            variants={cardVariants}
-            initial="initial"
-            animate="animate"
-          >
-            <div className="relative w-full">
-              <input
-                type="search"
-                placeholder="게임 검색..."
-                className="w-full px-4 py-2 pr-10 rounded-lg border bg-background/50 focus:outline-none focus:ring-2 focus:ring-[var(--neon-purple-3)] transition-all duration-200"
-              />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            {isMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </Button>
+          
+          <div className={styles.brand}>
+            <div className={styles.brandIcon}>
+              <span className={styles.brandIconText}>G</span>
             </div>
-          </motion.div>
-
-          {/* 오른쪽: 토큰 잔액 & 사용자 메뉴 */}
-          <div className="flex items-center gap-3">
-            {isAuthenticated && <TokenBalance />}
-
-            {/* 사용자 메뉴 */}
-            <div className="flex items-center gap-2">
-              {isAuthenticated && <NotificationBell />}
-              
-              <motion.div
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                <Button variant="ghost" size="sm" className="p-2">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </motion.div>
-              
-              <motion.div
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                <Button variant="ghost" size="sm" className="p-2">
-                  {isAuthenticated && user?.avatar ? (
-                    <div className="h-6 w-6 rounded-full bg-gradient-to-br from-[var(--neon-purple-3)] to-[var(--neon-purple-1)] flex items-center justify-center">
-                      <span className="text-white text-xs font-medium">
-                        {user.username.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                  ) : (
-                    <User className="h-4 w-4" />
-                  )}
-                </Button>
-              </motion.div>
-            </div>
+            <span className={styles.brandName}>{brandName}</span>
           </div>
         </div>
 
-        {/* 모바일 검색 */}
-        <motion.div 
-          className="md:hidden pb-4"
-          variants={cardVariants}
-          initial="initial"
-          animate="animate"
-        >
-          <div className="relative">
-            <input
-              type="search"
-              placeholder="게임 검색..."
-              className="w-full px-4 py-2 pr-10 rounded-lg border bg-background/50 focus:outline-none focus:ring-2 focus:ring-[var(--neon-purple-3)] transition-all duration-200"
-            />
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        {/* 중앙: 검색 (데스크톱) */}
+        {showSearch && (
+          <div className={styles.searchContainer}>
+            <div className={styles.searchWrapper}>
+              <Search className="h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="게임 검색..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={styles.searchInput}
+              />
+            </div>
           </div>
-        </motion.div>
-      </Container>
-    </motion.header>
-  );
-});
+        )}
 
-Header.displayName = 'Header';
+        {/* 오른쪽: 토큰 잔액 + 알림 + 사용자 메뉴 */}
+        <div className={styles.right}>          {/* 토큰 잔액 위젯 */}
+          {showTokenBalance && (
+            <div className={styles.tokenBalance}>
+              <TokenBalanceWidget amount={1000} />
+            </div>
+          )}
+
+          {/* 알림 버튼 */}
+          {showNotifications && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className={styles.iconButton}
+              aria-label="알림"
+            >
+              <Bell className="h-5 w-5" />
+            </Button>
+          )}
+
+          {/* 사용자 메뉴 */}
+          {showUserMenu && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className={styles.iconButton}
+              aria-label="사용자 메뉴"
+            >
+              <User className="h-5 w-5" />
+            </Button>
+          )}
+
+          {/* 커스텀 컨텐츠 */}
+          {children}
+        </div>
+      </div>
+
+      {/* 모바일 검색 (토글) */}
+      {showSearch && (
+        <div className={styles.mobileSearch}>
+          <div className={styles.searchWrapper}>
+            <Search className="h-4 w-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="게임 검색..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.searchInput}
+            />
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+export default Header;

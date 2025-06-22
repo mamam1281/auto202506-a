@@ -1,164 +1,93 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { motion, AnimatePresence, Variant, Variants } from 'framer-motion';
+import React from 'react';
 import { cn } from '../utils/utils';
+import styles from './Container.module.css';
 
-export type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
-export type ContainerVariant = 'default' | 'dark' | 'glass' | 'card' | 'gradient';
-export type AnimationPreset = 'fade' | 'slide' | 'zoom' | 'bounce' | 'none';
+export type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
-interface ContainerProps {
-  /** 자식 요소 */
-  children: ReactNode;
-  
-  /** 추가 CSS 클래스 */
-  className?: string;
-  
+export interface ContainerProps {
   /** 컨테이너 크기 */
   size?: ContainerSize;
-  
-  /** 패딩 적용 여부 */
-  padding?: boolean | 'sm' | 'md' | 'lg';
-  
-  /** 가운데 정렬 여부 */
-  centered?: boolean;
-  
-  /** 애니메이션 적용 여부 */
-  animate?: boolean;
-  
-  /** 애니메이션 프리셋 */
-  animationPreset?: AnimationPreset;
-  
-  /** 배경 스타일 */
-  variant?: ContainerVariant;
-  
-  /** 반응형 클래스 */
-  responsive?: boolean;
-  
-  /** 레이아웃 ID (AnimatePresence용) */
-  layoutId?: string;
+  /** 패딩 제거 */
+  noPadding?: boolean;
+  /** 중앙 정렬 */
+  center?: boolean;
+  /** 최대 너비 제한 해제 */
+  fluid?: boolean;
+  /** 추가 CSS 클래스 */
+  className?: string;
+  /** 인라인 스타일 */
+  style?: React.CSSProperties;
+  /** 자식 요소 */
+  children: React.ReactNode;
+  /** HTML 태그 타입 */
+  as?: React.ElementType;
 }
 
 /**
- * 반응형 컨테이너 컴포넌트
- * 피그마_003게임 플랫폼 레이아웃 시스템 참조 구현
+ * # Container 컴포넌트
+ * 
+ * Figma 003 게임 플랫폼 레이아웃 시스템 기준으로 제작된 반응형 컨테이너 컴포넌트입니다.
+ * 다양한 크기 옵션과 패딩 제어 기능을 제공합니다.
+ * 
+ * ## 특징
+ * - **반응형 크기**: sm, md, lg, xl, full 크기 옵션
+ * - **패딩 제어**: noPadding으로 패딩 제거 가능
+ * - **중앙 정렬**: center 옵션으로 자동 중앙 정렬
+ * - **유동 너비**: fluid 옵션으로 최대 너비 제한 해제
+ * - **태그 선택**: as 속성으로 HTML 태그 변경 가능
+ * 
+ * ## 크기별 최대 너비
+ * - **sm**: 640px
+ * - **md**: 768px  
+ * - **lg**: 1024px
+ * - **xl**: 1280px
+ * - **full**: 100% (제한 없음)
+ * 
+ * @example
+ * ```tsx
+ * // 기본 컨테이너
+ * <Container size="lg">
+ *   <h1>게임 목록</h1>
+ * </Container>
+ * 
+ * // 패딩 없는 전체 너비 컨테이너
+ * <Container size="full" noPadding>
+ *   <GameGrid />
+ * </Container>
+ * 
+ * // 섹션 태그로 사용
+ * <Container as="section" size="md" center>
+ *   <About />
+ * </Container>
+ * ```
  */
-export function Container({ 
-  children, 
-  className, 
+export function Container({
   size = 'lg',
-  padding = true,
-  centered = false,
-  animate = false,
-  animationPreset = 'fade',
-  variant = 'default',
-  responsive = true,
-  layoutId
-}: ContainerProps) {  // 크기별 클래스 맵핑 (실제 디바이스 크기 기준)
-  const sizeClasses = {
-    sm: 'max-w-sm',           // 384px (모바일)
-    md: 'max-w-screen-md',    // 768px (태블릿)
-    lg: 'max-w-screen-lg',    // 1024px (작은 데스크톱)
-    xl: 'max-w-screen-xl',    // 1280px (데스크톱)
-    '2xl': 'max-w-screen-2xl', // 1536px (큰 데스크톱)
-    full: 'max-w-full'
-  };
-    // 패딩 클래스 (실제 웹사이트 표준)
-  const paddingClasses: Record<string, string> = {
-    'true': 'px-4 md:px-6 lg:px-8',  // 모바일 16px, 태블릿 24px, 데스크톱 32px
-    'sm': 'px-2 md:px-3',            // 작은 패딩
-    'md': 'px-4 md:px-6',            // 중간 패딩
-    'lg': 'px-6 md:px-8 lg:px-12',   // 큰 패딩
-    'false': ''
-  };
-  
-  // 배경 스타일 클래스
-  const variantClasses = {
-    default: '',
-    dark: 'bg-slate-900 text-slate-50 shadow-lg',
-    glass: 'bg-background/60 backdrop-blur-md border border-slate-200/10',
-    card: 'bg-background shadow-xl rounded-xl border border-slate-200/10',
-    gradient: 'bg-gradient-to-br from-slate-900 via-[var(--neon-purple-1)] to-slate-900'
-  };  // 애니메이션 프리셋 variants
-  const fadeVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0, transition: { duration: 0.2 } }
-  };
-  
-  const slideVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-    exit: { opacity: 0, y: -20, transition: { duration: 0.3 } }
-  };
-  
-  const zoomVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } }
-  };
-  
-  const bounceVariants: Variants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } },
-    exit: { opacity: 0, y: 50, transition: { type: 'spring', stiffness: 300, damping: 20 } }
-  };
-  
-  // 현재 선택된 애니메이션 프리셋 가져오기
-  const getAnimationVariant = (): Variants => {
-    switch(animationPreset) {
-      case 'fade': return fadeVariants;
-      case 'slide': return slideVariants;
-      case 'zoom': return zoomVariants;
-      case 'bounce': return bounceVariants;
-      default: return fadeVariants;
-    }
-  };
-  // 선택된 variants
-  const selectedVariants = animate ? getAnimationVariant() : undefined;
-    // 패딩 클래스 결정
-  const paddingClass = typeof padding === 'boolean' 
-    ? (padding ? paddingClasses.true : paddingClasses.false)
-    : paddingClasses[padding] || paddingClasses.true;
-
-  // 공통 클래스
-  const containerClass = cn(
-    'mx-auto w-full',
-    sizeClasses[size],
-    paddingClass,
-    centered && 'flex flex-col items-center',
-    variantClasses[variant],
-    responsive && 'transition-all duration-300',
-    className
-  );  // 반응형 Wrapper - 타입 안전성을 위해 조건부 렌더링
-  const renderContainer = () => {
-    if (animate) {
-      return (
-        <motion.div
-          className={containerClass}
-          layoutId={layoutId}
-          variants={selectedVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-        >
-          {children}
-        </motion.div>
-      );
-    } else {
-      return (
-        <div className={containerClass}>
-          {children}
-        </div>
-      );
-    }
-  };
-
-  // AnimatePresence로 감싸서 exit 애니메이션 활성화
-  return animate && layoutId ? (
-    <AnimatePresence mode="wait">
-      {renderContainer()}
-    </AnimatePresence>
-  ) : renderContainer();
+  noPadding = false,
+  center = true,
+  fluid = false,
+  className,
+  style,
+  children,
+  as: Component = 'div'
+}: ContainerProps) {
+  return (
+    <Component 
+      className={cn(
+        styles.container,
+        styles[`container${size.charAt(0).toUpperCase() + size.slice(1)}`],
+        noPadding && styles.containerNoPadding,
+        center && styles.containerCenter,
+        fluid && styles.containerFluid,
+        className
+      )}
+      style={style}
+    >
+      {children}
+    </Component>
+  );
 }
+
+export default Container;

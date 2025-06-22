@@ -1,72 +1,52 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Sidebar, SidebarProvider } from './Sidebar';
+import { Sidebar } from './Sidebar';
 
-const meta: Meta<typeof Sidebar> = {
-  title: 'UI/Layout/Sidebar',
+const meta = {
+  title: 'Layout/Sidebar',
   component: Sidebar,
   parameters: {
-    layout: 'fullscreen',
-    docs: {
-      description: {
-        component: '앱 네비게이션을 위한 사이드바 컴포넌트'
-      }
-    }
+    layout: 'fullscreen'
   },
   tags: ['autodocs'],
+  argTypes: {
+    isOpen: { control: 'boolean' },
+    isCollapsed: { control: 'boolean' },
+    onToggle: { action: 'toggle sidebar' },
+    onCollapseToggle: { action: 'collapse toggle' }
+  },
   decorators: [
     (Story) => (
-      <SidebarProvider defaultOpen={true}>
-        <div className="h-screen flex">
-          <Story />
-          <div className="flex-1 p-4 bg-slate-100 dark:bg-slate-900">
-            <h1 className="text-2xl font-bold">메인 컨텐츠 영역</h1>
-            <p className="mt-2">사이드바와 함께 사용되는 메인 컨텐츠 예시입니다.</p>
-          </div>
-        </div>
-      </SidebarProvider>
-    ),
+      <div style={{ 
+        minHeight: '100vh',
+        background: 'var(--color-slate-900, #0f172a)',
+        color: 'white'
+      }}>
+        <Story />
+      </div>
+    )
   ],
-  argTypes: {
-    className: {
-      control: 'text',
-      description: '추가 CSS 클래스'
-    }
-  },
-};
+} satisfies Meta<typeof Sidebar>;
 
 export default meta;
-type Story = StoryObj<typeof Sidebar>;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-  parameters: {
-    docs: {
-      description: {
-        story: '기본 사이드바 컴포넌트'
-      }
-    }
+export const Open: Story = {
+  args: {
+    isOpen: true,
+    isCollapsed: false,
   }
 };
 
-export const WithCustomContent: Story = {
-  render: () => (
-    <Sidebar>
-      <div className="p-4">
-        <h2 className="text-xl font-bold">커스텀 사이드바</h2>
-        <p className="mt-2 text-sm">사이드바에 커스텀 컨텐츠를 추가할 수 있습니다.</p>
-        <div className="mt-4 space-y-2">
-          <div className="p-2 bg-primary/10 rounded-md">메뉴 항목 1</div>
-          <div className="p-2 bg-primary/10 rounded-md">메뉴 항목 2</div>
-          <div className="p-2 bg-primary/10 rounded-md">메뉴 항목 3</div>
-        </div>
-      </div>
-    </Sidebar>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: '커스텀 컨텐츠가 포함된 사이드바'
-      }
-    }
+export const Collapsed: Story = {
+  args: {
+    isOpen: true,
+    isCollapsed: true,
+  }
+};
+
+export const Closed: Story = {
+  args: {
+    isOpen: false,
+    isCollapsed: false,
   }
 };

@@ -1,0 +1,198 @@
+/* Header.module.css - Figma 003 게임 플랫폼 레이아웃 시스템 */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  background: var(--color-slate-900);
+  border-bottom: 1px solid var(--color-slate-700);
+  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.menuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md, 6px);
+  color: var(--color-slate-400);
+  transition: all var(--transition-fast, 0.15s) ease;
+}
+
+.menuButton:hover {
+  color: white;
+  background: var(--color-slate-800);
+}
+
+.menuButtonActive {
+  color: var(--neon-purple-3);
+  background: var(--color-slate-800);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brandIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--neon-gradient-1);
+  border-radius: var(--radius-md, 6px);
+}
+
+.brandIconText {
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.brandName {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: white;
+}
+
+/* 검색 영역 */
+.searchContainer {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 2rem;
+}
+
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1rem;
+  height: 40px;
+  background: var(--color-slate-800);
+  border: 1px solid var(--color-slate-700);
+  border-radius: var(--radius-lg, 8px);
+  transition: all var(--transition-fast, 0.15s) ease;
+}
+
+.searchWrapper:focus-within {
+  border-color: var(--neon-purple-3);
+  box-shadow: 0 0 0 1px var(--neon-purple-3);
+}
+
+.searchInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 0.875rem;
+}
+
+.searchInput::placeholder {
+  color: var(--color-slate-400);
+}
+
+/* 오른쪽 영역 */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tokenBalance {
+  margin-right: 0.5rem;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md, 6px);
+  color: var(--color-slate-400);
+  transition: all var(--transition-fast, 0.15s) ease;
+}
+
+.iconButton:hover {
+  color: white;
+  background: var(--color-slate-800);
+}
+
+/* 모바일 검색 */
+.mobileSearch {
+  display: none;
+  padding: 0 1rem 1rem;
+  background: var(--color-slate-900);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .searchContainer {
+    display: none;
+  }
+
+  .mobileSearch {
+    display: block;
+  }
+
+  .brandName {
+    display: none;
+  }
+
+  .tokenBalance {
+    margin-right: 0;
+  }
+
+  .right {
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    height: 56px;
+    padding: 0 0.75rem;
+  }
+
+  .menuButton,
+  .iconButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .brandIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .brandIconText {
+    font-size: 0.75rem;
+  }
+}

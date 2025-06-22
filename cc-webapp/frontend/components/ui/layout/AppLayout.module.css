@@ -1,0 +1,92 @@
+/* AppLayout.module.css - Figma 003 게임 플랫폼 레이아웃 시스템 */
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--color-slate-900);
+  color: white;
+}
+
+.layoutFixed {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.layoutWithSidebar .body {
+  /* 사이드바가 있는 경우의 스타일 */
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem 0;
+  background: var(--color-slate-900);
+}
+
+.mainNoPadding {
+  padding: 0;
+}
+
+/* 데스크톱에서 사이드바와 함께 사용될 때 */
+@media (min-width: 768px) {
+  .layoutWithSidebar .main {
+    margin-left: 280px; /* 사이드바 너비 */
+    transition: margin-left var(--transition-default, 0.3s) ease;
+  }
+
+  .layoutSidebarCollapsed .main {
+    margin-left: 80px; /* 축소된 사이드바 너비 */
+  }
+}
+
+/* 모바일에서는 사이드바가 오버레이로 동작 */
+@media (max-width: 767px) {
+  .layoutWithSidebar .main {
+    margin-left: 0;
+  }
+
+  .main {
+    padding: 1rem 0;
+  }
+}
+
+/* 고정 레이아웃에서 스크롤 영역 조정 */
+.layoutFixed .main {
+  height: calc(100vh - 64px); /* 헤더 높이 제외 */
+  overflow-y: auto;
+}
+
+/* 컨텐츠 영역 최적화 */
+.main > * {
+  width: 100%;
+}
+
+/* 접근성 및 포커스 관리 */
+.main:focus {
+  outline: none;
+}
+
+/* 스크롤바 스타일링 (WebKit 기반 브라우저) */
+.main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main::-webkit-scrollbar-track {
+  background: var(--color-slate-800);
+}
+
+.main::-webkit-scrollbar-thumb {
+  background: var(--color-slate-600);
+  border-radius: 4px;
+}
+
+.main::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-500);
+}

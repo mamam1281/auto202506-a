@@ -1,82 +1,166 @@
-import { Container } from "./Container";
-import Separator from "../basic/Separator";
+'use client';
 
-export function Footer() {
-  const currentYear = new Date().getFullYear();
+import React from 'react';
+import { cn } from '../utils/utils';
+import styles from './Footer.module.css';
 
-  const footerLinks = {
-    게임: ["인기 게임", "신규 게임", "장르별", "랭킹"],
-    커뮤니티: ["공지사항", "이벤트", "가이드", "FAQ"],
-    계정: ["내 프로필", "게임 기록", "결제 내역", "설정"],
-    지원: ["고객 센터", "문의하기", "버그 신고", "제안하기"],
-  };  return (
-    <footer className="border-t bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/30">
-      <Container size="xl">
-        <div className="py-12">
-          {/* 메인 푸터 컨텐츠 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            {Object.entries(footerLinks).map(
-              ([category, links]) => (
-                <div key={category}>
-                  <h3 className="font-medium mb-4 text-[var(--neon-purple-2)]">
-                    {category}
-                  </h3>
-                  <ul className="space-y-2">
-                    {links.map((link) => (
-                      <li key={link}>
-                        <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                          {link}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ),
-            )}
-          </div>
+export interface FooterProps {
+  /** 저작권 년도 */
+  year?: number;
+  /** 회사/브랜드명 */
+  brandName?: string;
+  /** 푸터 링크들 */
+  links?: FooterLink[];
+  /** 소셜 미디어 링크들 */
+  socialLinks?: SocialLink[];
+  /** 간단한 푸터 모드 (저작권만 표시) */
+  simple?: boolean;
+  /** 추가 CSS 클래스 */
+  className?: string;
+  /** 자식 요소 (커스텀 컨텐츠) */
+  children?: React.ReactNode;
+}
 
-          <Separator className="mb-8" />
+export interface FooterLink {
+  id: string;
+  label: string;
+  href: string;
+  external?: boolean;
+}
 
-          {/* 하단 정보 */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded bg-gradient-to-br from-[var(--neon-purple-3)] to-[var(--neon-purple-1)] flex items-center justify-center">
-                <span className="text-white font-bold text-xs">
-                  G
-                </span>
-              </div>
-              <span className="font-medium">GamePlatform</span>
+export interface SocialLink {
+  id: string;
+  platform: string;
+  href: string;
+  icon: React.ComponentType<any>;
+}
+
+const defaultLinks: FooterLink[] = [
+  { id: 'privacy', label: '개인정보처리방침', href: '/privacy' },
+  { id: 'terms', label: '이용약관', href: '/terms' },
+  { id: 'support', label: '고객지원', href: '/support' },
+];
+
+/**
+ * # Footer 컴포넌트
+ * 
+ * Figma 003 게임 플랫폼 레이아웃 시스템 기준으로 제작된 푸터 컴포넌트입니다.
+ * 간단한 저작권 표시부터 상세한 링크 메뉴까지 지원합니다.
+ * 
+ * ## 특징
+ * - **간단한 모드**: 저작권만 표시하는 미니멀 디자인
+ * - **상세 모드**: 링크, 소셜 미디어 등 포함
+ * - **반응형 디자인**: 모바일/데스크톱 최적화
+ * - **게임 브랜딩**: 네온 퍼플 디자인 시스템
+ * - **접근성**: 키보드 네비게이션 지원
+ * 
+ * @example
+ * ```tsx
+ * // 간단한 푸터
+ * <Footer simple brandName="GamePlatform" />
+ * 
+ * // 상세한 푸터
+ * <Footer 
+ *   brandName="GamePlatform"
+ *   links={footerLinks}
+ *   socialLinks={socialLinks}
+ * />
+ * ```
+ */
+export function Footer({
+  year = new Date().getFullYear(),
+  brandName = "GamePlatform",
+  links = defaultLinks,
+  socialLinks = [],
+  simple = false,
+  className,
+  children
+}: FooterProps) {
+  if (simple) {
+    return (
+      <footer className={cn(styles.footer, styles.footerSimple, className)}>
+        <div className={styles.container}>
+          <div className={styles.copyright}>
+            <div className={styles.brandIcon}>
+              <span className={styles.brandIconText}>G</span>
             </div>
-
-            <div className="flex flex-col md:flex-row items-center gap-4 text-sm text-muted-foreground">
-              <span>
-                © {currentYear} GamePlatform. All rights
-                reserved.
-              </span>
-              <div className="flex gap-4">
-                <a
-                  href="#"
-                  className="hover:text-foreground transition-colors"
-                >
-                  개인정보처리방침
-                </a>
-                <a
-                  href="#"
-                  className="hover:text-foreground transition-colors"
-                >
-                  이용약관
-                </a>
-                <a
-                  href="#"
-                  className="hover:text-foreground transition-colors"
-                >
-                  쿠키 정책
-                </a>
-              </div>
-            </div>
+            <span>
+              © {year} {brandName}. All rights reserved.
+            </span>
           </div>
+          {children}
         </div>
-      </Container>
+      </footer>
+    );
+  }
+
+  return (
+    <footer className={cn(styles.footer, className)}>
+      <div className={styles.container}>
+        {/* 상단: 브랜드 + 링크들 */}
+        <div className={styles.content}>
+          {/* 브랜드 영역 */}
+          <div className={styles.brand}>
+            <div className={styles.brandIcon}>
+              <span className={styles.brandIconText}>G</span>
+            </div>
+            <span className={styles.brandName}>{brandName}</span>
+          </div>
+
+          {/* 링크 영역 */}
+          {links.length > 0 && (
+            <nav className={styles.nav}>
+              <ul className={styles.linkList}>
+                {links.map((link) => (
+                  <li key={link.id}>
+                    <a
+                      href={link.href}
+                      className={styles.link}
+                      target={link.external ? '_blank' : undefined}
+                      rel={link.external ? 'noopener noreferrer' : undefined}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
+          {/* 소셜 링크 */}
+          {socialLinks.length > 0 && (
+            <div className={styles.social}>
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.id}
+                    href={social.href}
+                    className={styles.socialLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.platform}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* 하단: 저작권 + 커스텀 컨텐츠 */}
+        <div className={styles.bottom}>
+          <div className={styles.copyright}>
+            <span>
+              © {year} {brandName}. All rights reserved.
+            </span>
+          </div>
+          {children}
+        </div>
+      </div>
     </footer>
   );
 }
+
+export default Footer;

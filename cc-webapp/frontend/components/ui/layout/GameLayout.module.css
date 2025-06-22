@@ -1,0 +1,324 @@
+/* GameLayout.module.css - Figma 003 게임 플랫폼 레이아웃 시스템 */
+
+.gameLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--color-slate-900);
+  color: white;
+  position: relative;
+}
+
+/* 게임 헤더 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-slate-700);
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md, 6px);
+  color: var(--color-slate-400);
+  transition: all var(--transition-fast, 0.15s) ease;
+}
+
+.backButton:hover {
+  color: white;
+  background: var(--color-slate-800);
+}
+
+.gameTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.headerCenter {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 300px;
+  margin: 0 1rem;
+}
+
+.tokenBalance {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--neon-gradient-1);
+  border-radius: var(--radius-full, 9999px);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.tokenText {
+  color: white;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.controlButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md, 6px);
+  color: var(--color-slate-400);
+  transition: all var(--transition-fast, 0.15s) ease;
+}
+
+.controlButton:hover {
+  color: white;
+  background: var(--color-slate-800);
+}
+
+/* 게임 컨텐츠 */
+.gameContent {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.gameMain {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 56px);
+  overflow: hidden;
+}
+
+.gameMainFullscreen {
+  height: 100vh;
+}
+
+/* 설정 패널 */
+.settingsPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 50;
+  width: 320px;
+  height: 100%;
+  background: var(--color-slate-800);
+  border-left: 1px solid var(--color-slate-700);
+  transform: translateX(0);
+  transition: transform var(--transition-default, 0.3s) ease;
+}
+
+.settingsPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1rem 1rem;
+  border-bottom: 1px solid var(--color-slate-700);
+}
+
+.settingsPanelTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.settingsCloseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md, 6px);
+  color: var(--color-slate-400);
+  transition: all var(--transition-fast, 0.15s) ease;
+}
+
+.settingsCloseButton:hover {
+  color: white;
+  background: var(--color-slate-700);
+}
+
+.settingsPanelContent {
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.settingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settingItem:last-child {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settingLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  margin: 0;
+}
+
+.settingSlider {
+  width: 100%;
+  height: 8px;
+  background: var(--color-slate-700);
+  border-radius: var(--radius-full, 9999px);
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.settingSlider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--neon-purple-3);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.settingSlider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--neon-purple-3);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.settingSelect {
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--color-slate-700);
+  border: 1px solid var(--color-slate-600);
+  border-radius: var(--radius-md, 6px);
+  color: white;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.settingSelect:focus {
+  border-color: var(--neon-purple-3);
+}
+
+.toggleContainer {
+  position: relative;
+  width: 44px;
+  height: 24px;
+}
+
+.toggleInput {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.toggleLabel {
+  display: block;
+  width: 44px;
+  height: 24px;
+  background: var(--color-slate-600);
+  border-radius: var(--radius-full, 9999px);
+  cursor: pointer;
+  transition: background-color var(--transition-fast, 0.15s) ease;
+  position: relative;
+}
+
+.toggleLabel::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform var(--transition-fast, 0.15s) ease;
+}
+
+.toggleInput:checked + .toggleLabel {
+  background: var(--neon-purple-3);
+}
+
+.toggleInput:checked + .toggleLabel::before {
+  transform: translateX(20px);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .headerContent {
+    padding: 0 0.75rem;
+  }
+
+  .headerCenter {
+    margin: 0 0.5rem;
+    max-width: 200px;
+  }
+
+  .gameTitle {
+    font-size: 1rem;
+  }
+
+  .settingsPanel {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .gameMain {
+    height: calc(100vh - 56px);
+  }
+}
+
+@media (max-width: 480px) {
+  .headerContent {
+    height: 48px;
+  }
+
+  .headerCenter {
+    display: none; /* 모바일에서는 토큰 잔액 숨김 */
+  }
+
+  .gameMain {
+    height: calc(100vh - 48px);
+  }
+
+  .gameMainFullscreen {
+    height: 100vh;
+  }
+}
