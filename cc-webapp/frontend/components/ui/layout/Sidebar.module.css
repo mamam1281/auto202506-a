@@ -1,169 +1,306 @@
-.sidebarProvider {
-  display: flex;
-  min-height: 100vh;
-  background: var(--color-slate-900);
+/* Sidebar.module.css - Figma 003 게임 플랫폼 레이아웃 시스템 */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
 }
 
 .sidebar {
   position: fixed;
   top: 0;
-  bottom: 0;
-  z-index: 1000;
-  width: 280px;
-  background: var(--color-slate-800);
-  border-right: 1px solid var(--color-slate-700);
+  left: 0;
+  z-index: 50;
+  height: 100vh;
+  width: 240px; /* 더 좁게 */
+  background: rgba(15, 23, 42, 0.95); /* 반투명 배경 */
+  backdrop-filter: blur(12px); /* 블러 효과 강화 */
+  border-right: 1px solid rgba(71, 85, 105, 0.3); /* 투명한 테두리 */
+  transform: translateX(-100%);
+  transition: transform var(--transition-default, 0.3s) ease;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
 }
 
-.sidebar.left {
-  left: 0;
-}
-
-.sidebar.right {
-  right: 0;
-  border-right: none;
-  border-left: 1px solid var(--color-slate-700);
-}
-
-.sidebar.offcanvas {
-  transform: translateX(-100%);
-  transition: var(--transition-smooth);
-}
-
-.sidebar.offcanvas.right {
-  transform: translateX(100%);
-}
-
-.sidebar.offcanvas.open {
+.sidebarOpen {
   transform: translateX(0);
 }
 
-.sidebar.icon {
-  width: 64px;
+.sidebarCollapsed {
+  width: 70px; /* 접힌 상태도 더 좁게 */
 }
 
-.sidebar.icon .sidebarContent {
+/* 브랜드 영역 */
+.brand {
+  display: flex;
   align-items: center;
+  gap: 0.5rem; /* 간격 줄임 */
+  padding: 1rem; /* 패딩 줄임 */
+  border-bottom: 1px solid rgba(71, 85, 105, 0.2); /* 투명한 테두리 */
 }
 
-.sidebar.icon .sidebarContent > * {
+.brandIcon {
+  display: flex;
+  align-items: center;
   justify-content: center;
+  width: 28px; /* 모바일에서 작게 */
+  height: 28px;
+  background: var(--neon-gradient-1);
+  border-radius: var(--radius-md, 6px);
+  flex-shrink: 0;
 }
 
-.sidebarHeader {
-  padding: var(--padding-lg);
-  border-bottom: 1px solid var(--color-slate-700);
-  background: var(--color-slate-800);
-  backdrop-filter: blur(8px);
+.brandIconText {
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem; /* 모바일에서 작게 */
 }
 
-.sidebarContent {
+.brandName {
+  font-weight: 600;
+  font-size: 1rem; /* 모바일에서 작게 */
+  color: white;
+  opacity: 1;
+  transition: opacity var(--transition-fast, 0.15s) ease;
+}
+
+.brandName {
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: white;
+  opacity: 1;
+  transition: opacity var(--transition-fast, 0.15s) ease;
+}
+
+/* 네비게이션 */
+.nav {
   flex: 1;
+  padding: 1rem 0;
   overflow-y: auto;
-  padding: var(--padding-md);
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-slate-600) transparent;
 }
 
-.sidebarContent::-webkit-scrollbar {
-  width: 4px;
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.sidebarContent::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebarContent::-webkit-scrollbar-thumb {
-  background: var(--color-slate-600);
-  border-radius: 2px;
-}
-
-.sidebarContent::-webkit-scrollbar-thumb:hover {
-  background: var(--color-slate-500);
-}
-
-.sidebarFooter {
-  padding: var(--padding-lg);
-  border-top: 1px solid var(--color-slate-700);
-  background: var(--color-slate-800);
-}
-
-.sidebarTrigger {
-  display: inline-flex;
+.navItem {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: var(--padding-sm);
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
   border: none;
   background: transparent;
   color: var(--color-slate-400);
+  text-align: left;
+  border-radius: 0;
+  transition: all var(--transition-fast, 0.15s) ease;
   cursor: pointer;
-  border-radius: var(--radius-md);
-  transition: var(--transition-smooth);
+  position: relative;
 }
 
-.sidebarTrigger:hover {
-  background: var(--color-slate-700);
-  color: var(--color-slate-200);
+.navItem:hover {
+  color: white;
+  background: var(--color-slate-800);
 }
 
-.sidebarTrigger:focus-visible {
-  outline: 2px solid var(--color-neon-purple-primary);
-  outline-offset: 2px;
+.navItemActive {
+  color: var(--neon-purple-3);
+  background: rgba(91, 48, 246, 0.1);
 }
 
-.sidebarInset {
+.navItemActive::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--neon-purple-3);
+}
+
+.navIcon {
+  width: 18px; /* 모바일에서 작게 */
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.navLabel {
   flex: 1;
-  margin-left: 0;
-  transition: var(--transition-smooth);
-  min-height: 100vh;
-  background: var(--color-slate-900);
+  font-weight: 500;
+  font-size: 0.8rem; /* 모바일에서 작게 */
+  opacity: 1;
+  transition: opacity var(--transition-fast, 0.15s) ease;
 }
 
-.sidebarInset.sidebarOpen {
-  margin-left: 280px;
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    max-width: 320px;
+/* 태블릿 이상에서 크기 확대 */
+@media (min-width: 768px) {
+  .navIcon {
+    width: 20px;
+    height: 20px;
   }
   
-  .sidebar.icon {
-    width: 64px;
+  .navLabel {
+    font-size: 0.875rem;
+  }
+}
+
+.navBadge {
+  padding: 0.125rem 0.5rem;
+  background: var(--neon-purple-3);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-full, 9999px);
+  flex-shrink: 0;
+}
+
+/* 커스텀 컨텐츠 */
+.customContent {
+  padding: 1rem;
+  border-top: 1px solid var(--color-slate-700);
+}
+
+/* 축소/확장 토글 */
+.collapseToggle {
+  padding: 1rem;
+  border-top: 1px solid var(--color-slate-700);
+}
+
+.collapseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  border-radius: var(--radius-md, 6px);
+  color: var(--color-slate-400);
+  transition: all var(--transition-fast, 0.15s) ease;
+}
+
+.collapseButton:hover {
+  color: white;
+  background: var(--color-slate-800);
+}
+
+/* 사이드바 헤더 */
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.2);
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; /* 모바일에서 작게 */
+  height: 28px;
+  color: var(--color-slate-400);
+  transition: all var(--transition-fast, 0.15s) ease;
+  border-radius: var(--radius-md, 6px);
+}
+
+.closeButton:hover {
+  color: white;
+  background: rgba(71, 85, 105, 0.3);
+}
+
+.closeButton > svg,
+.closeButton > img {
+  width: 18px; /* 모바일에서 더 작게 */
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  max-width: 18px;
+  max-height: 18px;
+  display: block;
+}
+
+/* 태블릿 이상에서 크기 확대 */
+@media (min-width: 768px) {
+  .closeButton {
+    width: 32px;
+    height: 32px;
   }
   
-  .sidebarInset.sidebarOpen {
-    margin-left: 0;
+  .closeButton > svg,
+  .closeButton > img {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    max-width: 24px;
+    max-height: 24px;
   }
 }
 
-@media (max-width: 480px) {
+/* 축소 상태 스타일 */
+.sidebarCollapsed .brandName,
+.sidebarCollapsed .navLabel,
+.sidebarCollapsed .navBadge {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebarCollapsed .navItem {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.sidebarCollapsed .collapseButton {
+  justify-content: center;
+}
+
+/* 데스크톱 스타일 */
+@media (min-width: 768px) {
+  .overlay {
+    display: none;
+  }
+
   .sidebar {
-    max-width: 280px;
+    position: relative;
+    transform: translateX(0);
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .sidebarCollapsed {
+    width: 80px;
   }
 }
 
-/* 애니메이션 */
-.sidebar {
-  animation: var(--animation-fade-in) 0.3s var(--timing-ease-out);
+/* 모바일 최적화 */
+@media (max-width: 767px) {
+  .sidebar {
+    width: 280px;
+  }
+
+  .sidebarCollapsed {
+    width: 280px; /* 모바일에서는 축소 무시 */
+  }
+
+  .collapseToggle {
+    display: none; /* 모바일에서는 축소 버튼 숨김 */
+  }
 }
 
-.sidebar.offcanvas {
-  animation: var(--animation-slide-out-left) 0.3s var(--timing-ease-out);
+/* 접근성 개선 */
+.navItem:focus {
+  outline: 2px solid var(--neon-purple-3);
+  outline-offset: -2px;
 }
 
-.sidebar.offcanvas.right {
-  animation: var(--animation-slide-out-right) 0.3s var(--timing-ease-out);
-}
-
-.sidebar.offcanvas.open {
-  animation: var(--animation-slide-in-left) 0.3s var(--timing-ease-out);
-}
-
-.sidebar.offcanvas.right.open {
-  animation: var(--animation-slide-in-right) 0.3s var(--timing-ease-out);
+.collapseButton:focus {
+  outline: 2px solid var(--neon-purple-3);
+  outline-offset: -2px;
 }

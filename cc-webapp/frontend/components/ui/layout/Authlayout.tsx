@@ -1,101 +1,136 @@
-import { ReactNode } from "react";
-import { Container } from "./Container";
-import { cn } from "../utils/utils";
+'use client';
 
-interface AuthLayoutProps {
-  children: ReactNode;
+import React from 'react';
+import { Container } from './Container';
+import styles from './AuthLayout.module.css';
+
+// 간단한 클래스 이름 결합 함수
+const cn = (...classes: (string | undefined | false)[]): string => 
+  classes.filter(Boolean).join(' ');
+
+export interface AuthLayoutProps {
+  /** 자식 요소 (인증 폼) */
+  children: React.ReactNode;
+  /** 페이지 제목 */
   title?: string;
+  /** 페이지 부제목 */
   subtitle?: string;
+  /** 로고 표시 여부 */
   showLogo?: boolean;
+  /** 배경 유형 */
+  backgroundType?: 'gradient' | 'pattern' | 'solid';
+  /** 추가 CSS 클래스 */
   className?: string;
+  /** 추가 액션 (예: 소셜 로그인) */
+  additionalActions?: React.ReactNode;
 }
 
+/**
+ * # AuthLayout 컴포넌트
+ * 
+ * Figma 003 게임 플랫폼 레이아웃 시스템 기준으로 제작된 인증 전용 레이아웃입니다.
+ * 로그인, 회원가입, 비밀번호 재설정 등 인증 관련 페이지에 최적화되어 있습니다.
+ * 
+ * ## 특징
+ * - **중앙 정렬**: 인증 폼을 화면 중앙에 배치
+ * - **브랜딩**: 게임 플랫폼 로고와 제목 표시
+ * - **반응형**: 모바일/데스크톱 최적화
+ * - **배경 옵션**: 그라데이션, 패턴, 단색 배경 선택
+ * - **접근성**: 키보드 네비게이션 및 스크린 리더 지원
+ * 
+ * ## 레이아웃 구조
+ * ```
+ * ┌─────────────────────────────────┐
+ * │                                 │
+ * │         [로고]                   │
+ * │        제목/부제목                │
+ * │                                 │
+ * │    ┌─────────────────────┐      │
+ * │    │    인증 폼 영역       │      │
+ * │    │                     │      │
+ * │    └─────────────────────┘      │
+ * │                                 │
+ * │      추가 액션 영역               │
+ * └─────────────────────────────────┘
+ * ```
+ * 
+ * @example
+ * ```tsx
+ * // 로그인 페이지
+ * <AuthLayout 
+ *   title="로그인"
+ *   subtitle="게임 플랫폼에 오신 것을 환영합니다"
+ * >
+ *   <LoginForm />
+ * </AuthLayout>
+ * 
+ * // 회원가입 페이지
+ * <AuthLayout 
+ *   title="회원가입"
+ *   backgroundType="pattern"
+ *   additionalActions={<SocialLoginButtons />}
+ * >
+ *   <SignupForm />
+ * </AuthLayout>
+ * ```
+ */
 export function AuthLayout({
   children,
   title,
   subtitle,
   showLogo = true,
+  backgroundType = 'gradient',
   className,
+  additionalActions
 }: AuthLayoutProps) {
   return (
-    <div
-      className={cn(
-        "min-h-screen bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-primary)]",
-        "flex items-center justify-center p-4",
-        className,
-      )}
-    >
-      <Container size="sm" padding={false}>
-        <div className="w-full max-w-md mx-auto">
-          {/* 로고 및 헤더 */}
+    <div className={cn(
+      styles.authLayout,
+      styles[`background${backgroundType.charAt(0).toUpperCase() + backgroundType.slice(1)}`],
+      className
+    )}>
+      <Container size="sm" className={styles.container}>
+        <div className={styles.content}>
+          {/* 브랜딩 영역 */}
           {showLogo && (
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-3 mb-4">
-                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[var(--neon-purple-3)] to-[var(--neon-purple-1)] flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">
-                    G
-                  </span>
+            <div className={styles.branding}>
+              <div className={styles.logo}>
+                <div className={styles.logoIcon}>
+                  <span className={styles.logoIconText}>G</span>
                 </div>
-                <span className="text-2xl font-bold text-white">
-                  GamePlatform
-                </span>
+                <span className={styles.logoText}>GamePlatform</span>
               </div>
-
-              {title && (
-                <h1 className="text-xl font-medium text-white mb-2">
-                  {title}
-                </h1>
-              )}
-
-              {subtitle && (
-                <p className="text-sm text-gray-400">
-                  {subtitle}
-                </p>
+              
+              {(title || subtitle) && (
+                <div className={styles.headings}>
+                  {title && (
+                    <h1 className={styles.title}>{title}</h1>
+                  )}
+                  {subtitle && (
+                    <p className={styles.subtitle}>{subtitle}</p>
+                  )}
+                </div>
               )}
             </div>
           )}
 
-          {/* 인증 폼 카드 */}
-          <div className="bg-[var(--surface-glass)] backdrop-blur-sm rounded-2xl border border-[var(--surface-glass)] p-8 shadow-2xl">
-            {children}
-          </div>
-
-          {/* 푸터 링크 */}
-          <div className="text-center mt-8 space-y-4">
-            <div className="flex justify-center gap-6 text-sm text-gray-400">
-              <a
-                href="#"
-                className="hover:text-white transition-colors"
-              >
-                개인정보처리방침
-              </a>
-              <a
-                href="#"
-                className="hover:text-white transition-colors"
-              >
-                이용약관
-              </a>
-              <a
-                href="#"
-                className="hover:text-white transition-colors"
-              >
-                고객센터
-              </a>
+          {/* 인증 폼 영역 */}
+          <div className={styles.formContainer}>
+            <div className={styles.formCard}>
+              {children}
             </div>
-
-            <p className="text-xs text-gray-500">
-              © 2025 GamePlatform. All rights reserved.
-            </p>
           </div>
+
+          {/* 추가 액션 영역 */}
+          {additionalActions && (
+            <div className={styles.additionalActions}>
+              {additionalActions}
+            </div>
+          )}
         </div>
       </Container>
-
-      {/* 배경 장식 */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[var(--neon-purple-3)]/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[var(--neon-purple-1)]/20 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[var(--neon-purple-2)]/10 rounded-full blur-3xl" />
-      </div>
     </div>
   );
 }
+
+export default AuthLayout;

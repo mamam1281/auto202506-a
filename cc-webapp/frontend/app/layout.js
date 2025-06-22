@@ -6,7 +6,7 @@
 import { GeistSans } from 'geist/font/sans'; // Updated import for Geist font
 import { GeistMono } from 'geist/font/mono';
 import './globals.css'; // Your global styles
-import NotificationBanner from '@/components/archive/NotificationBanner'; // Adjust path if needed
+import Container from '../components/ui/layout/Container';
 
 // export const metadata = { // Metadata API is for Server Components
 //   title: 'CC Webapp',
@@ -27,15 +27,16 @@ export default function RootLayout({ children }) {
         <meta name="description" content="Emotion-driven gamified adult-content webapp" />
       </head>
       <body className="antialiased bg-gray-100 dark:bg-gray-900"> {/* Added basic body bg */}
-        <NotificationBanner userId={userIdForBanner} />
         {/* Add padding-top to main content area if banner is fixed and has a known height.
             The banner is ~52px high (p-3 + text-sm + icon). Let's use pt-16 to be safe.
             Alternatively, the banner could push content down if not fixed.
             Current banner is fixed top-4, so it overlays. Main content needs top padding.
         */}
-        <main className="pt-20"> {/* pt-20 to account for banner height + top-4 offset */}
-          {children}
-        </main>
+        <Container className="h-full">
+          <main className="pt-20">
+            {children}
+          </main>
+        </Container>
       </body>
     </html>
   );

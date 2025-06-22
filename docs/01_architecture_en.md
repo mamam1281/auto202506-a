@@ -135,20 +135,14 @@ bash
 |      – /api/gacha/spin       (가챠 로직)            |
 |      – /api/battlepass       (배틀패스 상태/보상)    |
 |      – /api/notification     (Push/SSE 푸시)        |
-|  • In-Memory Caching (Redis)                        |
-|      – user:{id}:streak_count                       |
-|      – user:{id}:last_action_ts                     |
-|      – user:{id}:pending_gems                       |
-|  • Event Streaming (Kafka)                           |
-|      – user_actions 토픽으로 실시간 행동 송출         |
-|  • Scheduler (Celery + APScheduler)                  |
+|  • Scheduler (APScheduler)                           |
 |      – Daily RFM / LTV 계산                           |
 |      – BattlePass 보상 지급 / 쿠폰 만료 체크           |
 |      – 주간 / 월간 리텐션 캠페인 트리거                |
 +---------------------------------------------------+
                        ↓ (SQLAlchemy ORM)
 +---------------------------------------------------+
-|              PostgreSQL  /  Redis                   |
+|                    SQLite                         |
 |  Tables:                                           |
 |   • users                                          |
 |   • user_actions                                   |

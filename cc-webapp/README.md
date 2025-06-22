@@ -41,10 +41,10 @@ This is the recommended way to run the entire CC Webapp stack for local developm
         POSTGRES_DB=cc_webapp_db
         POSTGRES_PORT=5432 # Host port for PostgreSQL
 
-        # Redis Settings
+        ### 삭제됨 Redis Settings
         REDIS_PORT=6379 # Host port for Redis
 
-        # Kafka Settings
+        ### 삭제됨 Kafka Settings
         KAFKA_HOST_PORT=9093 # Host port for Kafka broker access
 
         # Backend Settings

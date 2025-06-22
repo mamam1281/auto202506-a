@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Button from '../Button';
+import Button from './Button';
 
 const meta: Meta<typeof Button> = {
   title: 'UI/Basic/Button',
@@ -39,10 +39,18 @@ const meta: Meta<typeof Button> = {
     fullWidth: {
       control: 'boolean',
       description: '전체 너비 사용',
-    },
-    iconOnly: {
+    },    iconOnly: {
       control: 'boolean',
       description: '아이콘만 표시',
+    },
+    tooltip: {
+      control: 'text',
+      description: '툴팁 텍스트',
+    },
+    tooltipPosition: {
+      control: 'select',
+      options: ['top', 'bottom', 'left', 'right'],
+      description: '툴팁 위치',
     },
     onClick: { action: 'clicked' },
   },
@@ -207,6 +215,56 @@ export const Disabled: Story = {
     docs: {
       description: {
         story: '비활성화된 버튼',
+      },
+    },
+  },
+};
+
+// 툴팁 연쇄 인터랙티브 효과
+export const WithTooltips: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: '20px', padding: '40px', flexWrap: 'wrap' }}>
+      <Button variant="primary" tooltip="기본 버튼입니다" tooltipPosition="top">
+        Hover Me (Top)
+      </Button>
+      <Button variant="secondary" tooltip="보조 버튼입니다" tooltipPosition="bottom">
+        Hover Me (Bottom)
+      </Button>
+      <Button variant="outline" tooltip="외곽선 버튼입니다" tooltipPosition="left">
+        Hover Me (Left)
+      </Button>
+      <Button variant="gradient" tooltip="그라데이션 버튼입니다" tooltipPosition="right">
+        Hover Me (Right)
+      </Button>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: '연쇄 인터랙티브 효과: Hover → Focus → Active + 툴팁 팝오버',
+      },
+    },
+  },
+};
+
+// 연쇄 효과 데모
+export const InteractiveChain: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: '20px', padding: '40px', alignItems: 'center' }}>
+      <Button 
+        variant="primary" 
+        size="lg"
+        tooltip="1단계: Hover → 2단계: Focus → 3단계: Active"
+        tooltipPosition="top"
+      >
+        연쇄 효과 테스트
+      </Button>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: '완전한 연쇄 인터랙티브 효과 - Scale + Glow + Color Shift + Border + Tooltip',
       },
     },
   },

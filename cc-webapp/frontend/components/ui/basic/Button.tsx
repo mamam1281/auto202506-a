@@ -1,123 +1,101 @@
-import React from 'react';
+'use client';
+
+import React, { forwardRef } from 'react';
 import styles from './Button.module.css';
 
-export interface ButtonProps {
-  /** 버튼 변형 */
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /** 버튼 변형 - 통합 가이드 표준 */
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'gradient' | 'success' | 'warning' | 'error';
   
   /** 버튼 크기 */
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   
-  /** 아이콘 (선택적) */
+  /** 전체 너비 사용 */
+  fullWidth?: boolean;
+  
+  /** 로딩 상태 */
+  loading?: boolean;
+  
+  /** 아이콘 */
   icon?: React.ReactNode;
   
   /** 아이콘 위치 */
   iconPosition?: 'left' | 'right';
   
-  /** 아이콘만 표시 여부 */
+  /** 아이콘만 표시 (정사각형) */
   iconOnly?: boolean;
+    /** 로딩 텍스트 */
+  loadingText?: string;
   
-  /** 로딩 상태 */
-  loading?: boolean;
+  /** 툴팁 텍스트 */
+  tooltip?: string;
   
-  /** 비활성화 상태 */
-  disabled?: boolean;
+  /** 툴팁 위치 */
+  tooltipPosition?: 'top' | 'bottom' | 'left' | 'right';
   
-  /** 전체 너비 사용 */
-  fullWidth?: boolean;
-  
-  /** 클릭 이벤트 핸들러 */
-  onClick?: () => void;
-  
-  /** 버튼 타입 */
-  type?: 'button' | 'submit' | 'reset';
-  
-  /** 추가 CSS 클래스명 */
+  /** 커스텀 CSS 클래스 */
   className?: string;
-  
-  /** 자식 요소 */
-  children?: React.ReactNode;
 }
 
-const Button: React.FC<ButtonProps> = ({
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   variant = 'primary',
   size = 'md',
+  fullWidth = false,
+  loading = false,
   icon,
   iconPosition = 'left',
   iconOnly = false,
-  loading = false,
-  disabled = false,
-  fullWidth = false,
-  onClick,
-  type = 'button',
+  loadingText,
+  tooltip,
+  tooltipPosition = 'top',
   className = '',
   children,
+  disabled,
   ...props
-}) => {
-  const classNames = [
+}, ref) => {
+  const isDisabled = disabled || loading;
+  
+  // CSS 클래스 조합
+  const buttonClasses = [
     styles.button,
     styles[variant],
     styles[size],
     fullWidth && styles.fullWidth,
     iconOnly && styles.iconOnly,
     loading && styles.loading,
-    disabled && styles.disabled,
+    isDisabled && styles.disabled,
     className
   ].filter(Boolean).join(' ');
-
-  const handleClick = () => {
-    if (!disabled && !loading && onClick) {
-      onClick();
-    }
-  };
-
-  const renderContent = () => {
-    if (loading) {
-      return (
-        <>
-          <span className={styles.spinner} />
-          {!iconOnly && <span className={styles.loadingText}>로딩 중...</span>}
-        </>
-      );
-    }
-
-    if (iconOnly) {
-      return icon;
-    }
-
-    if (icon && iconPosition === 'left') {
-      return (
-        <>
-          {icon}
-          {children && <span>{children}</span>}
-        </>
-      );
-    }
-
-    if (icon && iconPosition === 'right') {
-      return (
-        <>
-          {children && <span>{children}</span>}
-          {icon}
-        </>
-      );
-    }
-
-    return children;
-  };
-
   return (
-    <button
-      type={type}
-      className={classNames}
-      onClick={handleClick}
-      disabled={disabled || loading}
-      aria-disabled={disabled || loading}
-      {...props}
-    >
-      {renderContent()}
-    </button>
+    <div className={tooltip ? styles.tooltipWrapper : undefined}>
+      <button
+        ref={ref}
+        className={buttonClasses}
+        disabled={isDisabled}
+        {...props}
+      >
+        {loading && <div className={styles.spinner} />}
+        
+        {!loading && icon && iconPosition === 'left' && icon}
+        
+        {!loading && !iconOnly && children}
+        
+        {!loading && icon && iconPosition === 'right' && icon}
+        
+        {loading && loadingText && (
+          <span className={styles.loadingText}>{loadingText}</span>
+        )}
+      </button>
+      
+      {tooltip && (
+        <div className={`${styles.tooltip} ${styles[`tooltip-${tooltipPosition}`]}`}>
+          {tooltip}
+        </div>
+      )}
+    </div>
   );
-};
+});
+
+Button.displayName = 'Button';
 
 export default Button;
