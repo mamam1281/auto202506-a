@@ -1555,8 +1555,7 @@ button {
       font-size: 12px;
     }
   }
-  /* AppHeader (상단 헤더) */
-  .app-header {
+  /* AppHeader (상단 헤더) */  .app-header {
     width: 100%;
     background: rgba(26, 26, 26, 0.95);
     backdrop-filter: blur(10px);
@@ -1569,22 +1568,26 @@ button {
     height: var(--app-header-height-desktop); /* 데스크톱 기본 높이 */
   }
   
+  .app-header .container {
+    padding-left: var(--spacing-4); /* 데스크톱 기본 패딩 */
+    padding-right: var(--spacing-4);
+  }
+  
   @media (max-width: var(--mobile-max)) {
     .app-header {
       height: var(--app-header-height-mobile); /* 모바일에서는 높이 줄임 */
     }
     .app-header .container {
-      padding-left: var(--spacing-2);
+      padding-left: var(--spacing-2); /* 모바일 패딩으로 줄임 */
       padding-right: var(--spacing-2);
     }
   }
-
   /* BottomNavigationBar (하단 네비) */
   .bottom-nav-bar {
-    background: rgba(45, 45, 45, 0.95);
+    background: rgba(34, 34, 34, 0.8); /* 더 어둡고 투명한 배경 */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4); /* 더 넓고 진한 그림자 */
     height: var(--spacing-9); /* 72px로 높이 증가 */
     position: fixed;
     bottom: 0;
@@ -1600,7 +1603,7 @@ button {
     padding: var(--spacing-1) var(--spacing-2);
     padding-bottom: calc(var(--spacing-1) + env(safe-area-inset-bottom));
   }
-    .bottom-nav-item {
+  .bottom-nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1623,19 +1626,6 @@ button {
     /* 텍스트 크기 */
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
-  }
-  
-  .bottom-nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius-sm);
-  }
-  
-  .bottom-nav-item span {
-    margin-top: 2px;
-    line-height: 1;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
   @media (min-width: 768px) {

@@ -25,8 +25,7 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   activeTab,
   onTabClick,
 }) => {
-  const iconSize = 20;
-  return (
+  const iconSize = 20;  return (
     <nav className="bottom-nav-bar">
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
@@ -35,16 +34,24 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
           <button
             key={item.id}
             onClick={() => onTabClick(item.id, item.path)}
-            className={`bottom-nav-item ${isActive ? 'text-[var(--color-accent-red)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--foreground)]'} relative group`}
+            className={`
+              bottom-nav-item relative group
+              transition-all duration-[var(--transition-normal)]
+              ${isActive ? 
+                'text-[var(--color-purple-primary)] bg-[rgba(91,48,246,0.1)] rounded-md' : 
+                'text-[var(--color-text-secondary)] hover:text-[var(--foreground)] hover:bg-[rgba(255,255,255,0.05)] rounded-md'
+              }
+            `}
             aria-current={isActive ? 'page' : undefined}
           >
             {isActive && (
-              <span className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-[var(--color-accent-red)] animate-pulse"></span>
-            )}            <IconComponent 
+              <span className="absolute -top-[6px] w-2 h-2 rounded-full bg-[var(--color-purple-primary)] animate-pulse shadow-lg"></span>
+            )}
+            <IconComponent 
               size={iconSize} 
-              className="mb-[var(--spacing-1)] transition-colors duration-[var(--transition-normal)]" 
+              className="mb-[var(--spacing-0-5)] transition-colors duration-[var(--transition-normal)]" 
             />
-            <span className="transition-colors duration-[var(--transition-normal)]">
+            <span className="text-[var(--font-size-xs)] font-[var(--font-weight-medium)] transition-colors duration-[var(--transition-normal)]">
               {item.label}
             </span>
           </button>

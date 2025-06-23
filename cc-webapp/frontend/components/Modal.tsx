@@ -144,12 +144,11 @@ const Modal: React.FC<ModalProps> = ({
             animate="animate"
             exit="exit"
             transition={modalVariants.transition}
-          >
-            {showCloseButton && (
+          >            {showCloseButton && (
               <Button
                 iconOnly
                 variant="text"
-                size="sm"
+                size="md"
                 aria-label="Close"
                 className="absolute top-3 right-3 z-10"
                 onClick={onClose}
