@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AppLayout } from './Applayout';
+import { AppLayout } from './AppLayout';
+import TokenDisplay from '../data-display/TokenDisplay';
+import MiniTokenDisplay from '../data-display/MiniTokenDisplay';
 
 /**
  * # AppLayout 컴포넌트 스토리북
@@ -494,6 +496,33 @@ export const LongContent: Story = {
       title: "긴 콘텐츠",
       leftContent: "menu",
       variant: "default",
+      hasShadow: true,
+      hasBorder: true
+    }
+  }
+};
+
+/**
+ * ## 토큰 디스플레이가 포함된 AppBar
+ * AppBar의 centerContent에 TokenDisplay를 직접 전달하여, 토큰 상태/크기/애니메이션 등 실시간 조정 가능
+ */
+export const WithTokenDisplay: Story = {
+  args: {
+    children: <DashboardContent />,
+    showAppBar: true,
+    showSidebar: false,
+    showBottomNav: false,
+    appBarProps: {
+      title: '카지노 게임',
+      leftContent: 'back',
+      centerContent: (
+        <MiniTokenDisplay
+          amount={1234567}
+          status="warning"
+        />
+      ),
+      rightContent: 'settings',
+      variant: 'game',
       hasShadow: true,
       hasBorder: true
     }

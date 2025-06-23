@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Card from './Card';
+import { useState } from 'react';
 
 const meta = {
   title: 'Components/Data Display/Card',
@@ -260,3 +261,31 @@ export const NoAnimation: Story = {
     ),
   },
 };
+
+// 카드 내부 버튼 상호작용 예시
+export const WithButtonInteraction: Story = {
+  args: {
+    clickable: true,
+    children: (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <h3 style={{ color: 'white', margin: 0 }}>카드 + 버튼 상호작용</h3>
+        <CardButtonDemo />
+      </div>
+    )
+  }
+};
+
+function CardButtonDemo() {
+  const [count, setCount] = useState(0);
+  return (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <button
+        style={{ padding: '8px 16px', borderRadius: 8, background: '#a78bfa', color: '#fff', border: 'none', fontWeight: 700, cursor: 'pointer' }}
+        onClick={e => { e.stopPropagation(); setCount(c => c + 1); }}
+      >
+        버튼 클릭 (+1)
+      </button>
+      <span style={{ color: '#fff', fontWeight: 700 }}>카운트: {count}</span>
+    </div>
+  );
+}
