@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home, Gamepad, Store, Users, User } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export interface NavItemData {
   id: string;
@@ -29,9 +30,8 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
     <nav className="bottom-nav-bar">
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
-        const IconComponent = item.icon;
-        return (
-          <button
+        const IconComponent = item.icon;        return (
+          <motion.button
             key={item.id}
             onClick={() => onTabClick(item.id, item.path)}
             className={`
@@ -43,6 +43,8 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
               }
             `}
             aria-current={isActive ? 'page' : undefined}
+            whileTap={{ scale: 0.95 }} // 탭 시 5% 축소로 피드백 제공
+            transition={{ type: "spring", stiffness: 400, damping: 17 }} // 부드러운 스프링 애니메이션
           >
             {isActive && (
               <span className="absolute -top-[6px] w-2 h-2 rounded-full bg-[var(--color-purple-primary)] animate-pulse shadow-lg"></span>
@@ -50,11 +52,10 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             <IconComponent 
               size={iconSize} 
               className="mb-[var(--spacing-0-5)] transition-colors duration-[var(--transition-normal)]" 
-            />
-            <span className="text-[var(--font-size-xs)] font-[var(--font-weight-medium)] transition-colors duration-[var(--transition-normal)]">
+            />            <span className="text-[var(--font-size-xs)] font-[var(--font-weight-medium)] transition-colors duration-[var(--transition-normal)]">
               {item.label}
             </span>
-          </button>
+          </motion.button>
         );
       })}
     </nav>

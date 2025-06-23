@@ -33,40 +33,40 @@ export interface InputProps {
 const sizeConfig = {
   sm: {
     height: 'h-[var(--input-height-sm)]',
-    padding: 'px-[var(--spacing-2)] py-[var(--spacing-1)]',
+    padding: 'px-[calc(var(--spacing-2)-4px)] py-[var(--spacing-1)]', // 4px 줄임 (기존 2px에서 추가 2px)
     font: 'text-[var(--font-size-caption)]',
     icon: 14, // 기존 16에서 14로 축소
-    iconLeft: 'left-[var(--spacing-3)]', // 더 안쪽
-    iconRight: 'right-[var(--spacing-3)]',
+    iconLeft: 'left-[calc(var(--spacing-3)-5px)]', // 5px 더 왼쪽으로 (기존 2px에서 3px 추가)
+    iconRight: 'right-[calc(var(--spacing-3)-2px)]', // 2px 더 왼쪽으로
     paddingWithIcon: {
-      left: 'pl-[var(--spacing-6)]',
-      right: 'pr-[var(--spacing-6)]',
+      left: 'pl-[calc(var(--spacing-6)-2px)]', // 아이콘 있을 때 패딩도 조정
+      right: 'pr-[calc(var(--spacing-6)-2px)]',
     },
     labelGap: 'mb-[var(--spacing-1)]',
   },
   md: {
     height: 'h-[var(--input-height-md)]',
-    padding: 'px-[var(--spacing-3)] py-[var(--spacing-2)]',
+    padding: 'px-[calc(var(--spacing-3)-4px)] py-[var(--spacing-2)]', // 4px 줄임 (기존 2px에서 추가 2px)
     font: 'text-[var(--font-size-body)]',
     icon: 18, // 기존 20에서 18로 축소
-    iconLeft: 'left-[var(--spacing-4)]',
-    iconRight: 'right-[var(--spacing-4)]',
+    iconLeft: 'left-[calc(var(--spacing-4)-5px)]', // 5px 더 왼쪽으로 (기존 2px에서 3px 추가)
+    iconRight: 'right-[calc(var(--spacing-4)-2px)]', // 2px 더 왼쪽으로
     paddingWithIcon: {
-      left: 'pl-[var(--spacing-8)]',
-      right: 'pr-[var(--spacing-8)]',
+      left: 'pl-[calc(var(--spacing-8)-2px)]', // 아이콘 있을 때 패딩도 조정
+      right: 'pr-[calc(var(--spacing-8)-2px)]',
     },
     labelGap: 'mb-[var(--spacing-2)]',
   },
   lg: {
     height: 'h-[var(--input-height-lg)]',
-    padding: 'px-[var(--spacing-4)] py-[var(--spacing-2)]',
+    padding: 'px-[calc(var(--spacing-4)-4px)] py-[var(--spacing-2)]', // 4px 줄임 (기존 2px에서 추가 2px)
     font: 'text-[var(--font-size-h5)]',
     icon: 22, // 기존 24에서 22로 축소
-    iconLeft: 'left-[var(--spacing-5)]',
-    iconRight: 'right-[var(--spacing-5)]',
+    iconLeft: 'left-[calc(var(--spacing-5)-5px)]', // 5px 더 왼쪽으로 (기존 2px에서 3px 추가)
+    iconRight: 'right-[calc(var(--spacing-5)-2px)]', // 2px 더 왼쪽으로
     paddingWithIcon: {
-      left: 'pl-[var(--spacing-10)]',
-      right: 'pr-[var(--spacing-10)]',
+      left: 'pl-[calc(var(--spacing-10)-2px)]', // 아이콘 있을 때 패딩도 조정
+      right: 'pr-[calc(var(--spacing-10)-2px)]',
     },
     labelGap: 'mb-[var(--spacing-2)]',
   },

@@ -155,9 +155,8 @@ const Modal: React.FC<ModalProps> = ({
               >
                 <X size={20} />
               </Button>
-            )}
-            {title && <h2 id="modal-title" className="heading-h3 mb-2">{title}</h2>}
-            {description && <p id="modal-desc" className="text-caption mb-4 text-[--color-text-secondary]">{description}</p>}
+            )}            {title && <h2 id="modal-title" className="text-[10px] font-[var(--font-weight-semibold)] mb-2 text-[var(--foreground)]">{title}</h2>}
+            {description && <p id="modal-desc" className="text-[10px] mb-4 text-[var(--muted-foreground)]">{description}</p>}
             <div>{children}</div>
           </motion.div>
         </motion.div>
