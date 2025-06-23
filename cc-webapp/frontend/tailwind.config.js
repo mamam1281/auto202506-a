@@ -42,7 +42,27 @@ module.exports = {
           glass: 'rgba(255,255,255,0.1)',  // --surface-glass
           card: '#2d2d2d',                 // 카드 배경
           border: '#333333',               // 카드 테두리
-        }
+        },
+        'primary-dark-navy': '#1A1A1A',
+        'primary-charcoal': '#2D2D2D',
+        'text-primary-white': '#FFFFFF',
+        'text-secondary-gray': '#D1D5DB',
+        'accent-cyan': '#ff4516',
+        'accent-warm-amber': '#F59E0B',
+        'neutral-light-gray': '#E0E0E0',
+        'neutral-medium-gray': '#A0A0A0',
+        'neutral-dark-gray': '#333333',
+        'semantic-success': '#10B981',
+        'semantic-error': '#B90C29',
+        'semantic-info': '#135B79',
+        'gradient-start-purple': '#6B46C1',
+        'gradient-end-purple': '#A78BFA',
+        'gradient-start-gold': '#FFD700',
+        'gradient-end-gold': '#FFA500',
+        'glass-bg-base': 'rgba(255, 255, 255, 0.08)',    // 유리 배경색 (투명도 8%)
+        'glass-border-base': 'rgba(255, 255, 255, 0.15)', // 유리 테두리색 (투명도 15%)
+        'neumorphic-light-shade': 'rgba(60, 60, 90, 0.7)', // 밝은 그림자
+        'neumorphic-dark-shade': 'rgba(15, 15, 30, 0.8)',  // 어두운 그림자
       },
       
       // 통합 가이드 기준 - 8px 기반 스페이싱 시스템
@@ -137,15 +157,26 @@ module.exports = {
       boxShadow: {
         'default': '0 2px 10px rgba(0,0,0,0.2), 0 0 0 1px rgba(123,41,205,0.15)',
         'hover': '0 8px 20px rgba(123,41,205,0.2), 0 0 0 1px rgba(123,41,205,0.25), 0 0 10px rgba(123,41,205,0.15)',
-        'active': '0 4px 15px rgba(135,13,209,0.3), 0 0 0 2px rgba(135,13,209,0.35)',
+        'pressed': '0 4px 15px rgba(135,13,209,0.3), 0 0 0 2px rgba(135,13,209,0.35)',
         'neon': '0 0 5px rgba(123, 41, 205, 0.3), 0 0 10px rgba(123, 41, 205, 0.2)',
         'neon-strong': '0 0 10px rgba(123, 41, 205, 0.4), 0 0 20px rgba(123, 41, 205, 0.3)',
-        'glass': '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1)',
+        'glass': '0 4px 16px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(255,255,255,0.10)',
         'game': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         'cosmic': '0 0 30px rgba(139, 92, 246, 0.3)',
+        '3d-dark': '0px 8px 16px rgba(0, 0, 0, 0.4), 0px 4px 8px rgba(0, 0, 0, 0.2)',
+        '3d-glow': '0px 12px 24px rgba(0, 0, 0, 0.6), 0px 6px 12px rgba(123, 41, 205, 0.3)',
+        '3d-pressed': '0px 4px 8px rgba(0, 0, 0, 0.3), 0px 2px 4px rgba(123, 41, 205, 0.2)',
+        'glow': '0 0 20px var(--btn-accent-bg), 0 0 40px var(--btn-accent-bg)',
+        'glow-gold': '0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 165, 0, 0.5), inset 0 0 8px rgba(255, 215, 0, 0.8)',
+        'glow-gold-intense': '0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 165, 0, 0.6), inset 0 0 12px rgba(255, 215, 0, 0.9)',
+        'glow-gold-pressed': '0 0 10px rgba(255, 215, 0, 0.6), 0 0 20px rgba(255, 165, 0, 0.4), inset 0 0 6px rgba(255, 215, 0, 0.7)',
+        'glow-purple': '0 0 15px rgba(107, 70, 193, 0.7), 0 0 30px rgba(167, 139, 250, 0.5), inset 0 0 8px rgba(107, 70, 193, 0.8)',
+        'glow-purple-intense': '0 0 20px rgba(107, 70, 193, 0.8), 0 0 40px rgba(167, 139, 250, 0.6), inset 0 0 12px rgba(107, 70, 193, 0.9)',
+        'glow-purple-pressed': '0 0 10px rgba(107, 70, 193, 0.6), 0 0 20px rgba(167, 139, 250, 0.4), inset 0 0 6px rgba(107, 70, 193, 0.7)',
+        'glass-pop': '0 6px 12px rgba(0, 0, 0, 0.25), 0 3px 6px rgba(0, 0, 0, 0.15)',
+        'neumorphic-out': `-8px -8px 16px var(--neumorphic-light-shade), 8px 8px 16px var(--neumorphic-dark-shade)`,
+        'neumorphic-in': `inset 8px 8px 16px var(--neumorphic-dark-shade), inset -8px -8px 16px var(--neumorphic-light-shade)`,
       },
-
-      // 배경 그라데이션
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'neon-gradient-1': 'linear-gradient(45deg, #7b29cd, #870dd1)',
@@ -154,34 +185,17 @@ module.exports = {
         'neon-gradient-4': 'linear-gradient(45deg, #8054f2, #7b29cd)',
         'gradient-cosmic': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         'gradient-game': 'linear-gradient(45deg, #f093fb 0%, #f5576c 100%)',
+        'glass': 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.05) 100%)', // Glassmorphism 배경
+        'gradient-gold': 'linear-gradient(90deg, #FFD700 0%, #FFA500 100%)',
+        'gradient-purple': 'linear-gradient(90deg, #6B46C1 0%, #A78BFA 100%)',
+        'noise': 'url(/assets/noise.png)',
+        'gradient-main-purple': 'linear-gradient(to right, var(--tw-gradient-stops))',
+        'gradient-main-gold': 'linear-gradient(to right, var(--tw-gradient-stops))',
       },
 
       // 백드롭 필터
       backdropBlur: {
         'glass': '10px',
-      },      // 폰트 패밀리
-      fontFamily: {
-        'body': ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        'heading': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        'mono': ['Fira Code', 'Monaco', 'Consolas', 'monospace'],
-      },
-
-      // 경계선 반지름
-      borderRadius: {
-        'none': '0px',
-        'sm': '2px',
-        'base': '4px', 
-        'md': '6px',
-        'lg': '8px',
-        'xl': '12px',
-        '2xl': '16px',
-        '3xl': '24px',
-        'full': '9999px',
-        // 컴포넌트별
-        'card': '16px',
-        'image': '12px',
-        'button': '12px',
-        'badge': '9999px',
       },
     },
   },
