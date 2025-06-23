@@ -1,5 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { GameLayout } from './GameLayout';
+import { SlotMachine } from '../game/slot-machine/SlotMachine';
+
+// 더미 컴포넌트 선언 (import 바로 아래)
+const Roulette = () => <div style={{color:'#fff',textAlign:'center',padding:'2rem'}}>Roulette 컴포넌트 미구현</div>;
+const RockPaperScissors = () => <div style={{color:'#fff',textAlign:'center',padding:'2rem'}}>RPS 컴포넌트 미구현</div>;
+const GachaBox = () => <div style={{color:'#fff',textAlign:'center',padding:'2rem'}}>GachaBox 컴포넌트 미구현</div>;
 
 /**
  * # GameLayout 컴포넌트 스토리북
@@ -99,228 +105,6 @@ GameLayout은 두 가지 스타일로 사용할 수 있습니다:
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-// 카지노 게임 시뮬레이션 컴포넌트들
-const SlotMachine = () => (
-  <div style={{
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    minHeight: '500px',
-    background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-    padding: '2rem'
-  }}>
-    <div style={{
-      display: 'flex',
-      gap: '1rem',
-      marginBottom: '2rem'
-    }}>
-      {[1, 2, 3].map((reel) => (
-        <div key={reel} style={{
-          width: '120px',
-          height: '150px',
-          background: 'var(--color-slate-800)',
-          border: '3px solid var(--neon-purple-3, #8b5cf6)',
-          borderRadius: '12px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '3rem',
-          boxShadow: '0 0 30px rgba(139, 92, 246, 0.3)'
-        }}>
-          🎰
-        </div>
-      ))}
-    </div>
-    
-    <button style={{
-      padding: '1rem 3rem',
-      background: 'linear-gradient(135deg, var(--neon-purple-3, #8b5cf6), var(--neon-blue-3, #3b82f6))',
-      color: 'white',
-      border: 'none',
-      borderRadius: '12px',
-      fontSize: '1.25rem',
-      fontWeight: '700',
-      cursor: 'pointer',
-      boxShadow: '0 8px 32px rgba(139, 92, 246, 0.4)'
-    }}>
-      SPIN (10 🪙)
-    </button>
-  </div>
-);
-
-const Roulette = () => (
-  <div style={{
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    minHeight: '500px',
-    background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-    padding: '2rem'
-  }}>
-    <div style={{
-      width: '300px',
-      height: '300px',
-      borderRadius: '50%',
-      background: `conic-gradient(
-        from 0deg,
-        #ef4444 0deg 45deg,
-        #1f2937 45deg 90deg,
-        #ef4444 90deg 135deg,
-        #1f2937 135deg 180deg,
-        #ef4444 180deg 225deg,
-        #1f2937 225deg 270deg,
-        #ef4444 270deg 315deg,
-        #1f2937 315deg 360deg
-      )`,
-      border: '8px solid var(--neon-green-3, #22c55e)',
-      marginBottom: '2rem',
-      position: 'relative',
-      boxShadow: '0 0 50px rgba(34, 197, 94, 0.3)'
-    }}>
-      <div style={{
-        position: 'absolute',
-        top: '10px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '4px',
-        height: '30px',
-        background: 'white',
-        borderRadius: '2px'
-      }} />
-    </div>
-    
-    <button style={{
-      padding: '1rem 3rem',
-      background: 'linear-gradient(135deg, var(--neon-green-3, #22c55e), var(--neon-blue-3, #3b82f6))',
-      color: 'white',
-      border: 'none',
-      borderRadius: '12px',
-      fontSize: '1.25rem',
-      fontWeight: '700',
-      cursor: 'pointer',
-      boxShadow: '0 8px 32px rgba(34, 197, 94, 0.4)'
-    }}>
-      SPIN (20 🪙)
-    </button>
-  </div>
-);
-
-const RockPaperScissors = () => (
-  <div style={{
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    minHeight: '500px',
-    background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-    padding: '2rem'
-  }}>
-    <h3 style={{ color: 'white', marginBottom: '2rem', fontSize: '1.5rem' }}>
-      선택하세요!
-    </h3>
-    
-    <div style={{
-      display: 'flex',
-      gap: '2rem',
-      marginBottom: '2rem'
-    }}>
-      {[
-        { emoji: '✊', name: '바위' },
-        { emoji: '✋', name: '보' },
-        { emoji: '✌️', name: '가위' }
-      ].map((choice) => (
-        <button key={choice.name} style={{
-          width: '120px',
-          height: '120px',
-          background: 'var(--color-slate-800)',
-          border: '3px solid var(--neon-orange-3, #f97316)',
-          borderRadius: '16px',
-          fontSize: '3rem',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease',
-          boxShadow: '0 0 20px rgba(249, 115, 22, 0.3)'
-        }}>
-          {choice.emoji}
-        </button>
-      ))}
-    </div>
-    
-    <p style={{ color: 'var(--color-slate-400)', fontSize: '1rem' }}>
-      게임 비용: 5 🪙
-    </p>
-  </div>
-);
-
-const GachaBox = () => (
-  <div style={{
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    minHeight: '500px',
-    background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-    padding: '2rem'
-  }}>
-    <div style={{
-      width: '200px',
-      height: '200px',
-      background: 'linear-gradient(135deg, var(--neon-purple-3, #8b5cf6), var(--neon-pink-3, #ec4899))',
-      borderRadius: '20px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '4rem',
-      marginBottom: '2rem',
-      boxShadow: '0 0 50px rgba(139, 92, 246, 0.5)',
-      animation: 'pulse 2s infinite'
-    }}>
-      🎁
-    </div>
-    
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)',
-      gap: '1rem',
-      marginBottom: '2rem'
-    }}>
-      {['Common', 'Rare', 'Epic'].map((rarity, index) => (
-        <div key={rarity} style={{
-          padding: '0.75rem 1rem',
-          background: index === 0 ? 'var(--color-slate-600)' : 
-                     index === 1 ? 'var(--neon-blue-3, #3b82f6)' : 
-                     'var(--neon-purple-3, #8b5cf6)',
-          borderRadius: '8px',
-          textAlign: 'center',
-          fontSize: '0.875rem',
-          fontWeight: '600'
-        }}>
-          {rarity}
-        </div>
-      ))}
-    </div>
-    
-    <button style={{
-      padding: '1rem 3rem',
-      background: 'linear-gradient(135deg, var(--neon-pink-3, #ec4899), var(--neon-purple-3, #8b5cf6))',
-      color: 'white',
-      border: 'none',
-      borderRadius: '12px',
-      fontSize: '1.25rem',
-      fontWeight: '700',
-      cursor: 'pointer',
-      boxShadow: '0 8px 32px rgba(236, 72, 153, 0.4)'
-    }}>
-      PULL (30 🪙)
-    </button>
-  </div>
-);
 
 /**
  * ## 슬롯머신 게임 (클래식 스타일)
@@ -439,23 +223,6 @@ export const FullFeatures: Story = {
 };
 
 /**
- * ## 모던 UI + 모바일 네비게이션
- * AppBar와 BottomNav를 함께 사용하는 완전한 모바일 레이아웃입니다.
- */
-export const MobileLayout: Story = {
-  args: {
-    gameType: 'slot',
-    gameTitle: '모바일 슬롯',
-    tokenBalance: 2500,
-    tokenCost: 10,
-    children: <SlotMachine />,
-    useAppBar: true,
-    containerSize: 'full',
-    showBottomNav: true
-  }
-};
-
-/**
  * ## 미니멀 UI
  * 필수 요소만 표시하는 깔끔한 인터페이스입니다.
  */
@@ -470,4 +237,20 @@ export const MinimalUI: Story = {
     showProbability: false,
     children: <RockPaperScissors />
   }
+};
+
+/**
+ * ## 모던 UI + 모바일 네비게이션
+ * AppBar와 BottomNav를 함께 사용하는 완전한 모바일 레이아웃입니다.
+ */
+export const MobileLayout: Story = {
+  args: {
+    gameType: 'slot',
+    gameTitle: '모바일 슬롯',
+    tokenBalance: 2500,
+    tokenCost: 10,
+    children: <SlotMachine />,
+    useAppBar: true,
+    containerSize: 'full',
+    showBottomNav: true  }
 };

@@ -1,3 +1,5 @@
+
+
 @reduxjs/toolkit
 react-redux
 react-router-dom
@@ -6,6 +8,7 @@ axios
 @emotion/react
 @emotion/styled
 sqlalchemy
+
 
 # FastAPI 및 웹 프레임워크
 fastapi==0.104.1
