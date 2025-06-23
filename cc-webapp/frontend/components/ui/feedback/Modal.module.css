@@ -1,0 +1,224 @@
+/* Modal.module.css */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.overlayBlur {
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.overlayDark {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.overlayLight {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  background-color: var(--color-white, #ffffff);
+  border-radius: 0.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: scale(1);
+  animation: modalIn 0.2s ease-out;
+}
+
+.modalSm {
+  max-width: 24rem; /* 384px */
+}
+
+.modalMd {
+  max-width: 28rem; /* 448px */
+}
+
+.modalLg {
+  max-width: 32rem; /* 512px */
+}
+
+.modalXl {
+  max-width: 36rem; /* 576px */
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-gray-900, #111827);
+  margin: 0;
+}
+
+.closeButton {
+  padding: 0.25rem;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--color-gray-400, #9ca3af);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  background-color: var(--color-gray-100, #f3f4f6);
+  color: var(--color-gray-600, #4b5563);
+}
+
+.closeButton:focus {
+  outline: 2px solid var(--color-blue-500, #3b82f6);
+  outline-offset: 2px;
+}
+
+.content {
+  padding: 1rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .modal {
+    background-color: var(--color-gray-800, #1f2937);
+  }
+  
+  .header {
+    border-bottom-color: var(--color-gray-600, #4b5563);
+  }
+  
+  .title {
+    color: var(--color-gray-100, #f3f4f6);
+  }
+  
+  .closeButton {
+    color: var(--color-gray-300, #d1d5db);
+  }
+  
+  .closeButton:hover {
+    background-color: var(--color-gray-700, #374151);
+    color: var(--color-gray-100, #f3f4f6);
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Exit animations */
+.overlay.exiting {
+  animation: fadeOut 0.15s ease-in;
+}
+
+.modal.exiting {
+  animation: modalOut 0.15s ease-in;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modalOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-1rem);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .overlay {
+    padding: 0.5rem;
+  }
+  
+  .modal {
+    border-radius: 0.375rem;
+  }
+  
+  .header {
+    padding: 0.75rem;
+  }
+  
+  .content {
+    padding: 0.75rem;
+  }
+}
+
+/* Focus trap styles */
+.modal:focus {
+  outline: none;
+}
+
+/* Accessibility */
+.overlay[aria-hidden="true"] {
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Custom scrollbar for modal content */
+.content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: var(--color-gray-100, #f3f4f6);
+  border-radius: 4px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300, #d1d5db);
+  border-radius: 4px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400, #9ca3af);
+}

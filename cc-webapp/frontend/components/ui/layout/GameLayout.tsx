@@ -134,9 +134,8 @@ export function GameLayout({
       <span className="text-xs text-slate-300">토큰</span>
     </div>
   );
-
   return (
-    <div className={cn(styles.gameLayout,className)}>
+    <div className={cn(styles.gameLayout, className)}>
       {/* Modern AppBar 또는 전통적인 게임 헤더 */}
       {useAppBar ? (
         <AppBar
@@ -144,19 +143,17 @@ export function GameLayout({
           leftContent="back"
           centerContent={tokenBalanceDisplay}
           rightContent={
-            <div className="flex items-center gap-2">
-              <Button
+            <div className="flex items-center gap-2">              <Button
                 variant="ghost"
-                size="icon"
+                size="sm"
                 onClick={() => setIsMuted(!isMuted)}
                 className="min-w-[40px] min-h-[40px]"
               >
                 {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
               </Button>
-              {showCJAI && (
-                <Button
+              {showCJAI && (                <Button
                   variant="ghost"
-                  size="icon"
+                  size="sm"
                   onClick={() => setShowCJPanel(!showCJPanel)}
                   className="min-w-[40px] min-h-[40px]"
                 >
@@ -222,9 +219,9 @@ export function GameLayout({
             className={styles.iconButton}
           >
             <Settings className="h-5 w-5" />
-          </Button>
-        </div>
-      </header>      {/* 메인 게임 영역 */}
+          </Button>        </div>
+      </header>
+      )}{/* 메인 게임 영역 */}
       <main className={cn(
         styles.mainContent,
         showBottomNav && styles.withBottomNav

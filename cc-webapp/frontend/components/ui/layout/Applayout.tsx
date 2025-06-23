@@ -7,11 +7,6 @@ import { cn } from '../utils/utils';
 import styles from './AppLayout.module.css';
 import AppBar from './AppBar';
 import BottomNav from './BottomNav';
-// 이전 Header와 Footer는 더 이상 사용하지 않음 (Header는 AppBar로, Footer는 BottomNav로 대체)
-import { Footer } from './Footer'; // 레거시 지원용 - 향후 제거 예정
-import { Header } from './Header'; // 레거시 지원용 - 향후 제거 예정
-import Toast from '../feedback/Toast';
-import Modal from '../feedback/Modal';
 import MetricDisplay from '../data-display/MetricDisplay';
 import PlayerStatsCard from '../data-display/PlayerStatsCard';
 import ProgressBar from '../data-display/ProgressBar';
@@ -22,13 +17,10 @@ export interface AppLayoutProps {
   /** 앱바 표시 여부 */
   showAppBar?: boolean;
   /** 사이드바 표시 여부 */
-  showSidebar?: boolean;
-  /** 바텀 네비게이션 표시 여부 */
+  showSidebar?: boolean;  /** 바텀 네비게이션 표시 여부 */
   showBottomNav?: boolean;
-  /** 푸터 표시 여부 (레거시 지원) */
-  showFooter?: boolean;
-  /** 간단한 푸터 모드 (레거시 지원) */
-  simpleFooter?: boolean;
+  /** 데스크톱에서도 바텀네비 표시 (Storybook용) */
+  showBottomNavOnDesktop?: boolean;
   /** 사이드바 초기 축소 상태 */
   initialSidebarCollapsed?: boolean;  
   /** 메인 컨텐츠 컨테이너 크기 */
@@ -38,14 +30,14 @@ export interface AppLayoutProps {
   /** 고정 레이아웃 (사이드바가 항상 보임) */
   fixedLayout?: boolean;
   /** 추가 CSS 클래스 */
-  className?: string;  /** 앱바 추가 속성 */
-  appBarProps?: Partial<React.ComponentProps<typeof AppBar>>;
-  /** 사이드바 추가 속성 */
+  className?: string;
+  /** 메인 지표 표시 여부 */
+  showMetrics?: boolean;
+  /** 플레이어 스탯 카드 표시 여부 */
+  showPlayerStats?: boolean;
+  /** 앱바 추가 속성 */
+  appBarProps?: Partial<React.ComponentProps<typeof AppBar>>;  /** 사이드바 추가 속성 */
   sidebarProps?: Partial<React.ComponentProps<typeof Sidebar>>;
-  /** 푸터 추가 속성 (레거시 지원) */
-  footerProps?: Partial<React.ComponentProps<typeof Footer>>;
-  /** 헤더 추가 속성 (레거시 지원) */
-  headerProps?: Partial<React.ComponentProps<typeof Header>>;
 }
 
 /**
@@ -115,16 +107,15 @@ export function AppLayout({
   showAppBar = true,
   showSidebar = true,
   showBottomNav = true,
-  showFooter = false, // 기본값이 false로 변경 (BottomNav 사용을 권장)
-  simpleFooter = false,
+  showBottomNavOnDesktop = false,
   initialSidebarCollapsed = false,
   containerSize = 'lg',
   noContentPadding = false,
   fixedLayout = false,
-  className,
+  showMetrics = false,
+  showPlayerStats = false,  className,
   appBarProps = {},
-  sidebarProps = {},
-  footerProps = {}
+  sidebarProps = {}
 }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed);
@@ -135,13 +126,13 @@ export function AppLayout({
 
   const handleSidebarCollapseToggle = () => {
     setSidebarCollapsed(!sidebarCollapsed);
-  };
-  return (
+  };  return (
     <div className={cn(
       styles.layout,
       fixedLayout && styles.layoutFixed,
       showSidebar && styles.layoutWithSidebar,
       sidebarCollapsed && styles.layoutSidebarCollapsed,
+      showBottomNav && styles.layoutWithBottomNav, // 바텀네비 여백 클래스 추가
       className
     )}>
       {/* AppBar는 시스템바(safe-area-inset-top) 영역을 자동으로 처리합니다 */}
@@ -152,10 +143,6 @@ export function AppLayout({
           {...appBarProps}
         />
       )}
-
-      {/* Toast/Modal 등 오버레이는 children 바깥에 렌더링 */}
-      <Toast />
-      <Modal />
 
       <div className={styles.body}>
         {showSidebar && (
@@ -172,13 +159,17 @@ export function AppLayout({
           noContentPadding && styles.mainNoPadding
         )}>
           {/* 메인 지표 예시: MetricDisplay, PlayerStatsCard, ProgressBar 등 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <MetricDisplay icon={<span>🪙</span>} label="토큰" value={12345} accentText="+120" />
-            <MetricDisplay icon={<span>⭐</span>} label="XP" value={3200} accentText="Lv.12" />
-            <MetricDisplay icon={<span>🔔</span>} label="알림" value={3} />
-            <MetricDisplay icon={<span>❤️</span>} label="체력" value={80} accentText={<ProgressBar value={80} color="red" />} />
-          </div>
-          <PlayerStatsCard money={10000} xp={3200} notifications={3} health={80} stamina={60} profileImage="/profile.png" />
+          {showMetrics && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <MetricDisplay icon={<span>🪙</span>} label="토큰" value={12345} accentText="+120" />
+              <MetricDisplay icon={<span>⭐</span>} label="XP" value={3200} accentText="Lv.12" />
+              <MetricDisplay icon={<span>🔔</span>} label="알림" value={3} />
+              <MetricDisplay icon={<span>❤️</span>} label="체력" value={80} accentText={<ProgressBar value={80} color="red" />} />
+            </div>
+          )}
+          {showPlayerStats && (
+            <PlayerStatsCard money={10000} xp={3200} notifications={3} health={80} stamina={60} profileImage="/profile.png" />
+          )}
           {noContentPadding ? (
             children
           ) : (
@@ -187,14 +178,12 @@ export function AppLayout({
             </Container>
           )}
         </main>
-      </div>      {/* Bottom Navigation Bar - 모바일 앱 스타일 내비게이션 */}
-      {showBottomNav && <BottomNav />}
+      </div>
 
-      {/* Footer는 레거시 지원용으로 기본적으로 표시하지 않습니다 */}
-      {showFooter && (
-        <Footer
-          simple={simpleFooter}
-          {...footerProps}
+      {/* Bottom Navigation Bar - 최상위 레벨에서 렌더링 (fixed 포지션을 위해) */}
+      {showBottomNav && (
+        <BottomNav 
+          className={showBottomNavOnDesktop ? '' : 'md:hidden'}
         />
       )}
     </div>

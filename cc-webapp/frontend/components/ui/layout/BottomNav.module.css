@@ -1,0 +1,20 @@
+/* BottomNav 전용 스타일 - fixed positioning 강제 */
+.bottom-nav-fixed {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 99999 !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+/* Storybook 환경에서도 fixed positioning이 작동하도록 */
+[data-theme] .bottom-nav-fixed,
+.sb-show-main .bottom-nav-fixed,
+.sb-main-padded .bottom-nav-fixed {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+}

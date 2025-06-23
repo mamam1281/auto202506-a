@@ -21,7 +21,8 @@
     inset 0 -1px 0 rgba(255, 255, 255, 0.05);
   
   /* 애니메이션 */
-  transition: all var(--duration-normal, 0.3s) var(--easing-ease-out, ease-out);
+  transition: all 0.13s cubic-bezier(0.4, 0.0, 0.2, 1); /* 반응속도 개선: duration 단축, 부드러운 커브 */
+  will-change: transform, box-shadow; /* GPU 최적화 */
 }
 
 /* 호버 시 글래스 효과 강화 */
@@ -35,6 +36,7 @@
     0 0 20px rgba(123, 41, 205, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.12s cubic-bezier(0.4, 0.0, 0.2, 1); /* hover 시 더 빠른 반응 */
 }
 
 /* === 네온 효과 관련 스타일 === */
@@ -293,6 +295,19 @@
   border: 1px solid rgba(123, 41, 205, 0.2);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+/* 게임/네온/미션/그라데이션 카드 글로우 컬러 최신화 */
+.game, .neon, .mission, .gradient {
+  box-shadow: 0 0 32px #a855f7, 0 0 64px #e040fb, 0 0 96px #7b29cd, 0 8px 24px #5b30f6;
+}
+
+.mission {
+  box-shadow: 0 0 32px #5b30f6, 0 0 64px #7b29cd, 0 8px 24px #a855f7;
+}
+
+.gradient {
+  box-shadow: 0 0 40px #e040fb, 0 0 80px #a855f7, 0 0 120px #5b30f6;
 }
 
 /* === 반응형 디자인 === */

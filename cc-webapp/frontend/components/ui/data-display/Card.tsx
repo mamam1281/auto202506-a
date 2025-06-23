@@ -45,46 +45,66 @@ export interface CardProps extends Omit<HTMLMotionProps<'div'>, 'onClick'> {
   children: React.ReactNode;
 }
 
-// 고급 애니메이션 variants
+// 고급 애니메이션 variants (2025 트렌드 반영)
 const cardVariants = {
-  default: { 
-    scale: 1, 
+  default: {
+    scale: 1,
     y: 0,
     rotateY: 0,
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
   },
-  hover: { 
-    scale: 1.03, 
-    y: -12,
+  hover: {
+    scale: 1.045,
+    y: -8,
     rotateY: 2,
-    boxShadow: `0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(123, 41, 205, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)`
+    boxShadow: '0 20px 60px rgba(123,41,205,0.32), 0 0 40px #a855f7, inset 0 1px 0 rgba(255,255,255,0.18)'
   },
-  active: { 
-    scale: 0.98, 
+  active: {
+    scale: 0.98,
     y: -2,
     rotateY: 0,
-    boxShadow: '0 8px 30px rgba(135, 13, 209, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25)'
+    boxShadow: '0 8px 30px #a855f7, inset 0 1px 0 rgba(255,255,255,0.25)'
   },
   // 네온 카드 variants
   neonDefault: {
     scale: 1,
-    boxShadow: `0 0 20px rgba(168, 85, 247, 0.4), 0 0 40px rgba(168, 85, 247, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)`
+    boxShadow: '0 0 24px #e040fb, 0 0 48px #a855f7, inset 0 1px 0 rgba(255,255,255,0.12)'
   },
   neonHover: {
-    scale: 1.05,
-    boxShadow: `0 0 30px rgba(168, 85, 247, 0.6), 0 0 60px rgba(168, 85, 247, 0.3), 0 0 100px rgba(168, 85, 247, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)`
+    scale: 1.06,
+    boxShadow: '0 0 40px #e040fb, 0 0 80px #a855f7, 0 0 120px #7b29cd, inset 0 1px 0 rgba(255,255,255,0.22)'
   },
-  // 게임 카드 variants
+  // 게임 카드 variants (핑크/퍼플 네온)
   gameDefault: {
     scale: 1,
     rotateX: 0,
-    boxShadow: `0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)`
+    boxShadow: '0 8px 25px #a855f7, 0 0 32px #e040fb, inset 0 1px 0 rgba(255,255,255,0.12)'
   },
   gameHover: {
     scale: 1.08,
     rotateX: 5,
-    boxShadow: `0 15px 40px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3), 0 0 80px rgba(255, 215, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)`
-  }
+    boxShadow: '0 15px 48px #e040fb, 0 0 80px #a855f7, 0 0 120px #7b29cd, inset 0 1px 0 rgba(255,255,255,0.22)'
+  },
+  // 미션 카드 variants (블루/퍼플 글로우 + rotate)
+  missionDefault: {
+    scale: 1,
+    rotate: 0,
+    boxShadow: '0 8px 24px #5b30f6, 0 0 32px #7b29cd, inset 0 1px 0 rgba(255,255,255,0.10)'
+  },
+  missionHover: {
+    scale: 1.06,
+    rotate: 2,
+    boxShadow: '0 16px 48px #5b30f6, 0 0 80px #7b29cd, 0 0 120px #a855f7, inset 0 1px 0 rgba(255,255,255,0.18)'
+  },
+  // 그라데이션 카드 variants (핑크/퍼플/블루 글로우)
+  gradientDefault: {
+    scale: 1,
+    boxShadow: '0 8px 24px #a855f7, 0 0 32px #5b30f6, 0 0 48px #e040fb, inset 0 1px 0 rgba(255,255,255,0.10)'
+  },
+  gradientHover: {
+    scale: 1.07,
+    boxShadow: '0 16px 56px #e040fb, 0 0 96px #a855f7, 0 0 120px #5b30f6, inset 0 1px 0 rgba(255,255,255,0.18)'
+  },
 };
 
 const Card: React.FC<CardProps> = ({
@@ -229,7 +249,6 @@ const Card: React.FC<CardProps> = ({
   // 애니메이션 variant 선택
   const getAnimationVariant = () => {
     if (!animated) return undefined;
-    
     switch (variant) {
       case 'neon':
         return {
@@ -240,6 +259,16 @@ const Card: React.FC<CardProps> = ({
         return {
           default: cardVariants.gameDefault,
           hover: cardVariants.gameHover,
+        };
+      case 'mission':
+        return {
+          default: cardVariants.missionDefault,
+          hover: cardVariants.missionHover,
+        };
+      case 'gradient':
+        return {
+          default: cardVariants.gradientDefault,
+          hover: cardVariants.gradientHover,
         };
       default:
         return cardVariants;
@@ -263,6 +292,14 @@ const Card: React.FC<CardProps> = ({
       style={{
         perspective: '1000px',
         transformStyle: 'preserve-3d',
+        willChange: 'transform, box-shadow',
+      }}
+      transition={{
+        type: 'spring',
+        stiffness: 600,
+        damping: 38,
+        mass: 0.6,
+        duration: 0.13
       }}
       {...motionProps}
     >
