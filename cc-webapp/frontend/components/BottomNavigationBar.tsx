@@ -27,29 +27,29 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
 }) => {
   const iconSize = 20;
   return (
-    <nav className="bottom-nav-bar fixed bottom-0 left-0 right-0 z-40 md:hidden">
-      <div className="container h-full flex items-center justify-around safe-bottom px-[var(--spacing-2)] py-[var(--spacing-2)]">
-        {navItems.map((item) => {
-          const isActive = activeTab === item.id;
-          const IconComponent = item.icon;
-          return (
-            <button
-              key={item.id}
-              onClick={() => onTabClick(item.id, item.path)}
-              className={`bottom-nav-item flex flex-col items-center justify-center flex-1 h-full text-[var(--color-text-secondary)] transition-colors duration-[var(--transition-normal)] ${isActive ? 'text-[var(--color-accent-red)]' : 'hover:text-[var(--foreground)]'} relative group`}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              {isActive && (
-                <span className="absolute -top-[var(--spacing-1)] w-1.5 h-1.5 rounded-full bg-[var(--color-accent-red)] animate-pulse"></span>
-              )}
-              <IconComponent size={iconSize} className="mb-[var(--spacing-0)] transition-colors duration-[var(--transition-normal)]" />
-              <span className="text-[var(--font-size-caption)] font-[var(--font-weight-medium)] transition-colors duration-[var(--transition-normal)]">
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+    <nav className="bottom-nav-bar">
+      {navItems.map((item) => {
+        const isActive = activeTab === item.id;
+        const IconComponent = item.icon;
+        return (
+          <button
+            key={item.id}
+            onClick={() => onTabClick(item.id, item.path)}
+            className={`bottom-nav-item ${isActive ? 'text-[var(--color-accent-red)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--foreground)]'} relative group`}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            {isActive && (
+              <span className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-[var(--color-accent-red)] animate-pulse"></span>
+            )}            <IconComponent 
+              size={iconSize} 
+              className="mb-[var(--spacing-1)] transition-colors duration-[var(--transition-normal)]" 
+            />
+            <span className="transition-colors duration-[var(--transition-normal)]">
+              {item.label}
+            </span>
+          </button>
+        );
+      })}
     </nav>
   );
 };

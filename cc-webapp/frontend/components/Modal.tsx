@@ -17,12 +17,12 @@ export interface ModalProps {
   showCloseButton?: boolean;
 }
 
-// 모달 크기별 클래스
+// 모달 크기별 클래스 - 모바일에서는 전체 너비, md 이상에서만 크기 제한
 const sizeClassMap: Record<ModalSize, string> = {
-  sm: 'max-w-sm w-full',
-  md: 'max-w-md w-full',
-  lg: 'max-w-lg w-full',
-  full: 'w-full h-full max-w-full',
+  sm: 'w-full max-w-full md:max-w-modal-sm',
+  md: 'w-full max-w-full md:max-w-modal-md',
+  lg: 'w-full max-w-full md:max-w-modal-lg',
+  full: 'w-full h-full max-w-full max-h-full',
 };
 
 const Modal: React.FC<ModalProps> = ({

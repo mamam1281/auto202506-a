@@ -3,7 +3,7 @@ import { LucideIcon } from 'lucide-react';
 
 export interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'accent' | 'success' | 'error' | 'info' | 'outline' | 'text' | 'neon' | 'glass' | 'animated';
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'md' | 'lg';
   iconOnly?: boolean;
   rounded?: boolean;
   loading?: boolean;

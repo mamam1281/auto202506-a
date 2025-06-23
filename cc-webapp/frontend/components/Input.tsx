@@ -119,23 +119,36 @@ export const Input = ({
     : success
     ? 'success'
     : propState;
-
   // Variant별 스타일 클래스
   const getVariantStyles = () => {
-    const base = `w-full input-base ${currentSize.height} ${currentSize.font} transition-all duration-[var(--transition-normal)] placeholder:text-[var(--muted-foreground)] text-[var(--foreground)] touch-target rounded-[var(--radius-md)]`;
+    const baseStyles = `
+      w-full input-base
+      ${currentSize.height} ${currentSize.padding} ${currentSize.font}
+      transition-[border-color,box-shadow,background-color] duration-[var(--transition-normal)] ease-out
+      placeholder:text-[var(--muted-foreground)] placeholder:transition-opacity placeholder:duration-[var(--transition-normal)]
+      text-[var(--foreground)]
+      touch-target
+      rounded-[var(--radius-md)]
+      shadow-inner-sm
+    `;
+
     const stateStyles = {
       default: `border-[var(--border)]`,
-      focused: `border-[var(--ring)] shadow-sm ring-2 ring-[var(--ring)]/20`,
-      error: `border-[var(--destructive)] bg-[var(--destructive)]/10`,
-      success: `border-[var(--color-success)] bg-[var(--color-success)]/10`,
+      focused: `
+        border-[var(--ring)]
+        shadow-focused-glow
+      `,
+      error: `border-[var(--destructive)] bg-[var(--destructive)]/10 shadow-error-glow`,
+      success: `border-[var(--color-success)] bg-[var(--color-success)]/10 shadow-success-glow`,
       disabled: `border-[var(--border)]/50 bg-[var(--input)]/50 text-[var(--muted-foreground)] cursor-not-allowed`,
     };
+
     switch (variant) {
       case 'search':
       case 'default':
       case 'text':
         return `
-          ${base}
+          ${baseStyles}
           bg-[var(--input)] border-2
           ${stateStyles[currentState]}
         `;
@@ -143,7 +156,7 @@ export const Input = ({
       case 'email':
       case 'password':
         return `
-          ${base}
+          ${baseStyles.replace('shadow-inner-sm', '')}
           bg-transparent border-0 border-b-2
           ${currentState === 'focused' ? 'border-b-transparent' : `border-b-[var(--border)]`}
           ${currentState === 'error' ? `border-b-[var(--destructive)]` : ''}
@@ -152,7 +165,7 @@ export const Input = ({
         `;
       default:
         return `
-          ${base}
+          ${baseStyles}
           bg-[var(--input)] border-2
           ${stateStyles[currentState]}
         `;

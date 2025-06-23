@@ -21,7 +21,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   hasNotifications = false,
   showPointsOnMobile = false,
 }) => {
-  const iconSize = 24;
+  const iconSize = 36;
   return (
     <header className="app-header layout-header-sticky safe-top">
       <div className="container flex items-center justify-between h-full py-[var(--spacing-2)]">
