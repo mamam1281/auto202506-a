@@ -28,7 +28,7 @@
 
   /* Neutral Colors */
   --color-neutral-light: #E0E0E0; /* 밝은 중성색 */
-  --color-neutral-medium: #A0A0A0; /* 중간 중성색 (플레이스홀더, 비활성 아이콘 등) */
+  --color-neutral-medium: rgba(160, 160, 160, 0.7); /* 중간 중성색 (플레이스홀더, 비활성 아이콘 등) */
   --color-neutral-dark: #333333; /* 어두운 중성색 (경계선, 구분선 등) */
 
   /* Semantic Colors - 의미론적 목적에 사용 (성공, 에러, 정보) */
@@ -213,16 +213,16 @@
 */
 :root {
   /* Button Sizes (height based on 8px grid) */
-  --btn-height-sm: var(--spacing-4); /* 32px */
-  --btn-height-md: var(--spacing-5); /* 40px */
-  --btn-height-lg: var(--spacing-6); /* 48px */
-  --btn-height-xl: var(--spacing-8); /* 64px (가이드에 56px로 되어있으나 8px 그리드 일관성 위해 64px로 조정) */
+  --btn-height-md: 44px;
+  --btn-height-lg: 56px;
+  /* --btn-height-sm: 32px; // 사용 안함 */
+  /* --btn-height-xl: 64px; // 사용 안함 */
 
   /* Button Padding (based on 8px grid) */
-  --btn-padding-sm: var(--spacing-1) var(--spacing-2);    /* 8px 16px */
-  --btn-padding-md: var(--spacing-2) var(--spacing-3);    /* 16px 24px */
-  --btn-padding-lg: var(--spacing-2) var(--spacing-4);    /* 16px 32px */
-  --btn-padding-xl: var(--spacing-3) var(--spacing-5);    /* 24px 40px (가이드에 20px 32px 이었으나 8px 그리드 일관성 위해 조정) */
+  --btn-padding-md: var(--spacing-2) var(--spacing-4); /* 16px 32px */
+  --btn-padding-lg: var(--spacing-3) var(--spacing-5); /* 24px 40px */
+  /* --btn-padding-sm: 8px 12px; // 사용 안함 */
+  /* --btn-padding-xl: 24px 40px; // 사용 안함 */
 
   /* Input Sizes (height based on 8px grid) */
   --input-height-sm: var(--spacing-4); /* 32px */
@@ -357,6 +357,14 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+@keyframes stripe-flow {
+  from { background-position: 100% 0; }
+  to { background-position: 0% 0; }
+}
+@keyframes progress-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
 
 /*
   9. 성능 최적화
@@ -924,21 +932,26 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-1);
-    border: var(--btn-border-width, 2px) solid transparent; /* 기본 border-width는 2px */
-    border-radius: var(--btn-border-radius, 8px); /* 기본 border-radius는 8px */
+    gap: var(--spacing-2);
+    border: var(--btn-border-width, 2px) solid transparent;
+    border-radius: 14px;
     font-family: var(--font-primary);
-    font-weight: var(--font-weight-medium); /* 버튼 폰트 가중치 */
+    font-weight: var(--font-weight-medium);
     text-decoration: none;
     cursor: pointer;
-    transition: var(--transition-normal); /* 기본 전환 효과 */
+    transition: var(--transition-normal);
     position: relative;
     overflow: hidden;
     user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    white-space: nowrap;
+    box-shadow: 0 4px 16px 0 rgba(91,48,246,0.10), 0 1.5px 6px 0 rgba(0,0,0,0.10);
+    padding: 14px 28px;
+    min-width: 64px;
+    min-height: 44px;
+  }
+
+  .btn-primary, .btn-accent, .btn-success, .btn-error {
+    font-weight: bold;
   }
 
   .btn:disabled {
@@ -959,9 +972,8 @@ button {
 
   /* Primary Gradient Button */
   .btn-primary {
-    background: var(--gradient-purple-primary);
-    color: white;
-    border-color: transparent;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
   }
   .btn-primary:hover {
     background: var(--gradient-purple-secondary);
@@ -975,9 +987,8 @@ button {
 
   /* Secondary Button */
   .btn-secondary {
-    background: var(--color-primary-charcoal);
-    color: white;
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--color-secondary);
+    color: var(--color-on-secondary);
   }
   .btn-secondary:hover {
     background: var(--color-neutral-dark);
@@ -991,9 +1002,8 @@ button {
 
   /* Accent Button */
   .btn-accent {
-    background: var(--color-accent-red);
-    color: white;
-    border-color: transparent;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
   }
   .btn-accent:hover {
     background: var(--gradient-accent); /* 호버 시 액센트 그라데이션 */
@@ -1004,8 +1014,7 @@ button {
   /* Success Button */
   .btn-success {
     background: var(--color-success);
-    color: white;
-    border-color: transparent;
+    color: var(--color-on-success);
   }
   .btn-success:hover {
     background: #0ea574; /* 약간 어두운 성공색 */
@@ -1016,8 +1025,7 @@ button {
   /* Error Button */
   .btn-error {
     background: var(--color-error);
-    color: white;
-    border-color: transparent;
+    color: var(--color-on-error);
   }
   .btn-error:hover {
     background: #a00b27; /* 약간 어두운 에러색 */
@@ -1028,8 +1036,7 @@ button {
   /* Info Button */
   .btn-info {
     background: var(--color-info);
-    color: white;
-    border-color: transparent;
+    color: var(--color-on-info);
   }
   .btn-info:hover {
     background: #0f4e6b; /* 약간 어두운 정보색 */
@@ -1040,122 +1047,104 @@ button {
   /* Outline Button */
   .btn-outline {
     background: transparent;
-    color: white;
-    border-color: rgba(255, 255, 255, 0.3);
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
   }
   .btn-outline:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255,255,255,0.08);
+    border-color: var(--color-ring);
+    color: var(--color-text-primary);
+    box-shadow: 0 2px 8px rgba(91,48,246,0.10);
+  }
+  .btn-outline:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--color-ring);
   }
 
   /* Text Button */
   .btn-text {
     background: transparent;
-    color: var(--color-text-secondary);
-    border-color: transparent;
+    color: var(--color-primary);
+    border: none;
   }
   .btn-text:hover {
+    background: rgba(91,48,246,0.06);
     color: var(--color-text-primary);
-    background: rgba(255, 255, 255, 0.05);
+    text-decoration: underline;
+  }
+  .btn-text:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--color-ring);
   }
 
-  /* Button Sizes */
-  .btn-sm {
-    height: var(--btn-height-sm);
-    padding: var(--btn-padding-sm);
-    font-size: var(--font-size-caption); /* 14px */
-  }
-  .btn-md {
-    height: var(--btn-height-md);
-    padding: var(--btn-padding-md);
-    font-size: var(--font-size-body); /* 16px */
-  }
-  .btn-lg {
-    height: var(--btn-height-lg);
-    padding: var(--btn-padding-lg);
-    font-size: var(--font-size-h5); /* 16px, 또는 18px로 조절 가능 */
-  }
-  .btn-xl {
-    height: var(--btn-height-xl);
-    padding: var(--btn-padding-xl);
-    font-size: var(--font-size-h4); /* 18px, 또는 20px로 조절 가능 */
-  }
-
-  /* Icon Only Buttons */
-  .btn-icon {
-    padding: 0;
-    aspect-ratio: 1 / 1; /* 가로세로 비율 1:1 */
-    border-radius: var(--btn-border-radius);
-  }
-  .btn-icon-sm { width: var(--btn-icon-sm, 32px); height: var(--btn-icon-sm, 32px); }
-  .btn-icon-md { width: var(--btn-icon-md, 40px); height: var(--btn-icon-md, 40px); }
-  .btn-icon-lg { width: var(--btn-icon-lg, 48px); height: var(--btn-icon-lg, 48px); }
-  .btn-icon-xl { width: var(--btn-icon-xl, 56px); height: var(--btn-icon-xl, 56px); }
-
-  /* Rounded Icon Buttons */
-  .btn-icon-rounded {
-    border-radius: var(--radius-full);
-  }
-
-  /* Loading State */
-  .btn-loading {
-    position: relative;
-    color: transparent !important; /* 텍스트 숨김 */
-  }
-  .btn-loading::after {
-    content: '';
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor; /* 부모의 텍스트 색상 상속 */
-    border-radius: 50%;
-    animation: button-spin 0.8s linear infinite;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white; /* 스피너 색상 */
-  }
-
-  /* Special Effect Buttons */
+  /* 특수효과 버튼 시각화 강화 */
   .btn-neon {
-    background: var(--gradient-purple-primary);
-    color: white;
-    border: 2px solid var(--color-purple-primary);
-    box-shadow:
-      0 0 10px rgba(91, 48, 246, 0.5),
-      inset 0 0 10px rgba(91, 48, 246, 0.2);
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    color: #fff;
+    box-shadow: 0 0 8px var(--color-accent);
   }
   .btn-neon:hover {
-    box-shadow:
-      0 0 20px rgba(91, 48, 246, 0.8),
-      inset 0 0 20px rgba(91, 48, 246, 0.3);
-    transform: translateY(-2px);
+    box-shadow: 0 0 24px 6px var(--color-purple-primary), 0 0 32px 8px var(--color-accent-red, #ff4516);
+    filter: brightness(1.1);
   }
 
   .btn-glass {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(8px);
+    color: var(--color-primary);
+    border: 1px solid rgba(255,255,255,0.18);
   }
   .btn-glass:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255,255,255,0.22);
+    border-color: rgba(255,255,255,0.32);
+    box-shadow: 0 4px 16px 0 rgba(91,48,246,0.12);
   }
 
   .btn-animated {
-    background: linear-gradient(-45deg, var(--color-purple-primary), var(--color-purple-secondary), var(--color-purple-tertiary), var(--color-accent-red));
+    background: linear-gradient(270deg, var(--color-primary), var(--color-accent), var(--color-primary));
     background-size: 400% 400%;
-    animation: gradient-shift 3s ease infinite;
-    color: white;
-    border: none;
+    animation: btn-gradient-move 3s ease infinite;
+    color: #fff;
   }
-  .btn-animated:hover {
-    animation-duration: 1s; /* 호버 시 애니메이션 속도 증가 */
-    transform: translateY(-1px);
+  @keyframes btn-gradient-move {
+    0% {background-position:0% 50%}
+    50% {background-position:100% 50%}
+    100% {background-position:0% 50%}
   }
+
+  /* Button Size Classes (폰트 크기 명확히 지정 및 미세 조정) */
+.btn-md {
+  height: 36px; /* 높이 명시적으로 추가, 기존보다 얇게 */
+  padding: 8px 22px; /* 기존 14px 28px에서 다운 */
+  font-size: 14px; /* 기존 15px에서 1px 다운 */
+}
+.btn-lg {
+  height: 42px; /* 기존보다 얇게 */
+  padding: 10px 28px; /* 기존 14px 28px에서 다운 */
+  font-size: 15px; /* 기존 17px에서 2px 다운 */
+}
+
+/* 아이콘 버튼 크기/배경/정렬 개선 */
+.btn-icon {
+  padding: 0;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--btn-border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-dark-navy, #1a1a2e);
+}
+.btn-icon-md {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+}
+.btn-icon-lg {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+}
+
 
   /* Button Group */
   .btn-group {
@@ -1429,6 +1418,101 @@ button {
     .content-label {
       font-size: var(--font-size-caption); /* 14px */
       align-self: center;
+    }
+  }
+
+  /* QuickStartItem 컴포넌트 스타일 */
+  .quick-start-item {
+    background: transparent;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: var(--transition-normal);
+    cursor: pointer;
+    width: 100%; /* 그리드에 맞춰 유연하게 */
+  }
+  .quick-start-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(91, 48, 246, 0.4);
+    box-shadow: 0 8px 25px rgba(91, 48, 246, 0.2);
+  }
+  .quick-start-icon {
+    width: var(--content-icon-size);
+    height: var(--content-icon-size);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-2);
+    font-size: var(--icon-lg);
+    color: white;
+    flex-shrink: 0;
+  }
+  .quick-start-label {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-primary);
+    text-align: center;
+    line-height: var(--line-height-tight);
+  }
+  @media (max-width: 1024px) {
+    .quick-start-icon {
+      width: 44px;
+      height: 44px;
+      font-size: var(--icon-md);
+    }
+  }
+  @media (max-width: 768px) {
+    .quick-start-icon {
+      width: var(--mobile-content-icon);
+      height: var(--mobile-content-icon);
+      font-size: var(--icon-sm);
+    }
+    .quick-start-label {
+      font-size: 12px;
+    }
+  }
+
+  /* AppHeader (상단 헤더) */
+  .app-header {
+    width: 100%;
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  /* BottomNavigationBar (하단 네비) */
+  .bottom-nav-bar {
+    background: rgba(45, 45, 45, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+    height: 64px;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .bottom-nav-item {
+    /* flex 및 텍스트 스타일은 컴포넌트 인라인에서 Tailwind로 정의 */
+  }
+  @media (min-width: 768px) {
+    .bottom-nav-bar {
+      display: none;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .bottom-nav-item {
+    flex: 1 1 0%;
+    white-space: nowrap;
+    min-width: 0;
+  }
+  @media (min-width: 768px) {
+    .bottom-nav-bar {
+      display: none;
     }
   }
 }
