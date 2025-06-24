@@ -135,9 +135,9 @@ export const Disabled: Story = {
 
 export const AllVariants: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+    <div className="flex flex-wrap gap-2">
       {['primary','secondary','accent','success','error','info','outline','text','neon','glass','animated'].map((variant) => (
-        <div key={variant} style={{ minWidth: 120 }}>
+        <div key={variant} className="min-w-[120px]">
           <Button variant={variant as any} size={args.size} disabled={args.disabled}>
             {variant.charAt(0).toUpperCase() + variant.slice(1)}
           </Button>
