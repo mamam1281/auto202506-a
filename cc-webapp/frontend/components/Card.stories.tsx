@@ -128,11 +128,10 @@ export const Clickable: Story = {
 export const NoPadding: Story = {
   args: {
     noPadding: true,
-    children: (      <div>
-        <div className="p-4 border-b border-border">
-          <h3 className="text-h3 font-semibold text-card-foreground">
+    children: (      <div>        <div className="p-4 border-b border-border">
+          <h4 className="text-h4 font-semibold text-card-foreground">
             커스텀 레이아웃
-          </h3>
+          </h4>
         </div>
         <div className="p-3">
           <p className="text-text-secondary text-sm">
@@ -160,18 +159,16 @@ export const Complex: Story = {
           <X className="size-icon-xs" />
         </Button>
       </div>
-    ),    children: (      <div className="space-y-5">
-        <div className="grid grid-cols-2 gap-4">
+    ),    children: (      <div className="space-y-5">        <div className="grid grid-cols-2 gap-4">
           <div className="text-center p-4 bg-primary/10 rounded-md">
-            <div className="text-h2 font-bold text-primary">
+            <div className="text-h3 font-bold text-primary">
               1,234
             </div>
             <div className="text-xs text-text-secondary mt-1">
               총 포인트
             </div>
-          </div>
-          <div className="text-center p-4 bg-green-500/10 rounded-md">
-            <div className="text-h2 font-bold text-green-400">
+          </div>          <div className="text-center p-4 bg-green-500/10 rounded-md">
+            <div className="text-h3 font-bold text-green-400">
               89%
             </div>
             <div className="text-xs text-text-secondary mt-1">
@@ -241,8 +238,7 @@ export const GridDemo: Story = {
         </div>
       </Card>
 
-      <Card title="포인트">        <div className="text-center py-2.5">
-          <div className="text-h2 font-bold text-primary">
+      <Card title="포인트">        <div className="text-center py-2.5">          <div className="text-h3 font-bold text-primary">
             1,234
           </div>
           <div className="text-xs text-text-secondary mt-2.5">
@@ -250,8 +246,7 @@ export const GridDemo: Story = {
           </div>
         </div>
       </Card>      {/* 두 번째 행 */}
-      <Card title="승률 통계">        <div className="text-center py-2.5">
-          <div className="text-h2 font-bold text-green-400">
+      <Card title="승률 통계">        <div className="text-center py-2.5">          <div className="text-h3 font-bold text-green-400">
             89%
           </div>
           <div className="text-xs text-text-secondary mt-2.5">

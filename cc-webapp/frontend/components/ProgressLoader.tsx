@@ -13,9 +13,9 @@ export interface ProgressLoaderProps {
 
 // Using themed spacing keys: h-1, h-2, h-3
 const heightTailwindClasses: Record<ProgressLoaderSize, string> = {
-  sm: 'h-4', // 16px
-  md: 'h-6', // 24px
-  lg: 'h-8', // 32px
+  sm: 'h-3', // 12px
+  md: 'h-4', // 16px
+  lg: 'h-5', // 20px
 };
 
 export const ProgressLoader: React.FC<ProgressLoaderProps> = ({
@@ -41,19 +41,17 @@ export const ProgressLoader: React.FC<ProgressLoaderProps> = ({
   // 바 클래스 구성 - 더 명시적 스타일링
   const barClasses = [barColorClass, radiusClass, 'h-full'].join(' ');
   const minWidthClass = "min-w-[4px]";
-  
-  // 디버깅용 border 추가 (문제 확인 후 제거 가능)
-  const debugClass = "border border-white";
+    // 테두리 제거(일반적인 개발앱 수준으로 조정)
+  const borderClass = "border-0"; // 테두리 없애기
   return (
     <div
-      className={`w-full ${heightTailwindClasses[size]} ${trackColorClass} ${radiusClass} overflow-hidden ${debugClass} ${className}`.trim()}
+      className={`w-full ${heightTailwindClasses[size]} ${trackColorClass} ${radiusClass} overflow-hidden ${borderClass} ${className}`.trim()}
       role="progressbar"
       aria-valuenow={clamped}
       aria-valuemin={0}
       aria-valuemax={100}
-    >
-      <motion.div
-        className={`${barClasses} ${minWidthClass} ${debugClass}`}
+    >      <motion.div
+        className={`${barClasses} ${minWidthClass}`}
         initial={{ width: '0%' }}
         animate={{ width: `${clamped}%` }}
         transition={{ duration: 0.5, ease: 'easeOut' }}

@@ -2,8 +2,8 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'accent' | 'success' | 'error' | 'info' | 'outline' | 'text' | 'neon' | 'glass' | 'animated';
-  size?: 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'accent' | 'success' | 'error' | 'info' | 'outline' | 'text' | 'neon' | 'glass' | 'animated' | 'kakao-yellow' | 'kakao-blue' | 'kakao-gradient' | 'kakao-white';
+  size?: 'sm' | 'md' | 'lg';
   iconOnly?: boolean;
   rounded?: boolean;
   disabled?: boolean;
@@ -13,6 +13,7 @@ export interface ButtonProps {
   children?: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
+  ripple?: boolean; // 모든 버튼에 리플 효과 적용 가능
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -27,36 +28,69 @@ const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   type = 'button',
+  ripple = false,
 }) => {
-  const baseClasses = 'btn';
-  const variantClass = `btn-${variant}`; // Assumes btn-neon, btn-glass, btn-animated are defined or will be
-  const sizeClass = iconOnly ? `btn-icon btn-icon-${size}` : `btn-${size}`;
-  const roundedClass = rounded ? 'rounded-full' : ''; // Assuming 'rounded-full' is the desired class for "rounded" icon buttons
+  const [coords, setCoords] = React.useState({ x: -1, y: -1 });
+  const [isRippling, setIsRippling] = React.useState(false);
+  
+  // 리플 효과 처리 함수
+  React.useEffect(() => {
+    if (coords.x !== -1 && coords.y !== -1) {
+      setIsRippling(true);
+      setTimeout(() => setIsRippling(false), 600);
+    } else {
+      setIsRippling(false);
+    }
+  }, [coords]);
 
-  const conditionalClasses = [];
+  React.useEffect(() => {
+    if (!isRippling) setCoords({ x: -1, y: -1 });
+  }, [isRippling]);
+  
+  // 클릭 이벤트 핸들러
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (ripple && !disabled) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setCoords({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
+    if (onClick) onClick(e);
+  };
+  
+  // 카카오 스타일 버튼인지 확인
+  const isKakaoStyle = variant.startsWith('kakao-');
+  
+  // 기본 클래스 및 변형 클래스 설정
+  const baseClasses = isKakaoStyle ? 'btn-kakao' : 'btn';
+  const variantClass = `btn-${variant}`;
+  
+  // 크기 클래스 설정
+  let sizeClass = '';
+  if (isKakaoStyle) {
+    sizeClass = size === 'lg' ? 'btn-kakao-lg' : size === 'sm' ? 'btn-kakao-sm' : '';
+  } else {
+    sizeClass = iconOnly ? `btn-icon btn-icon-${size}` : `btn-${size}`;
+  }
+  
+  const roundedClass = rounded ? 'rounded-full' : '';
+  const rippleClass = ripple ? 'btn-ripple' : ''; // 모든 버튼에 리플 효과 적용 가능하도록 변경
+  const disabledClass = disabled && isKakaoStyle ? 'btn-kakao-disabled' : '';
+
+  const conditionalClasses: string[] = [];
   if (Icon && iconPosition === 'right' && !iconOnly) {
     conditionalClasses.push('flex-row-reverse');
   }
-
-  const buttonClasses = [
-    baseClasses,
-    variantClass,
-    sizeClass,
-    roundedClass,
-    ...conditionalClasses,
-    className,
-  ].filter(Boolean).join(' ');
-
   // Reflects globals.css icon pixel values:
   // --icon-sm: 16px; --icon-md: 20px; --icon-lg: 24px; --icon-xl: 36px;
-  // Button 'size' prop is 'md' | 'lg'. We'll map these.
-  // If a more direct mapping or different button sizes (sm, xl) are needed for icons,
-  // ButtonProps['size'] might need adjustment or a new prop for iconSize.
+  // Button 'size' prop is 'sm' | 'md' | 'lg'. We'll map these.
   const iconSizeMap = {
+    sm: 16, // Maps to --icon-sm
     md: 20, // Maps to --icon-md
     lg: 24, // Maps to --icon-lg
   };
-  // Fallback to md if size is not md or lg (though TS should prevent this)
+  // Fallback to md if size is not in the map
   const currentIconSize = iconSizeMap[size] || iconSizeMap.md;
 
   const renderContent = () => {
@@ -75,15 +109,34 @@ const Button: React.FC<ButtonProps> = ({
     }
     return children;
   };
+  const buttonClasses = [
+    baseClasses,
+    variantClass,
+    sizeClass,
+    roundedClass,
+    rippleClass,
+    disabledClass,
+    ...conditionalClasses,
+    className,
+  ].filter(Boolean).join(' ');
 
   return (
     <button
       type={type}
       className={buttonClasses}
-      onClick={onClick}
+      onClick={handleClick}
       disabled={disabled}
     >
       {renderContent()}
+      {ripple && isRippling && (
+        <span
+          className="ripple"
+          style={{
+            left: coords.x,
+            top: coords.y
+          }}
+        />
+      )}
     </button>
   );
 };
