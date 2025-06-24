@@ -56,6 +56,14 @@ module.exports = {
           'accent': 'var(--brand-accent)',
           'highlight': 'var(--brand-highlight)',
         },
+
+        // Gacha Tier Colors
+        'gacha-common': 'var(--gacha-common-color)',
+        'gacha-rare': 'var(--gacha-rare-color)',
+        'gacha-epic': 'var(--gacha-epic-color)',
+        'gacha-legendary': 'var(--gacha-legendary-color)',
+        // It's also possible to define them as nested objects if more shades are needed
+        // e.g., gacha: { common: 'var(--gacha-common-color)', rare: ... }
       },
 
       // CSS Variables 직접 참조 - 간격 시스템 (완전 확장)
