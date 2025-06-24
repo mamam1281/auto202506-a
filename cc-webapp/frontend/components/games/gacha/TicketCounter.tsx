@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Ticket, Sparkles as SparklesIcon } from 'lucide-react'; // Renamed to avoid conflict
-import { useTicketCount } from '../../../contexts/gacha/TicketContext'; // Adjusted import path
+import { useTicketCount } from './TicketContext'; // Adjusted import path
 import { cn } from '../../utils/cn'; // Assuming a cn utility exists like in shadcn
 
 interface TicketCounterProps {

@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import GamePlatformLayout from './GamePlatformLayout';
-import { GameCardData, QuickStartItemData } from './GamePlatformLayout';
+import GamePlatformLayout, { GameCardData, QuickStartItemData } from './GamePlatformLayout';
 
 // Mock 데이터
 const mockPopularGames: GameCardData[] = [

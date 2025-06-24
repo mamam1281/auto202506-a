@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import LoadingSkeleton from '@/components/ui/LoadingSkeleton'; // Adjusted path
+import LoadingSkeleton from '@/components/LoadingSkeleton'; // Adjusted path
 
 // Dynamically import the RPSGame component for client-side rendering
 const RPSGame = dynamic(() =>

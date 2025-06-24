@@ -14,7 +14,7 @@ import {
   PITY_MAX_PULLS,
   GachaTier
 } from '../../../types/gacha';
-import { useTickets } from '../../../contexts/gacha/TicketContext';
+import { useTickets } from './TicketContext';
 import { cn } from '../../utils/cn';
 
 interface GachaBoxProps {

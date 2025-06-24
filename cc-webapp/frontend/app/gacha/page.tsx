@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Plus, RotateCcw, Gift, Zap, ShieldHalf, Wand2, Crown } from 'lucide-react';
-import { TicketProvider, useTickets } from '../../contexts/gacha/TicketContext';
+import { TicketProvider, useTickets } from '../../components/games/gacha/TicketContext';
 import { GachaBox } from '../../components/gacha/GachaBox';
 import { Button } from '../../components/ui/button'; // Assuming shadcn/ui button
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'; // Assuming shadcn/ui card

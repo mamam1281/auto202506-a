@@ -1,7 +1,7 @@
 import React from 'react';
-import Button from '../../components/Button';
-import GameCard, { GameCardProps } from '../../components/GameCard';
-import QuickStartItem, { QuickStartItemProps } from '../../components/QuickStartItem';
+import Button from './Button';
+import GameCard, { GameCardProps } from './GameCard';
+import QuickStartItem, { QuickStartItemProps } from './QuickStartItem';
 
 // GamePlatformLayout에서 사용할 게임 카드 데이터 타입
 export interface GameCardData extends GameCardProps {}
