@@ -26,7 +26,7 @@ export const GameCard: React.FC<GameCardProps> = ({
   >
     <div className="game-card-placeholder">
       {imageUrl ? (
-        <img src={imageUrl} alt={title} className="w-12 h-12 object-cover rounded-[--radius-lg]" />
+        <img src={imageUrl} alt={title} className="w-12 h-12 object-cover rounded-lg" />
       ) : (
         imagePlaceholder
       )}

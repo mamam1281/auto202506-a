@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       // CSS Variables 직접 참조 - 색상 시스템
       colors: {
+        // Top-level/Abstract Colors (from globals.css :root)
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         card: 'var(--card)',
@@ -25,31 +26,62 @@ module.exports = {
         destructive: 'var(--destructive)',
         ring: 'var(--ring)',
         
-        // 네온 퍼플 컬러 시스템
-        'neon-purple-1': 'var(--neon-purple-1)',
-        'neon-purple-2': 'var(--neon-purple-2)',
-        'neon-purple-3': 'var(--neon-purple-3)',
-        'neon-purple-4': 'var(--neon-purple-4)',
+        // Semantic Colors
+        success: 'var(--color-success)',
+        error: 'var(--color-error)',
+        info: 'var(--color-info)',
+        warning: 'var(--color-warning)',
         
-        // 브랜드 컬러
-        'brand-primary': 'var(--brand-primary)',
-        'brand-secondary': 'var(--brand-secondary)',
-        'brand-accent': 'var(--brand-accent)',
-        'brand-highlight': 'var(--brand-highlight)',
+        // Special Purpose Colors
+        'accent-red': 'var(--color-accent-red)',
+        'accent-amber': 'var(--color-accent-amber)',
+        'text-primary': 'var(--color-text-primary)',
+        'text-secondary': 'var(--color-text-secondary)',
+        'neutral-light': 'var(--color-neutral-light)',
+        'neutral-medium': 'var(--color-neutral-medium)',
+        'neutral-dark': 'var(--color-neutral-dark)',
+        
+        // Brand Colors (Nested approach)
+        'neon-purple': {
+          '1': 'var(--neon-purple-1)',
+          '2': 'var(--neon-purple-2)',
+          '3': 'var(--neon-purple-3)',
+          '4': 'var(--neon-purple-4)',
+        },
+        
+        'brand': {
+          'primary': 'var(--brand-primary)',
+          'secondary': 'var(--brand-secondary)',
+          'accent': 'var(--brand-accent)',
+          'highlight': 'var(--brand-highlight)',
+        },
       },
 
-      // CSS Variables 직접 참조 - 간격 시스템 (확장)
+      // CSS Variables 직접 참조 - 간격 시스템 (완전 확장)
       spacing: {
+        '0': 'var(--spacing-0)',
         '0.5': 'var(--spacing-0-5)',
         '1': 'var(--spacing-1)',
+        '1.5': 'var(--spacing-1-5)',
         '2': 'var(--spacing-2)',
+        '2.5': 'var(--spacing-2-5)',
         '3': 'var(--spacing-3)',
+        '3.5': 'var(--spacing-3-5)',
         '4': 'var(--spacing-4)',
         '5': 'var(--spacing-5)',
         '6': 'var(--spacing-6)',
         '7': 'var(--spacing-7)',
         '8': 'var(--spacing-8)',
         '9': 'var(--spacing-9)',
+        '10': 'var(--spacing-10)',
+        '11': 'var(--spacing-11)',
+        '12': 'var(--spacing-12)',
+        '14': 'var(--spacing-14)',
+        '16': 'var(--spacing-16)',
+        '20': 'var(--spacing-20)',
+        '24': 'var(--spacing-24)',
+        '28': 'var(--spacing-28)',
+        '32': 'var(--spacing-32)',
       },
 
       // CSS Variables 직접 참조 - 최대 너비 (모달 등)
@@ -70,13 +102,18 @@ module.exports = {
         'full': 'var(--radius-full)',
       },
 
-      // CSS Variables 직접 참조 - 폰트 시스템 (lineHeight 배열로 포함)
+      // CSS Variables 직접 참조 - 폰트 시스템 (모든 CSS 변수 사용)
       fontSize: {
-        'xs': ['var(--font-size-xs)', { lineHeight: 'var(--line-height-tight)' }],
+        'xs': ['var(--font-size-xs)', { lineHeight: 'var(--line-height-xs)' }],
+        'sm': ['var(--font-size-sm)', { lineHeight: 'var(--line-height-sm)' }],
+        'base': ['var(--font-size-body)', { lineHeight: 'var(--line-height-body)' }],
+        'lg': ['var(--font-size-lg)', { lineHeight: 'var(--line-height-lg)' }],
+        'xl': ['var(--font-size-xl)', { lineHeight: 'var(--line-height-xl)' }],
+        '2xl': ['var(--font-size-2xl)', { lineHeight: 'var(--line-height-2xl)' }],
+        '3xl': ['var(--font-size-3xl)', { lineHeight: 'var(--line-height-3xl)' }],
+        '4xl': ['var(--font-size-4xl)', { lineHeight: 'var(--line-height-4xl)' }],
         'caption': ['var(--font-size-caption)', { lineHeight: 'var(--line-height-caption)' }],
-        'sm': ['var(--font-size-sm)', { lineHeight: 'var(--line-height-base)' }],
         'body': ['var(--font-size-body)', { lineHeight: 'var(--line-height-body)' }],
-        'lg': ['var(--font-size-lg)', { lineHeight: 'var(--line-height-base)' }],
         'h4': ['var(--font-size-h4)', { lineHeight: 'var(--line-height-heading)' }],
         'h3': ['var(--font-size-h3)', { lineHeight: 'var(--line-height-heading)' }],
         'h2': ['var(--font-size-h2)', { lineHeight: 'var(--line-height-heading)' }],
@@ -114,6 +151,8 @@ module.exports = {
         'glass-card': 'var(--shadow-glass-card)',
         'animated-default': 'var(--shadow-animated-default)',
         'animated-hover': 'var(--shadow-animated-hover)',
+        'btn-default': 'var(--shadow-btn-default)',
+        'btn-hover': 'var(--shadow-btn-hover)',
       },
 
       // CSS Variables 직접 참조 - 애니메이션
@@ -122,41 +161,14 @@ module.exports = {
         'normal': 'var(--transition-normal)',
       },
 
-      // CSS Variables 직접 참조 - 아이콘 크기
+      // CSS Variables 직접 참조 - 레이아웃 크기
       width: {
-        'icon-xs': 'var(--icon-xs)',
-        'icon-sm': 'var(--icon-sm)',
-        'icon-md': 'var(--icon-md)',
-        'icon-lg': 'var(--icon-lg)',
-        'icon-xl': 'var(--icon-xl)',
-        'icon-xxl': 'var(--icon-xxl)',
-        'btn-icon-sm': 'var(--btn-icon-sm)',
-        'btn-icon-md': 'var(--btn-icon-md)',
-        'btn-icon-lg': 'var(--btn-icon-lg)',
-        'btn-icon-xl': 'var(--btn-icon-xl)',
-        'content-card': 'var(--content-card-size)',
-        'content-icon': 'var(--content-icon-size)',
-        'mobile-content': 'var(--mobile-content-size)',
-        'mobile-content-icon': 'var(--mobile-content-icon)',
+        'checkbox': 'var(--checkbox-size)',
+        'layout': 'var(--layout-max-width)',
       },
 
       height: {
-        'icon-xs': 'var(--icon-xs)',
-        'icon-sm': 'var(--icon-sm)',
-        'icon-md': 'var(--icon-md)',
-        'icon-lg': 'var(--icon-lg)',
-        'icon-xl': 'var(--icon-xl)',
-        'icon-xxl': 'var(--icon-xxl)',
-        'btn-md': 'var(--btn-height-md)',
-        'btn-lg': 'var(--btn-height-lg)',
-        'btn-icon-sm': 'var(--btn-icon-sm)',
-        'btn-icon-md': 'var(--btn-icon-md)',
-        'btn-icon-lg': 'var(--btn-icon-lg)',
-        'btn-icon-xl': 'var(--btn-icon-xl)',
-        'content-card': 'var(--content-card-size)',
-        'content-icon': 'var(--content-icon-size)',
-        'mobile-content': 'var(--mobile-content-size)',
-        'mobile-content-icon': 'var(--mobile-content-icon)',
+        'checkbox': 'var(--checkbox-size)',
         'section-card': 'var(--section-card-height)',
         'mobile-section': 'var(--mobile-section-height)',
         'app-header-mobile': 'var(--app-header-height-mobile)',
@@ -165,13 +177,13 @@ module.exports = {
         'tabs-content-mobile': 'var(--tabs-content-min-height-mobile)',
       },
 
-      // CSS Variables 직접 참조 - 브레이크포인트 업데이트
+      // CSS Variables 직접 참조 - 브레이크포인트
       screens: {
         'sm': 'var(--breakpoint-mobile-sm)',   // 480px
         'md': 'var(--breakpoint-mobile-lg)',   // 768px  
         'lg': 'var(--breakpoint-tablet)',      // 1024px
-        'xl': '1280px',                        // Tailwind 기본값 유지
-        '2xl': '1536px',                       // Tailwind 기본값 유지
+        'xl': 'var(--breakpoint-xl)',          // 1280px
+        '2xl': 'var(--breakpoint-2xl)',        // 1536px
       },
 
       // 그라데이션 배경
@@ -179,11 +191,6 @@ module.exports = {
         'gradient-purple-primary': 'var(--gradient-purple-primary)',
         'gradient-purple-secondary': 'var(--gradient-purple-secondary)',
         'gradient-neon': 'var(--gradient-neon)',
-      },
-
-      // 체크박스 크기
-      size: {
-        'checkbox': 'var(--checkbox-size)',
       },
 
       // 최소 높이
@@ -194,23 +201,6 @@ module.exports = {
         'mobile-section': 'var(--mobile-section-height)',
         'tabs-content': 'var(--tabs-content-min-height)',
         'tabs-content-mobile': 'var(--tabs-content-min-height-mobile)',
-      },
-
-      // Gap 값들
-      gap: {
-        'layout': 'var(--layout-gap)',
-        'app-header-icon': 'var(--app-header-icon-gap)',
-      },      // Padding 값들
-      padding: {
-        'layout': 'var(--layout-padding)',
-        'mobile-layout': 'var(--mobile-layout-padding)',
-        'section-card': 'var(--section-card-padding)',
-        'content-card': 'var(--content-card-padding)',
-        'tabs-content': 'var(--tabs-content-padding)',
-        'tabs-content-mobile': 'var(--tabs-content-padding-mobile)',
-        'app-header-y': 'var(--app-header-padding-y)',
-        'container-x': 'var(--container-padding-x)',
-        'container-x-mobile': 'var(--container-padding-x-mobile)',
       },
     },
   },

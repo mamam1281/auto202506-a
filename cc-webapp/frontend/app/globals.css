@@ -3,22 +3,34 @@
 @tailwind utilities;
 
 /* 1. CSS Variables */
-:root {
-  /* Colors */
+:root {  /* Colors */
   --background: #0f172a;
   --foreground: #f8fafc;
   --card: #1e293b;
   --card-foreground: #f8fafc;
   --muted: #374151;
-  --muted-foreground: #9ca3af;
-  --accent: #8b5cf6;
-  --accent-foreground: #f8fafc;
-  --primary: #8b5cf6;
+  --muted-foreground: #9ca3af;  --primary: #8b5cf6;
   --primary-foreground: #f8fafc;
+  --accent: #7b29cd;
+  --accent-foreground: #f8fafc;
   --border: #374151;
-  --border-hover: #4b5563;
-  --input: #1e293b;
+  --border-hover: #4b5563;--input: #1e293b;
   --destructive: #ef4444;
+  
+  /* Semantic Colors */
+  --color-success: #10B981;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  --color-warning: #f59e0b;
+  
+  /* Special Purpose Colors */
+  --color-accent-red: #ff4516;
+  --color-accent-amber: #f59e0b;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #d1d5db;
+  --color-neutral-light: #e0e0e0;
+  --color-neutral-medium: rgba(160, 160, 160, 0.7);
+  --color-neutral-dark: #333333;
     /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -31,13 +43,14 @@
   --shadow-card-default: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 20px rgba(139, 92, 246, 0.1);
   --shadow-card-hover: 0 10px 25px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08), 0 0 30px rgba(139, 92, 246, 0.3);
   --shadow-neon-primary: 0 0 10px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.2);
-  --shadow-neon-hover: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.4);
-  --shadow-glass-card: 0 4px 16px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(255,255,255,0.10);
+  --shadow-neon-hover: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.4);  --shadow-glass-card: 0 4px 16px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(255,255,255,0.10);
   --shadow-animated-default: 0 4px 15px rgba(255, 107, 107, 0.3);
-  --shadow-animated-hover: 0 8px 25px rgba(255, 107, 107, 0.5);
-  
-  /* Focus Ring */
-  --ring: #8b5cf6;
+  --shadow-animated-hover: 0 8px 25px rgba(255, 107, 107, 0.5);  
+  /* Button Shadow */
+  --shadow-btn-default: 0 2px 8px 0 rgba(139, 92, 246, 0.08), 0 1px 4px 0 rgba(0, 0, 0, 0.08);
+  --shadow-btn-hover: 0 4px 12px 0 rgba(139, 92, 246, 0.15), 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+    /* Focus Ring */
+  --ring: var(--primary);
   
   /* Transitions */
   --transition-fast: 150ms;
@@ -60,13 +73,16 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-full: 50%;
-  
-  /* Typography */
+    /* Typography */
   --font-size-xs: 12px;
   --font-size-caption: 12px;
   --font-size-sm: 14px;
   --font-size-body: 16px;
   --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
   --font-size-h4: 18px;
   --font-size-h3: 20px;
   --font-size-h2: 24px;
@@ -77,12 +93,20 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  
-  --line-height-base: 1.5;
+    --line-height-base: 1.5;
   --line-height-tight: 1.25;
   --line-height-caption: 1.25;
   --line-height-body: 1.6;
   --line-height-heading: 1.2;
+  
+  /* Additional Line Heights for fontSize system */
+  --line-height-xs: 1rem;     /* 12px font → 16px line-height */
+  --line-height-sm: 1.25rem;  /* 14px font → 20px line-height */
+  --line-height-lg: 1.75rem;  /* 18px font → 28px line-height */
+  --line-height-xl: 1.75rem;  /* 20px font → 28px line-height */
+  --line-height-2xl: 2rem;    /* 24px font → 32px line-height */
+  --line-height-3xl: 2.25rem; /* 30px font → 36px line-height */
+  --line-height-4xl: 2.5rem;  /* 36px font → 40px line-height */
   /* Form Components */
   --checkbox-size: 20px;
   --input-height-sm: 32px;
@@ -95,12 +119,30 @@
   --icon-md: 20px;
   --icon-lg: 24px;
   --icon-xl: 36px;
-  --icon-xxl: 48px;
-    /* Spacing - Extended */
+  --icon-xxl: 48px;  /* Spacing - Extended */
+  --spacing-0: 0px;
   --spacing-0-5: 4px;
+  --spacing-1: 8px;
+  --spacing-1-5: 12px;
+  --spacing-2: 16px;
+  --spacing-2-5: 20px;
+  --spacing-3: 24px;
+  --spacing-3-5: 28px;
+  --spacing-4: 32px;
+  --spacing-5: 40px;
+  --spacing-6: 48px;
   --spacing-7: 56px;
   --spacing-8: 64px;
   --spacing-9: 72px;
+  --spacing-10: 80px;
+  --spacing-11: 88px;
+  --spacing-12: 96px;
+  --spacing-14: 112px;
+  --spacing-16: 128px;
+  --spacing-20: 160px;
+  --spacing-24: 192px;
+  --spacing-28: 224px;
+  --spacing-32: 256px;
   
   /* Layout System Variables */
   --layout-max-width: 1200px;
@@ -116,8 +158,7 @@
   --mobile-section-height: 160px;
   --mobile-content-size: 120px;
   --mobile-content-icon: 40px;
-  
-  /* Button Variables */
+    /* Button Variables */
   --btn-height-md: 44px;
   --btn-height-lg: 56px;
   --btn-padding-md: 16px 32px;
@@ -127,6 +168,8 @@
   --btn-icon-lg: 48px;
   --btn-icon-xl: 56px;
   --btn-border-radius: 8px;
+  --btn-border-radius-md: 8px;
+  --btn-border-radius-lg: 12px;
   
   /* App Header Variables */
   --app-header-height-mobile: 56px;
@@ -139,11 +182,12 @@
   --modal-max-width-md: 500px;
   --modal-max-width-lg: 600px;
   --modal-max-width-xl: 800px;
-  
-  /* Breakpoints */
+    /* Breakpoints */
   --breakpoint-mobile-sm: 480px;
   --breakpoint-mobile-lg: 768px;
   --breakpoint-tablet: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
     /* 네온 퍼플 컬러 시스템 */
   --neon-purple-1: #7b29cd;
   --neon-purple-2: #870dd1;
@@ -306,31 +350,30 @@ p:last-child {
   .quick-start-item:hover {
     background: var(--card);
     border-color: var(--border-hover);
-  }
-  /* Button Styles */
+  }  /* Button Styles */
   .btn {
-    transition: all 0.2s ease;
+    transition: all var(--transition-normal) ease;
     border-radius: var(--btn-border-radius);
     font-weight: var(--font-weight-medium);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--spacing-1);
+    box-shadow: var(--shadow-btn-default);
   }
-  
-  /* Button Sizes */
+    /* Button Sizes */
   .btn-md {
     height: var(--btn-height-md);
     padding: var(--btn-padding-md);
     font-size: var(--font-size-sm);
-    border-radius: var(--btn-border-radius);
+    border-radius: var(--btn-border-radius-md);
   }
   
   .btn-lg {
     height: var(--btn-height-lg);
     padding: var(--btn-padding-lg);
     font-size: var(--font-size-body);
-    border-radius: var(--radius-lg);
+    border-radius: var(--btn-border-radius-lg);
   }
   
   /* Button Icon Styles */
