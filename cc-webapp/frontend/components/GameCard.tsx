@@ -18,15 +18,14 @@ export const GameCard: React.FC<GameCardProps> = ({
   imagePlaceholder,
   onClick,
 }) => (  <div
-    className="game-card glassmorphism-dark hover-lift transition-all duration-200 cursor-pointer"
+    className="game-card glassmorphism-dark hover-lift transition-all duration-normal cursor-pointer"
     onClick={onClick}
     tabIndex={0}
     role="button"
     aria-label={title}
-  >
-    <div className="game-card-placeholder">
+  >    <div className="game-card-placeholder">
       {imageUrl ? (
-        <img src={imageUrl} alt={title} className="w-12 h-12 object-cover rounded-lg" />
+        <img src={imageUrl} alt={title} className="w-icon-lg h-icon-lg object-cover rounded-lg" />
       ) : (
         imagePlaceholder
       )}

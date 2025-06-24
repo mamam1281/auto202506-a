@@ -23,17 +23,16 @@ const Card: React.FC<CardProps> = ({
         card modern-mesh-card
         ${noPadding ? '' : 'p-4'}
         rounded-lg
-        ${onClick ? 'cursor-pointer hover-lift' : ''}
+        ${onClick ? 'cursor-pointer' : ''}
         ${className}
       `}
       onClick={onClick}
       whileTap={onClick ? { scale: 0.99 } : {}}
       whileHover={onClick ? { y: -2 } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 10 }}
-    >      {(title || headerRight) && (
-        <div className="flex items-center justify-between mb-6 flex-shrink-0">
+    >{(title || headerRight) && (        <div className="flex items-center justify-between mb-6 flex-shrink-0">
           {title && (
-            <h3 className="text-h3 font-semibold text-card-foreground leading-tight">
+            <h3 className="heading-h3 text-card-foreground">
               {title}
             </h3>
           )}

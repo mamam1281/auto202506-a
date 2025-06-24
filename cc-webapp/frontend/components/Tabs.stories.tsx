@@ -50,27 +50,26 @@ const commercialTabs: TabItem[] = [
     content: (
       <>
         <Card title="오늘의 통계">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-[var(--color-purple-primary)]">1,234</div>
-            <div className="text-sm text-[var(--color-text-secondary)]">총 포인트</div>
+          <div className="text-center">            <div className="text-2xl font-bold text-neon-purple-1">1,234</div>
+            <div className="text-sm text-text-secondary">총 포인트</div>
           </div>
         </Card>
         <Card title="진행률">
           <div className="text-center">
             <div className="text-2xl font-bold text-green-400">78%</div>
-            <div className="text-sm text-[var(--color-text-secondary)]">목표 달성</div>
+            <div className="text-sm text-text-secondary">목표 달성</div>
           </div>
         </Card>
         <Card title="이번 주 활동">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-400">15</div>
-            <div className="text-sm text-[var(--color-text-secondary)]">게임 플레이</div>
+            <div className="text-sm text-text-secondary">게임 플레이</div>
           </div>
         </Card>
         <Card title="순위">
           <div className="text-center">
             <div className="text-2xl font-bold text-yellow-400">#23</div>
-            <div className="text-sm text-[var(--color-text-secondary)]">전체 랭킹</div>
+            <div className="text-sm text-text-secondary">전체 랭킹</div>
           </div>
         </Card>
       </>
@@ -86,7 +85,7 @@ const commercialTabs: TabItem[] = [
           <div className="text-center">
             <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mx-auto mb-3"></div>
             <h4 className="font-semibold">김사용자</h4>
-            <p className="text-sm text-[var(--color-text-secondary)]">Level 15 게이머</p>
+            <p className="text-sm text-text-secondary">Level 15 게이머</p>
           </div>
           <div className="space-y-2">
             <div className="flex justify-between">
@@ -119,19 +118,18 @@ const commercialTabs: TabItem[] = [
         {Array.from({ length: 8 }, (_, i) => (
           <Card key={i} className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                i === 0 ? 'bg-yellow-500' : i === 1 ? 'bg-gray-400' : i === 2 ? 'bg-amber-600' : 'bg-[var(--muted)]'
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${                i === 0 ? 'bg-yellow-500' : i === 1 ? 'bg-gray-400' : i === 2 ? 'bg-amber-600' : 'bg-muted'
               }`}>
                 {i + 1}
               </div>
               <div>
                 <div className="font-medium">플레이어 {i + 1}</div>
-                <div className="text-sm text-[var(--color-text-secondary)]">Level {20 - i}</div>
+                <div className="text-sm text-text-secondary">Level {20 - i}</div>
               </div>
             </div>
             <div className="text-right">
-              <div className="font-bold text-[var(--color-purple-primary)]">{(5000 - i * 200).toLocaleString()}</div>
-              <div className="text-sm text-[var(--color-text-secondary)]">포인트</div>
+              <div className="font-bold text-neon-purple-1">{(5000 - i * 200).toLocaleString()}</div>
+              <div className="text-sm text-text-secondary">포인트</div>
             </div>
           </Card>
         ))}

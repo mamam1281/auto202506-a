@@ -39,19 +39,15 @@
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   
   /* Extended Shadow Variables for Design System */
-  --shadow-focused-glow: 0 0 0 2px var(--background), 0 0 0 4px rgba(139, 92, 246, 0.3), 0 0 15px rgba(139, 92, 246, 0.2);
-  --shadow-inner-sm: inset 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(0, 0, 0, 0.2);
-  --shadow-error-glow: 0 0 0 2px var(--background), 0 0 0 4px rgba(239, 68, 68, 0.3), 0 0 15px rgba(239, 68, 68, 0.2);
-  --shadow-success-glow: 0 0 0 2px var(--background), 0 0 0 4px rgba(16, 185, 129, 0.3), 0 0 15px rgba(16, 185, 129, 0.2);
-  --shadow-card-default: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 20px rgba(139, 92, 246, 0.1);
-  --shadow-card-hover: 0 10px 25px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08), 0 0 30px rgba(139, 92, 246, 0.3);
-  --shadow-neon-primary: 0 0 10px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.2);
-  --shadow-neon-hover: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.4);  --shadow-glass-card: 0 4px 16px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(255,255,255,0.10);
-  --shadow-animated-default: 0 4px 15px rgba(255, 107, 107, 0.3);
-  --shadow-animated-hover: 0 8px 25px rgba(255, 107, 107, 0.5);  
-  /* Button Shadow */
-  --shadow-btn-default: 0 2px 8px 0 rgba(139, 92, 246, 0.08), 0 1px 4px 0 rgba(0, 0, 0, 0.08);
-  --shadow-btn-hover: 0 4px 12px 0 rgba(139, 92, 246, 0.15), 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+  --shadow-focused-glow: 0 0 0 2px var(--background), 0 0 0 4px rgba(var(--accent-rgb), 0.3), 0 0 15px rgba(var(--accent-rgb), 0.2);
+  --shadow-inner-sm: inset 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(0, 0, 0, 0.2);  --shadow-error-glow: 0 0 0 2px var(--background), 0 0 0 4px rgba(var(--color-error-rgb), 0.3), 0 0 15px rgba(var(--color-error-rgb), 0.2);
+  --shadow-success-glow: 0 0 0 2px var(--background), 0 0 0 4px rgba(var(--color-success-rgb), 0.3), 0 0 15px rgba(var(--color-success-rgb), 0.2);--shadow-card-default: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 20px rgba(var(--accent-rgb), 0.1);
+  --shadow-card-hover: 0 10px 25px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08), 0 0 30px rgba(var(--accent-rgb), 0.3);--shadow-neon-primary: 0 0 10px rgba(var(--accent-rgb), 0.3), 0 0 20px rgba(var(--accent-rgb), 0.2);
+  --shadow-neon-hover: 0 0 20px rgba(var(--accent-rgb), 0.5), 0 0 40px rgba(var(--accent-rgb), 0.4);--shadow-glass-card: 0 4px 16px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(255,255,255,0.10);  --shadow-animated-default: 0 4px 15px rgba(var(--color-accent-red), 0.3);
+  --shadow-animated-hover: 0 8px 25px rgba(var(--color-accent-red), 0.5);
+  --shadow-success-glow-hover: 0 0 25px rgba(var(--color-success-rgb), 0.8), 0 0 50px rgba(var(--color-success-rgb), 0.4);
+  /* Button Shadow */  --shadow-btn-default: 0 2px 8px 0 rgba(var(--accent-rgb), 0.08), 0 1px 4px 0 rgba(0, 0, 0, 0.08);
+  --shadow-btn-hover: 0 4px 12px 0 rgba(var(--accent-rgb), 0.15), 0 2px 6px 0 rgba(0, 0, 0, 0.1);
     /* Focus Ring */
   --ring: var(--primary);
   
@@ -107,9 +103,14 @@
   --line-height-sm: 1.25rem;  /* 14px font → 20px line-height */
   --line-height-lg: 1.75rem;  /* 18px font → 28px line-height */
   --line-height-xl: 1.75rem;  /* 20px font → 28px line-height */
-  --line-height-2xl: 2rem;    /* 24px font → 32px line-height */
-  --line-height-3xl: 2.25rem; /* 30px font → 36px line-height */
+  --line-height-2xl: 2rem;    /* 24px font → 32px line-height */  --line-height-3xl: 2.25rem; /* 30px font → 36px line-height */
   --line-height-4xl: 2.5rem;  /* 36px font → 40px line-height */
+  
+  /* Avatar specific font sizes */
+  --font-size-avatar-sm: 12px; /* For 40x40 avatar */
+  --font-size-avatar-md: 14px; /* For 48x48 avatar */
+  --font-size-avatar-lg: 16px; /* For 64x64 avatar */
+  --font-size-avatar-xl: 18px; /* For 80x80 avatar */
   /* Form Components */
   --checkbox-size: 20px;
   --input-height-sm: 32px;
@@ -201,14 +202,17 @@
   --brand-secondary: #870dd1;
   --brand-accent: #5b30f6;
   --brand-highlight: #8054f2;
-  
-  /* RGB Color Values for rgba() usage */
+    /* RGB Color Values for rgba() usage */
   --card-rgb: 30, 41, 59;
   --accent-rgb: 139, 92, 246;
   --background-rgb: 15, 23, 42;
   --foreground-rgb: 248, 250, 252;
   --border-rgb: 55, 65, 81;
-  --muted-rgb: 55, 65, 81;
+  --muted-rgb: 55, 65, 81;  --color-success-rgb: 16, 185, 129;
+  --color-error-rgb: 239, 68, 68;
+  --color-warning-rgb: 245, 158, 11;
+  --color-info-rgb: 59, 130, 246;
+  --color-accent-red-rgb: 255, 69, 22;
     /* Gradient Variables */
   --gradient-purple-primary: linear-gradient(135deg, #7b29cd 0%, #5b30f6 100%);
   --gradient-purple-secondary: linear-gradient(135deg, #870dd1 0%, #8054f2 100%);
@@ -300,11 +304,10 @@ p:last-child {
     backdrop-filter: blur(12px);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    
-    /* 시각적 효과 */
+      /* 시각적 효과 */
     box-shadow: var(--shadow-card-default);
     
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal) ease;
   }
   
   .card:hover {
@@ -315,11 +318,9 @@ p:last-child {
     .modern-mesh-card {
     background: var(--card);
   }
-  
-  .hover-lift:hover {
-    transform: translateY(-4px);
-  }
-  /* Game Card */
+    .hover-lift:hover {
+    transform: translateY(-2px);
+  }/* Game Card */
   .game-card {
     width: 100%;
     min-width: 0;
@@ -330,14 +331,13 @@ p:last-child {
     background: var(--card);
     border: 1px solid var(--accent);
     border-radius: var(--radius-lg);
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal) ease;
   }
   
   .game-card:hover {
     border-color: var(--accent);
     box-shadow: var(--shadow-md);
-  }
-  /* Quick Start Item */
+  }  /* Quick Start Item */
   .quick-start-item {
     width: 100%;
     min-width: 0;
@@ -347,13 +347,13 @@ p:last-child {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal) ease;
   }
   
   .quick-start-item:hover {
     background: var(--card);
     border-color: var(--border-hover);
-  }  /* Button Styles */
+  }/* Button Styles */
   .btn {
     transition: all var(--transition-normal) ease;
     border-radius: var(--btn-border-radius);
@@ -470,10 +470,9 @@ p:last-child {
     /* 상용 서비스 안정성을 위한 강제 스타일 */
     overflow: hidden !important;
     transition: none !important; /* 크기 변화 애니메이션 제거 */
-    
-    /* 전문적인 시각적 스타일 */
+      /* 전문적인 시각적 스타일 */
     background: var(--background);
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(var(--accent-rgb), 0.2);
     border-radius: var(--radius-lg);
     box-shadow: 
       0 4px 6px -1px rgba(0, 0, 0, 0.1),
@@ -714,11 +713,87 @@ p:last-child {
   .bg-neon-purple-2 { background-color: var(--neon-purple-2); }
   .bg-neon-purple-3 { background-color: var(--neon-purple-3); }
   .bg-neon-purple-4 { background-color: var(--neon-purple-4); }
-  
-  .border-neon-purple-1 { border-color: var(--neon-purple-1); }
+    .border-neon-purple-1 { border-color: var(--neon-purple-1); }
   .border-neon-purple-2 { border-color: var(--neon-purple-2); }
   .border-neon-purple-3 { border-color: var(--neon-purple-3); }
   .border-neon-purple-4 { border-color: var(--neon-purple-4); }
+  
+  /* Game Card Sub-components */
+  .game-card-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: var(--spacing-12);
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-2);
+  }
+  
+  .game-card-title {
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--spacing-1);
+  }
+  
+  .game-card-info {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-secondary);
+  }
+  
+  /* Typography Utilities */
+  .heading-h1 {
+    font-size: var(--font-size-h1);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+    color: var(--color-text-primary);
+  }
+  
+  .heading-h2 {
+    font-size: var(--font-size-h2);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+    color: var(--color-text-primary);
+  }
+  
+  .heading-h3 {
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-heading);
+    color: var(--color-text-primary);
+  }
+  
+  .heading-h4 {
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-heading);
+    color: var(--color-text-primary);
+  }
+  
+  /* Layout Utilities */
+  .layout-header-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .container {
+    width: 100%;
+    max-width: var(--layout-max-width);
+    margin: 0 auto;
+    padding: 0 var(--container-padding-x);
+  }
+  
+  @media (max-width: 767px) {
+    .container {
+      padding: 0 var(--container-padding-x-mobile);
+    }
+  }
 }
 
 /* 5. Animations */

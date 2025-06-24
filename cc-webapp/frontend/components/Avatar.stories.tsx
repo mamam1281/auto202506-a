@@ -87,8 +87,7 @@ export const Sizes: Story = {
           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
           alt="Small Avatar"
           size="sm"
-        />
-        <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Small</p>
+        />        <p className="mt-2 text-xs text-muted-foreground">Small</p>
       </div>
       <div className="text-center">
         <Avatar
@@ -96,7 +95,7 @@ export const Sizes: Story = {
           alt="Medium Avatar"
           size="md"
         />
-        <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Medium</p>
+        <p className="mt-2 text-xs text-muted-foreground">Medium</p>
       </div>
       <div className="text-center">
         <Avatar
@@ -104,7 +103,7 @@ export const Sizes: Story = {
           alt="Large Avatar"
           size="lg"
         />
-        <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Large</p>
+        <p className="mt-2 text-xs text-muted-foreground">Large</p>
       </div>
       <div className="text-center">
         <Avatar
@@ -112,7 +111,7 @@ export const Sizes: Story = {
           alt="Extra Large Avatar"
           size="xl"
         />
-        <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Extra Large</p>
+        <p className="mt-2 text-xs text-muted-foreground">Extra Large</p>
       </div>
     </div>
   ),
@@ -122,50 +121,47 @@ export const Sizes: Story = {
 export const FallbackOptions: Story = {
   render: () => (
     <div className="space-y-6">
-      <div>
-        <h4 className="text-[var(--font-size-body)] font-medium text-[var(--foreground)] mb-4">
+      <div>        <h4 className="text-body font-medium text-foreground mb-4">
           Fallback Types
         </h4>
         <div className="flex items-center gap-6">
           <div className="text-center">
             <Avatar size="lg" alt="Default Icon" />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Default Icon</p>
+            <p className="mt-2 text-xs text-muted-foreground">Default Icon</p>
           </div>
           <div className="text-center">
             <Avatar size="lg" fallback="AB" alt="Text Fallback" />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Text Fallback</p>
+            <p className="mt-2 text-xs text-muted-foreground">Text Fallback</p>
           </div>
           <div className="text-center">
             <Avatar size="lg" fallback="😀" alt="Happy Emoji" />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Happy Emoji</p>
+            <p className="mt-2 text-xs text-muted-foreground">Happy Emoji</p>
           </div>
           <div className="text-center">
             <Avatar size="lg" fallback="👤" alt="User Emoji" />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">User Emoji</p>
+            <p className="mt-2 text-xs text-muted-foreground">User Emoji</p>
           </div>
         </div>
       </div>
-      
-      <div>
-        <h4 className="text-[var(--font-size-body)] font-medium text-[var(--foreground)] mb-4">
+        <div>
+        <h4 className="text-body font-medium text-foreground mb-4">
           Different Sizes with Text
         </h4>
-        <div className="flex items-end gap-4">
-          <div className="text-center">
+        <div className="flex items-end gap-4">          <div className="text-center">
             <Avatar size="sm" fallback="AB" alt="Small Text" />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Small</p>
+            <p className="mt-2 text-xs text-muted-foreground">Small</p>
           </div>
           <div className="text-center">
             <Avatar size="md" fallback="AB" alt="Medium Text" />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Medium</p>
+            <p className="mt-2 text-xs text-muted-foreground">Medium</p>
           </div>
           <div className="text-center">
             <Avatar size="lg" fallback="AB" alt="Large Text" />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Large</p>
+            <p className="mt-2 text-xs text-muted-foreground">Large</p>
           </div>
           <div className="text-center">
             <Avatar size="xl" fallback="AB" alt="Extra Large Text" />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Extra Large</p>
+            <p className="mt-2 text-xs text-muted-foreground">Extra Large</p>
           </div>
         </div>
       </div>
@@ -177,8 +173,7 @@ export const FallbackOptions: Story = {
 export const States: Story = {
   render: () => (
     <div className="space-y-6">
-      <div>
-        <h4 className="text-[var(--font-size-body)] font-medium text-[var(--foreground)] mb-4">
+      <div>        <h4 className="text-body font-medium text-foreground mb-4">
           Avatar States
         </h4>        <div className="flex items-center gap-6">
           <div className="text-center">
@@ -187,7 +182,7 @@ export const States: Story = {
               alt="Normal"
               size="lg"
             />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Normal</p>
+            <p className="mt-2 text-xs text-muted-foreground">Normal</p>
           </div>
           <div className="text-center">
             <Avatar
@@ -196,7 +191,7 @@ export const States: Story = {
               size="lg"
               isActive={true}
             />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Active</p>
+            <p className="mt-2 text-xs text-muted-foreground">Active</p>
           </div>
         </div>
       </div>

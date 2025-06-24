@@ -32,43 +32,43 @@ export interface InputProps {
 
 const sizeConfig = {
   sm: {
-    height: 'h-[var(--input-height-sm)]',
-    padding: 'px-[calc(var(--spacing-2)-2px)] py-[var(--spacing-1)]',
-    font: 'text-[var(--font-size-caption)]',
+    height: 'h-input-sm',
+    padding: 'px-2 py-1',
+    font: 'text-caption',
     icon: 16,
-    iconLeft: 'left-[calc(var(--spacing-2)-2px)]',
+    iconLeft: 'left-2',
     iconRight: 'right-3',
     paddingWithIcon: {
-      left: 'pl-[calc(var(--spacing-2)-2px+16px+4px)]', // 패딩 + 아이콘 + 간격
+      left: 'pl-8', // 패딩 + 아이콘 + 간격
       right: 'pr-10',
     },
-    labelGap: 'mb-[var(--spacing-1)]',
+    labelGap: 'mb-1',
   },
   md: {
-    height: 'h-[var(--input-height-md)]',
-    padding: 'px-[calc(var(--spacing-3)-2px)] py-[var(--spacing-2)]',
-    font: 'text-[var(--font-size-body)]',
+    height: 'h-input-md',
+    padding: 'px-3 py-2',
+    font: 'text-body',
     icon: 18,
-    iconLeft: 'left-[calc(var(--spacing-3)-2px)]',
+    iconLeft: 'left-3',
     iconRight: 'right-3',
     paddingWithIcon: {
-      left: 'pl-[calc(var(--spacing-3)-2px+18px+4px)]', // 패딩 + 아이콘 + 간격
+      left: 'pl-9', // 패딩 + 아이콘 + 간격
       right: 'pr-10',
     },
-    labelGap: 'mb-[var(--spacing-2)]',
+    labelGap: 'mb-2',
   },
   lg: {
-    height: 'h-[var(--input-height-lg)]',
-    padding: 'px-[calc(var(--spacing-4)-2px)] py-[var(--spacing-2)]',
-    font: 'text-[var(--font-size-h5)]',
+    height: 'h-input-lg',
+    padding: 'px-4 py-2',
+    font: 'text-h5',
     icon: 20,
-    iconLeft: 'left-[calc(var(--spacing-4)-2px)]',
+    iconLeft: 'left-4',
     iconRight: 'right-4',
     paddingWithIcon: {
-      left: 'pl-[calc(var(--spacing-4)-2px+20px+4px)]', // 패딩 + 아이콘 + 간격
+      left: 'pl-10', // 패딩 + 아이콘 + 간격
       right: 'pr-12',
     },
-    labelGap: 'mb-[var(--spacing-2)]',
+    labelGap: 'mb-2',
   },
 };
 
@@ -118,29 +118,28 @@ export const Input = ({
     ? 'error'
     : success
     ? 'success'
-    : propState;
-  // Variant별 스타일 클래스
+    : propState;  // Variant별 스타일 클래스
   const getVariantStyles = () => {
     const baseStyles = `
       w-full input-base
       ${currentSize.height} ${currentSize.padding} ${currentSize.font}
-      transition-[border-color,box-shadow,background-color] duration-[var(--transition-normal)] ease-out
-      placeholder:text-[var(--muted-foreground)] placeholder:transition-opacity placeholder:duration-[var(--transition-normal)]
-      text-[var(--foreground)]
+      transition-[border-color,box-shadow,background-color] duration-normal ease-out
+      placeholder:text-muted-foreground placeholder:transition-opacity placeholder:duration-normal
+      text-foreground
       touch-target
-      rounded-[var(--radius-md)]
+      rounded-md
       shadow-inner-sm
     `;
 
     const stateStyles = {
-      default: `border-[var(--border)]`,
+      default: `border-border`,
       focused: `
-        border-[var(--ring)]
+        border-ring
         shadow-focused-glow
       `,
-      error: `border-[var(--destructive)] bg-[var(--destructive)]/10 shadow-error-glow`,
-      success: `border-[var(--color-success)] bg-[var(--color-success)]/10 shadow-success-glow`,
-      disabled: `border-[var(--border)]/50 bg-[var(--input)]/50 text-[var(--muted-foreground)] cursor-not-allowed`,
+      error: `border-destructive bg-destructive/10 shadow-error-glow`,
+      success: `border-success bg-success/10 shadow-success-glow`,
+      disabled: `border-border/50 bg-input/50 text-muted-foreground cursor-not-allowed`,
     };
 
     switch (variant) {
@@ -149,7 +148,7 @@ export const Input = ({
       case 'text':
         return `
           ${baseStyles}
-          bg-[var(--input)] border-2
+          bg-input border-2
           ${stateStyles[currentState]}
         `;
       case 'gradient':
@@ -158,24 +157,23 @@ export const Input = ({
         return `
           ${baseStyles.replace('shadow-inner-sm', '')}
           bg-transparent border-0 border-b-2
-          ${currentState === 'focused' ? 'border-b-transparent' : `border-b-[var(--border)]`}
-          ${currentState === 'error' ? `border-b-[var(--destructive)]` : ''}
-          ${currentState === 'success' ? `border-b-[var(--color-success)]` : ''}
-          ${currentState === 'disabled' ? `border-b-[var(--border)]/50 text-[var(--muted-foreground)]` : ''}
+          ${currentState === 'focused' ? 'border-b-transparent' : `border-b-border`}
+          ${currentState === 'error' ? `border-b-destructive` : ''}
+          ${currentState === 'success' ? `border-b-success` : ''}
+          ${currentState === 'disabled' ? `border-b-border/50 text-muted-foreground` : ''}
         `;
       default:
         return `
           ${baseStyles}
-          bg-[var(--input)] border-2
+          bg-input border-2
           ${stateStyles[currentState]}
         `;
     }
   };
-
   // 기본 아이콘
   const getDefaultIcon = () => {
     // getDefaultIcon 내 iconColorClass 개선
-    const iconColorClass = `text-[var(--color-neutral-medium)] ${isFocused || inputValue ? 'group-focus-within:text-[var(--color-text-secondary)]' : ''}`;
+    const iconColorClass = `text-neutral-medium ${isFocused || inputValue ? 'group-focus-within:text-text-secondary' : ''}`;
     switch (variant) {
       case 'search':
         return <Search size={currentSize.icon} className={iconColorClass} />;
@@ -187,7 +185,6 @@ export const Input = ({
         return null;
     }
   };
-
   // 우측 아이콘 (비밀번호 토글)
   const getRightIcon = () => {
     // getRightIcon 내 Eye/EyeOff 버튼 크기/정렬 개선
@@ -196,7 +193,7 @@ export const Input = ({
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="text-[var(--color-neutral-medium)] hover:text-[var(--color-text-secondary)] transition-colors duration-[var(--transition-normal)] touch-target"
+          className="text-neutral-medium hover:text-text-secondary transition-colors duration-normal touch-target"
           tabIndex={-1}
           disabled={disabled}
           style={{
@@ -253,7 +250,6 @@ export const Input = ({
       />
     );
   };
-
   // 라벨 애니메이션
   const renderLabel = () =>
     label ? (
@@ -267,7 +263,6 @@ export const Input = ({
         {label}
       </motion.label>
     ) : null;
-
   // 메시지 애니메이션
   const renderMessage = () => {
     if (error)
@@ -284,7 +279,7 @@ export const Input = ({
       );
     if (variant === 'password')
       return (
-        <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="mt-1 text-caption text-secondary cursor-pointer select-none">
+        <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="mt-1 text-caption text-text-secondary cursor-pointer select-none">
           Forgot Password?
         </motion.p>
       );
@@ -344,13 +339,12 @@ export const Input = ({
           >
             {showPassword ? <EyeOff size={passwordToggleIconSize} color={passwordToggleIconColor} /> : <Eye size={passwordToggleIconSize} color={passwordToggleIconColor} />}
           </span>
-        )}
-        {/* Gradient Underline for gradient variants (Framer Motion AnimatePresence 사용) */}
+        )}        {/* Gradient Underline for gradient variants (Framer Motion AnimatePresence 사용) */}
         {(variant === 'gradient' || variant === 'email' || variant === 'password') && (
           <AnimatePresence>
             {isFocused && (
               <motion.div
-                className="absolute bottom-0 left-0 h-[2px] w-full bg-gradient-to-r from-[var(--color-purple-primary)] via-[var(--color-purple-secondary)] to-[var(--color-purple-tertiary)]"
+                className="absolute bottom-0 left-0 h-0.5 w-full bg-gradient-purple-primary"
                 initial={{ width: 0, opacity: 0 }}
                 animate={{ width: '100%', opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}

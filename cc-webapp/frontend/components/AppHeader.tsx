@@ -33,30 +33,29 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   };
 
   return (
-    <header className="app-header layout-header-sticky safe-top pl-safe-left pr-safe-right">
-      <div className="container flex items-center justify-between h-full py-[var(--app-header-padding-y)] px-[var(--container-padding-x)]">        {/* 좌측: 로고/앱 이름 영역 */}
-        <div className="flex items-center flex-shrink-0 min-w-0 mr-[var(--spacing-2)] pl-[var(--spacing-3)]">
-          <span className="text-[var(--foreground)] heading-h3 font-[var(--font-weight-bold)] truncate">
+    <header className="app-header layout-header-sticky safe-top pl-safe-left pr-safe-right">      <div className="container flex items-center justify-between h-full py-app-header-y px-container-x">        {/* 좌측: 로고/앱 이름 영역 */}
+        <div className="flex items-center flex-shrink-0 min-w-0 mr-2 pl-3">
+          <span className="heading-h3 truncate">
             {appName}
           </span>
-        </div>{/* 중앙: 포인트 표시 (반응형) */}
-        <div className={`${showPointsOnMobile ? 'flex' : 'hidden md:flex'} items-center gap-[var(--spacing-1)] flex-shrink-0 min-w-0`}>
+        </div>        {/* 중앙: 포인트 표시 (반응형) */}
+        <div className={`${showPointsOnMobile ? 'flex' : 'hidden md:flex'} items-center gap-1 flex-shrink-0 min-w-0`}>
           <Diamond 
             size={24} 
-            className="text-[var(--color-purple-secondary)] flex-shrink-0" 
+            className="text-neon-purple-2 flex-shrink-0" 
           />
-          <span className="text-[var(--foreground)] text-[var(--font-size-body)] font-[var(--font-weight-medium)] whitespace-nowrap">
+          <span className="text-foreground text-body font-medium whitespace-nowrap">
             {points.toLocaleString()}
           </span>
         </div>        {/* 우측: 액션 아이콘들 */}
-        <div className="flex items-center gap-[var(--spacing-1)] flex-shrink-0">
+        <div className="flex items-center gap-1 flex-shrink-0">
           <Button 
             variant="text" 
             iconOnly 
             size="md" 
             icon={Bell}
             onClick={handleNotificationsClick}
-            className={`w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center p-0 hover:bg-transparent active:scale-95 transition-transform ${hasNotifications ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-neutral-medium)]'}`}
+            className={`flex items-center justify-center p-0 hover:bg-transparent active:scale-95 transition-transform duration-normal ${hasNotifications ? 'text-accent-amber' : 'text-neutral-medium'}`}
             aria-label="알림"
           />
           
@@ -66,7 +65,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             size="md" 
             icon={Settings}
             onClick={handleSettingsClick}
-            className="w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center p-0 hover:bg-transparent active:scale-95 transition-transform text-[var(--color-neutral-medium)]"
+            className="flex items-center justify-center p-0 hover:bg-transparent active:scale-95 transition-transform duration-normal text-neutral-medium"
             aria-label="설정"
           />
         </div>

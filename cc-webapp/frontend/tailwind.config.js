@@ -93,9 +93,7 @@ module.exports = {
         'btn-md': 'var(--btn-border-radius-md)',
         'btn-lg': 'var(--btn-border-radius-lg)',
         'section-card': 'var(--section-card-radius)',
-      },
-
-      // CSS Variables 직접 참조 - 폰트 시스템 (모든 CSS 변수 사용)
+      },      // CSS Variables 직접 참조 - 폰트 시스템 (모든 CSS 변수 사용)
       fontSize: {
         'xs': ['var(--font-size-xs)', { lineHeight: 'var(--line-height-xs)' }],
         'sm': ['var(--font-size-sm)', { lineHeight: 'var(--line-height-sm)' }],
@@ -112,6 +110,7 @@ module.exports = {
         'h2': ['var(--font-size-h2)', { lineHeight: 'var(--line-height-heading)' }],
         'h1': ['var(--font-size-h1)', { lineHeight: 'var(--line-height-heading)' }],
         'token': ['var(--font-size-token)', { lineHeight: 'var(--line-height-base)' }],
+        'h5': ['var(--font-size-h4)', { lineHeight: 'var(--line-height-heading)' }],
       },
 
       fontWeight: {
