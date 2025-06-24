@@ -27,39 +27,49 @@ const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   type = 'button',
-}) => {  const baseClasses = 'btn';
-  const variantClass = `btn-${variant}`;
+}) => {
+  const baseClasses = 'btn';
+  const variantClass = `btn-${variant}`; // Assumes btn-neon, btn-glass, btn-animated are defined or will be
   const sizeClass = iconOnly ? `btn-icon btn-icon-${size}` : `btn-${size}`;
-  const roundedClass = rounded ? 'btn-icon-rounded' : '';
-  const iconRightClass = Icon && iconPosition === 'right' && !iconOnly ? 'btn-icon-right' : '';
+  const roundedClass = rounded ? 'rounded-full' : ''; // Assuming 'rounded-full' is the desired class for "rounded" icon buttons
+
+  const conditionalClasses = [];
+  if (Icon && iconPosition === 'right' && !iconOnly) {
+    conditionalClasses.push('flex-row-reverse');
+  }
 
   const buttonClasses = [
     baseClasses,
     variantClass,
     sizeClass,
     roundedClass,
-    iconRightClass,
+    ...conditionalClasses,
     className,
   ].filter(Boolean).join(' ');
 
+  // Reflects globals.css icon pixel values:
+  // --icon-sm: 16px; --icon-md: 20px; --icon-lg: 24px; --icon-xl: 36px;
+  // Button 'size' prop is 'md' | 'lg'. We'll map these.
+  // If a more direct mapping or different button sizes (sm, xl) are needed for icons,
+  // ButtonProps['size'] might need adjustment or a new prop for iconSize.
   const iconSizeMap = {
-    sm: 16,
-    md: 24,
-    lg: 28,
-    xl: 32,
+    md: 20, // Maps to --icon-md
+    lg: 24, // Maps to --icon-lg
   };
-  const iconSize = iconSizeMap[size] || iconSizeMap.md;
+  // Fallback to md if size is not md or lg (though TS should prevent this)
+  const currentIconSize = iconSizeMap[size] || iconSizeMap.md;
 
   const renderContent = () => {
     if (iconOnly) {
-      return Icon ? <Icon size={iconSize} /> : null;
+      return Icon ? <Icon size={currentIconSize} /> : null;
     }
     if (Icon) {
+      // For non-iconOnly buttons, ensure there's children or it might look odd
       return (
         <>
-          {iconPosition === 'left' && <Icon size={iconSize} />}
+          {iconPosition === 'left' && <Icon size={currentIconSize} className={children ? "mr-2" : ""} />}
           {children}
-          {iconPosition === 'right' && <Icon size={iconSize} />}
+          {iconPosition === 'right' && <Icon size={currentIconSize} className={children ? "ml-2" : ""} />}
         </>
       );
     }

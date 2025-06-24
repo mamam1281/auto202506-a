@@ -10,33 +10,38 @@ export interface LoadingSpinnerProps {
   className?: string;
 }
 
-const sizeClasses: Record<LoadingSpinnerSize, string> = {
-  sm: 'w-8 h-8',
-  md: 'w-20 h-20', 
-  lg: 'w-32 h-32',
+// Using theme spacing keys: 4 (32px), 10 (80px), 16 (128px)
+const sizeTailwindClasses: Record<LoadingSpinnerSize, string> = {
+  sm: 'w-4 h-4', // w-4 (32px), h-4 (32px) from theme spacing
+  md: 'w-10 h-10', // w-10 (80px), h-10 (80px) from theme spacing
+  lg: 'w-16 h-16', // w-16 (128px), h-16 (128px) from theme spacing
 };
 
-const borderWidths: Record<LoadingSpinnerSize, string> = {
-  sm: '2px',
-  md: '5px',
-  lg: '8px',
+// Using Tailwind border width classes or arbitrary values
+const borderTailwindClasses: Record<LoadingSpinnerSize, string> = {
+  sm: 'border-2', // 2px
+  md: 'border-[5px]', // 5px
+  lg: 'border-8', // 8px
 };
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'md',
   variant = 'modern',
   className = '',
-}) => {  if (variant === 'modern') {
+}) => {
+  const currentSizeClass = sizeTailwindClasses[size];
+  const currentBorderWidthClass = borderTailwindClasses[size];
+
+  if (variant === 'modern') {
     return (
-      <div className={`${sizeClasses[size]} inline-flex items-center justify-center ${className}`}>
+      <div className={`${currentSizeClass} inline-flex items-center justify-center ${className}`}>
         <motion.div
-          className="w-full h-full rounded-full box-border"
-          style={{
-            borderWidth: borderWidths[size],
-            borderColor: '#1F2937',
-            borderTopColor: '#8B5CF6',
-            borderRightColor: '#A855F7'
-          }}
+          className={`w-full h-full rounded-full box-border
+                      ${currentBorderWidthClass}
+                      border-muted border-t-primary border-r-[#A855F7]`} // slate-800 -> muted, purple-500 -> primary
+          // borderColor: '#1F2937', // border-muted (mapped from slate-800)
+          // borderTopColor: '#8B5CF6', // border-t-primary
+          // borderRightColor: '#A855F7' // No direct theme color, use arbitrary
           animate={{ rotate: 360 }}
           transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
         />
@@ -44,20 +49,19 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     );
   }  // classic
   return (
-    <div className={`${sizeClasses[size]} inline-flex items-center justify-center ${className}`}>
+    <div className={`${currentSizeClass} inline-flex items-center justify-center ${className}`}>
       <motion.div
         className="w-full h-full"
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-      >        <div 
-          className="w-full h-full rounded-full box-border"
-          style={{
-            borderWidth: borderWidths[size],
-            borderStyle: 'solid',
-            borderColor: 'transparent',
-            borderTopColor: '#F59E0B',
-            borderRightColor: '#EAB308'
-          }}
+      >
+        <div
+          className={`w-full h-full rounded-full box-border border-solid
+                      ${currentBorderWidthClass}
+                      border-transparent border-t-warning border-r-[#EAB308]`} // amber-500 -> warning
+          // borderColor: 'transparent', -> border-transparent
+          // borderTopColor: '#F59E0B', -> border-t-warning
+          // borderRightColor: '#EAB308' // No direct theme color, use arbitrary
         />
       </motion.div>
     </div>

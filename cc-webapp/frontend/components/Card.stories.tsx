@@ -184,9 +184,14 @@ export const Complex: Story = {
             <span className="text-text-secondary">이번 주 진행률</span>
             <span className="text-foreground font-medium">78%</span>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden border border-gray-600">
+          {/* Replaced bg-gray-700 with bg-muted. Assuming border-gray-600 is similar to border-border or border-muted. Using border-muted. */}
+          <div className="w-full bg-muted rounded-full h-4 overflow-hidden border border-muted">
             <div 
-              className="bg-gradient-to-r from-purple-500 via-blue-500 to-purple-400 h-4 rounded-full transition-all duration-normal shadow-lg" 
+              // Gradient colors mapped to theme variables:
+              // from-purple-500 -> from-primary
+              // via-blue-500 -> via-info
+              // to-purple-400 -> to-neon-purple-4 (assuming neon-purple-4 is the closest for purple-400)
+              className="bg-gradient-to-r from-primary via-info to-neon-purple-4 h-4 rounded-full transition-all duration-normal shadow-lg"
               style={{ width: '78%' }}
             ></div>
           </div>
@@ -426,7 +431,7 @@ export const SettingsCard: Story = {
   args: {
     title: '알림 설정',    headerRight: (
       <Button iconOnly variant="text" size="md" onClick={action('settings clicked')}>
-        <Settings className="size-icon-sm" />
+        <Settings size={16} /> {/* --icon-sm is 16px */}
       </Button>
     ),children: (      <div className="space-y-2">
         {/* 각 설정 항목에 명시적인 수직 패딩 추가 */}

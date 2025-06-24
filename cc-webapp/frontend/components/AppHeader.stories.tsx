@@ -142,12 +142,15 @@ export const SafeAreaTest: Story = {
   },
   decorators: [
     (Story) => (
-      <div style={{ 
-        paddingTop: '44px', // iPhone 노치 시뮬레이션
-        paddingLeft: '20px',
-        paddingRight: '20px',
-        background: 'linear-gradient(to bottom, #000 44px, transparent 44px)',
-      }}>
+      <div
+        className="pt-[44px] pl-[20px] pr-[20px] bg-[linear-gradient(to_bottom,rgba(var(--black-rgb))_44px,transparent_44px)]"
+        // Spacing theme:
+        // '5': 'var(--spacing-5)' (40px)
+        // '2-5': 'var(--spacing-2-5)' (20px) - if it existed.
+        // '11': 'var(--spacing-11)' (88px)
+        // Using arbitrary values for exact px match as theme values might not align.
+        // --black-rgb is 0,0,0 from globals.css
+      >
         <Story />
       </div>
     ),

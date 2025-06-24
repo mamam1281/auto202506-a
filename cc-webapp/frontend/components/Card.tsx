@@ -18,11 +18,20 @@ const Card: React.FC<CardProps> = ({
   noPadding = false,
   onClick,
 }) => {
-  return (    <motion.div
+  // The '.card' class from globals.css already includes:
+  // - background: var(--card) (making 'modern-mesh-card' redundant if it only sets this)
+  // - border-radius: var(--radius-lg) (making 'rounded-lg' utility class redundant)
+  // - box-shadow: var(--shadow-card-default)
+  // - display: flex, flex-direction: column
+  // - transition properties
+
+  // The 'p-4' utility class maps to var(--spacing-4) from the theme, which is 32px.
+  // This is kept as conditional padding.
+  return (
+    <motion.div
       className={`
-        card modern-mesh-card
+        card
         ${noPadding ? '' : 'p-4'}
-        rounded-lg
         ${onClick ? 'cursor-pointer' : ''}
         ${className}
       `}

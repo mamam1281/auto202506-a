@@ -171,7 +171,7 @@ const Modal: React.FC<ModalProps> = ({
               }
               bg-card/80 border border-border/10
               backdrop-filter backdrop-blur-[24px] backdrop-saturate-[200%]
-              shadow-[0_16px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.15),0_0_80px_rgba(0,0,0,0.1)]
+              shadow-[0_16px_40px_rgba(var(--black-rgb),0.4),inset_0_1px_0_rgba(var(--pure-white-rgb),0.15),0_0_80px_rgba(var(--black-rgb),0.1)]
               p-6 relative flex flex-col focus:outline-none overflow-hidden
               ${className}
             `}
@@ -199,7 +199,9 @@ const Modal: React.FC<ModalProps> = ({
           >            {/* 모바일용 스와이프 인디케이터 */}
             {isMobile && allowSwipeClose && (
               <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-                <div className="w-[40px] h-[4px] bg-muted-foreground/20 rounded-full backdrop-blur-sm"></div>
+                <div className="w-5 h-0.5 bg-muted-foreground/20 rounded-full backdrop-blur-sm"></div>
+                {/* w-5 maps to var(--spacing-5) -> 40px */}
+                {/* h-0.5 maps to var(--spacing-0-5) -> 4px */}
               </div>
             )}
 

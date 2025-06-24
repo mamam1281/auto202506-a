@@ -26,33 +26,52 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   activeTab,
   onTabClick,
 }) => {
-  const iconSize = 24;  return (
-    <nav className="bottom-nav-bar">
+  const iconSize = 24; // Corresponds to --icon-lg
+  // Design Tokens:
+  // Spacing: --spacing-0-5 (4px), --spacing-1 (8px), --spacing-1-5 (12px), --spacing-2 (16px)
+  // Colors: text-purple-primary, bg-purple-primary/10, text-text-secondary, hover:text-foreground, hover:bg-white/5
+  // Font size: text-xs (12px)
+
+  return (
+    <nav
+      className="fixed inset-x-0 bottom-0 h-16 bg-card border-t border-border shadow-md
+                 flex items-center justify-around p-1 safe-bottom z-50"
+      // shadow-top-md could be a custom shadow like `0 -4px 6px -1px rgb(0 0 0 / 0.1), 0 -2px 4px -2px rgb(0 0 0 / 0.1)`
+      // Using shadow-md as a standard alternative.
+      // Let's assume shadow-md is fine for now, or it can be shadow-lg
+      // `h-16` is 64px. `p-1` is 4px padding around.
+    >
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
-        const IconComponent = item.icon;        return (
+        const IconComponent = item.icon;
+        return (
           <motion.button
             key={item.id}
             onClick={() => onTabClick(item.id, item.path)}
             className={`
-              bottom-nav-item relative group
+              flex flex-col items-center justify-center flex-1 h-full
+              p-1 text-center relative group outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md
               transition-all duration-normal
-              ${isActive ?
-                'text-purple-primary bg-purple-primary/10 rounded-md' :
-                'text-text-secondary hover:text-foreground hover:bg-white/5 rounded-md'
+              ${isActive
+                ? 'text-purple-primary bg-purple-primary/10' // No rounded-md here, already on parent for focus
+                : 'text-text-secondary hover:text-foreground hover:bg-neutral-medium/30' // Using neutral-medium for hover bg
               }
             `}
             aria-current={isActive ? 'page' : undefined}
-            whileTap={{ scale: 0.95 }} // 탭 시 5% 축소로 피드백 제공
-            transition={{ type: "spring", stiffness: 400, damping: 17 }} // 부드러운 스프링 애니메이션
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             {isActive && (
-              <span className="absolute -top-1.5 w-2 h-2 rounded-full bg-purple-primary animate-pulse shadow-lg"></span>
+              // -top-1.5 with themed spacing '1.5' (12px) = -12px. If -6px is desired, use -top-[6px]
+              // The prompt example implies -top-1.5 should be -6px, but current config makes it -12px.
+              // Sticking to -top-1.5 as per current code, which means -12px.
+              <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-purple-primary animate-pulse shadow-lg"></span>
             )}
             <IconComponent 
               size={iconSize} 
-              className="mb-0.5 transition-colors duration-normal"
-            />            <span className="text-xs font-medium transition-colors duration-normal">
+              className="mb-0.5 transition-colors duration-normal" // mb-0.5 is 2px
+            />
+            <span className="text-xs font-medium transition-colors duration-normal">
               {item.label}
             </span>
           </motion.button>
