@@ -15,7 +15,10 @@ export const Default: Story = {
   render: (args) => {
     const [activeTab, setActiveTab] = useState('home');
     return (
-      <div style={{ minHeight: 200, background: '#222' }}>
+      // Converted inline styles to Tailwind classes
+      // minHeight: 200 -> min-h-[200px]
+      // background: '#222' -> bg-background (using theme's background color)
+      <div className="min-h-[200px] bg-background p-4 flex items-center justify-center">
         <BottomNavigationBar
           activeTab={activeTab}
           onTabClick={(tabId) => setActiveTab(tabId)}

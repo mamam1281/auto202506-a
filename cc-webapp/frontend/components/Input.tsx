@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { LucideIcon, Eye, EyeOff, Search, User, Mail, Lock } from 'lucide-react';
-import { motion, AnimatePresence, type HTMLMotionProps } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export type InputVariant = 'default' | 'search' | 'email' | 'password' | 'text' | 'gradient';
 export type InputSize = 'sm' | 'md' | 'lg';
@@ -11,63 +11,62 @@ export interface InputProps {
   size?: InputSize;
   state?: InputState;
   label?: string;
-  error?: string;
-  success?: string;
-  errorMessage?: string; // Storybook 호환용
-  successMessage?: string; // Storybook 호환용
+  error?: string; // Original error prop
+  success?: string; // Original success prop
+  errorMessage?: string; // For Storybook and explicit error messaging
+  successMessage?: string; // For Storybook and explicit success messaging
   disabled?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  leftIcon?: React.ReactNode; // Allow custom ReactNode for left icon
+  rightIcon?: React.ReactNode; // Allow custom ReactNode for right icon
   showPasswordToggle?: boolean;
   fullWidth?: boolean;
-  className?: string;
-  containerClassName?: string;
-  type?: "text" | "password" | "email" | "search" | "gradient";
+  className?: string; // Additional classes for the input element itself
+  containerClassName?: string; // Classes for the outer div container
+  type?: "text" | "password" | "email" | "search"; // Removed 'gradient' as it's a style variant
   id?: string;
   value?: string;
   defaultValue?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  // Allow all other standard input attributes
+  [key: string]: any;
 }
 
 const sizeConfig = {
   sm: {
     height: 'h-input-sm',
-    padding: 'px-2 py-1',
     font: 'text-caption',
-    icon: 16,
-    iconLeft: 'left-2',
-    iconRight: 'right-3',
-    paddingWithIcon: {
-      left: 'pl-8', // 패딩 + 아이콘 + 간격
-      right: 'pr-10',
-    },
+    iconSize: 16,
+    py: 'py-1.5',
+    pxDefault: 'px-2',
+    plIcon: 'pl-7',
+    prIcon: 'pr-7',
+    iconLeftPos: 'left-2',
+    iconRightPos: 'right-2',
     labelGap: 'mb-1',
   },
   md: {
     height: 'h-input-md',
-    padding: 'px-3 py-2',
     font: 'text-body',
-    icon: 18,
-    iconLeft: 'left-3',
-    iconRight: 'right-3',
-    paddingWithIcon: {
-      left: 'pl-9', // 패딩 + 아이콘 + 간격
-      right: 'pr-10',
-    },
+    iconSize: 20,
+    py: 'py-2',
+    pxDefault: 'px-3',
+    plIcon: 'pl-9',
+    prIcon: 'pr-9',
+    iconLeftPos: 'left-3',
+    iconRightPos: 'right-3',
     labelGap: 'mb-2',
   },
   lg: {
     height: 'h-input-lg',
-    padding: 'px-4 py-2',
     font: 'text-h5',
-    icon: 20,
-    iconLeft: 'left-4',
-    iconRight: 'right-4',
-    paddingWithIcon: {
-      left: 'pl-10', // 패딩 + 아이콘 + 간격
-      right: 'pr-12',
-    },
+    iconSize: 24,
+    py: 'py-2.5',
+    pxDefault: 'px-4',
+    plIcon: 'pl-11',
+    prIcon: 'pr-11',
+    iconLeftPos: 'left-4',
+    iconRightPos: 'right-4',
     labelGap: 'mb-2',
   },
 };
@@ -82,8 +81,8 @@ export const Input = ({
   errorMessage,
   successMessage,
   disabled = false,
-  leftIcon,
-  rightIcon,
+  leftIcon: customLeftIcon,
+  rightIcon: customRightIcon,
   showPasswordToggle = false,
   fullWidth = false,
   className = '',
@@ -99,213 +98,192 @@ export const Input = ({
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState(value ?? defaultValue ?? '');
   const inputRef = useRef<HTMLInputElement>(null);
-  const currentSize = sizeConfig[size];
 
-  // Password toggle icon size/color 변수 선언 (스코프 에러 fix)
-  const passwordToggleIconSize = currentSize.icon; // 아이콘 크기: 14~22px
-  const passwordToggleIconColor = '#bbb'; // 또는 'var(--color-neutral-medium)'
+  const currentSize = sizeConfig[size];
+  const actualPasswordToggleIconSize = currentSize.iconSize;
 
   React.useEffect(() => {
     if (value !== undefined) setInputValue(value);
   }, [value]);
 
-  const isPassword = type === 'password';
-  const inputType = isPassword && showPassword ? 'text' : type;
+  const isPasswordType = type === 'password';
+  const inputType = isPasswordType && showPassword ? 'text' : type;
+
+  const determinedError = error || errorMessage;
+  const determinedSuccess = success || successMessage;
 
   const currentState: InputState = disabled
     ? 'disabled'
-    : error
+    : determinedError
     ? 'error'
-    : success
+    : determinedSuccess
     ? 'success'
-    : propState;  // Variant별 스타일 클래스
-  const getVariantStyles = () => {
-    const baseStyles = `
-      w-full input-base
-      ${currentSize.height} ${currentSize.padding} ${currentSize.font}
-      transition-[border-color,box-shadow,background-color] duration-normal ease-out
-      placeholder:text-muted-foreground placeholder:transition-opacity placeholder:duration-normal
-      text-foreground
-      touch-target
-      rounded-md
-      shadow-inner-sm
-    `;
+    : propState;
 
-    const stateStyles = {
-      default: `border-border`,
-      focused: `
-        border-ring
-        shadow-focused-glow
-      `,
-      error: `border-destructive bg-destructive/10 shadow-error-glow`,
-      success: `border-success bg-success/10 shadow-success-glow`,
-      disabled: `border-border/50 bg-input/50 text-muted-foreground cursor-not-allowed`,
-    };
+  const defaultIconElement = (() => {
+    const iconColorClass = `text-neutral-medium ${isFocused || inputValue ? 'group-focus-within:text-text-secondary' : 'group-hover:text-text-secondary'}`;
+    if (variant === 'search') return <Search size={currentSize.iconSize} className={iconColorClass} />;
+    if (variant === 'email' && type === 'email') return <Mail size={currentSize.iconSize} className={iconColorClass} />;
+    if (variant === 'password' && type === 'password' && !showPasswordToggle) return <Lock size={currentSize.iconSize} className={iconColorClass} />;
+    return null;
+  })();
 
-    switch (variant) {
-      case 'search':
-      case 'default':
-      case 'text':
-        return `
-          ${baseStyles}
-          bg-input border-2
-          ${stateStyles[currentState]}
-        `;
-      case 'gradient':
-      case 'email':
-      case 'password':
-        return `
-          ${baseStyles.replace('shadow-inner-sm', '')}
-          bg-transparent border-0 border-b-2
-          ${currentState === 'focused' ? 'border-b-transparent' : `border-b-border`}
-          ${currentState === 'error' ? `border-b-destructive` : ''}
-          ${currentState === 'success' ? `border-b-success` : ''}
-          ${currentState === 'disabled' ? `border-b-border/50 text-muted-foreground` : ''}
-        `;
-      default:
-        return `
-          ${baseStyles}
-          bg-input border-2
-          ${stateStyles[currentState]}
-        `;
-    }
-  };
-  // 기본 아이콘
-  const getDefaultIcon = () => {
-    // getDefaultIcon 내 iconColorClass 개선
-    const iconColorClass = `text-neutral-medium ${isFocused || inputValue ? 'group-focus-within:text-text-secondary' : ''}`;
-    switch (variant) {
-      case 'search':
-        return <Search size={currentSize.icon} className={iconColorClass} />;
-      case 'email':
-        return <Mail size={currentSize.icon} className={iconColorClass} />;
-      case 'password':
-        return <Lock size={currentSize.icon} className={iconColorClass} />;
-      default:
-        return null;
-    }
-  };
-  // 우측 아이콘 (비밀번호 토글)
-  const getRightIcon = () => {
-    // getRightIcon 내 Eye/EyeOff 버튼 크기/정렬 개선
-    if (isPassword && showPasswordToggle) {
+  const actualLeftIcon = customLeftIcon || defaultIconElement;
+
+  const passwordToggleAndRightIconElement = (() => {
+    if (isPasswordType && showPasswordToggle) {
       return (
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="text-neutral-medium hover:text-text-secondary transition-colors duration-normal touch-target"
+          className={`flex items-center justify-center p-1 rounded-full text-neutral-medium hover:text-text-secondary focus:outline-none focus:ring-2 focus:ring-ring/50 transition-colors duration-normal w-[${actualPasswordToggleIconSize + 8}px] h-[${actualPasswordToggleIconSize + 8}px]`}
           tabIndex={-1}
           disabled={disabled}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 0,
-            width: currentSize.icon + 8,
-            height: currentSize.icon + 8,
-            background: 'none',
-            border: 'none',
-          }}
+          aria-label={showPassword ? 'Hide password' : 'Show password'}
         >
-          {showPassword ? (
-            <EyeOff size={currentSize.icon} />
-          ) : (
-            <Eye size={currentSize.icon} />
-          )}
+          {showPassword ? <EyeOff size={actualPasswordToggleIconSize} /> : <Eye size={actualPasswordToggleIconSize} />}
         </button>
       );
     }
-    return rightIcon;
+    return customRightIcon;
+  })();
+
+  const getFinalPaddingClasses = (hasLeft: boolean, hasRight: boolean) => {
+    const { py, pxDefault, plIcon, prIcon } = currentSize;
+    let pl = hasLeft ? plIcon : pxDefault.replace('px-', 'pl-');
+    let pr = hasRight ? prIcon : pxDefault.replace('px-', 'pr-');
+
+    if (!hasLeft && !hasRight) return `${py} ${pxDefault}`;
+    return `${py} ${pl} ${pr}`;
   };
 
-  // 패딩 계산
-  const getInputPadding = () => {
-    let paddingClasses = currentSize.padding;
-    const hasLeftIcon = leftIcon || getDefaultIcon();
-    const hasRightIcon = getRightIcon();
-    if (hasLeftIcon) {
-      paddingClasses = paddingClasses.replace(/px-\[\S+\]/, currentSize.paddingWithIcon.left);
+  const inputPaddingClasses = getFinalPaddingClasses(!!actualLeftIcon, !!passwordToggleAndRightIconElement);
+
+  const getBaseVariantStyles = () => {
+    const baseClasses = [
+      'w-full',
+      currentSize.height,
+      currentSize.font,
+      'transition-[border-color,box-shadow,background-color] duration-normal ease-out',
+      'placeholder:text-muted-foreground placeholder:transition-opacity placeholder:duration-normal',
+      'text-foreground',
+      'rounded-md',
+    ];
+
+    const stateSpecificStyles = {
+      default: 'border-border',
+      focused: 'border-ring shadow-focused-glow',
+      error: 'border-destructive bg-destructive/10 shadow-error-glow',
+      success: 'border-success bg-success/10 shadow-success-glow',
+      disabled: 'border-border/50 bg-input/50 text-muted-foreground cursor-not-allowed',
+    };
+
+    if (currentState === 'disabled') {
+      return [...baseClasses, stateSpecificStyles.disabled].join(' ');
     }
-    if (hasRightIcon) {
-      if (!paddingClasses.includes('pr-')) {
-        paddingClasses = `${paddingClasses} ${currentSize.paddingWithIcon.right}`;
-      } else {
-        paddingClasses = paddingClasses.replace(/pr-\[\S+\]/, currentSize.paddingWithIcon.right);
-      }
+
+    let variantStyles: string[] = [...baseClasses];
+
+    if (variant === 'gradient' || (variant === 'default' && (type === 'email' || type === 'password'))) { // Apply gradient style to email/password types by default
+      variantStyles.push(
+        'bg-transparent border-0 border-b-2',
+        currentState === 'focused' ? 'border-b-transparent'
+        : currentState === 'error' ? 'border-b-destructive'
+        : currentState === 'success' ? 'border-b-success'
+        : 'border-b-border'
+      );
+    } else { // search, text, or default variant not matching email/password type
+      variantStyles.push('bg-input border-2 shadow-inner-sm', stateSpecificStyles[currentState]);
     }
-    return paddingClasses;
+    return variantStyles.join(' ');
   };
 
-  // 그라데이션 밑줄 애니메이션
+  const finalInputClassName = [
+    getBaseVariantStyles(),
+    inputPaddingClasses,
+    className,
+  ].filter(Boolean).join(' ');
+
   const renderGradientUnderline = () => {
-    if (!['email', 'password', 'gradient'].includes(variant)) return null;
+    if (!((variant === 'gradient' || (variant === 'default' && (type === 'email' || type === 'password'))) && currentState !== 'disabled')) return null;
     return (
-      <motion.div
-        layout
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={isFocused ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="absolute left-0 bottom-0 w-full h-0.5 origin-left"
-        style={{ background: 'var(--gradient-purple-primary)' }}
-      />
+      <AnimatePresence>
+        {isFocused && (
+          <motion.div
+            layout
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            exit={{ scaleX: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="absolute left-0 bottom-0 w-full h-0.5 bg-gradient-purple-primary origin-left"
+          />
+        )}
+      </AnimatePresence>
     );
   };
-  // 라벨 애니메이션
+
   const renderLabel = () =>
     label ? (
       <motion.label
         htmlFor={id}
-        initial={{ color: 'var(--muted-foreground)' }}
-        animate={{ color: isFocused ? 'var(--ring)' : 'var(--muted-foreground)' }}
+        initial={false}
+        animate={{ color: isFocused ? 'var(--primary)' : 'var(--muted-foreground)' }}
         transition={{ duration: 0.2 }}
-        className="block mb-2 text-body select-none"
+        className={`block ${currentSize.labelGap} text-body select-none`}
       >
         {label}
       </motion.label>
     ) : null;
-  // 메시지 애니메이션
+
   const renderMessage = () => {
-    if (error)
+    const messageText = determinedError || determinedSuccess;
+    const messageColor = determinedError ? 'text-error' : 'text-success';
+
+    if (messageText) {
       return (
-        <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="mt-1 text-error text-caption">
-          {error}
+        <motion.p
+          key={messageText}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2 }}
+          className={`mt-1.5 text-caption ${messageColor}`}
+        >
+          {messageText}
         </motion.p>
       );
-    if (success)
+    }
+    if (type === 'password' && variant === 'password' && !determinedError && !determinedSuccess) {
       return (
-        <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="mt-1 text-success text-caption">
-          {success}
-        </motion.p>
-      );
-    if (variant === 'password')
-      return (
-        <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="mt-1 text-caption text-text-secondary cursor-pointer select-none">
+        <motion.p
+          key="forgot-password"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2 }}
+          className="mt-1.5 text-caption text-text-secondary cursor-pointer select-none hover:text-primary transition-colors"
+        >
           Forgot Password?
         </motion.p>
       );
+    }
     return null;
   };
 
   return (
-    <div className={`
-      relative
-      ${fullWidth ? 'w-full' : 'w-80'}
-      ${containerClassName}
-      group
-    `}>
+    <div className={`relative ${fullWidth ? 'w-full' : 'w-80'} ${containerClassName} group`}>
       {renderLabel()}
-      <div className="relative flex items-center">        {(leftIcon || getDefaultIcon()) && (
-          <span className={`absolute ${currentSize.iconLeft} top-1/2 -translate-y-1/2 z-10 pointer-events-none flex items-center justify-start`}>
-            {leftIcon || getDefaultIcon()}
+      <div className="relative flex items-center">
+        {actualLeftIcon && (
+          <span className={`absolute ${currentSize.iconLeftPos} top-1/2 -translate-y-1/2 z-10 pointer-events-none flex items-center justify-center`}>
+            {actualLeftIcon}
           </span>
         )}
         <motion.input
           ref={inputRef}
           id={id}
           type={inputType}
-          className={`
-            ${getVariantStyles()} ${getInputPadding()} ${currentSize.height} ${currentSize.font}
-          `}
+          className={finalInputClassName}
           disabled={disabled}
           value={inputValue}
           onFocus={() => setIsFocused(true)}
@@ -316,45 +294,16 @@ export const Input = ({
           }}
           {...props}
         />
-        {type === 'password' && (
-          <span
-            className="input-password-toggle"
-            style={{
-              position: 'absolute',
-              right: 8,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: passwordToggleIconSize,
-              height: passwordToggleIconSize,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: passwordToggleIconColor,
-              fontSize: passwordToggleIconSize,
-              cursor: 'pointer',
-              zIndex: 2,
-            }}
-            onClick={() => setShowPassword((v) => !v)}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
-          >
-            {showPassword ? <EyeOff size={passwordToggleIconSize} color={passwordToggleIconColor} /> : <Eye size={passwordToggleIconSize} color={passwordToggleIconColor} />}
+        {passwordToggleAndRightIconElement && (
+          <span className={`absolute ${currentSize.iconRightPos} top-1/2 -translate-y-1/2 z-10 flex items-center justify-center`}>
+            {passwordToggleAndRightIconElement}
           </span>
-        )}        {/* Gradient Underline for gradient variants (Framer Motion AnimatePresence 사용) */}
-        {(variant === 'gradient' || variant === 'email' || variant === 'password') && (
-          <AnimatePresence>
-            {isFocused && (
-              <motion.div
-                className="absolute bottom-0 left-0 h-0.5 w-full bg-gradient-purple-primary"
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: '100%', opacity: 1 }}
-                exit={{ width: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-              />
-            )}
-          </AnimatePresence>
         )}
+        {renderGradientUnderline()}
       </div>
-      {renderMessage()}
+      <AnimatePresence mode="wait">
+        {renderMessage()}
+      </AnimatePresence>
     </div>
   );
 };

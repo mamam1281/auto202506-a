@@ -137,7 +137,8 @@ export const AllVariants: Story = {
   render: (args) => (
     <div className="flex flex-wrap gap-2">
       {['primary','secondary','accent','success','error','info','outline','text','neon','glass','animated'].map((variant) => (
-        <div key={variant} className="min-w-[120px]">
+        // Replaced min-w-[120px] with theme variable min-w-mobile-content (120px)
+        <div key={variant} className="min-w-mobile-content">
           <Button variant={variant as any} size={args.size} disabled={args.disabled}>
             {variant.charAt(0).toUpperCase() + variant.slice(1)}
           </Button>

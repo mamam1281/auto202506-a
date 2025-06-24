@@ -16,15 +16,14 @@ export interface CheckboxProps {
 const CheckIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
   <svg
     className={className}
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
+    viewBox="0 0 16 16" // Keep viewBox to define coordinate system
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    // width and height attributes removed to be controlled by className
   >
     <path
       d="M13.5 4.5L6 12L2.5 8.5"
-      stroke="currentColor"
+      stroke="currentColor" // Inherits color from parent
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -62,7 +61,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
       />      <motion.div
         className={`
           relative flex-shrink-0 cursor-pointer
-          w-5 h-5
+          w-checkbox h-checkbox
           border-2 border-solid rounded-sm
           flex items-center justify-center
           transition-all duration-fast ease-in-out

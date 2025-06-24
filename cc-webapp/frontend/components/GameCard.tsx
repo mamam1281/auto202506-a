@@ -25,7 +25,7 @@ export const GameCard: React.FC<GameCardProps> = ({
     aria-label={title}
   >    <div className="game-card-placeholder">
       {imageUrl ? (
-        <img src={imageUrl} alt={title} className="w-icon-lg h-icon-lg object-cover rounded-lg" />
+        <img src={imageUrl} alt={title} className="w-[var(--icon-lg)] h-[var(--icon-lg)] object-cover rounded-lg" />
       ) : (
         imagePlaceholder
       )}
