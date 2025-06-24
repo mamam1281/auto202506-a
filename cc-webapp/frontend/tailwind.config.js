@@ -31,9 +31,10 @@ module.exports = {
         error: 'var(--color-error)',
         info: 'var(--color-info)',
         warning: 'var(--color-warning)',
-        
-        // Special Purpose Colors
+          // Special Purpose Colors
         'purple-primary': 'var(--color-purple-primary)', // Added for BottomNavigationBar
+        'purple-secondary': 'var(--color-purple-secondary)', // Added for gradients
+        'purple-tertiary': 'var(--color-purple-tertiary)', // Added for tertiary purple
         'accent-red': 'var(--color-accent-red)',
         'accent-amber': 'var(--color-accent-amber)',
         'text-primary': 'var(--color-text-primary)',

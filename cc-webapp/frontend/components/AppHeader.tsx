@@ -41,30 +41,28 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       onProfileClick();
     }
   };
-
   return (
     <header
-      className="app-header layout-header-sticky safe-top pl-safe-left pr-safe-right h-[var(--app-header-height-mobile)] md:h-[var(--app-header-height-desktop)]"
-    >
-      <div className="container flex items-center justify-between h-full px-container-x"> {/* Removed py-app-header-y as height is now fixed by parent */}
-        {/* 좌측: 로고/앱 이름 영역 */}
-        <div className="flex items-center flex-shrink-0 min-w-0 mr-2"> {/* Removed pl-3, container padding should handle spacing */}
-          <span className="heading-h3 truncate">
-            {appName}
-          </span>
-        </div>
-        {/* 중앙: 토큰 잔고 표시 (반응형) */}
-        <div className={`${showTokenBalanceOnMobile ? 'flex' : 'hidden md:flex'} items-center gap-1 flex-shrink-0 min-w-0`}>
+      className="app-header layout-header-sticky safe-top pl-safe-left pr-safe-right h-[var(--app-header-height-mobile)] md:h-[var(--app-header-height-desktop)] glassmorphism-header"
+    >      <div className="container flex items-center h-full px-container-x relative"> {/* relative 추가 */}        {/* 좌측: 토큰 잔고 표시 */}
+        <div className={`${showTokenBalanceOnMobile ? 'flex' : 'hidden md:flex'} items-center gap-1 flex-shrink-0 min-w-0 pl-2`}>
           <Diamond 
-            size={20} // Slightly adjusted icon size for balance
-            className="text-neon-purple-3 flex-shrink-0" // Using a defined neon purple from globals.css
+            size={20}
+            className="text-neon-purple-3 flex-shrink-0"
           />
           <span className="text-foreground text-body font-medium whitespace-nowrap">
             {cyberTokenBalance.toLocaleString()}
           </span>
         </div>
+
+        {/* 중앙: 로고/앱 이름 영역 - 수학적 완전 중앙 배치 */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span className="heading-h3 truncate text-center pointer-events-auto">
+            {appName}
+          </span>
+        </div>
         {/* 우측: 액션 아이콘들 */}
-        <div className="flex items-center gap-app-header-icon flex-shrink-0"> {/* Using CSS var --app-header-icon-gap for gap */}
+        <div className="ml-auto flex items-center gap-app-header-icon flex-shrink-0"> {/* ml-auto 추가로 우측 정렬 */}
           <Button 
             variant="text" 
             iconOnly 

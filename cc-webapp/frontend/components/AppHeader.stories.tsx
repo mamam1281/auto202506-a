@@ -13,23 +13,18 @@ const meta: Meta<typeof AppHeader> = {
       },
     },
   },
-  tags: ['autodocs'],
-  argTypes: {
+  tags: ['autodocs'],  argTypes: {
     appName: {
       control: 'text',
       description: '앱 이름 (로고 텍스트)',
-    },
-    points: {
-      control: 'number',
-      description: '사용자 포인트',
     },
     hasNotifications: {
       control: 'boolean',
       description: '알림 여부 (벨 아이콘 색상 변경)',
     },
-    showPointsOnMobile: {
+    showTokenBalanceOnMobile: {
       control: 'boolean',
-      description: '모바일에서 포인트 표시 여부',
+      description: '모바일에서 토큰 잔고 표시 여부',
     },
     onNotificationsClick: {
       control: false,
@@ -38,6 +33,10 @@ const meta: Meta<typeof AppHeader> = {
     onSettingsClick: {
       control: false,
       description: '설정 버튼 클릭 핸들러',
+    },
+    onProfileClick: {
+      control: false,
+      description: '프로필 버튼 클릭 핸들러',
     },
   },
 };
@@ -48,44 +47,44 @@ type Story = StoryObj<typeof AppHeader>;
 export const Default: Story = {
   args: {
     appName: 'GamePlatform',
-    points: 25000,
     hasNotifications: false,
-    showPointsOnMobile: true,
+    showTokenBalanceOnMobile: true,
     onNotificationsClick: action('notifications clicked'),
     onSettingsClick: action('settings clicked'),
+    onProfileClick: action('profile clicked'),
   },
 };
 
 export const WithNotifications: Story = {
   args: {
     appName: 'GamePlatform',
-    points: 99999,
     hasNotifications: true,
-    showPointsOnMobile: true,
+    showTokenBalanceOnMobile: true,
     onNotificationsClick: action('notifications clicked'),
     onSettingsClick: action('settings clicked'),
+    onProfileClick: action('profile clicked'),
   },
 };
 
-export const MobileNoPoints: Story = {
+export const MobileNoTokenBalance: Story = {
   args: {
     appName: 'GamePlatform',
-    points: 1234,
     hasNotifications: false,
-    showPointsOnMobile: false,
+    showTokenBalanceOnMobile: false,
     onNotificationsClick: action('notifications clicked'),
     onSettingsClick: action('settings clicked'),
+    onProfileClick: action('profile clicked'),
   },
 };
 
-export const HighPoints: Story = {
+export const WithAllFeatures: Story = {
   args: {
     appName: 'GamePlatform',
-    points: 9999999,
     hasNotifications: true,
-    showPointsOnMobile: true,
+    showTokenBalanceOnMobile: true,
     onNotificationsClick: action('notifications clicked'),
     onSettingsClick: action('settings clicked'),
+    onProfileClick: action('profile clicked'),
   },
 };
 
@@ -93,11 +92,11 @@ export const HighPoints: Story = {
 export const ResponsiveTest: Story = {
   args: {
     appName: 'GamePlatform',
-    points: 42500,
     hasNotifications: true,
-    showPointsOnMobile: true,
+    showTokenBalanceOnMobile: true,
     onNotificationsClick: action('notifications clicked'),
     onSettingsClick: action('settings clicked'),
+    onProfileClick: action('profile clicked'),
   },
   parameters: {
     viewport: {
@@ -105,7 +104,7 @@ export const ResponsiveTest: Story = {
     },
     docs: {
       description: {
-        story: '모바일 화면에서의 반응형 동작을 테스트합니다. 포인트 표시와 아이콘 배치를 확인하세요.',
+        story: '모바일 화면에서의 반응형 동작을 테스트합니다. 토큰 잔고 표시와 아이콘 배치를 확인하세요.',
       },
     },
   },
@@ -115,16 +114,16 @@ export const ResponsiveTest: Story = {
 export const IconSizeTest: Story = {
   args: {
     appName: 'GamePlatform',
-    points: 15000,
     hasNotifications: true,
-    showPointsOnMobile: true,
+    showTokenBalanceOnMobile: true,
     onNotificationsClick: action('notifications clicked'),
     onSettingsClick: action('settings clicked'),
+    onProfileClick: action('profile clicked'),
   },
   parameters: {
     docs: {
       description: {
-        story: '모든 아이콘이 24px 크기로 일관되게 표시되는지 확인합니다. Diamond, Bell, Settings 아이콘 모두 체크하세요.',
+        story: '모든 아이콘이 일관되게 표시되는지 확인합니다. Diamond, Bell, Settings, UserCircle 아이콘 모두 체크하세요.',
       },
     },
   },
@@ -134,11 +133,11 @@ export const IconSizeTest: Story = {
 export const SafeAreaTest: Story = {
   args: {
     appName: 'GamePlatform',
-    points: 78500,
     hasNotifications: false,
-    showPointsOnMobile: true,
+    showTokenBalanceOnMobile: true,
     onNotificationsClick: action('notifications clicked'),
     onSettingsClick: action('settings clicked'),
+    onProfileClick: action('profile clicked'),
   },
   decorators: [
     (Story) => (
@@ -163,3 +162,37 @@ export const SafeAreaTest: Story = {
     },
   },
 };
+
+export const GlassmorphismEffect: Story = {
+  args: {
+    appName: 'GamePlatform',
+    hasNotifications: true,
+    showTokenBalanceOnMobile: true,
+    onNotificationsClick: action('notifications clicked'),
+    onSettingsClick: action('settings clicked'),
+    onProfileClick: action('profile clicked'),
+  },
+  decorators: [
+    (Story) => (
+      <div className="min-h-screen bg-gradient-to-br from-purple-primary via-purple-secondary to-purple-tertiary">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+Cjwvc3ZnPg==')] opacity-20"></div>
+        <Story />
+      </div>
+    ),
+  ],
+  parameters: {
+    docs: {
+      description: {
+        story: '깊이감 있는 다크 글래스모피즘 효과를 시연합니다. 배경 블러, 그림자, 내부 하이라이트가 적용된 AppHeader를 확인하세요.',
+      },
+    },
+  },
+};
+
+export const decorators = [
+  (Story) => (
+    <div style={{ paddingLeft: '1rem' }}> {/* pl-4와 동일한 16px 여백 */}
+      <Story />
+    </div>
+  ),
+];

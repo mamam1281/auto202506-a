@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.10",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
     "framer-motion": "^12.18.1",
@@ -10,5 +11,8 @@
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0"
+  },
+  "scripts": {
+    "storybook": "storybook dev -p 6006"
   }
 }

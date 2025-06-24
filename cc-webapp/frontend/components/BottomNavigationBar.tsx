@@ -31,47 +31,66 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   // Spacing: --spacing-0-5 (4px), --spacing-1 (8px), --spacing-1-5 (12px), --spacing-2 (16px)
   // Colors: text-purple-primary, bg-purple-primary/10, text-text-secondary, hover:text-foreground, hover:bg-white/5
   // Font size: text-xs (12px)
-
   return (
     <nav
-      className="bottom-nav-bar fixed inset-x-0 bottom-0 h-16 bg-card border-t border-border shadow-md
-                 flex items-center justify-around p-1 safe-bottom z-50 md:hidden"
-      // shadow-top-md could be a custom shadow like `0 -4px 6px -1px rgb(0 0 0 / 0.1), 0 -2px 4px -2px rgb(0 0 0 / 0.1)`
-      // Using shadow-md as a standard alternative.
-      // Let's assume shadow-md is fine for now, or it can be shadow-lg
-      // `h-16` is 64px. `p-1` is 4px padding around.
+      className="bottom-nav-bar"
+      // global.css의 .bottom-nav-bar 클래스를 사용하여 완전한 하단 고정 보장
     >
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
-        const IconComponent = item.icon;
-        return (
+        const IconComponent = item.icon;        return (
           <motion.button
             key={item.id}
-            onClick={() => onTabClick(item.id, item.path)}
-            className={`
-              flex flex-col items-center justify-center flex-1 h-full
-              p-1 text-center relative group outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md
+            onClick={() => {
+              console.log('BottomNav onClick triggered:', item.id, item.path);
+              onTabClick(item.id, item.path);
+            }}            className={`
+              bottom-nav-item relative
               transition-all duration-normal
               ${isActive
-                ? 'text-purple-primary bg-purple-primary/10' // No rounded-md here, already on parent for focus
-                : 'text-text-secondary hover:text-foreground hover:bg-neutral-medium/30' // Using neutral-medium for hover bg
+                ? 'text-purple-primary bg-purple-primary/10 shadow-lg' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
               }
             `}
             aria-current={isActive ? 'page' : undefined}
+            aria-label={`${item.label} 탭`}
             whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            {isActive && (
-              // -top-1.5 with themed spacing '1.5' (12px) = -12px. If -6px is desired, use -top-[6px]
-              // The prompt example implies -top-1.5 should be -6px, but current config makes it -12px.
-              // Sticking to -top-1.5 as per current code, which means -12px.
-              <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-purple-primary animate-pulse shadow-lg"></span>
-            )}
-            <IconComponent 
+            whileHover={{ scale: 1.05 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 400, 
+              damping: 17,
+              duration: 0.2
+            }}
+          >            {isActive && (
+              <motion.div 
+                className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full nav-indicator-bar"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 500, 
+                  damping: 25,
+                  duration: 0.4 
+                }}
+                layoutId="activeIndicator" // framer-motion의 layoutId로 부드러운 전환
+              />
+            )}            <IconComponent 
               size={iconSize} 
-              className="mb-0.5 transition-colors duration-normal" // mb-0.5 is 2px
-            />
-            <span className="text-xs font-medium transition-colors duration-normal">
+              className={`mb-0.5 transition-colors duration-normal ${
+                isActive ? 'text-purple-primary' : 'text-muted-foreground'
+              }`} 
+              style={{
+                color: isActive ? 'var(--color-purple-primary)' : undefined
+              }}
+            />            <span className={`text-[10px] font-normal transition-colors duration-normal ${
+              isActive ? 'text-purple-primary/80' : 'text-muted-foreground/70'
+            }`}
+              style={{
+                color: isActive ? 'rgba(91, 48, 246, 0.8)' : 'rgba(209, 213, 219, 0.7)'
+              }}
+            >
               {item.label}
             </span>
           </motion.button>

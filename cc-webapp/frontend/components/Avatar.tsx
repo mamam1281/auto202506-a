@@ -86,13 +86,13 @@ const Avatar: React.FC<AvatarProps> = ({
         relative flex-shrink-0 rounded-full overflow-hidden
         flex items-center justify-center        bg-[var(--color-primary-charcoal)] text-[var(--color-text-secondary)]
         border-2 border-[var(--border)]        ${sizeClass} ${className}
-        ${isActive ? 'border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.6),_0_0_40px_rgba(34,197,94,0.3)]' : ''}
+        ${isActive ? 'border-green-400 shadow-[0_0_10px_rgba(34,197,94,0.4),_0_0_20px_rgba(34,197,94,0.2)]' : ''}
         ${(isLoading || imageLoading) ? 'avatar-shimmer-loading' : ''}
       `}      whileHover={{ 
         scale: 1.1, 
         boxShadow: isActive 
-          ? '0 0 25px rgba(34, 197, 94, 0.8), 0 0 50px rgba(34, 197, 94, 0.4)'
-          : '0 0 15px rgba(91, 48, 246, 0.5)' 
+          ? '0 0 15px rgba(34, 197, 94, 0.5), 0 0 30px rgba(34, 197, 94, 0.2)'
+          : '0 0 8px rgba(91, 48, 246, 0.3)' 
       }}
       transition={{ type: "spring", stiffness: 400, damping: 10 }}
       role="img"

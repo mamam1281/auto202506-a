@@ -780,14 +780,26 @@ button {
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--radius-lg);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  }
-  .glassmorphism-dark {
+  }  .glassmorphism-dark {
     background: rgba(26, 26, 26, 0.3);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* AppHeader 전용 깊이감 있는 다크 글래스모피즘 */
+  .glassmorphism-header {
+    background: rgba(26, 26, 26, 0.85); /* 더 진한 배경 */
+    backdrop-filter: blur(20px) saturate(180%); /* 더 강한 블러와 채도 */
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 4px 24px rgba(0, 0, 0, 0.4),
+      0 1px 0 rgba(255, 255, 255, 0.05) inset; /* 상단 내부 하이라이트 */
+    transition: all var(--transition-normal);
+    will-change: transform, box-shadow; /* GPU 가속 힌트 */
   }
 
   .neumorphism {
@@ -810,12 +822,125 @@ button {
     box-shadow:
       8px 8px 16px rgba(0, 0, 0, 0.3),
       -8px -8px 16px rgba(68, 68, 68, 0.5);
+  }  /* 첫 번째 중복 정의 제거됨 - 아래 더 향상된 정의 사용 */
+  /* 호버 리프트 효과 개선 */
+  .hover-lift {
+    transition: all var(--transition-normal);
   }
-  .animated-gradient {
-    background: linear-gradient(-45deg, #5B30F6, #870DD1, #8054F2, #FF4516);
-    background-size: 400% 400%;
-    animation: gradient-shift 3s ease infinite;
-    will-change: background-position;
+
+  .hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 
+      0 16px 40px rgba(0, 0, 0, 0.2),
+      0 6px 16px rgba(91, 48, 246, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .modern-mesh-card.hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      0 20px 48px rgba(0, 0, 0, 0.35),
+      0 8px 16px rgba(91, 48, 246, 0.2),
+      0 0 24px rgba(135, 13, 209, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  /* 네온 글로우 카드 */
+  .neon-glow {
+    background: var(--color-primary-charcoal);
+    border: 2px solid var(--color-purple-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: 
+      0 0 8px rgba(91, 48, 246, 0.3),
+      inset 0 0 8px rgba(91, 48, 246, 0.1);
+    animation: neon-pulse-card 3s ease-in-out infinite alternate;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .neon-glow:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 0 20px rgba(135, 13, 209, 0.4),
+      0 8px 32px rgba(0, 0, 0, 0.2),
+      inset 0 0 16px rgba(135, 13, 209, 0.15);
+    border-color: var(--color-purple-secondary);
+  }
+
+  /* 컨텐트 그리드 시스템 */
+  .content-grid {
+    display: grid;
+    gap: var(--spacing-2);
+    grid-template-columns: repeat(2, 1fr); /* 모바일: 2열 */
+    padding: var(--spacing-2);
+  }
+
+  @media (min-width: 769px) {
+    .content-grid {
+      grid-template-columns: repeat(3, 1fr); /* 태블릿: 3열 */
+      gap: var(--spacing-3);
+      padding: var(--spacing-3);
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .content-grid {
+      grid-template-columns: repeat(4, 1fr); /* 데스크톱: 4열 */
+      gap: var(--spacing-4);
+      padding: var(--spacing-4);
+    }
+  }
+
+  /* 컨텐트 카드 기본 스타일 */
+  .content-card {
+    min-width: 0;
+    max-width: 100%;
+    height: 120px; /* 모바일 기본 높이 */
+    padding: var(--spacing-2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+  }
+
+  @media (min-width: 769px) {
+    .content-card {
+      height: 120px;
+      padding: var(--spacing-3);
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .content-card {
+      height: 140px;
+      padding: var(--spacing-4);
+    }
+  }
+
+  /* 애니메이션 키프레임 */
+  @keyframes mesh-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes neon-pulse-card {
+    0% { 
+      box-shadow: 
+        0 0 8px rgba(91, 48, 246, 0.3),
+        inset 0 0 8px rgba(91, 48, 246, 0.1);
+    }
+    100% { 
+      box-shadow: 
+        0 0 15px rgba(91, 48, 246, 0.5),
+        inset 0 0 12px rgba(91, 48, 246, 0.2);
+    }
   }
   .animated-gradient-text {
     background: linear-gradient(-45deg, #5B30F6, #870DD1, #8054F2, #FF4516);
@@ -1326,21 +1451,25 @@ button {
     flex-direction: column;
     /* !!! -------------------- !!! */
   }
-  
+    /* 모던 메시 글래스모피즘 카드 - 2025년 트렌드 */
   .modern-mesh-card {
-    /* 2025년 트렌드: Gradient Mesh + Neural Network 패턴 */
+    /* Neural Network Gradient Mesh Pattern */
     background: 
-      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(120, 229, 255, 0.1) 0%, transparent 50%),
-      linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
-    backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.125);
+      radial-gradient(circle at 20% 80%, rgba(91, 48, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(135, 13, 209, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(128, 84, 242, 0.08) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(45, 45, 45, 0.95) 0%, rgba(26, 26, 26, 0.9) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
     box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.37),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 2px 8px rgba(91, 48, 246, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
     position: relative;
     overflow: hidden;
+    transition: all var(--transition-normal);
   }
     .modern-mesh-card::before {
     content: '';
@@ -1353,34 +1482,21 @@ button {
       repeating-linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.008) 1px,
+        rgba(255, 255, 255, 0.01) 1px,
         transparent 2px,
         transparent 40px
       ),
       repeating-linear-gradient(
         0deg,
         transparent,
-        rgba(255, 255, 255, 0.008) 1px,
+        rgba(255, 255, 255, 0.01) 1px,
         transparent 2px,
         transparent 40px
       );
     pointer-events: none;
+    opacity: 0.6;
   }
-  
-  .card.hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 0 20px rgba(91, 48, 246, 0.15),
-      0 8px 32px rgba(0, 0, 0, 0.25);
-  }
-  
-  .modern-mesh-card.hover-lift:hover {
-    transform: translateY(-3px);
-    box-shadow: 
-      0 12px 40px rgba(0, 0, 0, 0.4),
-      0 0 30px rgba(120, 119, 198, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  }
+    /* 중복된 호버 효과 제거됨 */
     /*
     Tabs 컴포넌트 스타일
   */
@@ -1817,19 +1933,23 @@ button {
       padding-left: var(--spacing-4); /* 데스크톱에서 좌우 패딩 증가 */
       padding-right: var(--spacing-4);
     }
-  }
-  /* BottomNavigationBar (하단 네비) */
+  }  /* BottomNavigationBar (하단 네비) - 다크 글래스모피즘 적용 */
   .bottom-nav-bar {
-    background: rgba(34, 34, 34, 0.8); /* 더 어둡고 투명한 배경 */
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4); /* 더 넓고 진한 그림자 */
+    background: rgba(26, 26, 26, 0.85); /* AppHeader와 동일한 진한 배경 */
+    backdrop-filter: blur(20px) saturate(180%); /* 더 강한 블러와 채도 */
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* 상단 테두리 */
+    box-shadow: 
+      0 -4px 24px rgba(0, 0, 0, 0.4),
+      0 -1px 0 rgba(255, 255, 255, 0.05) inset; /* 상단 내부 하이라이트 */
     height: var(--spacing-9); /* 72px로 높이 증가 */
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 40;
+    transition: all var(--transition-normal);
+    will-change: transform, box-shadow; /* GPU 가속 힌트 */
     
     /* 핵심 flex 속성들 */
     display: flex;
@@ -1838,8 +1958,7 @@ button {
     
     padding: var(--spacing-1) var(--spacing-2);
     padding-bottom: calc(var(--spacing-1) + env(safe-area-inset-bottom));
-  }
-  .bottom-nav-item {
+  }.bottom-nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1862,6 +1981,36 @@ button {
     /* 텍스트 크기 */
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
+    
+    /* 클릭 및 터치 영역 최적화 */
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    
+    /* 포커스 접근성 */
+    outline: none;
+    border-radius: var(--radius-md);
+  }
+  
+  .bottom-nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+  }
+  
+  .bottom-nav-item:active {
+    transform: translateY(0);
+  }
+    .bottom-nav-item:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-purple-primary);
+  }
+
+  /* 하단 네비게이션 활성 인디케이터 바 */
+  .nav-indicator-bar {
+    background: linear-gradient(90deg, var(--color-purple-primary) 0%, var(--color-purple-secondary) 100%);
+    box-shadow: 
+      0 2px 8px rgba(91, 48, 246, 0.4),
+      0 0 16px rgba(91, 48, 246, 0.2);
+    will-change: transform, opacity;
   }
     @media (min-width: 768px) {
     .bottom-nav-bar {
