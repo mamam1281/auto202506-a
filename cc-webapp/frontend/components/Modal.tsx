@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 import Button from './Button';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
-export type ModalVariant = 'default' | 'ice' | 'hologram' | 'space' | 'crystal';
+export type ModalVariant = 'default' | 'ice';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -33,9 +33,6 @@ const sizeClassMap: Record<ModalSize, string> = {
 const variantClassMap: Record<ModalVariant, string> = {
   default: 'bg-card/80 border border-border/10 backdrop-filter backdrop-blur-[24px] backdrop-saturate-[200%] shadow-[0_16px_40px_rgba(var(--black-rgb),0.4),inset_0_1px_0_rgba(var(--pure-white-rgb),0.15),0_0_80px_rgba(var(--black-rgb),0.1)]',
   ice: 'ice-glassmorphism',
-  hologram: 'hologram-modal',
-  space: 'space-warp-modal',
-  crystal: 'crystal-modal',
 };
 
 const Modal: React.FC<ModalProps> = ({

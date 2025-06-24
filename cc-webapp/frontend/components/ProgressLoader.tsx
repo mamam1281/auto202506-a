@@ -13,9 +13,9 @@ export interface ProgressLoaderProps {
 
 // Using themed spacing keys: h-1, h-2, h-3
 const heightTailwindClasses: Record<ProgressLoaderSize, string> = {
-  sm: 'h-1', // 8px, maps to var(--spacing-1)
-  md: 'h-2', // 16px, maps to var(--spacing-2)
-  lg: 'h-3', // 24px, maps to var(--spacing-3)
+  sm: 'h-4', // 16px
+  md: 'h-6', // 24px
+  lg: 'h-8', // 32px
 };
 
 export const ProgressLoader: React.FC<ProgressLoaderProps> = ({
