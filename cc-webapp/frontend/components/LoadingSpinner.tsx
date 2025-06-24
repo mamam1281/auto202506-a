@@ -10,18 +10,18 @@ export interface LoadingSpinnerProps {
   className?: string;
 }
 
-// Using theme spacing keys: 4 (32px), 10 (80px), 16 (128px)
+// Using theme spacing keys: 원래 크기 유지
 const sizeTailwindClasses: Record<LoadingSpinnerSize, string> = {
-  sm: 'w-4 h-4', // w-4 (32px), h-4 (32px) from theme spacing
-  md: 'w-10 h-10', // w-10 (80px), h-10 (80px) from theme spacing
-  lg: 'w-16 h-16', // w-16 (128px), h-16 (128px) from theme spacing
+  sm: 'w-8 h-8', // 32px 원래 크기 유지
+  md: 'w-20 h-20', // 80px 원래 크기 유지
+  lg: 'w-32 h-32', // 128px 원래 크기 유지
 };
 
-// Using Tailwind border width classes or arbitrary values
+// Using Tailwind border width classes or arbitrary values - 2배 증가
 const borderTailwindClasses: Record<LoadingSpinnerSize, string> = {
-  sm: 'border-2', // 2px
-  md: 'border-[5px]', // 5px
-  lg: 'border-8', // 8px
+  sm: 'border-[4px]', // 2px → 4px (2배)
+  md: 'border-[10px]', // 5px → 10px (2배)
+  lg: 'border-[16px]', // 8px → 16px (2배)
 };
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({

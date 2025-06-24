@@ -159,15 +159,16 @@
   --font-mono: 'IBM Plex Sans KR', monospace;
 
   /* Heading Sizes */
-  --font-size-h1: 32px;
-  --font-size-h2: 24px;
-  --font-size-h3: 20px;
-  --font-size-h4: 18px; /* 추가: 가이드에는 없지만 h1-h3 사이로 자연스럽게 흐름 */
-  --font-size-h5: 16px; 
-  /* Body & Token Sizes */  --font-size-body: 16px;
-  --font-size-caption: 14px;
+  --font-size-h1: 24px;
+  --font-size-h2: 22px;
+  --font-size-h3: 18px;
+  --font-size-h4: 16px; /* 추가: 가이드에는 없지만 h1-h3 사이로 자연스럽게 흐름 */
+  --font-size-h5: 14px; /* 추가: h4보다 2px 작은 크기 */
+  /* Body & Token Sizes */  
+  --font-size-body: 16px;
+  --font-size-caption: 12px;
   --font-size-xs: 8px; /* BottomNavigationBar 한글 폰트 1px 줄임 */
-  --font-size-token: 16px;
+  --font-size-token: 12px;
 
   /* Line Heights */
   --line-height-heading: 1.2; /* 상대적인 값으로 변경하여 유연성 확보 */
@@ -740,7 +741,6 @@ button {
   .icon-md { width: var(--icon-md); height: var(--icon-md); font-size: var(--icon-md); }
   .icon-lg { width: var(--icon-lg); height: var(--icon-lg); font-size: var(--icon-lg); }
   .icon-xl { width: var(--icon-xl); height: var(--icon-xl); font-size: var(--icon-xl); }
-
   /* 아이콘과 텍스트 조합 */
   .icon-text {
     display: flex;
@@ -752,6 +752,60 @@ button {
     align-items: center;
     gap: var(--spacing-1);
     flex-direction: row-reverse;
+  }
+  /* 카드 레이아웃 헬퍼 클래스 - 공간 균형 활용 */
+  .card-flex-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .card-flex-tight {
+    gap: var(--spacing-2); /* 16px */
+  }
+  
+  .card-flex-normal {
+    gap: var(--spacing-4); /* 32px */
+  }
+  
+  .card-flex-loose {
+    gap: var(--spacing-6); /* 48px */
+  }
+
+  /* 균형잡힌 공간 활용 클래스 */
+  .space-balanced {
+    justify-content: space-evenly; /* 균등 분배 */
+    align-items: stretch; /* 높이 맞춤 */
+  }
+  
+  .content-fill {
+    flex: 1; /* 남은 공간 채우기 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 텍스트 그룹핑 헬퍼 - 개선된 간격 */
+  .text-group-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--spacing-2); /* 16px - 더 자연스러운 텍스트간 간격 */
+    width: 100%;
+  }
+
+  /* 텍스트 정렬 및 줄 간격 유틸리티 */
+  .leading-tight-card {
+    line-height: var(--line-height-tight); /* 1.25 */
+  }
+  
+  .leading-body-card {
+    line-height: var(--line-height-body); /* 1.6 */
   }
 
 
@@ -1285,7 +1339,7 @@ button {
   .btn-animated {
     background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FF6B6B);
     background-size: 300% 300%;
-    animation: gradient-shift 1.5s ease infinite, pulse-glow 2s ease-in-out infinite alternate;
+    animation: gradient-shift 1.5s ease infinite, pulse-glow 2s ease-in-out infinite;
     color: #fff;
     font-weight: 700; /* 글자 더 두껍게 */
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* 텍스트 그림자 추가 */
@@ -1366,7 +1420,7 @@ button {
 
 /* IconRight 버튼의 폰트 사이즈 크게 */
 .btn-icon-right {
-  font-size: 14px !important; /* 15px에서 14px로 1단계 축소 */
+  font-size: 13px !important; /* 15px에서 14px로 1단계 축소 */
   font-weight: 600 !important;
 }
 
@@ -1419,6 +1473,59 @@ button {
     border-right-width: 0;
   }
 
+  /* 버튼 그룹 세로 패딩 및 간격 */
+  .btn-group-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2); /* 16px 버튼 간 세로 간격 */
+    width: 100%;
+  }
+  
+  .btn-group-vertical .btn {
+    border-radius: var(--btn-border-radius);
+    margin: 0; /* 개별 버튼 마진 제거 */
+  }
+  
+  /* 버튼 그룹 컨테이너 패딩 */
+  .btn-group-container {
+    padding: var(--spacing-4) 0; /* 상하 32px 패딩 */
+  }
+  
+  /* 버튼이 여러 개 있는 섹션의 전체 패딩 */
+  .buttons-section {
+    padding: var(--spacing-6) var(--spacing-4); /* 48px 상하, 32px 좌우 */
+    gap: var(--spacing-4); /* 32px 요소 간 간격 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* 인라인 버튼 그룹 (가로 배치) */
+  .btn-group-inline {
+    display: flex;
+    gap: var(--spacing-3); /* 24px 가로 간격 */
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-3) 0; /* 상하 24px 패딩 */
+  }
+  
+  /* 모바일에서 버튼 그룹 간격 조정 */
+  @media (max-width: 768px) {
+    .btn-group-vertical {
+      gap: var(--spacing-3); /* 모바일에서 24px 간격 */
+    }
+    
+    .buttons-section {
+      padding: var(--spacing-4) var(--spacing-2); /* 모바일 패딩 축소 */
+    }
+    
+    .btn-group-inline {
+      gap: var(--spacing-2); /* 모바일 가로 간격 16px */
+      padding: var(--spacing-2) 0;
+    }
+  }
+
   /* Floating Action Button */
   .btn-fab {
     position: fixed;
@@ -1437,8 +1544,7 @@ button {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
   }  /*
     Card 컴포넌트 스타일
-  */
-  .card {
+  */  .card {
     /* 기본 카드 스타일 */
     transition: all var(--transition-normal);
     
@@ -1447,59 +1553,167 @@ button {
     min-width: 0; /* flex/grid 아이템이 공간이 부족할 때 최소 0px까지 줄어들 수 있도록 허용 */
     max-width: 100%; /* 불필요하게 늘어나지 않도록 (안전장치) */
     height: auto; /* 콘텐츠에 따라 높이 자동 조절 (찌그러짐 방지) */
+    min-height: 280px; /* 최소 높이 크게 증가 (200px → 280px) */
     display: flex;
     flex-direction: column;
+    
+    /* 카드 내부 패딩 - 매우 여유롭게! */
+    padding: 60px 48px; /* 세로 패딩 크게 증가 (48px → 60px) */
+    
+    /* 카드 내부 요소 간 기본 간격 - 훨씬 더 넓게! */
+    gap: 40px; /* 32px → 40px로 대폭 증가 */
+    
+    /* 텍스트 정렬 및 중앙 배치 - 공간 균형 활용 */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     /* !!! -------------------- !!! */
-  }
-    /* 모던 메시 글래스모피즘 카드 - 2025년 트렌드 */
+  }/* 모던 메시 글래스모피즘 카드 - 더 밝은 배경과 균형잡힌 레이아웃 */
   .modern-mesh-card {
-    /* Neural Network Gradient Mesh Pattern */
+    /* 더 밝고 선명한 컬러 그라데이션 메시 패턴 */
     background: 
-      radial-gradient(circle at 20% 80%, rgba(91, 48, 246, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(135, 13, 209, 0.12) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(128, 84, 242, 0.08) 0%, transparent 50%),
-      linear-gradient(135deg, rgba(45, 45, 45, 0.95) 0%, rgba(26, 26, 26, 0.9) 100%);
+      radial-gradient(circle at 20% 80%, rgba(91, 48, 246, 0.25) 0%, transparent 45%),
+      radial-gradient(circle at 80% 20%, rgba(135, 13, 209, 0.2) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(128, 84, 242, 0.15) 0%, transparent 35%),
+      radial-gradient(circle at 30% 70%, rgba(91, 48, 246, 0.12) 0%, transparent 40%),
+      radial-gradient(circle at 70% 30%, rgba(135, 13, 209, 0.12) 0%, transparent 40%),
+      linear-gradient(135deg, rgba(55, 55, 65, 0.8) 0%, rgba(35, 35, 45, 0.75) 100%);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(91, 48, 246, 0.25);
     border-radius: var(--radius-lg);
     box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      0 2px 8px rgba(91, 48, 246, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      0 12px 40px rgba(0, 0, 0, 0.25),
+      0 4px 12px rgba(91, 48, 246, 0.15),
+      0 0 20px rgba(135, 13, 209, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
     position: relative;
     overflow: hidden;
     transition: all var(--transition-normal);
   }
-    .modern-mesh-card::before {
+
+  /* 카드 내 컨텐츠가 메시 패턴 위에 표시되도록 */
+  .modern-mesh-card > * {
+    position: relative;
+    z-index: 2;
+  }.modern-mesh-card::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: -10%;
+    left: -10%;
+    right: -10%;
+    bottom: -10%;
     background: 
+      /* 더 뚜렷한 메시 그리드 패턴 */
       repeating-linear-gradient(
-        90deg,
+        45deg,
         transparent,
-        rgba(255, 255, 255, 0.01) 1px,
+        rgba(91, 48, 246, 0.08) 1px,
         transparent 2px,
-        transparent 40px
+        transparent 25px
       ),
       repeating-linear-gradient(
-        0deg,
+        -45deg,
         transparent,
-        rgba(255, 255, 255, 0.01) 1px,
+        rgba(135, 13, 209, 0.06) 1px,
         transparent 2px,
-        transparent 40px
-      );
-    pointer-events: none;
-    opacity: 0.6;
+        transparent 25px
+      ),
+      /* 움직이는 그라데이션 오버레이 */
+      conic-gradient(from 0deg at 50% 50%, 
+        rgba(91, 48, 246, 0.1) 0deg,
+        transparent 60deg,
+        rgba(135, 13, 209, 0.08) 120deg,
+        transparent 180deg,
+        rgba(128, 84, 242, 0.06) 240deg,
+        transparent 300deg,
+        rgba(91, 48, 246, 0.1) 360deg
+      );    pointer-events: none;
+    opacity: 0.8;
+    animation: mesh-rotate 30s linear infinite;
+    z-index: 1;
+  }    /* 모바일에서 카드 패딩 조정 - 공간 활용 대폭 개선! */
+  @media (max-width: 768px) {
+    .card {
+      padding: 48px 32px; /* 모바일에서도 충분한 패딩! (32px → 48px 세로) */
+      gap: 32px; /* 모바일에서도 넉넉한 간격! (24px → 32px) */
+      min-height: 240px; /* 모바일 최소 높이 대폭 증가 (180px → 240px) */
+    }
+    
+    .card-content {
+      gap: 28px; /* 모바일 콘텐츠 간격 증가 (24px → 28px) */
+      padding: var(--spacing-2); /* 16px */
+    }
+    
+    .content-icon, .card-icon {
+      width: 56px; /* 모바일 아이콘 크기 증가 (40px → 56px) */
+      height: 56px;
+      font-size: 56px;
+    }
+  }  /* 카드 내 콘텐츠 레이아웃 헬퍼 클래스 - 공간 균형 대폭 확장! */
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px; /* 32px → 36px 더 넓은 간격 */
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    padding: var(--spacing-3); /* 24px 추가 내부 여백 증가 */
   }
-    /* 중복된 호버 효과 제거됨 */
-    /*
-    Tabs 컴포넌트 스타일
-  */
+  
+  .card-content-tight {
+    gap: 24px; /* 16px → 24px 보통 간격도 증가 */
+    padding: var(--spacing-2); /* 16px */
+  }
+  
+  .card-content-loose {
+    gap: 56px; /* 48px → 56px 매우 넓은 간격 더 증가 */
+    padding: 40px; /* 32px → 40px */
+  }
+
+  /* 카드 내 텍스트 그룹핑 - 더 자연스러운 간격 증가 */
+  .card-text-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* 16px → 20px 텍스트간 간격 증가 */
+    text-align: center;
+    width: 100%;
+  }
+
+  /* 카드 아이콘 스타일 - 더 큰 아이콘으로 공간 활용 */
+  .card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px; /* 72px → 84px 더 크게! */
+    height: 84px;
+    font-size: 84px;
+    flex-shrink: 0; /* 카드가 작아져도 아이콘 크기 유지 */
+    margin-bottom: 16px; /* 아이콘 하단 여백 증가 (8px → 16px) */
+  }
+
+  /* 카드 내 버튼 전용 간격 스타일 - 버튼 위아래로 충분한 여백! */
+  .card .btn,
+  .card-content .btn {
+    margin: 20px 0; /* 버튼 위아래로 20px 여백 */
+  }
+  
+  .card .btn:first-child {
+    margin-top: 0; /* 첫 번째 버튼은 위쪽 마진 제거 */
+  }
+  
+  .card .btn:last-child {
+    margin-bottom: 0; /* 마지막 버튼은 아래쪽 마진 제거 */
+  }
+
+  /* 버튼 그룹이 있는 카드에서는 그룹 전체에 여백 */
+  .card .btn + .btn {
+    margin-top: 16px; /* 버튼 간 간격 */
+  }
+
+  /* Tabs 컴포넌트 스타일 */
   .tabs-container {
     /* 탭 컨테이너 기본 스타일 */
     position: relative;
@@ -1592,515 +1806,69 @@ button {
       font-size: 10px;
     }
   }
-} /* @layer components 닫힘 */
 
-/*
-  1.5. 레이아웃 시스템 (웹→모바일 반응형) - 공통 레이아웃 변수
-  실제 레이아웃 클래스는 @layer components에 정의될 수 있습니다.
-*/
-@layer components {
-  /* 공통 레이아웃 변수 */
-  :root {
-    --layout-max-width: 1200px;
-    --layout-padding: var(--spacing-4);
-    --layout-gap: var(--spacing-6);
-
-    /* Section Card */
-    --section-card-height: 200px;
-    --section-card-padding: var(--spacing-4);
-    --section-card-radius: var(--radius-lg);
-
-    /* Content Grid */
-    --content-card-size: 140px;
-    --content-card-padding: var(--spacing-3);
-    --content-icon-size: 48px;
-
-    /* Mobile Overrides */
-    --mobile-layout-padding: var(--spacing-2);
-    --mobile-section-height: 160px;
-    --mobile-content-size: 120px;
-    --mobile-content-icon: 40px;
-  }
-
-  /*
-    레이아웃 시스템 (웹→모바일 반응형)
-  */
-  .game-platform-layout {
-    max-width: var(--layout-max-width);
-    margin: 0 auto;
-    padding: var(--layout-padding); /* 데스크톱 기본 패딩 */
-    background: var(--color-primary-dark-navy);
-    min-height: 100vh;
-    min-height: 100dvh; /* 동적 뷰포트 높이 */
-  }
-
-  /* 헤더 섹션 */
-  .layout-header {
-    text-align: center;
-    margin-bottom: var(--layout-gap);
-  }
-  .layout-title {
-    font-size: clamp(24px, 4vw, var(--font-size-h1)); /* clamp로 반응형 폰트 크기 */
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
-    margin-bottom: var(--spacing-2);
-  }
-  .layout-subtitle {
-    font-size: clamp(14px, 2.5vw, var(--font-size-body)); /* clamp로 반응형 폰트 크기 */
-    color: var(--color-text-secondary);
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  /* 스티키 헤더 (모바일 최적화 포함) */
-  .layout-header-sticky {
-    position: sticky;
-    top: 0;
-    background: rgba(26, 26, 26, 0.95); /* 반투명 배경 */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    z-index: 100;
-    padding: var(--spacing-2) 0;
-    margin-bottom: var(--spacing-4);
-  }
-  @media (max-width: 768px) {
-    .layout-header-sticky {
-      padding: var(--spacing-1) 0;
-      margin-bottom: var(--spacing-2);
-    }
-    .layout-title {
-      font-size: 20px;
-    }
-    .layout-subtitle {
-      font-size: 12px;
-    }
-  }
-
-
-  /* 섹션 카드 시스템 - 3개 섹션 레이아웃 */
-  .sections-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 웹 버전: 3열 그리드 */
-    gap: var(--spacing-4);
-    margin-bottom: var(--layout-gap);
-  }
-  .section-card {
-    background: var(--color-primary-charcoal);
-    border-radius: var(--section-card-radius);
-    padding: var(--section-card-padding);
-    height: var(--section-card-height);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: var(--transition-normal);
-  }
-  .section-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(91, 48, 246, 0.3);
-    box-shadow: 0 8px 25px rgba(91, 48, 246, 0.15);
-  }
-  .section-title {
-    font-size: var(--font-size-h4); /* 18px */
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
-    margin-bottom: var(--spacing-1);
-  }
-  .section-description {
-    font-size: var(--font-size-caption); /* 14px */
-    color: var(--color-text-secondary);
-    line-height: var(--line-height-body);
-  }
-  .section-button {
-    align-self: flex-start;
-    margin-top: var(--spacing-3);
-  }
-
-  /* 태블릿: 2열 그리드 */
-  @media (max-width: 1024px) {
-    .sections-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-3);
-    }
-    .section-card {
-      height: var(--mobile-section-height);
-    }
-  }
-  /* 모바일: 1열 스택 */
-  @media (max-width: 768px) {
-    .sections-grid {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-2);
-    }
-    .game-platform-layout {
-      padding: var(--mobile-layout-padding);
-    }
-    .section-card {
-      height: auto;
-      min-height: 140px;
-      padding: var(--spacing-3);
-    }
-    .section-title {
-      font-size: 16px;
-    }
-    .section-description {
-      font-size: 13px;
-    }
-  }
-
-  /* 컨텐츠 그리드 시스템 - 반응형 최적화 */
-  .content-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 모바일 기본: 2열 */
-    gap: var(--spacing-2); /* 모바일 기본 간격 (16px) */
-    padding: 0 var(--spacing-2); /* 그리드 자체의 좌우 패딩 (16px) */
-    width: 100%;
-    box-sizing: border-box;
-  }  .content-card {
-    background: var(--color-primary-charcoal);
-    border-radius: var(--radius-lg);
-    padding: var(--content-card-padding);
-    width: 100%; /* 그리드 셀 전체 사용 */
-    height: var(--content-card-size);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: var(--transition-normal);
-    cursor: pointer;
-    min-width: 0; /* 그리드 아이템 최적화 */
-    box-sizing: border-box;
-  }
-  .content-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(91, 48, 246, 0.4);
-    box-shadow: 0 4px 15px rgba(91, 48, 246, 0.2);
-  }
-  .content-icon {
-    width: var(--content-icon-size);
-    height: var(--content-icon-size);
-    background: var(--gradient-purple-primary);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--spacing-2);
-    font-size: var(--icon-lg); /* 24px */
-    font-weight: var(--font-weight-bold);
-    color: white;
-  }
-  .content-label {
-    font-size: var(--font-size-caption); /* 14px */
-    color: var(--color-text-secondary);
-    text-align: center;
-    margin-top: var(--spacing-1); /* 아이콘과 라벨 사이 간격 추가 */
-  }
-  /* 태블릿: 3열 그리드 */
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .content-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--spacing-3);
-      padding: 0 var(--spacing-3);
-    }
-    .content-card {
-      height: 120px; /* 고정 높이 */
-    }
-    .content-icon {
-      width: 44px;
-      height: 44px;
-      font-size: var(--icon-md); /* 20px */
-    }
-  }
-  
-  /* 데스크톱: 4열 그리드 */
-  @media (min-width: 1025px) {
-    .content-grid {
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--spacing-4);
-      padding: 0 var(--spacing-4);
-    }
-    .content-card {
-      height: var(--content-card-size);
-    }
-    .content-icon {
-      width: var(--content-icon-size);
-      height: var(--content-icon-size);
-      font-size: var(--icon-lg); /* 24px */
-    }
-  }
-  /* 모바일: 2열 그리드 */
-  @media (max-width: 768px) {
-    .content-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-2);
-    }
-    .content-card {
-      width: 100%;
-      height: var(--mobile-content-size);
-      padding: var(--spacing-2);
-    }
-    .content-icon {
-      width: var(--mobile-content-icon);
-      height: var(--mobile-content-icon);
-      font-size: var(--icon-sm); /* 16px */
-      margin-bottom: var(--spacing-1);
-    }    .content-label {
-      font-size: 12px;
-    }
-  }
-  /* QuickStartItem 컴포넌트 스타일 */
-  .quick-start-item {
-    background: transparent;
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-3);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: var(--transition-normal);
-    cursor: pointer;
-    width: 100%; /* 그리드 셀 전체 사용 */
-    min-width: 0; /* 그리드 아이템 최적화 */
-    max-width: 100%; /* 불필요하게 늘어나지 않도록 */
-    box-sizing: border-box;
-  }
-  .quick-start-item:hover {
-    transform: translateY(-2px);
-    border-color: rgba(91, 48, 246, 0.4);
-    box-shadow: 0 8px 25px rgba(91, 48, 246, 0.2);
-  }
-  .quick-start-icon {
-    width: var(--content-icon-size);
-    height: var(--content-icon-size);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--spacing-2);
-    font-size: var(--icon-lg);
-    color: white;
-    flex-shrink: 0;
-  }
-  .quick-start-label {
-    font-size: var(--font-size-caption);
-    color: var(--color-text-primary);
-    text-align: center;
-    line-height: var(--line-height-tight);
-  }
-  @media (max-width: 1024px) {
-    .quick-start-icon {
-      width: 44px;
-      height: 44px;
-      font-size: var(--icon-md);
-    }
-  }
-  @media (max-width: 768px) {
-    .quick-start-icon {
-      width: var(--mobile-content-icon);
-      height: var(--mobile-content-icon);
-      font-size: var(--icon-sm);
-    }
-    .quick-start-label {
-      font-size: 12px;
-    }
-  }  /* AppHeader (상단 헤더) */
-  .app-header {
-    width: 100%;
-    background: rgba(26, 26, 26, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    height: var(--app-header-height-mobile); /* 모바일 기본 높이 */
-  }
-  
-  .app-header .container {
-    padding-left: var(--spacing-2); /* 모바일 기본 패딩 */
-    padding-right: var(--spacing-2);
-  }
-  
-  /* 데스크톱에서 AppHeader 높이와 패딩 증가 */
-  @media (min-width: 768px) { /* md 브레이크포인트 */
-    .app-header {
-      height: var(--app-header-height-desktop); /* 데스크톱에서 높이 증가 */
-    }
-    .app-header .container {
-      padding-left: var(--spacing-4); /* 데스크톱에서 좌우 패딩 증가 */
-      padding-right: var(--spacing-4);
-    }
-  }  /* BottomNavigationBar (하단 네비) - 다크 글래스모피즘 적용 */
-  .bottom-nav-bar {
-    background: rgba(26, 26, 26, 0.85); /* AppHeader와 동일한 진한 배경 */
-    backdrop-filter: blur(20px) saturate(180%); /* 더 강한 블러와 채도 */
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* 상단 테두리 */
+  /* 강제 우선순위로 메시 카드 효과 보장 */
+  .content-card.modern-mesh-card {
+    background: 
+      radial-gradient(circle at 15% 85%, rgba(91, 48, 246, 0.5) 0%, transparent 40%),
+      radial-gradient(circle at 85% 15%, rgba(135, 13, 209, 0.4) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(128, 84, 242, 0.3) 0%, transparent 30%),
+      linear-gradient(135deg, rgba(45, 45, 45, 0.95) 0%, rgba(26, 26, 26, 0.9) 100%) !important;
+    border: 2px solid rgba(91, 48, 246, 0.4) !important;
     box-shadow: 
-      0 -4px 24px rgba(0, 0, 0, 0.4),
-      0 -1px 0 rgba(255, 255, 255, 0.05) inset; /* 상단 내부 하이라이트 */
-    height: var(--spacing-9); /* 72px로 높이 증가 */
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 40;
-    transition: all var(--transition-normal);
-    will-change: transform, box-shadow; /* GPU 가속 힌트 */
-    
-    /* 핵심 flex 속성들 */
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    
-    padding: var(--spacing-1) var(--spacing-2);
-    padding-bottom: calc(var(--spacing-1) + env(safe-area-inset-bottom));
-  }.bottom-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    
-    /* 핵심 flex 및 텍스트 제어 */
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-    
-    height: 100%;
-    max-width: 80px; /* 탭 최대 너비 제한 */
-    padding: var(--spacing-1) var(--spacing-0-5); /* 상하 8px, 좌우 4px로 여유 확보 */
-    cursor: pointer;
-    transition: var(--transition-normal);
-    
-    /* 텍스트 크기 */
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    
-    /* 클릭 및 터치 영역 최적화 */
-    touch-action: manipulation;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    
-    /* 포커스 접근성 */
-    outline: none;
-    border-radius: var(--radius-md);
+      0 16px 48px rgba(0, 0, 0, 0.5),
+      0 8px 16px rgba(91, 48, 246, 0.3),
+      0 0 32px rgba(135, 13, 209, 0.2),
+      inset 0 2px 0 rgba(255, 255, 255, 0.15) !important;
+  }
+
+  /* 더 강한 메시 애니메이션을 위한 추가 키프레임 */
+  @keyframes mesh-glow-pulse {
+    0%, 100% { 
+      filter: brightness(1) contrast(1);
+      transform: scale(1);
+    }
+    50% { 
+      filter: brightness(1.1) contrast(1.1);
+      transform: scale(1.02);
+    }
+  }
+
+  .modern-mesh-card:hover::before {
+    animation: mesh-rotate 15s linear infinite, mesh-glow-pulse 3s ease-in-out infinite;
+  }
+
+  /* 프로그레스바 애니메이션 스타일 */
+  .progress-striped {
+    background-image: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.15) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.15) 75%,
+      transparent 75%,
+      transparent
+    );
+    background-size: 1rem 1rem;
+    animation: progress-bar-stripes 1s linear infinite;
   }
   
-  .bottom-nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    transform: translateY(-1px);
+  .progress-pulsing {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
   
-  .bottom-nav-item:active {
-    transform: translateY(0);
-  }
-    .bottom-nav-item:focus-visible {
-    box-shadow: 0 0 0 2px var(--color-purple-primary);
-  }
-
-  /* 하단 네비게이션 활성 인디케이터 바 */
-  .nav-indicator-bar {
-    background: linear-gradient(90deg, var(--color-purple-primary) 0%, var(--color-purple-secondary) 100%);
-    box-shadow: 
-      0 2px 8px rgba(91, 48, 246, 0.4),
-      0 0 16px rgba(91, 48, 246, 0.2);
-    will-change: transform, opacity;
-  }
-    @media (min-width: 768px) {
-    .bottom-nav-bar {
-      display: none;
+  @keyframes progress-bar-stripes {
+    0% {
+      background-position-x: 1rem;
+    }
+    100% {
+      background-position-x: 0;
     }
   }
-
-  /* GameCard 반응형 그리드 시스템 */
-  .game-card {
-    width: 100%; /* 그리드 셀 전체 사용 */
-    min-width: 0; /* 그리드 아이템 최적화 */
-    max-width: 100%; /* 불필요하게 늘어나지 않도록 */
-    height: 200px; /* 데스크톱 기본 높이 */
-    background: var(--color-primary-charcoal);
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: var(--transition-normal);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-4);
-    box-sizing: border-box;
-  }
-
-  .game-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(91, 48, 246, 0.4);
-    box-shadow: 0 8px 25px rgba(91, 48, 246, 0.2);
-  }
-
-  .game-card-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--spacing-2);
-    height: 64px;
-    flex-shrink: 0;
-  }
-
-  .game-card-title {
-    font-size: var(--font-size-body);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
-    text-align: center;
-    width: 100%;
-    margin-bottom: var(--spacing-1);
-    line-height: var(--line-height-tight);
-  }
-
-  .game-card-info {
-    font-size: var(--font-size-caption);
-    color: var(--color-text-secondary);
-    text-align: center;
-  }
-
-  /* 태블릿: 3열 그리드용 GameCard */
-  @media (max-width: 1024px) {
-    .game-card {
-      height: 180px;
-      padding: var(--spacing-3);
-    }
-    .game-card-placeholder {
-      height: 56px;
-    }
-    .game-card-title {
-      font-size: var(--font-size-caption);
-    }
-    .game-card-info {
-      font-size: 12px;
-    }
-  }
-
-  /* 모바일: 2열 그리드용 GameCard - 항상 2열 유지 */
-  @media (max-width: 768px) {
-    .game-card {
-      height: 160px;
-      padding: var(--spacing-2);
-    }
-    .game-card-placeholder {
-      height: 48px;
-      margin-bottom: var(--spacing-1);
-    }
-    .game-card-title {
-      font-size: 12px;
-      margin-bottom: calc(var(--spacing-1) * 0.5);
-    }
-    .game-card-info {
-      font-size: 10px;
-    }
+  
+  /* 프로그레스바 그라데이션 배경 */
+  .bg-gradient-purple-primary {
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
   }
 } /* @layer components 닫힘 */

@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import Button from './Button';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
+export type ModalVariant = 'default' | 'ice' | 'hologram' | 'space' | 'crystal';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ export interface ModalProps {
   title?: string;
   description?: string;
   size?: ModalSize;
+  variant?: ModalVariant;
   className?: string;
   backdropClassName?: string;
   showCloseButton?: boolean;
@@ -27,6 +29,15 @@ const sizeClassMap: Record<ModalSize, string> = {
   full: 'w-full h-full max-w-full max-h-full',
 };
 
+// 모달 배경 효과별 클래스
+const variantClassMap: Record<ModalVariant, string> = {
+  default: 'bg-card/80 border border-border/10 backdrop-filter backdrop-blur-[24px] backdrop-saturate-[200%] shadow-[0_16px_40px_rgba(var(--black-rgb),0.4),inset_0_1px_0_rgba(var(--pure-white-rgb),0.15),0_0_80px_rgba(var(--black-rgb),0.1)]',
+  ice: 'ice-glassmorphism',
+  hologram: 'hologram-modal',
+  space: 'space-warp-modal',
+  crystal: 'crystal-modal',
+};
+
 const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
@@ -34,6 +45,7 @@ const Modal: React.FC<ModalProps> = ({
   title,
   description,
   size = 'md',
+  variant = 'default',
   className = '',
   backdropClassName = '',
   showCloseButton = true,
@@ -162,16 +174,13 @@ const Modal: React.FC<ModalProps> = ({
           onClick={handleBackdropClick}
           aria-modal="true"
           tabIndex={-1}
-        >
-          <motion.div
+        >          <motion.div
             ref={modalRef}            className={`
               ${isMobile 
                 ? 'w-full h-auto min-h-[50vh] max-h-[90vh] rounded-t-xl rounded-b-none' 
                 : `${sizeClassMap[size]} rounded-lg`
               }
-              bg-card/80 border border-border/10
-              backdrop-filter backdrop-blur-[24px] backdrop-saturate-[200%]
-              shadow-[0_16px_40px_rgba(var(--black-rgb),0.4),inset_0_1px_0_rgba(var(--pure-white-rgb),0.15),0_0_80px_rgba(var(--black-rgb),0.1)]
+              ${variantClassMap[variant]}
               p-6 relative flex flex-col focus:outline-none overflow-hidden
               ${className}
             `}

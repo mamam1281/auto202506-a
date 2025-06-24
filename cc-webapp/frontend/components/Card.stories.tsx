@@ -67,8 +67,7 @@ export const WithTitle: Story = {
           <p className="text-text-secondary text-xs">
             이벤트 기간: 2025년 6월 24일 - 7월 1일
           </p>
-        </div>
-        <div className="flex gap-3 pt-2">
+        </div>        <div className="buttons-section">
           <Button variant="primary" size="md">혜택 받기</Button>
           <Button variant="outline" size="md">나중에 보기</Button>
         </div>
@@ -460,5 +459,62 @@ export const SettingsCard: Story = {
         story: '설정 항목들을 표시하는 카드입니다. 각 항목에 명시적인 수직 패딩을 적용하여 텍스트 간 간격을 최적화했습니다.',
       },
     },
+  },
+};
+
+// 버튼 그룹 세로 배치 카드
+export const ButtonGroupVertical: Story = {
+  args: {
+    title: '버튼 그룹 세로 배치',
+    children: (
+      <div className="space-y-6">
+        <p className="text-text-secondary text-sm">
+          버튼들이 세로로 배치되며 충분한 간격을 가집니다.
+        </p>
+        <div className="btn-group-vertical">
+          <Button variant="primary" size="md">주요 액션</Button>
+          <Button variant="secondary" size="md">보조 액션</Button>
+          <Button variant="outline" size="md">선택사항</Button>
+        </div>
+      </div>
+    ),
+  },
+};
+
+// 버튼 그룹 가로 배치 카드
+export const ButtonGroupInline: Story = {
+  args: {
+    title: '버튼 그룹 가로 배치',
+    children: (
+      <div className="space-y-6">
+        <p className="text-text-secondary text-sm">
+          버튼들이 가로로 배치되며 적절한 간격을 가집니다.
+        </p>
+        <div className="btn-group-inline">
+          <Button variant="primary" size="md">확인</Button>
+          <Button variant="outline" size="md">취소</Button>
+        </div>
+      </div>
+    ),
+  },
+};
+
+// 복잡한 버튼 섹션 카드
+export const ButtonsSection: Story = {
+  args: {
+    title: '버튼 섹션 예시',
+    children: (
+      <div className="buttons-section">
+        <p className="text-text-secondary text-sm text-center">
+          버튼 섹션 스타일이 적용된 카드입니다.
+        </p>
+        <Button variant="primary" size="lg">메인 액션</Button>
+        <Button variant="accent" size="md">특별 기능</Button>
+        <div className="btn-group-inline">
+          <Button variant="outline" size="sm">옵션 1</Button>
+          <Button variant="outline" size="sm">옵션 2</Button>
+        </div>
+      </div>
+    ),
   },
 };

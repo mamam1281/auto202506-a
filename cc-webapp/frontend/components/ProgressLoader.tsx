@@ -25,22 +25,22 @@ export const ProgressLoader: React.FC<ProgressLoaderProps> = ({
   className = '',
 }) => {
   const clamped = Math.max(0, Math.min(100, value));
-  // Assuming 'bg-muted' is a suitable replacement for 'bg-[var(--color-primary-charcoal)]'
-  // as --color-primary-charcoal is not in the provided theme.
+  
+  // 트랙 배경색 - 어두운 배경
   const trackColorClass = 'bg-muted';
-  const radiusClass = 'rounded-md'; // Maps to var(--radius-md)
+  const radiusClass = 'rounded-md';
 
-  let barColorClass = 'bg-success'; // Maps to var(--color-success)
-  if (variant === 'gradient' || variant === 'striped' || variant === 'pulsing') {
-    // Assuming 'bg-gradient-purple-primary' is the intended gradient.
+  // 프로그레스 바 색상 설정
+  let barColorClass = 'bg-success'; // 기본 초록색
+  if (variant === 'gradient') {
     barColorClass = 'bg-gradient-purple-primary';
+  } else if (variant === 'striped') {
+    barColorClass = 'bg-primary progress-striped';
+  } else if (variant === 'pulsing') {
+    barColorClass = 'bg-accent progress-pulsing';
   }
 
-  let barClasses = [barColorClass, radiusClass, 'h-full'];
-  if (variant === 'striped') barClasses.push('progress-striped'); // Assumed to be defined in globals.css
-  if (variant === 'pulsing') barClasses.push('progress-pulsing'); // Assumed to be defined in globals.css
-
-  // min-w-[var(--spacing-0-5)] for 4px, or min-w-[4px]
+  const barClasses = [barColorClass, radiusClass, 'h-full'].join(' ');
   const minWidthClass = "min-w-[4px]";
 
   return (
@@ -52,11 +52,10 @@ export const ProgressLoader: React.FC<ProgressLoaderProps> = ({
       aria-valuemax={100}
     >
       <motion.div
-        className={`${barClasses.join(' ')} ${minWidthClass}`}
+        className={`${barClasses} ${minWidthClass}`}
         initial={{ width: '0%' }}
         animate={{ width: `${clamped}%` }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        // style minWidth removed
       />
     </div>
   );

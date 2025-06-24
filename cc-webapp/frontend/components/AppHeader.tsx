@@ -45,7 +45,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     <header
       className="app-header layout-header-sticky safe-top pl-safe-left pr-safe-right h-[var(--app-header-height-mobile)] md:h-[var(--app-header-height-desktop)] glassmorphism-header"
     >      <div className="container flex items-center h-full px-container-x relative"> {/* relative 추가 */}        {/* 좌측: 토큰 잔고 표시 */}
-        <div className={`${showTokenBalanceOnMobile ? 'flex' : 'hidden md:flex'} items-center gap-1 flex-shrink-0 min-w-0 pl-2`}>
+        <div className={`${showTokenBalanceOnMobile ? 'flex' : 'hidden md:flex'} items-center gap-1 flex-shrink-0 min-w-0 pl-4 pr-4`}>
           <Diamond 
             size={20}
             className="text-neon-purple-3 flex-shrink-0"
@@ -55,9 +55,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           </span>
         </div>
 
-        {/* 중앙: 로고/앱 이름 영역 - 수학적 완전 중앙 배치 */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="heading-h3 truncate text-center pointer-events-auto">
+        {/* 중앙: 로고/앱 이름 영역 - 겹침 방지를 위한 조건부 중앙 배치 */}
+        <div className="flex-1 flex items-center justify-center px-4">
+          <span className="heading-h3 truncate text-center">
             {appName}
           </span>
         </div>
