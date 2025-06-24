@@ -6,6 +6,9 @@ export interface TabItem {
   id: string;
   label: string;
   content: React.ReactNode;
+  // 탭 콘텐츠에 적용할 레이아웃 타입 또는 클래스 정보 추가
+  contentType?: 'single-card' | 'multi-card-grid' | 'full-width-section' | 'vertical-stack';
+  customLayoutClass?: string; // 특정 레이아웃 클래스를 직접 지정할 경우
 }
 
 export interface TabsProps {
@@ -54,11 +57,10 @@ const Tabs: React.FC<TabsProps> = ({
   return (
     <div className={`tabs-container ${className}`}>
       {/* 탭 라벨 리스트 */}      <div 
-        ref={tabListRef}
-        className={`
-          relative flex border-b-[1px] border-[var(--border)]
+        ref={tabListRef}        className={`
+          relative flex border-b-[1px] border-border
           overflow-x-auto scrollbar-hide
-          pt-[var(--spacing-3)] pb-[var(--spacing-2)]
+          pt-3 pb-2
           ${tabListClassName}
         `}
         style={{
@@ -71,17 +73,16 @@ const Tabs: React.FC<TabsProps> = ({
           <button
             key={tab.id}
             ref={activeTab === tab.id ? activeTabRef : null} // 활성 탭에만 ref 연결
-            onClick={() => onTabChange(tab.id)}
-            className={`
-              relative py-[var(--spacing-3)] px-[var(--spacing-2)]
-              text-[var(--font-size-sm)] font-[var(--font-weight-medium)]
-              transition-colors duration-[var(--transition-normal)] cursor-pointer
+            onClick={() => onTabChange(tab.id)}            className={`
+              relative py-3 px-2
+              text-sm font-medium
+              transition-colors duration-normal cursor-pointer
               ${activeTab === tab.id 
-                ? 'text-[var(--color-purple-primary)]' 
-                : 'text-[var(--color-text-secondary)] hover:text-[var(--foreground)]'
+                ? 'text-primary' 
+                : 'text-muted-foreground hover:text-foreground'
               }
               whitespace-nowrap text-center
-              border-r border-[var(--border)]/30 last:border-r-0
+              border-r border-border/30 last:border-r-0
             `}
             style={{
               minHeight: '48px',
@@ -93,11 +94,10 @@ const Tabs: React.FC<TabsProps> = ({
             {tab.label}
           </button>
         ))}
-        
-        {/* Sliding Underline */}
+          {/* Sliding Underline */}
         {activeTabIndex !== -1 && ( // 활성 탭이 있을 때만 렌더링
           <motion.div
-            className="absolute bottom-0 h-[2px] bg-[var(--color-purple-primary)]" // 밑줄 스타일
+            className="absolute bottom-0 h-[2px] bg-primary" // 밑줄 스타일
             initial={false} // 초기 애니메이션 비활성화 (위치 계산 후 바로 적용)
             animate={{ 
               width: underlineWidth, 
@@ -110,9 +110,24 @@ const Tabs: React.FC<TabsProps> = ({
             }} // 스프링 애니메이션
           />
         )}
-      </div>      {/* 탭 콘텐츠 영역 */}
-      <div className={`tab-content mt-[var(--spacing-3)] ${tabContentClassName}`}>
-        <AnimatePresence mode="wait"> {/* 콘텐츠 전환 시 이전 콘텐츠 완전히 사라진 후 다음 콘텐츠 나타나도록 */}
+      </div>      {/* 상용 서비스급 고정 마스터 컨테이너 - 모든 탭 콘텐츠의 통일된 프레임 */}
+      <div        className={`
+          tab-content-master-container mt-3
+          w-full max-w-6xl mx-auto
+          min-h-[400px] max-[767px]:min-h-[300px]
+          bg-background border border-border/30 rounded-lg
+          p-4 max-[767px]:p-3
+          ${tabContentClassName}
+        `}
+        style={{
+          // 강제로 고정 크기 적용 (상용 서비스 안정성)
+          minHeight: 'var(--tabs-content-min-height, 400px)',
+          borderRadius: 'var(--radius)',
+          background: 'var(--background)',
+          transition: 'none', // 크기 변경 애니메이션 비활성화
+        }}
+      >
+        <AnimatePresence mode="wait">
           {tabs.map((tab) =>
             activeTab === tab.id ? (
               <motion.div
@@ -121,7 +136,28 @@ const Tabs: React.FC<TabsProps> = ({
                 animate="animate"
                 exit="exit"
                 variants={contentVariants}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.2 }}                className={`
+                  w-full h-full relative
+                  ${(() => {
+                    switch (tab.contentType) {
+                      case 'single-card':
+                        return 'flex items-start justify-center pt-2'; // 단일 카드를 중앙 상단에 배치
+                      case 'multi-card-grid':
+                        return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-min'; // 반응형 그리드
+                      case 'vertical-stack': 
+                        return 'flex flex-col gap-3 max-h-full overflow-y-auto'; // 세로 스택 (스크롤 가능)
+                      case 'full-width-section': 
+                        return 'w-full h-full'; // 컨테이너 전체 사용
+                      default:
+                        return tab.customLayoutClass || 'flex flex-col gap-3'; // 기본 레이아웃
+                    }
+                  })()}
+                `}
+                style={{
+                  // 내부 콘텐츠도 컨테이너 크기에 맞춤
+                  minHeight: 'calc(var(--tabs-content-min-height, 400px) - var(--spacing-4) * 2)',
+                  maxHeight: 'calc(var(--tabs-content-min-height, 400px) - var(--spacing-4) * 2)',
+                }}
               >
                 {tab.content}
               </motion.div>

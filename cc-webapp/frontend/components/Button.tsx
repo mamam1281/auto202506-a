@@ -6,7 +6,6 @@ export interface ButtonProps {
   size?: 'md' | 'lg';
   iconOnly?: boolean;
   rounded?: boolean;
-  loading?: boolean;
   disabled?: boolean;
   icon?: LucideIcon;
   iconPosition?: 'left' | 'right';
@@ -21,7 +20,6 @@ const Button: React.FC<ButtonProps> = ({
   size = 'md',
   iconOnly = false,
   rounded = false,
-  loading = false,
   disabled = false,
   icon: Icon,
   iconPosition = 'left',
@@ -29,33 +27,30 @@ const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   type = 'button',
-}) => {
-  const baseClasses = 'btn';
+}) => {  const baseClasses = 'btn';
   const variantClass = `btn-${variant}`;
   const sizeClass = iconOnly ? `btn-icon btn-icon-${size}` : `btn-${size}`;
   const roundedClass = rounded ? 'btn-icon-rounded' : '';
-  const loadingClass = loading ? 'btn-loading' : '';
+  const iconRightClass = Icon && iconPosition === 'right' && !iconOnly ? 'btn-icon-right' : '';
 
   const buttonClasses = [
     baseClasses,
     variantClass,
     sizeClass,
     roundedClass,
-    loadingClass,
+    iconRightClass,
     className,
   ].filter(Boolean).join(' ');
 
-  const iconSize = {
+  const iconSizeMap = {
     sm: 16,
-    md: 20,
-    lg: 24,
-    xl: 28,
-  }[size];
+    md: 24,
+    lg: 28,
+    xl: 32,
+  };
+  const iconSize = iconSizeMap[size] || iconSizeMap.md;
 
   const renderContent = () => {
-    if (loading) {
-      return null;
-    }
     if (iconOnly) {
       return Icon ? <Icon size={iconSize} /> : null;
     }
@@ -76,7 +71,7 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       className={buttonClasses}
       onClick={onClick}
-      disabled={disabled || loading}
+      disabled={disabled}
     >
       {renderContent()}
     </button>

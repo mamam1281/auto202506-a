@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, KeyboardEvent } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useRef, KeyboardEvent, useState } from 'react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { X } from 'lucide-react';
 import Button from './Button';
 
@@ -15,9 +15,10 @@ export interface ModalProps {
   className?: string;
   backdropClassName?: string;
   showCloseButton?: boolean;
+  allowSwipeClose?: boolean;
 }
 
-// 모달 크기별 클래스 - 모바일에서는 전체 너비, md 이상에서만 크기 제한
+// 모달 크기별 클래스 - CSS Variables 완전 준수
 const sizeClassMap: Record<ModalSize, string> = {
   sm: 'w-full max-w-full md:max-w-modal-sm',
   md: 'w-full max-w-full md:max-w-modal-md',
@@ -36,9 +37,14 @@ const Modal: React.FC<ModalProps> = ({
   className = '',
   backdropClassName = '',
   showCloseButton = true,
+  allowSwipeClose = true,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const lastActiveElement = useRef<HTMLElement | null>(null);
+  const [dragY, setDragY] = useState(0);
+
+  // 모바일 감지
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 767;
 
   // 포커스 가능한 요소 찾기
   const getFocusableElements = () => {
@@ -99,42 +105,76 @@ const Modal: React.FC<ModalProps> = ({
     return () => document.removeEventListener('keydown', handleKeyDown as any);
     // eslint-disable-next-line
   }, [isOpen, onClose]);
-
   // 오버레이 클릭 시 닫기
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) onClose();
   };
 
-  // 애니메이션 variants
+  // 스와이프 제스처 처리 (모바일)
+  const handleDragEnd = (event: any, info: PanInfo) => {
+    if (!allowSwipeClose || !isMobile) return;
+    
+    // 아래쪽으로 100px 이상 드래그하면 닫기
+    if (info.offset.y > 100 && info.velocity.y > 0) {
+      onClose();
+    }
+    setDragY(0);
+  };
+
+  const handleDrag = (event: any, info: PanInfo) => {
+    if (!allowSwipeClose || !isMobile) return;
+    
+    // 위쪽으로 드래그는 제한
+    const newY = Math.max(0, info.offset.y);
+    setDragY(newY);
+  };
+
+  // CSS Variables 준수 애니메이션 variants
   const backdropVariants = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
     exit: { opacity: 0 },
   };
-  const modalVariants = {
-    initial: { scale: 0.96, opacity: 0, y: 40 },
-    animate: { scale: 1, opacity: 1, y: 0 },
-    exit: { scale: 0.96, opacity: 0, y: 40 },
-    transition: { duration: 0.22, ease: [0.4, 0, 0.2, 1] as any },
-  };
 
+  const modalVariants = {
+    initial: isMobile 
+      ? { y: '100%', opacity: 0.8 }
+      : { scale: 0.96, opacity: 0, y: 40 },
+    animate: isMobile
+      ? { y: 0, opacity: 1 }
+      : { scale: 1, opacity: 1, y: 0 },
+    exit: isMobile
+      ? { y: '100%', opacity: 0.8 }
+      : { scale: 0.96, opacity: 0, y: 40 },
+  };
   return (
     <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className={`fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-md ${backdropClassName}`}
+      {isOpen && (        <motion.div          className={`
+            fixed inset-0 z-50 flex items-end md:items-center justify-center 
+            bg-background/30 backdrop-blur-[20px] 
+            ${backdropClassName}
+          `}
           variants={backdropVariants}
           initial="initial"
           animate="animate"
           exit="exit"
-          transition={{ duration: 0.18 }}
+          transition={{ duration: Number(getComputedStyle(document.documentElement).getPropertyValue('--transition-normal').replace('ms', '')) / 1000 || 0.2 }}
           onClick={handleBackdropClick}
           aria-modal="true"
           tabIndex={-1}
         >
           <motion.div
-            ref={modalRef}
-            className={`glassmorphism-dark ${sizeClassMap[size]} bg-card rounded-lg shadow-xl p-8 relative flex flex-col focus:outline-none ${className}`}
+            ref={modalRef}            className={`
+              ${isMobile 
+                ? 'w-full h-auto min-h-[50vh] max-h-[90vh] rounded-t-xl rounded-b-none' 
+                : `${sizeClassMap[size]} rounded-lg`
+              }
+              bg-card/80 border border-border/10
+              backdrop-filter backdrop-blur-[24px] backdrop-saturate-[200%]
+              shadow-[0_16px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.15),0_0_80px_rgba(0,0,0,0.1)]
+              p-6 relative flex flex-col focus:outline-none overflow-hidden
+              ${className}
+            `}
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? 'modal-title' : undefined}
@@ -144,21 +184,65 @@ const Modal: React.FC<ModalProps> = ({
             initial="initial"
             animate="animate"
             exit="exit"
-            transition={modalVariants.transition}
-          >            {showCloseButton && (
+            transition={{ 
+              type: "tween", 
+              duration: Number(getComputedStyle(document.documentElement).getPropertyValue('--transition-normal').replace('ms', '')) / 1000 || 0.2,
+              ease: [0.4, 0, 0.2, 1]
+            }}
+            drag={isMobile && allowSwipeClose ? "y" : false}
+            dragConstraints={{ top: 0, bottom: window.innerHeight }}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
+            style={{
+              y: dragY,
+            }}
+          >            {/* 모바일용 스와이프 인디케이터 */}
+            {isMobile && allowSwipeClose && (
+              <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
+                <div className="w-[40px] h-[4px] bg-muted-foreground/20 rounded-full backdrop-blur-sm"></div>
+              </div>
+            )}
+
+            {showCloseButton && (
               <Button
                 iconOnly
                 variant="text"
                 size="md"
                 aria-label="Close"
-                className="absolute top-4 right-4 z-10"
+                className="absolute top-3 right-3 z-10"
                 onClick={onClose}
               >
                 <X size={20} />
               </Button>
-            )}            {title && <h2 id="modal-title" className="text-lg font-semibold mb-4 text-foreground pr-8">{title}</h2>}
-            {description && <p id="modal-desc" className="text-sm mb-6 text-muted-foreground">{description}</p>}
-            <div>{children}</div>
+            )}            {title && (
+              <h2 
+                id="modal-title" 
+                className={`
+                  text-h3 font-semibold 
+                  mb-3 text-card-foreground 
+                  pr-6 leading-heading
+                  ${isMobile ? 'mt-3' : ''}
+                `}
+              >
+                {title}
+              </h2>
+            )}
+            
+            {description && (
+              <p 
+                id="modal-desc" 
+                className="
+                  text-caption mb-4 
+                  text-muted-foreground leading-body
+                "
+              >
+                {description}
+              </p>
+            )}
+            
+            <div className="flex-1 overflow-y-auto">
+              {children}
+            </div>
           </motion.div>
         </motion.div>
       )}

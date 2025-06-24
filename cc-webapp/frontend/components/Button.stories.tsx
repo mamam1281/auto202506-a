@@ -104,16 +104,6 @@ export const Animated: Story = {
   },
 };
 
-export const WithIcon: Story = {
-  args: {
-    children: 'With Icon',
-    variant: 'primary',
-    size: 'md',
-    icon: Plus,
-    iconPosition: 'left',
-  },
-};
-
 export const IconRight: Story = {
   args: {
     children: 'Icon Right',
@@ -130,16 +120,7 @@ export const IconOnly: Story = {
     icon: Plus,
     variant: 'primary',
     size: 'md',
-    rounded: true,
-  },
-};
-
-export const Loading: Story = {
-  args: {
-    children: 'Loading',
-    variant: 'primary',
-    size: 'md',
-    loading: true,
+    rounded: false,
   },
 };
 
@@ -157,7 +138,7 @@ export const AllVariants: Story = {
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
       {['primary','secondary','accent','success','error','info','outline','text','neon','glass','animated'].map((variant) => (
         <div key={variant} style={{ minWidth: 120 }}>
-          <Button variant={variant as any} size={args.size} icon={args.icon} iconPosition={args.iconPosition} loading={args.loading} disabled={args.disabled}>
+          <Button variant={variant as any} size={args.size} disabled={args.disabled}>
             {variant.charAt(0).toUpperCase() + variant.slice(1)}
           </Button>
         </div>
@@ -166,9 +147,6 @@ export const AllVariants: Story = {
   ),
   args: {
     size: 'md',
-    icon: undefined,
-    iconPosition: 'left',
-    loading: false,
     disabled: false,
   },
 };

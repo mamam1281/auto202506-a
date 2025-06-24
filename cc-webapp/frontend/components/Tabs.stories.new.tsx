@@ -141,10 +141,12 @@ const commercialTabs: TabItem[] = [
   {
     id: 'settings',
     label: '설정',
-    contentType: 'full-width-section',    content: (
-      <div className="space-y-8">
-        <h3 className="text-xl font-semibold mb-6">게임 설정</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{ marginBottom: '64px' }}>
+    contentType: 'full-width-section',
+    content: (
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold mb-4">게임 설정</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card title="게임 설정">
             <div className="space-y-4">
               <div className="flex items-center justify-between">

@@ -960,22 +960,20 @@ button {
     overflow: hidden;
     user-select: none;
     white-space: nowrap;
-    box-shadow: 0 2px 8px 0 rgba(91,48,246,0.08), 0 1px 4px 0 rgba(0,0,0,0.08);
-    padding: 8px 24px; /* 더 슬림하게 */
+    box-shadow: 0 2px 8px 0 rgba(91,48,246,0.08), 0 1px 4px 0 rgba(0,0,0,0.08);    padding: 8px 24px; /* 더 슬림하게 */
     min-width: 64px;
     min-height: 32px; /* 더 낮게 */
-    font-size: 13px; /* 더 작게 */
+    font-size: 11px; /* 12px에서 11px로 추가 축소 */
     line-height: 1.2;
   }
 
   .btn-primary, .btn-accent, .btn-success, .btn-error {
     font-weight: bold;
-  }
-
-  .btn:disabled {
+  }  .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none; /* 클릭 이벤트 방지 */
+    font-size: 11px; /* 폰트 크기 더 작게 수정 */
   }
 
   .btn:focus {
@@ -1004,25 +1002,22 @@ button {
       0 0 25px rgba(91, 48, 246, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
-  }
-
-  /* Secondary Button (Gray) - Modern Glass */
+  }  /* Secondary Button (Gray) - 훨씬 더 연한 색상으로 수정 */
   .btn-secondary {
-    background: linear-gradient(135deg, rgba(45, 45, 45, 0.9) 0%, rgba(51, 51, 51, 0.9) 100%);
-    color: #fff;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, #94A3B8 0%, #CBD5E1 100%);
+    color: #1E293B;
+    border: 1px solid #E2E8F0;
     box-shadow: 
-      0 4px 15px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 4px 15px rgba(148, 163, 184, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
   }
   .btn-secondary:hover {
-    background: linear-gradient(135deg, rgba(51, 51, 51, 0.95) 0%, rgba(45, 45, 45, 0.95) 100%);
-    color: #fff;
+    background: linear-gradient(135deg, #CBD5E1 0%, #E2E8F0 100%);
+    color: #0F172A;
     box-shadow: 
-      0 6px 20px rgba(0, 0, 0, 0.4),
-      0 0 15px rgba(255, 255, 255, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      0 6px 20px rgba(148, 163, 184, 0.35),
+      0 0 15px rgba(148, 163, 184, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
     transform: translateY(-1px);
   }
 
@@ -1061,11 +1056,10 @@ button {
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
   }
-
   /* Error Button (Red) - Alert Glow */
   .btn-error {
     background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-    color: #fff;
+    color: #ffffff; /* 명확한 흰색으로 수정 */
     box-shadow: 
       0 4px 15px rgba(239, 68, 68, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -1073,15 +1067,13 @@ button {
   }
   .btn-error:hover {
     background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
-    color: #fff;
+    color: #ffffff; /* 명확한 흰색으로 수정 */
     box-shadow: 
       0 6px 20px rgba(239, 68, 68, 0.4),
       0 0 25px rgba(239, 68, 68, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
-  }
-
-  /* Info Button (Cyan) - Ocean Glow */
+  }  /* Info Button (Cyan/Teal) - 청록색으로 완전히 변경 */
   .btn-info {
     background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
     color: #fff;
@@ -1091,31 +1083,31 @@ button {
     border: 1px solid rgba(6, 182, 212, 0.4);
   }
   .btn-info:hover {
-    background: linear-gradient(135deg, #0891B2 0%, #06B6D4 100%);
+    background: linear-gradient(135deg, #0891B2 0%, #0E7490 100%);
     color: #fff;
     box-shadow: 
       0 6px 20px rgba(6, 182, 212, 0.4),
       0 0 25px rgba(6, 182, 212, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
-  }
-  /* Outline Button - Premium Border */
+  }  /* Outline Button - 테두리 매우 명확하게 수정 */
   .btn-outline {
     background: rgba(91, 48, 246, 0.05);
-    border: 2px solid #5B30F6;
+    border: 3px solid #5B30F6; /* 3px로 더 두껍게 */
     color: #5B30F6;
-    backdrop-filter: blur(5px);
     box-shadow: 
-      0 2px 10px rgba(91, 48, 246, 0.1),
-      inset 0 1px 0 rgba(91, 48, 246, 0.1);
+      0 2px 10px rgba(91, 48, 246, 0.15),
+      inset 0 0 20px rgba(91, 48, 246, 0.05);
+    font-weight: 700; /* 더 두꺼운 폰트 */
   }
   .btn-outline:hover {
     background: linear-gradient(135deg, #5B30F6 0%, #8054F2 100%);
     color: #fff;
     border-color: #8054F2;
+    border-width: 3px; /* 호버 시에도 동일한 두께 유지 */
     box-shadow: 
-      0 4px 15px rgba(91, 48, 246, 0.3),
-      0 0 20px rgba(91, 48, 246, 0.2);
+      0 4px 15px rgba(91, 48, 246, 0.4),
+      0 0 25px rgba(91, 48, 246, 0.3);
     transform: translateY(-1px);
   }
 
@@ -1133,19 +1125,17 @@ button {
     box-shadow: 
       0 2px 10px rgba(91, 48, 246, 0.1),
       inset 0 1px 0 rgba(91, 48, 246, 0.05);
-  }
-
-  /* Neon Effect Button */
+  }  /* Neon Effect Button - 테두리 더 얇게 수정 */
   .btn-neon {
     background: #1a1a2e;
     color: #0ff;
-    border: 2px solid #0ff;
-    box-shadow: 0 0 10px #0ff, inset 0 0 10px #0ff;
+    border: 0.5px solid #0ff; /* 1px에서 0.5px로 더 얇게 */
+    box-shadow: 0 0 6px #0ff, inset 0 0 6px #0ff; /* 8px에서 6px로 더 줄임 */
   }
   .btn-neon:hover {
     background: #0ff;
     color: #1a1a2e;
-    box-shadow: 0 0 20px #0ff, inset 0 0 20px #0ff;
+    box-shadow: 0 0 12px #0ff, inset 0 0 12px #0ff; /* 15px에서 12px로 더 줄임 */
   }
   /* Glass Effect Button - Enhanced */
   .btn-glass {
@@ -1166,17 +1156,35 @@ button {
       0 0 25px rgba(255, 255, 255, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.4);
     transform: translateY(-1px);
-  }
-
-  /* Animated Button */
+  }  /* Animated Button - 강화된 애니메이션 효과 */
   .btn-animated {
-    background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4);
-    background-size: 400% 400%;
-    animation: gradient-shift 3s ease infinite;
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FF6B6B);
+    background-size: 300% 300%;
+    animation: gradient-shift 1.5s ease infinite, pulse-glow 2s ease-in-out infinite alternate;
     color: #fff;
+    font-weight: 700; /* 글자 더 두껍게 */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* 텍스트 그림자 추가 */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
   }
+  
+  .btn-animated::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s infinite;
+    transform: rotate(45deg);
+  }
+  
   .btn-animated:hover {
-    animation-duration: 1s;
+    animation-duration: 0.6s, 1s; /* 호버 시 더 빠르게 */
+    transform: translateY(-2px) scale(1.05); /* 크기 약간 증가 */
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
   }
 
   @keyframes gradient-shift {
@@ -1184,18 +1192,62 @@ button {
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-  /* Button Size Classes (더 슬림한 크기) */
+  
+  @keyframes pulse-glow {
+    0% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+    100% { box-shadow: 0 6px 25px rgba(78, 205, 196, 0.4); }
+  }
+  
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+  }/* Button Size Classes (더 슬림한 크기) */
 .btn-md {
   height: 32px; /* 더 얇게 */
   padding: 6px 20px; /* 더 컴팩트 */
-  font-size: 13px;
+  font-size: 12px; /* 13px에서 12px로 축소 */
   border-radius: 20px;
 }
 .btn-lg {
   height: 36px; /* 더 얇게 */
   padding: 8px 24px;
-  font-size: 14px;
+  font-size: 13px; /* 14px에서 13px로 축소 */
   border-radius: 22px;
+}
+
+/* Button Icon Styles */
+.btn-icon {
+  width: 40px !important; /* 정사각형 */
+  height: 40px !important; /* 정사각형 */
+  padding: 0 !important;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 8px !important; /* 둥근 모서리 */
+}
+
+.btn-icon.btn-md {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.btn-icon.btn-lg {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* IconRight 버튼의 폰트 사이즈 크게 */
+.btn-icon-right {
+  font-size: 14px !important; /* 15px에서 14px로 1단계 축소 */
+  font-weight: 600 !important;
+}
+
+/* IconRight 버튼에서 텍스트와 아이콘 간격 */
+.btn svg + *, .btn * + svg {
+  margin-left: 8px;
 }
 
 /* 아이콘 버튼 크기/배경/정렬 개선 */
@@ -1258,13 +1310,21 @@ button {
   }  .btn-fab:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-  }
-  /*
+  }  /*
     Card 컴포넌트 스타일
   */
   .card {
     /* 기본 카드 스타일 */
     transition: all var(--transition-normal);
+    
+    /* !!! 그리드 최적화 - 핵심 !!! */
+    width: 100%; /* 그리드 열의 너비를 꽉 채우도록 */
+    min-width: 0; /* flex/grid 아이템이 공간이 부족할 때 최소 0px까지 줄어들 수 있도록 허용 */
+    max-width: 100%; /* 불필요하게 늘어나지 않도록 (안전장치) */
+    height: auto; /* 콘텐츠에 따라 높이 자동 조절 (찌그러짐 방지) */
+    display: flex;
+    flex-direction: column;
+    /* !!! -------------------- !!! */
   }
   
   .modern-mesh-card {
@@ -1572,18 +1632,19 @@ button {
     }
   }
 
-
-  /* 컨텐츠 그리드 시스템 - 8개 아이템 */
+  /* 컨텐츠 그리드 시스템 - 반응형 최적화 */
   .content-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 웹 버전: 4열 그리드 */
-    gap: var(--spacing-4);
-  }
-  .content-card {
+    grid-template-columns: repeat(2, 1fr); /* 모바일 기본: 2열 */
+    gap: var(--spacing-2); /* 모바일 기본 간격 (16px) */
+    padding: 0 var(--spacing-2); /* 그리드 자체의 좌우 패딩 (16px) */
+    width: 100%;
+    box-sizing: border-box;
+  }  .content-card {
     background: var(--color-primary-charcoal);
     border-radius: var(--radius-lg);
     padding: var(--content-card-padding);
-    width: var(--content-card-size);
+    width: 100%; /* 그리드 셀 전체 사용 */
     height: var(--content-card-size);
     display: flex;
     flex-direction: column;
@@ -1592,6 +1653,8 @@ button {
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: var(--transition-normal);
     cursor: pointer;
+    min-width: 0; /* 그리드 아이템 최적화 */
+    box-sizing: border-box;
   }
   .content-card:hover {
     transform: translateY(-2px);
@@ -1617,21 +1680,37 @@ button {
     text-align: center;
     margin-top: var(--spacing-1); /* 아이콘과 라벨 사이 간격 추가 */
   }
-
   /* 태블릿: 3열 그리드 */
-  @media (max-width: 1024px) {
+  @media (min-width: 769px) and (max-width: 1024px) {
     .content-grid {
       grid-template-columns: repeat(3, 1fr);
       gap: var(--spacing-3);
+      padding: 0 var(--spacing-3);
     }
     .content-card {
-      width: 100%;
       height: 120px; /* 고정 높이 */
     }
     .content-icon {
       width: 44px;
       height: 44px;
       font-size: var(--icon-md); /* 20px */
+    }
+  }
+  
+  /* 데스크톱: 4열 그리드 */
+  @media (min-width: 1025px) {
+    .content-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-4);
+      padding: 0 var(--spacing-4);
+    }
+    .content-card {
+      height: var(--content-card-size);
+    }
+    .content-icon {
+      width: var(--content-icon-size);
+      height: var(--content-icon-size);
+      font-size: var(--icon-lg); /* 24px */
     }
   }
   /* 모바일: 2열 그리드 */
@@ -1654,7 +1733,6 @@ button {
       font-size: 12px;
     }
   }
-
   /* QuickStartItem 컴포넌트 스타일 */
   .quick-start-item {
     background: transparent;
@@ -1667,7 +1745,10 @@ button {
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: var(--transition-normal);
     cursor: pointer;
-    width: 100%; /* 그리드에 맞춰 유연하게 */
+    width: 100%; /* 그리드 셀 전체 사용 */
+    min-width: 0; /* 그리드 아이템 최적화 */
+    max-width: 100%; /* 불필요하게 늘어나지 않도록 */
+    box-sizing: border-box;
   }
   .quick-start-item:hover {
     transform: translateY(-2px);
@@ -1782,8 +1863,7 @@ button {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
   }
-  
-  @media (min-width: 768px) {
+    @media (min-width: 768px) {
     .bottom-nav-bar {
       display: none;
     }
@@ -1791,7 +1871,9 @@ button {
 
   /* GameCard 반응형 그리드 시스템 */
   .game-card {
-    width: 100%; /* 그리드가 width를 제어하도록 */
+    width: 100%; /* 그리드 셀 전체 사용 */
+    min-width: 0; /* 그리드 아이템 최적화 */
+    max-width: 100%; /* 불필요하게 늘어나지 않도록 */
     height: 200px; /* 데스크톱 기본 높이 */
     background: var(--color-primary-charcoal);
     border-radius: var(--radius-lg);
@@ -1803,6 +1885,7 @@ button {
     align-items: center;
     justify-content: center;
     padding: var(--spacing-4);
+    box-sizing: border-box;
   }
 
   .game-card:hover {

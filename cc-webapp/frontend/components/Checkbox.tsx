@@ -44,8 +44,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
 }) => {
   const generatedId = id || `checkbox-${name || Math.random().toString(36).substr(2, 9)}`;
   
-  return (
-    <div 
+  return (    <div 
       className={`
         inline-flex items-center gap-3 flex-nowrap min-w-0 w-full
         ${className}
@@ -60,22 +59,20 @@ const Checkbox: React.FC<CheckboxProps> = ({
         onChange={(e) => onChange(e.target.checked)}
         disabled={disabled}
         className="sr-only"
-      />
-      
-      <motion.div
+      />      <motion.div
         className={`
           relative flex-shrink-0 cursor-pointer
           w-5 h-5
-          border-2 border-solid rounded-md
+          border-2 border-solid rounded-sm
           flex items-center justify-center
-          transition-all duration-200 ease-in-out
+          transition-all duration-fast ease-in-out
           ${checked 
-            ? 'bg-purple-600 border-purple-600 shadow-purple-500/25 shadow-md' 
-            : 'bg-gray-800 border-gray-600 hover:bg-gray-700 hover:border-gray-500'
+            ? 'bg-primary border-primary shadow-sm' 
+            : 'bg-input border-border hover:bg-accent hover:border-border-hover'
           }
           ${disabled 
             ? 'opacity-50 cursor-not-allowed' 
-            : 'hover:shadow-lg active:scale-95'
+            : 'hover:shadow-md active:scale-95'
           }
           ${boxClassName}
         `}
@@ -91,8 +88,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
             if (!disabled) onChange(!checked);
           }
         }}
-      >
-        {checked && (
+      >        {checked && (
           <motion.div
             initial={{ opacity: 0, scale: 0.3 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -101,22 +97,20 @@ const Checkbox: React.FC<CheckboxProps> = ({
               duration: 0.15,
               ease: "easeOut"
             }}
-            className="text-white"
+            className="text-primary-foreground"
           >
             <CheckIcon className="w-3 h-3" />
           </motion.div>
         )}
-      </motion.div>
-      
-      {label && (
+      </motion.div>      {label && (
         <label 
           htmlFor={generatedId} 
           className={`
             flex-1 min-w-0
-            text-white text-sm font-normal 
+            text-card-foreground text-body font-normal 
             select-none cursor-pointer 
-            leading-normal whitespace-nowrap overflow-hidden text-ellipsis
-            ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-gray-200'}
+            leading-body 
+            ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-foreground'}
           `}
         >
           {label}

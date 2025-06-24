@@ -15,48 +15,161 @@
   --accent-foreground: #f8fafc;
   --primary: #8b5cf6;
   --primary-foreground: #f8fafc;
+  --border: #374151;
+  --border-hover: #4b5563;
+  --input: #1e293b;
+  --destructive: #ef4444;
+    /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   
-  /* Spacing */
+  /* Extended Shadow Variables for Design System */
+  --shadow-focused-glow: 0 0 0 2px var(--background), 0 0 0 4px rgba(139, 92, 246, 0.3), 0 0 15px rgba(139, 92, 246, 0.2);
+  --shadow-inner-sm: inset 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(0, 0, 0, 0.2);
+  --shadow-error-glow: 0 0 0 2px var(--background), 0 0 0 4px rgba(239, 68, 68, 0.3), 0 0 15px rgba(239, 68, 68, 0.2);
+  --shadow-success-glow: 0 0 0 2px var(--background), 0 0 0 4px rgba(16, 185, 129, 0.3), 0 0 15px rgba(16, 185, 129, 0.2);
+  --shadow-card-default: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 20px rgba(139, 92, 246, 0.1);
+  --shadow-card-hover: 0 10px 25px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08), 0 0 30px rgba(139, 92, 246, 0.3);
+  --shadow-neon-primary: 0 0 10px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.2);
+  --shadow-neon-hover: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.4);
+  --shadow-glass-card: 0 4px 16px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(255,255,255,0.10);
+  --shadow-animated-default: 0 4px 15px rgba(255, 107, 107, 0.3);
+  --shadow-animated-hover: 0 8px 25px rgba(255, 107, 107, 0.5);
+  
+  /* Focus Ring */
+  --ring: #8b5cf6;
+  
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-normal: 200ms;
+    /* Spacing */
   --spacing-1: 8px;
   --spacing-2: 16px;
   --spacing-3: 24px;
   --spacing-4: 32px;
   --spacing-5: 40px;
   --spacing-6: 48px;
-  
-  /* Border Radius */
+    /* Tabs Content Area - 상용 서비스급 고정 컨테이너 시스템 */
+  --tabs-content-min-height: 400px; /* 데스크톱 최소 높이 */
+  --tabs-content-min-height-mobile: 300px; /* 모바일 최소 높이 */
+  --tabs-content-max-width: 1152px; /* max-w-6xl 상당 (72rem) */  --tabs-content-padding: 32px; /* 내부 여백 */
+  --tabs-content-padding-mobile: 24px; /* 모바일 내부 여백 */
+    /* Border Radius */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
+  --radius-full: 50%;
   
   /* Typography */
+  --font-size-xs: 12px;
+  --font-size-caption: 12px;
   --font-size-sm: 14px;
   --font-size-body: 16px;
   --font-size-lg: 18px;
+  --font-size-h4: 18px;
   --font-size-h3: 20px;
   --font-size-h2: 24px;
+  --font-size-h1: 32px;
+  --font-size-token: 16px;
+  
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  --line-height-base: 1.5;
+  --line-height-tight: 1.25;
+  --line-height-caption: 1.25;
   --line-height-body: 1.6;
+  --line-height-heading: 1.2;
+  /* Form Components */
+  --checkbox-size: 20px;
+  --input-height-sm: 32px;
+  --input-height-md: 40px;
+  --input-height-lg: 48px;
+  
+  /* Icon Sizes */
+  --icon-xs: 12px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 36px;
+  --icon-xxl: 48px;
+    /* Spacing - Extended */
+  --spacing-0-5: 4px;
+  --spacing-7: 56px;
+  --spacing-8: 64px;
+  --spacing-9: 72px;
+  
+  /* Layout System Variables */
+  --layout-max-width: 1200px;
+  --layout-padding: 32px;
+  --layout-gap: 48px;
+  --section-card-height: 200px;
+  --section-card-padding: 32px;
+  --section-card-radius: 12px;
+  --content-card-size: 140px;
+  --content-card-padding: 24px;
+  --content-icon-size: 48px;
+  --mobile-layout-padding: 16px;
+  --mobile-section-height: 160px;
+  --mobile-content-size: 120px;
+  --mobile-content-icon: 40px;
+  
+  /* Button Variables */
+  --btn-height-md: 44px;
+  --btn-height-lg: 56px;
+  --btn-padding-md: 16px 32px;
+  --btn-padding-lg: 24px 40px;
+  --btn-icon-sm: 32px;
+  --btn-icon-md: 40px;
+  --btn-icon-lg: 48px;
+  --btn-icon-xl: 56px;
+  --btn-border-radius: 8px;
+  
+  /* App Header Variables */
+  --app-header-height-mobile: 56px;
+  --app-header-height-desktop: 64px;
+  --app-header-padding-y: 16px;
+  --app-header-icon-gap: 8px;
+  
+  /* Modal Sizes */
+  --modal-max-width-sm: 400px;
+  --modal-max-width-md: 500px;
+  --modal-max-width-lg: 600px;
+  --modal-max-width-xl: 800px;
   
   /* Breakpoints */
   --breakpoint-mobile-sm: 480px;
   --breakpoint-mobile-lg: 768px;
   --breakpoint-tablet: 1024px;
-  
-  /* 네온 퍼플 컬러 시스템 */
+    /* 네온 퍼플 컬러 시스템 */
   --neon-purple-1: #7b29cd;
   --neon-purple-2: #870dd1;
   --neon-purple-3: #5b30f6;
   --neon-purple-4: #8054f2;
+    /* 브랜드 컬러 */
+  --brand-primary: #7b29cd;
+  --brand-secondary: #870dd1;
+  --brand-accent: #5b30f6;
+  --brand-highlight: #8054f2;
   
-  /* 브랜드 컬러 */
-  --brand-primary: var(--neon-purple-1);
-  --brand-secondary: var(--neon-purple-2);
-  --brand-accent: var(--neon-purple-3);
-  --brand-highlight: var(--neon-purple-4);
+  /* RGB Color Values for rgba() usage */
+  --card-rgb: 30, 41, 59;
+  --accent-rgb: 139, 92, 246;
+  --background-rgb: 15, 23, 42;
+  --foreground-rgb: 248, 250, 252;
+  --border-rgb: 55, 65, 81;
+  --muted-rgb: 55, 65, 81;
+    /* Gradient Variables */
+  --gradient-purple-primary: linear-gradient(135deg, #7b29cd 0%, #5b30f6 100%);
+  --gradient-purple-secondary: linear-gradient(135deg, #870dd1 0%, #8054f2 100%);
+  --gradient-neon: linear-gradient(135deg, var(--neon-purple-1), var(--neon-purple-3));
+  
+  /* Container Padding */
+  --container-padding-x: 32px;
+  --container-padding-x-mobile: 16px;
 }
 
 /* 2. Base Styles */
@@ -128,7 +241,7 @@ p:last-child {
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    height: 100%; /* 그리드 셀 높이에 맞춤 */
+    height: auto; /* 유연한 높이 */
     min-height: 180px; /* 최소 높이 보장 */
     
     /* 플렉스 컨테이너로 내부 콘텐츠 배치 */
@@ -136,38 +249,29 @@ p:last-child {
     flex-direction: column;
     
     /* Glassmorphism */
-    background: rgba(30, 41, 59, 0.7);
+    background: var(--card);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     
     /* 시각적 효과 */
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06),
-      0 0 20px rgba(139, 92, 246, 0.1);
+    box-shadow: var(--shadow-card-default);
     
     transition: all 0.3s ease;
   }
   
   .card:hover {
     transform: translateY(-2px);
-    box-shadow: 
-      0 10px 25px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05),
-      0 0 30px rgba(139, 92, 246, 0.2);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-card-hover);
   }
-  
-  .modern-mesh-card {
-    background: linear-gradient(135deg, 
-      rgba(30, 41, 59, 0.8) 0%,
-      rgba(51, 65, 85, 0.6) 100%);
+    .modern-mesh-card {
+    background: var(--card);
   }
   
   .hover-lift:hover {
     transform: translateY(-4px);
   }
-
   /* Game Card */
   .game-card {
     width: 100%;
@@ -176,19 +280,16 @@ p:last-child {
     height: auto;
     min-height: 140px;
     
-    background: linear-gradient(135deg, 
-      rgba(139, 92, 246, 0.1) 0%,
-      rgba(59, 130, 246, 0.1) 100%);
-    border: 1px solid rgba(139, 92, 246, 0.3);
+    background: var(--card);
+    border: 1px solid var(--accent);
     border-radius: var(--radius-lg);
     transition: all 0.3s ease;
   }
   
   .game-card:hover {
-    border-color: rgba(139, 92, 246, 0.6);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
   }
-
   /* Quick Start Item */
   .quick-start-item {
     width: 100%;
@@ -196,21 +297,20 @@ p:last-child {
     max-width: 100%;
     height: auto;
     
-    background: rgba(30, 41, 59, 0.5);
-    border: 1px solid rgba(75, 85, 99, 0.3);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     transition: all 0.3s ease;
   }
   
   .quick-start-item:hover {
-    background: rgba(30, 41, 59, 0.7);
-    border-color: rgba(139, 92, 246, 0.4);
+    background: var(--card);
+    border-color: var(--border-hover);
   }
-
   /* Button Styles */
   .btn {
     transition: all 0.2s ease;
-    border-radius: var(--radius-md);
+    border-radius: var(--btn-border-radius);
     font-weight: var(--font-weight-medium);
     display: inline-flex;
     align-items: center;
@@ -218,40 +318,64 @@ p:last-child {
     gap: var(--spacing-1);
   }
   
-  .btn-primary {
-    background: linear-gradient(135deg, var(--neon-purple-1), var(--neon-purple-2));
-    color: white;
+  /* Button Sizes */
+  .btn-md {
+    height: var(--btn-height-md);
+    padding: var(--btn-padding-md);
+    font-size: var(--font-size-sm);
+    border-radius: var(--btn-border-radius);
+  }
+  
+  .btn-lg {
+    height: var(--btn-height-lg);
+    padding: var(--btn-padding-lg);
+    font-size: var(--font-size-body);
+    border-radius: var(--radius-lg);
+  }
+  
+  /* Button Icon Styles */
+  .btn-icon-md {
+    width: var(--btn-icon-md);
+    height: var(--btn-icon-md);
+    font-size: var(--icon-md);
+  }
+  
+  .btn-icon-lg {
+    width: var(--btn-icon-lg);
+    height: var(--btn-icon-lg);
+    font-size: var(--icon-lg);
+  }  .btn-primary {
+    background: var(--gradient-purple-primary);
+    color: var(--primary-foreground);
     border: 1px solid var(--neon-purple-1);
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+    box-shadow: var(--shadow-neon-primary);
   }
   
   .btn-primary:hover {
-    background: linear-gradient(135deg, var(--neon-purple-2), var(--neon-purple-3));
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    background: var(--gradient-purple-secondary);
+    border-color: var(--neon-purple-3);
+    box-shadow: var(--shadow-neon-hover);
     transform: translateY(-1px);
   }
-  
-  .btn-secondary {
-    background: rgba(30, 41, 59, 0.8);
+    .btn-secondary {
+    background: var(--card);
     color: var(--foreground);
-    border: 1px solid rgba(139, 92, 246, 0.3);
+    border: 1px solid var(--border);
   }
-  
-  .btn-secondary:hover {
-    background: rgba(30, 41, 59, 1);
-    border-color: rgba(139, 92, 246, 0.6);
-    box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+    .btn-secondary:hover {
+    background: var(--muted);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md);
   }
-  
-  .btn-outline {
+    .btn-outline {
     background: transparent;
     color: var(--foreground);
-    border: 1px solid rgba(139, 92, 246, 0.4);
+    border: 1px solid var(--border);
   }
   
   .btn-outline:hover {
-    background: rgba(139, 92, 246, 0.1);
-    border-color: rgba(139, 92, 246, 0.6);
+    background: var(--muted);
+    border-color: var(--border-hover);
   }
   
   .btn-text {
@@ -259,39 +383,146 @@ p:last-child {
     color: var(--muted-foreground);
     border: none;
   }
-  
-  .btn-text:hover {
+    .btn-text:hover {
     color: var(--foreground);
-    background: rgba(139, 92, 246, 0.1);
-  }
-  
-  .btn-glass {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--muted);
+  }  .btn-glass {
+    background: rgba(var(--card-rgb), 0.7);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(var(--accent-rgb), 0.2);
     color: var(--foreground);
+    box-shadow: var(--shadow-glass-card);
   }
   
   .btn-glass:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(139, 92, 246, 0.4);
+    background: rgba(var(--muted-rgb), 0.8);
+    border-color: rgba(var(--accent-rgb), 0.4);
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-1px);
+  }
+
+  /* Tabs Content Area */
+  .tabs-content-area {
+    min-height: var(--tabs-content-min-height);
+  }
+  
+  @media (max-width: 767px) {
+    .tabs-content-area {
+      min-height: var(--tabs-content-min-height-mobile);
+    }
+  }
+  
+  /* 상용 서비스급 Tabs 컴포넌트 시스템 */
+  .tab-content-master-container {
+    /* 고정된 마스터 컨테이너 - 모든 탭에서 동일한 크기 */
+    position: relative;
+    width: 100%;
+    max-width: var(--tabs-content-max-width);
+    min-height: var(--tabs-content-min-height);
+    margin: 0 auto; /* 중앙 정렬 */
+    
+    /* 상용 서비스 안정성을 위한 강제 스타일 */
+    overflow: hidden !important;
+    transition: none !important; /* 크기 변화 애니메이션 제거 */
+    
+    /* 전문적인 시각적 스타일 */
+    background: var(--background);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: var(--radius-lg);
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* 모바일 최적화 */
+  @media (max-width: 767px) {
+    .tab-content-master-container {
+      min-height: var(--tabs-content-min-height-mobile);
+      padding: var(--tabs-content-padding-mobile);
+    }
+  }
+  
+  /* 탭 콘텐츠 레이아웃 시스템 - 마스터 컨테이너 내부에서만 작동 */
+  .tab-content-master-container .content-single-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: var(--spacing-2);
+    width: 100%;
+    height: 100%;
+  }
+  
+  .tab-content-master-container .content-multi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-4);
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: var(--spacing-1); /* 스크롤바 여백 */
+  }
+  
+  .tab-content-master-container .content-vertical-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: var(--spacing-1); /* 스크롤바 여백 */
+  }
+  
+  .tab-content-master-container .content-full-width {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 }
 
 /* 4. Utilities */
 @layer utilities {
   .glassmorphism-dark {
-    background: rgba(30, 41, 59, 0.7);
+    background: rgba(var(--card-rgb), 0.7);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(var(--accent-rgb), 0.2);
   }
   
   .text-gradient {
-    background: linear-gradient(135deg, var(--neon-purple-1), var(--neon-purple-3));
+    background: var(--gradient-neon);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+  
+  /* Neon Color Utilities */
+  .text-neon-purple {
+    color: var(--neon-purple-1);
+  }
+  
+  .bg-neon-purple {
+    background: var(--gradient-purple-primary);
+  }
+  
+  .border-neon-purple {
+    border-color: var(--neon-purple-1);
+  }
+  
+  /* Extended Neon color utilities */
+  .text-neon-purple-1 { color: var(--neon-purple-1); }
+  .text-neon-purple-2 { color: var(--neon-purple-2); }
+  .text-neon-purple-3 { color: var(--neon-purple-3); }
+  .text-neon-purple-4 { color: var(--neon-purple-4); }
+  
+  .bg-neon-purple-1 { background-color: var(--neon-purple-1); }
+  .bg-neon-purple-2 { background-color: var(--neon-purple-2); }
+  .bg-neon-purple-3 { background-color: var(--neon-purple-3); }
+  .bg-neon-purple-4 { background-color: var(--neon-purple-4); }
+  
+  .border-neon-purple-1 { border-color: var(--neon-purple-1); }
+  .border-neon-purple-2 { border-color: var(--neon-purple-2); }
+  .border-neon-purple-3 { border-color: var(--neon-purple-3); }
+  .border-neon-purple-4 { border-color: var(--neon-purple-4); }
 }
 
 /* 5. Animations */
@@ -306,4 +537,39 @@ p:last-child {
 
 .animate-neon-pulse { 
   animation: neon-pulse 2s ease-in-out infinite; 
+}
+
+/* 6. Safe Area Support */
+@layer utilities {
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  .pl-safe-left {
+    padding-left: calc(var(--container-padding-x) + env(safe-area-inset-left));
+  }
+  
+  .pr-safe-right {
+    padding-right: calc(var(--container-padding-x) + env(safe-area-inset-right));
+  }
+  
+  .mt-safe-top {
+    margin-top: env(safe-area-inset-top);
+  }
+  
+  .mb-safe-bottom {
+    margin-bottom: env(safe-area-inset-bottom);
+  }
 }

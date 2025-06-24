@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
 import Avatar from './Avatar';
 
 const meta: Meta<typeof Avatar> = {
@@ -79,15 +78,6 @@ export const Active: Story = {
   },
 };
 
-export const Loading: Story = {
-  args: {
-    src: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-    alt: 'John Doe',
-    size: 'md',
-    isLoading: true,
-  },
-};
-
 // Size variants
 export const Sizes: Story = {
   render: () => (
@@ -136,18 +126,46 @@ export const FallbackOptions: Story = {
         <h4 className="text-[var(--font-size-body)] font-medium text-[var(--foreground)] mb-4">
           Fallback Types
         </h4>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <div className="text-center">
-            <Avatar size="md" alt="Default Icon" />
+            <Avatar size="lg" alt="Default Icon" />
             <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Default Icon</p>
           </div>
           <div className="text-center">
-            <Avatar size="md" fallback="AB" alt="Text Fallback" />
+            <Avatar size="lg" fallback="AB" alt="Text Fallback" />
             <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Text Fallback</p>
           </div>
           <div className="text-center">
-            <Avatar size="md" fallback="🎮" alt="Emoji Fallback" />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Emoji Fallback</p>
+            <Avatar size="lg" fallback="😀" alt="Happy Emoji" />
+            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Happy Emoji</p>
+          </div>
+          <div className="text-center">
+            <Avatar size="lg" fallback="👤" alt="User Emoji" />
+            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">User Emoji</p>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h4 className="text-[var(--font-size-body)] font-medium text-[var(--foreground)] mb-4">
+          Different Sizes with Text
+        </h4>
+        <div className="flex items-end gap-4">
+          <div className="text-center">
+            <Avatar size="sm" fallback="AB" alt="Small Text" />
+            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Small</p>
+          </div>
+          <div className="text-center">
+            <Avatar size="md" fallback="AB" alt="Medium Text" />
+            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Medium</p>
+          </div>
+          <div className="text-center">
+            <Avatar size="lg" fallback="AB" alt="Large Text" />
+            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Large</p>
+          </div>
+          <div className="text-center">
+            <Avatar size="xl" fallback="AB" alt="Extra Large Text" />
+            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Extra Large</p>
           </div>
         </div>
       </div>
@@ -162,12 +180,11 @@ export const States: Story = {
       <div>
         <h4 className="text-[var(--font-size-body)] font-medium text-[var(--foreground)] mb-4">
           Avatar States
-        </h4>
-        <div className="flex items-center gap-6">
+        </h4>        <div className="flex items-center gap-6">
           <div className="text-center">
             <Avatar
               src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-              alt="Normal State"
+              alt="Normal"
               size="lg"
             />
             <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Normal</p>
@@ -175,106 +192,14 @@ export const States: Story = {
           <div className="text-center">
             <Avatar
               src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-              alt="Active State"
+              alt="Active"
               size="lg"
               isActive={true}
             />
             <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Active</p>
           </div>
-          <div className="text-center">
-            <Avatar
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-              alt="Loading State"
-              size="lg"
-              isLoading={true}
-            />
-            <p className="mt-2 text-[var(--font-size-xs)] text-[var(--muted-foreground)]">Loading</p>
-          </div>
         </div>
       </div>
     </div>
   ),
-};
-
-// Interactive demo
-export const Interactive: Story = {
-  render: () => {
-    const [avatarState, setAvatarState] = useState({
-      size: 'md' as const,
-      isActive: false,
-      isLoading: false,
-      hasImage: true,
-    });
-
-    const sampleImages = [
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-    ];
-
-    return (
-      <div className="space-y-6">
-        <div className="text-center">
-          <Avatar
-            src={avatarState.hasImage ? sampleImages[0] : undefined}
-            fallback="JD"
-            alt="Interactive Avatar"
-            size={avatarState.size}
-            isActive={avatarState.isActive}
-            isLoading={avatarState.isLoading}
-          />
-        </div>
-
-        <div className="space-y-4 max-w-md mx-auto">
-          <div>
-            <label className="block text-[var(--font-size-sm)] font-medium text-[var(--foreground)] mb-2">
-              Size
-            </label>
-            <select
-              value={avatarState.size}
-              onChange={(e) => setAvatarState(prev => ({ ...prev, size: e.target.value as any }))}
-              className="w-full p-2 bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius-sm)] text-[var(--foreground)]"
-            >
-              <option value="sm">Small</option>
-              <option value="md">Medium</option>
-              <option value="lg">Large</option>
-              <option value="xl">Extra Large</option>
-            </select>
-          </div>
-
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={avatarState.isActive}
-                onChange={(e) => setAvatarState(prev => ({ ...prev, isActive: e.target.checked }))}
-                className="rounded"
-              />
-              <span className="text-[var(--font-size-sm)] text-[var(--foreground)]">Active State</span>
-            </label>
-            
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={avatarState.isLoading}
-                onChange={(e) => setAvatarState(prev => ({ ...prev, isLoading: e.target.checked }))}
-                className="rounded"
-              />
-              <span className="text-[var(--font-size-sm)] text-[var(--foreground)]">Loading</span>
-            </label>
-            
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={avatarState.hasImage}
-                onChange={(e) => setAvatarState(prev => ({ ...prev, hasImage: e.target.checked }))}
-                className="rounded"
-              />
-              <span className="text-[var(--font-size-sm)] text-[var(--foreground)]">Show Image</span>
-            </label>
-          </div>
-        </div>
-      </div>
-    );
-  },
 };

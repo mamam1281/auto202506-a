@@ -69,8 +69,8 @@ export const PasswordToggle: Story = {
 export const WithIcons: Story = {
   args: {
     type: 'text',
-    placeholder: 'With icons',
-    leftIcon: <Search size={20} />,
+    placeholder: '', // 텍스트 없이 아이콘만 표시
+    leftIcon: <Search size={18} />,
     rightIcon: null,
   },
 };
@@ -95,7 +95,7 @@ export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 400 }}>
       <Input type="text" placeholder="Default" />
-      <Input type="search" placeholder="Search" leftIcon={<Search size={20} />} />
+      <Input type="search" placeholder="Search" />
       <Input type="email" placeholder="Email" />
       <Input type="password" placeholder="Password" />
       <Input type="gradient" placeholder="Gradient" />

@@ -25,7 +25,6 @@ const Avatar: React.FC<AvatarProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(!!src);
-
   // 크기 클래스 결정
   const sizeClass = (() => {
     switch (size) {
@@ -45,9 +44,25 @@ const Avatar: React.FC<AvatarProps> = ({
     xl: 40,
   };
 
+  // 이모지 크기 매핑 (이모지를 더 크게 표시)
+  const emojiSizeMapping = {
+    sm: 'text-lg', // 18px
+    md: 'text-xl', // 20px
+    lg: 'text-2xl', // 24px
+    xl: 'text-3xl', // 30px
+  };
+
   // 대체 콘텐츠 결정
   const renderFallback = () => {
-    if (fallback) return fallback;
+    if (fallback) {
+      // 이모지인지 확인 (유니코드 이모지 패턴)
+      const isEmoji = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u.test(fallback.toString());
+      
+      if (isEmoji) {
+        return <span className={`${emojiSizeMapping[size]} leading-none`}>{fallback}</span>;
+      }
+      return <span className="uppercase font-[var(--font-weight-semibold)]">{fallback}</span>;
+    }
     if (alt && alt !== 'User Avatar') {
       // 이니셜 표시
       const initials = alt.split(' ').map(word => word.charAt(0)).join('').slice(0, 2);
@@ -93,15 +108,20 @@ const Avatar: React.FC<AvatarProps> = ({
             }`}
             onLoad={handleImageLoad}
             onError={handleImageError}
-          />
-          {imageLoading && (
+          />          {imageLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-primary-charcoal)]">
-              <div className="avatar-shimmer-loading w-full h-full" />
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="animate-spin rounded-full w-1/3 h-1/3 border-2 border-[var(--color-purple-primary)] border-t-transparent" />
+              </div>
             </div>
           )}
         </>
       ) : (        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--color-purple-primary)] to-[var(--color-purple-secondary)]">
-          {renderFallback()}
+          {(isLoading && !src) ? (
+            <div className="animate-spin rounded-full w-1/3 h-1/3 border-2 border-white border-t-transparent" />
+          ) : (
+            renderFallback()
+          )}
         </div>
       )}
     </motion.div>
