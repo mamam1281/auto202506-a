@@ -95,14 +95,16 @@
 }
 
 .btn-kakao-blue {
-  background-color: var(--color-kakao-blue);
+  background-color: var(--color-neutral-dark);
   color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-kakao-gradient {
-  background-image: var(--gradient-kakao-blue);
+  background: linear-gradient(135deg, #4a4a4a 0%, #6a6a6a 100%);
   color: white;
-  box-shadow: 0 4px 8px rgba(61, 102, 255, 0.2);
+  box-shadow: 0 4px 8px rgba(74, 74, 74, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .btn-kakao-white {
@@ -138,6 +140,12 @@
   height: 32px; /* 40px에서 32px로 변경 */
   padding: 0 14px; /* 16px에서 14px로 변경 */
   font-size: 13px; /* 14px에서 13px로 변경 */
+}
+
+.btn-kakao-xs {
+  height: 28px; /* 가장 작은 사이즈 */
+  padding: 0 12px;
+  font-size: 11px;
 }
 
 /* 모든 버튼에서 사용할 수 있는 리플 효과 */
@@ -304,4 +312,41 @@ body {
   margin-top: 4px;
   margin-bottom: 12px;
   font-family: monospace;
+}
+
+/* 기존 버튼들에 테두리 강화 (글래스/애니메이션 제외) */
+.btn-primary {
+  border: 2px solid rgba(91, 48, 246, 0.6) !important;
+}
+
+.btn-secondary {
+  border: 2px solid rgba(148, 163, 184, 0.6) !important;
+}
+
+.btn-accent {
+  border: 2px solid rgba(255, 69, 22, 0.6) !important;
+}
+
+.btn-success {
+  border: 2px solid rgba(16, 185, 129, 0.6) !important;
+}
+
+.btn-error {
+  border: 2px solid rgba(239, 68, 68, 0.6) !important;
+}
+
+.btn-info {
+  border: 2px solid rgba(6, 182, 212, 0.6) !important;
+}
+
+.btn-outline {
+  border: 3px solid #5B30F6 !important;
+}
+
+.btn-text {
+  border: 1px solid rgba(91, 48, 246, 0.3) !important;
+}
+
+.btn-text:hover {
+  border: 2px solid rgba(91, 48, 246, 0.5) !important;
 }

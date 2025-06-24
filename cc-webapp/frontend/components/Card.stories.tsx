@@ -59,17 +59,19 @@ export const Default: Story = {
 export const WithTitle: Story = {
   args: {
     title: '오늘의 제안',
-    children: (      <div className="space-y-6">
+    children: (
+      <div className="space-y-4">
         <p className="text-text-secondary text-sm leading-relaxed">
           특별한 혜택을 확인해보세요!
         </p>
-        <div className="space-y-4">
+        <div className="space-y-3">
           <p className="text-text-secondary text-xs">
             이벤트 기간: 2025년 6월 24일 - 7월 1일
           </p>
-        </div>        <div className="buttons-section">
-          <Button variant="primary" size="md">혜택 받기</Button>
-          <Button variant="outline" size="md">나중에 보기</Button>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="primary" size="xs">혜택 받기</Button>
+          <Button variant="outline" size="xs">나중에 보기</Button>
         </div>
       </div>
     ),
@@ -79,21 +81,25 @@ export const WithTitle: Story = {
 // 헤더 우측 요소가 있는 카드
 export const WithHeaderRight: Story = {
   args: {
-    title: '알림 설정',    headerRight: (      <Button iconOnly variant="text" size="md" onClick={action('settings clicked')}>
+    title: '알림 설정',
+    headerRight: (
+      <Button iconOnly variant="text" size="xs" onClick={action('settings clicked')}>
         <Settings className="size-icon-sm" />
       </Button>
-    ),children: (      <div className="space-y-6">
-        <div className="flex items-center justify-between py-2.5">
+    ),
+    children: (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between py-2">
           <span className="text-text-secondary text-sm">푸시 알림</span>
-          <Button variant="primary" size="md">켜기</Button>
+          <Button variant="primary" size="xs">켜기</Button>
         </div>
-        <div className="flex items-center justify-between py-2.5">
+        <div className="flex items-center justify-between py-2">
           <span className="text-text-secondary text-sm">이메일 알림</span>
-          <Button variant="glass" size="md">끄기</Button>
+          <Button variant="glass" size="xs">끄기</Button>
         </div>
-        <div className="flex items-center justify-between py-2.5">
+        <div className="flex items-center justify-between py-2">
           <span className="text-text-secondary text-sm">소리 알림</span>
-          <Button variant="outline" size="md">켜기</Button>
+          <Button variant="outline" size="xs">켜기</Button>
         </div>
       </div>
     ),
@@ -105,8 +111,10 @@ export const Clickable: Story = {
   args: {
     title: '🎮 클릭 가능한 카드',
     onClick: action('card clicked'),
-    children: (      <div className="space-y-4">
-        <div className="flex items-center gap-2">          <Star className="size-icon-sm text-yellow-400" />
+    children: (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Star className="size-icon-sm text-yellow-400" />
           <span className="text-text-secondary text-sm">
             프리미엄 기능 체험하기
           </span>
@@ -128,7 +136,9 @@ export const Clickable: Story = {
 export const NoPadding: Story = {
   args: {
     noPadding: true,
-    children: (      <div>        <div className="p-4 border-b border-border">
+    children: (
+      <div>
+        <div className="p-4 border-b border-border">
           <h4 className="text-h4 font-semibold text-card-foreground">
             커스텀 레이아웃
           </h4>
@@ -137,8 +147,9 @@ export const NoPadding: Story = {
           <p className="text-text-secondary text-sm">
             noPadding 옵션을 사용하여 내부에서 직접 패딩을 제어할 수 있습니다.
           </p>
-        </div>        <div className="p-2 bg-primary/10 rounded-b-lg">
-          <Button variant="animated" size="md" className="w-full">
+        </div>
+        <div className="p-2 bg-primary/10 rounded-b-lg">
+          <Button variant="animated" size="xs" className="w-full">
             액션 버튼
           </Button>
         </div>
@@ -151,23 +162,28 @@ export const NoPadding: Story = {
 export const Complex: Story = {
   args: {
     title: '게임 통계',
-    headerRight: (      <div className="flex gap-1">
-        <Button iconOnly variant="text" size="md" onClick={action('bell clicked')}>
+    headerRight: (
+      <div className="flex gap-1">
+        <Button iconOnly variant="text" size="xs" onClick={action('bell clicked')}>
           <Bell className="size-icon-xs" />
         </Button>
-        <Button iconOnly variant="text" size="md" onClick={action('close clicked')}>
+        <Button iconOnly variant="text" size="xs" onClick={action('close clicked')}>
           <X className="size-icon-xs" />
         </Button>
       </div>
-    ),    children: (      <div className="space-y-5">        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-4 bg-primary/10 rounded-md">
+    ),
+    children: (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="text-center p-3 bg-primary/10 rounded-md">
             <div className="text-h3 font-bold text-primary">
               1,234
             </div>
             <div className="text-xs text-text-secondary mt-1">
               총 포인트
             </div>
-          </div>          <div className="text-center p-4 bg-green-500/10 rounded-md">
+          </div>
+          <div className="text-center p-3 bg-green-500/10 rounded-md">
             <div className="text-h3 font-bold text-green-400">
               89%
             </div>
@@ -175,7 +191,8 @@ export const Complex: Story = {
               승률
             </div>
           </div>
-        </div>        <div className="space-y-3">
+        </div>
+        <div className="space-y-3">
           <div className="flex justify-between items-center text-sm">
             <span className="text-text-secondary">이번 주 진행률</span>
             <span className="text-foreground font-medium">78%</span>
@@ -200,8 +217,10 @@ export const Complex: Story = {
 // 4x4 그리드 데모 (모바일 2열 강제 고정)
 export const GridDemo: Story = {
   render: () => (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-7xl">      {/* 첫 번째 행 */}
-      <Card title="간단한 알림">        <div className="py-2.5">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-7xl">
+      {/* 첫 번째 행 */}
+      <Card title="간단한 알림">
+        <div className="py-2">
           <p className="text-text-secondary text-sm">
             새로운 업데이트가 있습니다.
           </p>
@@ -211,45 +230,51 @@ export const GridDemo: Story = {
       <Card 
         title="액션 카드" 
         onClick={action('action card clicked')}
-      >        <div className="space-y-2.5 py-2.5">
+      >
+        <div className="space-y-2 py-2">
           <p className="text-text-secondary text-sm">
             클릭하여 세부 정보를 확인하세요.
           </p>
-          <Button variant="animated" size="md">자세히 보기</Button>
+          <Button variant="animated" size="xs">자세히 보기</Button>
         </div>
       </Card>
       
       <Card 
         title="설정" 
         headerRight={
-          <Button iconOnly variant="text" size="md">
+          <Button iconOnly variant="text" size="xs">
             <Settings className="size-icon-sm" />
           </Button>
         }
-      >        <div className="space-y-2.5 py-2.5">
+      >
+        <div className="space-y-2 py-2">
           <div className="flex items-center justify-between">
             <span className="text-sm">다크 모드</span>
-            <Button variant="glass" size="md">켜기</Button>
+            <Button variant="glass" size="xs">켜기</Button>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm">알림</span>
-            <Button variant="primary" size="md">설정</Button>
+            <Button variant="primary" size="xs">설정</Button>
+          </div>
+        </div>
+      </Card>      <Card title="포인트">
+        <div className="text-center py-2">
+          <div className="text-h3 font-bold text-primary">
+            1,234
+          </div>
+          <div className="text-xs text-text-secondary mt-2">
+            현재 포인트
           </div>
         </div>
       </Card>
 
-      <Card title="포인트">        <div className="text-center py-2.5">          <div className="text-h3 font-bold text-primary">
-            1,234
-          </div>
-          <div className="text-xs text-text-secondary mt-2.5">
-            현재 포인트
-          </div>
-        </div>
-      </Card>      {/* 두 번째 행 */}
-      <Card title="승률 통계">        <div className="text-center py-2.5">          <div className="text-h3 font-bold text-green-400">
+      {/* 두 번째 행 */}
+      <Card title="승률 통계">
+        <div className="text-center py-2">
+          <div className="text-h3 font-bold text-green-400">
             89%
           </div>
-          <div className="text-xs text-text-secondary mt-2.5">
+          <div className="text-xs text-text-secondary mt-2">
             전체 승률
           </div>
         </div>
@@ -258,34 +283,38 @@ export const GridDemo: Story = {
       <Card 
         title="빠른 시작"
         onClick={action('quick start clicked')}
-      >        <div className="space-y-2.5 py-2.5">
+      >
+        <div className="space-y-2 py-2">
           <p className="text-text-secondary text-sm">
             즐겨하는 게임을 바로 시작하세요.
           </p>
-          <Button variant="glass" size="md" className="w-full">시작하기</Button>
+          <Button variant="glass" size="xs" className="w-full">시작하기</Button>
         </div>
       </Card>
 
-      <Card title="알림 설정">        <div className="space-y-2.5 py-2.5">
+      <Card title="알림 설정">
+        <div className="space-y-2 py-2">
           <div className="flex justify-between items-center">
             <span className="text-sm">푸시 알림</span>
-            <Button variant="success" size="md">ON</Button>
+            <Button variant="success" size="xs">ON</Button>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-sm">이메일</span>
-            <Button variant="outline" size="md">OFF</Button>
+            <Button variant="outline" size="xs">OFF</Button>
           </div>
         </div>
       </Card>
 
-      <Card title="최근 활동">        <div className="space-y-2.5 py-2.5">
+      <Card title="최근 활동">
+        <div className="space-y-2 py-2">
           <div className="text-sm text-foreground">슬롯 게임</div>
           <div className="text-xs text-text-secondary">10분 전</div>
           <div className="text-sm text-foreground">카드 게임</div>
           <div className="text-xs text-text-secondary">1시간 전</div>
         </div>
       </Card>      {/* 세 번째 행 */}
-      <Card title="프로필">        <div className="space-y-2.5 py-2.5">
+      <Card title="프로필">
+        <div className="space-y-2 py-2">
           <div className="flex justify-between">
             <span className="text-sm">레벨</span>
             <span className="text-primary font-medium">15</span>
@@ -303,7 +332,8 @@ export const GridDemo: Story = {
       <Card 
         title="이벤트"
         onClick={action('event clicked')}
-      >        <div className="space-y-2.5 py-2.5">
+      >
+        <div className="space-y-2 py-2">
           <div className="flex items-center gap-2">
             <Star className="size-icon-sm text-yellow-400" />
             <span className="text-sm">특별 이벤트</span>
@@ -314,27 +344,31 @@ export const GridDemo: Story = {
         </div>
       </Card>
 
-      <Card title="도움말">        <div className="space-y-2.5 py-2.5">
+      <Card title="도움말">
+        <div className="space-y-2 py-2">
           <p className="text-text-secondary text-sm">
             게임 방법과 팁을 확인하세요.
           </p>
-          <Button variant="animated" size="md" className="w-full">가이드 보기</Button>
+          <Button variant="animated" size="xs" className="w-full">가이드 보기</Button>
         </div>
       </Card>
 
-      <Card title="보상함">        <div className="text-center space-y-2.5 py-2.5">
+      <Card title="보상함">
+        <div className="text-center space-y-2 py-2">
           <div className="text-lg font-semibold">🎁</div>
           <p className="text-sm">받을 보상이 있습니다!</p>
-          <Button variant="primary" size="md">받기</Button>
+          <Button variant="primary" size="xs">받기</Button>
         </div>
       </Card>      {/* 네 번째 행 */}
-      <Card title="게임 모드">        <div className="space-y-2.5 py-2.5">
-          <Button variant="glass" size="md" className="w-full">클래식</Button>
-          <Button variant="outline" size="md" className="w-full">터보</Button>
+      <Card title="게임 모드">
+        <div className="space-y-2 py-2">
+          <Button variant="glass" size="xs" className="w-full">클래식</Button>
+          <Button variant="outline" size="xs" className="w-full">터보</Button>
         </div>
       </Card>
 
-      <Card title="친구 목록">        <div className="space-y-2.5 py-2.5">
+      <Card title="친구 목록">
+        <div className="space-y-2 py-2">
           <div className="flex justify-between items-center">
             <span className="text-sm">온라인</span>
             <span className="text-green-400 text-xs">3명</span>
@@ -349,7 +383,8 @@ export const GridDemo: Story = {
       <Card 
         title="랭킹"
         onClick={action('ranking clicked')}
-      >        <div className="space-y-2.5 py-2.5">
+      >
+        <div className="space-y-2 py-2">
           <div className="text-center">
             <div className="text-lg font-bold text-accent-amber">
               #7
@@ -361,7 +396,8 @@ export const GridDemo: Story = {
         </div>
       </Card>
 
-      <Card title="공지사항">        <div className="space-y-2.5 py-2.5">
+      <Card title="공지사항">
+        <div className="space-y-2 py-2">
           <div className="flex items-center gap-2">
             <Bell size={12} className="text-primary" />
             <span className="text-sm">새 소식</span>
@@ -423,27 +459,30 @@ export const GameStats: Story = {
 // 설정 항목 카드 (텍스트 간격 최적화)
 export const SettingsCard: Story = {
   args: {
-    title: '알림 설정',    headerRight: (
-      <Button iconOnly variant="text" size="md" onClick={action('settings clicked')}>
+    title: '알림 설정',
+    headerRight: (
+      <Button iconOnly variant="text" size="xs" onClick={action('settings clicked')}>
         <Settings size={16} /> {/* --icon-sm is 16px */}
       </Button>
-    ),children: (      <div className="space-y-2">
+    ),
+    children: (
+      <div className="space-y-2">
         {/* 각 설정 항목에 명시적인 수직 패딩 추가 */}
-        <div className="flex justify-between items-center py-3">
+        <div className="flex justify-between items-center py-2">
           <span className="text-foreground text-body">푸시 알림</span>
-          <Button variant="primary" size="md">켜기</Button>
+          <Button variant="primary" size="xs">켜기</Button>
         </div>
-        <div className="flex justify-between items-center py-3">
+        <div className="flex justify-between items-center py-2">
           <span className="text-foreground text-body">이메일 알림</span>
-          <Button variant="glass" size="md">끄기</Button>
+          <Button variant="glass" size="xs">끄기</Button>
         </div>
-        <div className="flex justify-between items-center py-3">
+        <div className="flex justify-between items-center py-2">
           <span className="text-foreground text-body">소리 알림</span>
-          <Button variant="primary" size="md">켜기</Button>
+          <Button variant="primary" size="xs">켜기</Button>
         </div>
-        <div className="flex justify-between items-center py-3">
+        <div className="flex justify-between items-center py-2">
           <span className="text-foreground text-body">진동 알림</span>
-          <Button variant="glass" size="md">끄기</Button>
+          <Button variant="glass" size="xs">끄기</Button>
         </div>
       </div>
     ),
@@ -462,14 +501,14 @@ export const ButtonGroupVertical: Story = {
   args: {
     title: '버튼 그룹 세로 배치',
     children: (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <p className="text-text-secondary text-sm">
           버튼들이 세로로 배치되며 충분한 간격을 가집니다.
         </p>
         <div className="btn-group-vertical">
-          <Button variant="primary" size="md">주요 액션</Button>
-          <Button variant="secondary" size="md">보조 액션</Button>
-          <Button variant="outline" size="md">선택사항</Button>
+          <Button variant="primary" size="xs">주요 액션</Button>
+          <Button variant="secondary" size="xs">보조 액션</Button>
+          <Button variant="outline" size="xs">선택사항</Button>
         </div>
       </div>
     ),
@@ -481,13 +520,13 @@ export const ButtonGroupInline: Story = {
   args: {
     title: '버튼 그룹 가로 배치',
     children: (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <p className="text-text-secondary text-sm">
           버튼들이 가로로 배치되며 적절한 간격을 가집니다.
         </p>
         <div className="btn-group-inline">
-          <Button variant="primary" size="md">확인</Button>
-          <Button variant="outline" size="md">취소</Button>
+          <Button variant="primary" size="xs">확인</Button>
+          <Button variant="outline" size="xs">취소</Button>
         </div>
       </div>
     ),

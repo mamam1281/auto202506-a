@@ -155,7 +155,9 @@ export const AllVariants: Story = {
             disabled={args.disabled}
             ripple={variant.startsWith('kakao-') ? true : args.ripple}
           >
-            {variant.charAt(0).toUpperCase() + variant.slice(1)}
+            {variant === 'kakao-blue' ? '뉴트럴' : 
+             variant === 'kakao-gradient' ? '그레이' :
+             variant.charAt(0).toUpperCase() + variant.slice(1)}
           </Button>
         </div>
       ))}
@@ -228,8 +230,8 @@ export const AllKakaoVariants: Story = {
       <h4 style={{ color: 'white', marginBottom: '8px', fontSize: '19px' }}>카카오 스타일 버튼</h4>
       <div className="flex flex-wrap gap-2">
         <Button variant="kakao-yellow" ripple>노란색 버튼</Button>
-        <Button variant="kakao-blue" ripple>파란색 버튼</Button>
-        <Button variant="kakao-gradient" ripple>그라데이션 버튼</Button>
+        <Button variant="kakao-blue" ripple>뉴트럴 버튼</Button>
+        <Button variant="kakao-gradient" ripple>그레이 그라데이션</Button>
         <Button variant="kakao-white" ripple>흰색 버튼</Button>
       </div>
     </div>

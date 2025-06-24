@@ -3,7 +3,7 @@ import { LucideIcon } from 'lucide-react';
 
 export interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'accent' | 'success' | 'error' | 'info' | 'outline' | 'text' | 'neon' | 'glass' | 'animated' | 'kakao-yellow' | 'kakao-blue' | 'kakao-gradient' | 'kakao-white';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   iconOnly?: boolean;
   rounded?: boolean;
   disabled?: boolean;
@@ -65,11 +65,10 @@ const Button: React.FC<ButtonProps> = ({
   // 기본 클래스 및 변형 클래스 설정
   const baseClasses = isKakaoStyle ? 'btn-kakao' : 'btn';
   const variantClass = `btn-${variant}`;
-  
-  // 크기 클래스 설정
+    // 크기 클래스 설정
   let sizeClass = '';
   if (isKakaoStyle) {
-    sizeClass = size === 'lg' ? 'btn-kakao-lg' : size === 'sm' ? 'btn-kakao-sm' : '';
+    sizeClass = size === 'lg' ? 'btn-kakao-lg' : size === 'sm' ? 'btn-kakao-sm' : size === 'xs' ? 'btn-kakao-xs' : '';
   } else {
     sizeClass = iconOnly ? `btn-icon btn-icon-${size}` : `btn-${size}`;
   }
@@ -81,11 +80,11 @@ const Button: React.FC<ButtonProps> = ({
   const conditionalClasses: string[] = [];
   if (Icon && iconPosition === 'right' && !iconOnly) {
     conditionalClasses.push('flex-row-reverse');
-  }
-  // Reflects globals.css icon pixel values:
+  }  // Reflects globals.css icon pixel values:
   // --icon-sm: 16px; --icon-md: 20px; --icon-lg: 24px; --icon-xl: 36px;
-  // Button 'size' prop is 'sm' | 'md' | 'lg'. We'll map these.
+  // Button 'size' prop is 'xs' | 'sm' | 'md' | 'lg'. We'll map these.
   const iconSizeMap = {
+    xs: 14, // Maps to --icon-xs (extra small)
     sm: 16, // Maps to --icon-sm
     md: 20, // Maps to --icon-md
     lg: 24, // Maps to --icon-lg
