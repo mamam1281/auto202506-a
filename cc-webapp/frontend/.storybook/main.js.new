@@ -18,7 +18,8 @@ const config = {
   },
   docs: {
     autodocs: 'tag',
-  },  typescript: {
+  },
+  typescript: {
     check: false,
     reactDocgen: 'react-docgen-typescript',
     reactDocgenTypescriptOptions: {
@@ -79,7 +80,7 @@ const config = {
         },
       ],
     });
-
+    
     config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...config.resolve.alias,

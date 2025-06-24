@@ -1,0 +1,307 @@
+/* 필수 Tailwind 스타일을 명시적으로 주입하는 파일 */
+
+/* Progress 관련 필수 CSS 변수 정의 - 원래 디자인 시스템 색상 */
+:root {
+  /* Colors */
+  --color-primary-dark-navy: #1a1a1a;
+  --color-primary-charcoal: #2d2d2d;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #D1D5DB;
+  --color-accent-red: #FF4516;
+  --color-accent-amber: #F59E0B; 
+  --color-neutral-dark: #333333;
+  --color-success: #10B981;
+  --color-error: #B90C29;
+  --color-info: #135B79;
+  --color-purple-primary: #5B30F6;
+  --color-purple-secondary: #870DD1;
+  --color-purple-tertiary: #8054F2;
+  
+  /* 카카오 스타일 색상 */
+  --color-kakao-yellow: #FEE500;
+  --color-kakao-black: #181600;
+  --color-kakao-blue: #4455F7;
+  --color-kakao-gray: #F6F6F6;
+  --color-kakao-dark-gray: #AEAEAE;
+  
+  /* Applied Colors */
+  --primary: var(--color-text-primary);
+  --accent: var(--color-accent-red);
+  --muted: var(--color-neutral-dark);
+  
+  /* Properties */
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  
+  /* 카카오뱅크/페이 스타일 그림자 */
+  --shadow-kakao-btn: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-kakao-btn-hover: 0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-kakao-card: 0 4px 16px rgba(0, 0, 0, 0.06);
+  
+  /* Gradients */
+  --gradient-purple-primary: linear-gradient(135deg, var(--color-purple-primary) 0%, var(--color-purple-secondary) 100%);
+  --gradient-kakao-blue: linear-gradient(135deg, #3D66FF 0%, #6687FF 100%);
+  --gradient-kakao-yellow: linear-gradient(135deg, #FFE03D 0%, #FFCE00 100%);
+}
+
+/* 카카오 스타일 버튼 클래스 */
+.btn-kakao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-kakao-btn);
+  user-select: none;
+}
+
+.btn-kakao::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+  pointer-events: none;
+}
+
+.btn-kakao:active {
+  transform: translateY(1px);
+  box-shadow: var(--shadow-kakao-btn);
+}
+
+.btn-kakao:hover::after {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.btn-kakao:active::after {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 카카오 스타일 변형 버튼들 */
+.btn-kakao-yellow {
+  background-color: var(--color-kakao-yellow);
+  color: var(--color-kakao-black);
+}
+
+.btn-kakao-blue {
+  background-color: var(--color-kakao-blue);
+  color: white;
+}
+
+.btn-kakao-gradient {
+  background-image: var(--gradient-kakao-blue);
+  color: white;
+  box-shadow: 0 4px 8px rgba(61, 102, 255, 0.2);
+}
+
+.btn-kakao-white {
+  background-color: white;
+  color: #222;
+  border: 1px solid #EAEAEA;
+}
+
+.btn-kakao-disabled {
+  background-color: var(--color-kakao-gray);
+  color: var(--color-kakao-dark-gray);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn-kakao-disabled:hover::after,
+.btn-kakao-disabled:active::after {
+  background-color: transparent;
+}
+
+.btn-kakao-disabled:active {
+  transform: none;
+}
+
+/* 사이즈 변형 */
+.btn-kakao-lg {
+  height: 56px;
+  padding: 0 32px;
+  font-size: 18px;
+}
+
+.btn-kakao-sm {
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+/* 카카오 스타일 리플 효과 */
+.btn-kakao-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Progress 관련 명시적 스타일 */
+.bg-success {
+  background-color: var(--color-success);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-muted {
+  background-color: var(--muted);
+}
+
+.bg-gradient-purple-primary {
+  background-image: var(--gradient-purple-primary);
+}
+
+.rounded-md {
+  border-radius: var(--radius-md);
+}
+
+.w-full {
+  width: 100%;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.h-4 {
+  height: 16px;
+}
+
+.h-6 {
+  height: 24px;
+}
+
+.h-8 {
+  height: 32px;
+}
+
+/* 프로그레스바 애니메이션 */
+.progress-striped {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  animation: progress-bar-stripes 1s linear infinite;
+}
+
+.progress-pulsing {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes progress-bar-stripes {
+  0% {
+    background-position-x: 1rem;
+  }
+  100% {
+    background-position-x: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* 디버깅용 border */
+.border {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.border-white {
+  border-color: white;
+}
+
+/* 최소 너비 */
+.min-w-\[4px\] {
+  min-width: 4px;
+}
+
+/* 컨테이너 배경과 여백 (스토리북 내부 컨트롤) */
+.sb-container {
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 여러 프로그레스바를 표시할 때 간격 */
+.progress-group > div {
+  margin-bottom: 16px;
+}
+
+/* 디버그 레이어 - 프로그레스바 테스트 */
+.debug-outline * {
+  outline: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 컴포넌트 디버깅을 위한 레이블 지원 */
+.debug-label {
+  font-family: monospace;
+  font-size: 12px;
+  color: #cccccc;
+  margin-bottom: 4px;
+  margin-top: 12px;
+  display: block;
+}
+
+/* 더 확실한 스토리북 배경 설정 */
+#storybook-preview-wrapper {
+  background: #0f0f0f !important;
+}
+
+body {
+  background: #0f0f0f;
+}
+
+/* 프로그레스바 값 표시 */
+.progress-value {
+  color: white;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  font-family: monospace;
+}

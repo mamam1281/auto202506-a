@@ -1866,9 +1866,13 @@ button {
       background-position-x: 0;
     }
   }
-  
-  /* 프로그레스바 그라데이션 배경 */
+    /* 프로그레스바 그라데이션 배경 */
   .bg-gradient-purple-primary {
-    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    background: var(--gradient-purple-primary);
+  }
+  
+  /* bg-gradient 유틸리티 클래스 추가 확인 */
+  .bg-gradient {
+    background-image: var(--gradient-purple-primary);
   }
 } /* @layer components 닫힘 */
