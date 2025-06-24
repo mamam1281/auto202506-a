@@ -233,6 +233,43 @@
   /* Container Padding */
   --container-padding-x: 32px;
   --container-padding-x-mobile: 16px;
+
+  /* Gacha Tier Colors */
+  /* Common Tier */
+  --gacha-common-color: #a0a0a0;
+  --gacha-common-glow: #a0a0a0;
+  --gacha-common-gradient-from: #a0a0a0;
+  --gacha-common-gradient-to: #e0e0e0;
+  --gacha-common-particle-alt: #cccccc;
+
+  /* Rare Tier */
+  --gacha-rare-color: #135b79; /* Deep Cyan/Blue */
+  --gacha-rare-glow: #135b79;
+  --gacha-rare-gradient-from: #135b79;
+  --gacha-rare-gradient-to: #10b981; /* Tealish Green */
+  --gacha-rare-particle-alt: #4fc3f7; /* Light Blue */
+
+  /* Epic Tier */
+  --gacha-epic-color: #7b29cd; /* Neon Purple (from variables) */
+  --gacha-epic-glow: #7b29cd;
+  --gacha-epic-gradient-from: #7b29cd;
+  --gacha-epic-gradient-to: #8054f2; /* Lighter Neon Purple */
+  --gacha-epic-particle-alt1: #870dd1;
+  --gacha-epic-particle-alt2: #e879f9; /* Pinkish Purple */
+
+  /* Legendary Tier */
+  --gacha-legendary-color: #f59e0b; /* Electric Orange/Amber (from variables) */
+  --gacha-legendary-glow: #f59e0b;
+  --gacha-legendary-gradient-from: #f59e0b;
+  --gacha-legendary-gradient-to: #ff4516; /* Accent Red */
+  --gacha-legendary-particle-alt: #ffc107; /* Gold */
+
+  /* Breakpoints (already defined, just for reference) */
+  /* --breakpoint-xs: 320px; (Not explicitly defined, but sm is 480px) */
+  /* --breakpoint-sm: 480px; (Tailwind sm is 640px by default, but here it's var(--breakpoint-mobile-sm)) */
+  /* --breakpoint-md: 768px; (Tailwind md is 768px by default, here it's var(--breakpoint-mobile-lg)) */
+  /* --breakpoint-lg: 1024px; (Tailwind lg is 1024px by default, here it's var(--breakpoint-tablet)) */
+  /* --breakpoint-xl: 1280px; (Tailwind xl is 1280px by default) */
 }
 
 /* 2. Base Styles */
@@ -928,5 +965,157 @@ p:last-child {
   
   .mb-safe-bottom {
     margin-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Custom Gacha Glassmorphism Utilities */
+  .glass-light {
+    background-color: rgba(var(--card-rgb), 0.5); /* Lighter, more translucent */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(var(--pure-white-rgb), 0.1);
+  }
+
+  .glass-strong {
+    background-color: rgba(var(--card-rgb), 0.75); /* Standard glass */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(var(--pure-white-rgb), 0.15);
+    box-shadow: var(--shadow-glass-card);
+  }
+
+  .glass-crystal { /* For the main gacha box - highly polished */
+    background-color: rgba(var(--card-rgb), 0.3); /* More transparent */
+    backdrop-filter: blur(16px) saturate(120%); /* Higher blur, bit of saturation */
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    border: 1px solid rgba(var(--pure-white-rgb), 0.25); /* Brighter border */
+    box-shadow: inset 0 0 20px rgba(var(--pure-white-rgb),0.05), /* Inner glow */
+                0 4px 15px rgba(var(--black-rgb),0.2); /* Softer outer shadow */
+  }
+
+  .glass-ultra-clear { /* For GachaContainer background - very transparent */
+    background-color: rgba(var(--background-rgb), 0.1); /* Almost fully transparent */
+    backdrop-filter: blur(4px); /* Very minimal blur */
+    -webkit-backdrop-filter: blur(4px);
+    /* No border by default, can be added */
+  }
+
+  /* Custom Text Effect Utilities */
+  .text-minimal-glow {
+    text-shadow: 0 0 5px rgba(var(--foreground-rgb), 0.5),
+                 0 0 10px rgba(var(--accent-rgb), 0.3);
+  }
+
+  .text-popup-title { /* For ResultModal item name */
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    text-shadow: 0 0 8px rgba(var(--foreground-rgb),0.7),
+                 0 0 15px var(--accent); /* Tier color will be applied inline */
+  }
+
+  .text-popup-tier { /* For ResultModal tier name */
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary); /* Tier color will be applied inline */
+    text-shadow: 0 0 8px var(--accent),  /* Tier color will be applied inline */
+                 0 0 15px var(--accent), /* Tier color will be applied inline */
+                 1px 1px 2px rgba(var(--black-rgb),0.7);
+  }
+
+  .text-popup-content { /* For ResultModal item description */
+    font-size: var(--font-size-body);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-body);
+    text-shadow: 1px 1px 2px rgba(var(--black-rgb),0.5);
+  }
+
+  /* Text clear utilities (using CSS vars for color) */
+  .text-clear-primary { color: var(--color-text-primary); }
+  .text-clear-secondary { color: var(--color-text-secondary); }
+  .text-clear-muted { color: var(--muted-foreground); } /* Example, adjust if needed */
+  .text-clear-accent { color: var(--accent); } /* Example, adjust if needed */
+  .text-clear-subtle { color: rgba(var(--foreground-rgb), 0.6); } /* Example */
+
+  /* Micro-bounce animation (for use with Framer Motion or as a class) */
+  .micro-bounce { /* Applied on hover/tap typically */
+    transition: transform 0.1s cubic-bezier(0.215, 0.610, 0.355, 1.000); /* easeOutExpo */
+  }
+  .micro-bounce:active {
+    transform: scale(0.95);
+  }
+
+  /* Button animated - placeholder if specific CSS animation is needed */
+  .btn-animated {
+    /* Generic animation properties for buttons, specific animations applied as needed */
+  }
+}
+
+/* Additional Keyframes */
+@keyframes gradient-shift { /* For PullButton background animation */
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer { /* For subtle shine effects */
+  0% { transform: translateX(-100%) skewX(-20deg); }
+  100% { transform: translateX(200%) skewX(-20deg); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--particle-end-x, 20px), var(--particle-end-y, -100px)) rotate(var(--particle-end-rotate, 720deg));
+    opacity: 0;
+  }
+}
+
+/* Add animation classes to Tailwind */
+@layer utilities {
+  .animate-gradient-shift {
+    animation: gradient-shift 3s ease infinite;
+  }
+  .animate-shimmer { /* Use with an ::after pseudo-element typically */
+    position: relative;
+    overflow: hidden;
+  }
+  .animate-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    animation: shimmer 2s infinite;
+  }
+  .animate-spin-css { /* To avoid conflict with Tailwind's spin */
+    animation: spin 1s linear infinite;
+  }
+  .animate-pulse-css { /* To avoid conflict with Tailwind's pulse */
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  .animate-particle-float {
+    animation: particleFloat var(--particle-duration, 5s) linear infinite;
+    animation-delay: var(--particle-delay, 0s);
   }
 }
