@@ -1,25 +1,29 @@
 import React from 'react';
-import { Diamond, Bell, Settings } from 'lucide-react';
+import { Diamond, Bell, Settings, UserCircle } from 'lucide-react';
 import Button from './Button';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 export interface AppHeaderProps {
   appName: string;
-  points: number;
+  // points prop removed, cyber token balance will be sourced from Redux
   onNotificationsClick?: () => void;
   onSettingsClick?: () => void;
+  onProfileClick?: () => void; // Added for profile icon
   hasNotifications?: boolean;
-  showPointsOnMobile?: boolean;
+  showTokenBalanceOnMobile?: boolean; // Renamed for clarity from showPointsOnMobile
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({
   appName,
-  points,
   onNotificationsClick,
   onSettingsClick,
+  onProfileClick,
   hasNotifications = false,
-  showPointsOnMobile = true,
+  showTokenBalanceOnMobile = true,
 }) => {
-  // 액션 핸들러
+  const cyberTokenBalance = useSelector((state: RootState) => state.cyberToken.balance);
+
   const handleNotificationsClick = () => {
     if (onNotificationsClick) {
       onNotificationsClick();
@@ -32,30 +36,42 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     }
   };
 
+  const handleProfileClick = () => {
+    if (onProfileClick) {
+      onProfileClick();
+    }
+  };
+
   return (
-    <header className="app-header layout-header-sticky safe-top pl-safe-left pr-safe-right">      <div className="container flex items-center justify-between h-full py-app-header-y px-container-x">        {/* 좌측: 로고/앱 이름 영역 */}
-        <div className="flex items-center flex-shrink-0 min-w-0 mr-2 pl-3">
+    <header
+      className="app-header layout-header-sticky safe-top pl-safe-left pr-safe-right h-[var(--app-header-height-mobile)] md:h-[var(--app-header-height-desktop)]"
+    >
+      <div className="container flex items-center justify-between h-full px-container-x"> {/* Removed py-app-header-y as height is now fixed by parent */}
+        {/* 좌측: 로고/앱 이름 영역 */}
+        <div className="flex items-center flex-shrink-0 min-w-0 mr-2"> {/* Removed pl-3, container padding should handle spacing */}
           <span className="heading-h3 truncate">
             {appName}
           </span>
-        </div>        {/* 중앙: 포인트 표시 (반응형) */}
-        <div className={`${showPointsOnMobile ? 'flex' : 'hidden md:flex'} items-center gap-1 flex-shrink-0 min-w-0`}>
+        </div>
+        {/* 중앙: 토큰 잔고 표시 (반응형) */}
+        <div className={`${showTokenBalanceOnMobile ? 'flex' : 'hidden md:flex'} items-center gap-1 flex-shrink-0 min-w-0`}>
           <Diamond 
-            size={24} 
-            className="text-neon-purple-2 flex-shrink-0" 
+            size={20} // Slightly adjusted icon size for balance
+            className="text-neon-purple-3 flex-shrink-0" // Using a defined neon purple from globals.css
           />
           <span className="text-foreground text-body font-medium whitespace-nowrap">
-            {points.toLocaleString()}
+            {cyberTokenBalance.toLocaleString()}
           </span>
-        </div>        {/* 우측: 액션 아이콘들 */}
-        <div className="flex items-center gap-1 flex-shrink-0">
+        </div>
+        {/* 우측: 액션 아이콘들 */}
+        <div className="flex items-center gap-app-header-icon flex-shrink-0"> {/* Using CSS var --app-header-icon-gap for gap */}
           <Button 
             variant="text" 
             iconOnly 
             size="md" 
             icon={Bell}
             onClick={handleNotificationsClick}
-            className={`flex items-center justify-center p-0 hover:bg-transparent active:scale-95 transition-transform duration-normal ${hasNotifications ? 'text-accent-amber' : 'text-neutral-medium'}`}
+            className={`p-1 hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full ${hasNotifications ? 'text-accent-amber animate-pulse' : 'text-muted-foreground hover:text-foreground'}`}
             aria-label="알림"
           />
           
@@ -65,8 +81,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             size="md" 
             icon={Settings}
             onClick={handleSettingsClick}
-            className="flex items-center justify-center p-0 hover:bg-transparent active:scale-95 transition-transform duration-normal text-neutral-medium"
+            className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full"
             aria-label="설정"
+          />
+          <Button
+            variant="text"
+            iconOnly
+            size="md"
+            icon={UserCircle} // Added Profile Icon
+            onClick={handleProfileClick}
+            className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full"
+            aria-label="프로필"
           />
         </div>
       </div>

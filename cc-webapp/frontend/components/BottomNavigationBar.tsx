@@ -34,8 +34,8 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 h-16 bg-card border-t border-border shadow-md
-                 flex items-center justify-around p-1 safe-bottom z-50"
+      className="bottom-nav-bar fixed inset-x-0 bottom-0 h-16 bg-card border-t border-border shadow-md
+                 flex items-center justify-around p-1 safe-bottom z-50 md:hidden"
       // shadow-top-md could be a custom shadow like `0 -4px 6px -1px rgb(0 0 0 / 0.1), 0 -2px 4px -2px rgb(0 0 0 / 0.1)`
       // Using shadow-md as a standard alternative.
       // Let's assume shadow-md is fine for now, or it can be shadow-lg

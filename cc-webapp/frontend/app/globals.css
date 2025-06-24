@@ -806,6 +806,32 @@ p:last-child {
       padding: 0 var(--container-padding-x-mobile);
     }
   }
+
+  /* Styles for Layout Components from Prompt */
+  .game-platform-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--background); /* Ensuring dark theme background */
+  }
+
+  .app-header {
+    /* Height is controlled by CSS vars --app-header-height-mobile and --app-header-height-desktop */
+    /* Specific styling is expected to be handled by Tailwind classes in the component itself */
+    /* This class is here to satisfy the prompt requirements. */
+    width: 100%;
+    background-color: var(--card); /* Example background, can be overridden */
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bottom-nav-bar {
+    /* Specific styling is expected to be handled by Tailwind classes in the component itself */
+    /* This class is here to satisfy the prompt requirements. */
+    /* Visibility (md:hidden) will be handled by Tailwind in the component. */
+    width: 100%;
+    background-color: var(--card); /* Example background, can be overridden */
+    border-top: 1px solid var(--border);
+  }
 }
 
 /* 5. Animations */
