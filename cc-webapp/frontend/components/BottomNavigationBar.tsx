@@ -36,10 +36,10 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             onClick={() => onTabClick(item.id, item.path)}
             className={`
               bottom-nav-item relative group
-              transition-all duration-[var(--transition-normal)]
-              ${isActive ? 
-                'text-[var(--color-purple-primary)] bg-[rgba(91,48,246,0.1)] rounded-md' : 
-                'text-[var(--color-text-secondary)] hover:text-[var(--foreground)] hover:bg-[rgba(255,255,255,0.05)] rounded-md'
+              transition-all duration-normal
+              ${isActive ?
+                'text-purple-primary bg-purple-primary/10 rounded-md' :
+                'text-text-secondary hover:text-foreground hover:bg-white/5 rounded-md'
               }
             `}
             aria-current={isActive ? 'page' : undefined}
@@ -47,12 +47,12 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             transition={{ type: "spring", stiffness: 400, damping: 17 }} // 부드러운 스프링 애니메이션
           >
             {isActive && (
-              <span className="absolute -top-[6px] w-2 h-2 rounded-full bg-[var(--color-purple-primary)] animate-pulse shadow-lg"></span>
+              <span className="absolute -top-1.5 w-2 h-2 rounded-full bg-purple-primary animate-pulse shadow-lg"></span>
             )}
             <IconComponent 
               size={iconSize} 
-              className="mb-[var(--spacing-0-5)] transition-colors duration-[var(--transition-normal)]" 
-            />            <span className="text-[10px] font-[var(--font-weight-medium)] transition-colors duration-[var(--transition-normal)]">
+              className="mb-0.5 transition-colors duration-normal"
+            />            <span className="text-xs font-medium transition-colors duration-normal">
               {item.label}
             </span>
           </motion.button>
