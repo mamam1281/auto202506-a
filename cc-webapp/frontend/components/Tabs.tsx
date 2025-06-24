@@ -55,49 +55,52 @@ const Tabs: React.FC<TabsProps> = ({
   };
 
   return (
-    <div className={`tabs-container ${className}`}>
-      {/* 탭 라벨 리스트 */}      <div 
-        ref={tabListRef}        className={`
+    <div className={`tabs-container ${className}`}>      {/* 탭 라벨 리스트 */}
+      <div 
+        ref={tabListRef}
+        className={`
           relative flex border-b-[1px] border-border
-          overflow-x-auto scrollbar-hide
           pt-3 pb-2
           ${tabListClassName}
         `}
         style={{
           minHeight: '48px', // 고정 높이
           display: 'grid',
-          gridTemplateColumns: `repeat(${Math.min(tabs.length, 4)}, 1fr)`, // 최대 4개 컬럼
+          gridTemplateColumns: `repeat(${tabs.length}, 1fr)`, // 모든 탭을 균등하게 분배
           gap: '0px'
         }}
-      >{tabs.map((tab) => (
+      >        {tabs.map((tab) => (
           <button
             key={tab.id}
             ref={activeTab === tab.id ? activeTabRef : null} // 활성 탭에만 ref 연결
-            onClick={() => onTabChange(tab.id)}            className={`
+            onClick={() => onTabChange(tab.id)}
+            className={`
               relative py-3 px-2
               text-sm font-medium
-              transition-colors duration-normal cursor-pointer
+              transition-all duration-normal cursor-pointer
               ${activeTab === tab.id 
-                ? 'text-primary' 
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'text-primary bg-accent/10' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               }
               whitespace-nowrap text-center
               border-r border-border/30 last:border-r-0
+              hover:transform hover:-translate-y-[1px]
+              active:transform active:translate-y-0
             `}
             style={{
               minHeight: '48px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              fontSize: tabs.length > 4 ? '12px' : '14px', // 탭이 많으면 폰트 크기 줄이기
             }}
           >
             {tab.label}
           </button>
-        ))}
-          {/* Sliding Underline */}
+        ))}          {/* Sliding Underline */}
         {activeTabIndex !== -1 && ( // 활성 탭이 있을 때만 렌더링
           <motion.div
-            className="absolute bottom-0 h-[2px] bg-primary" // 밑줄 스타일
+            className="absolute bottom-0 h-[3px] bg-gradient-to-r from-accent via-primary to-accent rounded-t-sm" // 밑줄 스타일 강화
             initial={false} // 초기 애니메이션 비활성화 (위치 계산 후 바로 적용)
             animate={{ 
               width: underlineWidth, 
@@ -105,23 +108,30 @@ const Tabs: React.FC<TabsProps> = ({
             }} // 너비와 x축 위치 애니메이션
             transition={{ 
               type: "spring", 
-              stiffness: 300, 
-              damping: 30 
-            }} // 스프링 애니메이션
+              stiffness: 400, 
+              damping: 25 
+            }} // 더 빠르고 반응적인 스프링 애니메이션
+            style={{
+              boxShadow: '0 0 8px rgba(255, 69, 22, 0.4)', // 은은한 glow 효과
+            }}
           />
         )}
-      </div>      {/* 상용 서비스급 고정 마스터 컨테이너 - 모든 탭 콘텐츠의 통일된 프레임 */}
-      <div        className={`
+      </div>      {/* 모바일 우선 반응형 마스터 컨테이너 */}
+      <div
+        className={`
           tab-content-master-container mt-3
           w-full max-w-6xl mx-auto
-          min-h-[400px] max-[767px]:min-h-[300px]
+          min-h-[250px] max-[767px]:min-h-[200px]
+          max-h-[70vh] max-[767px]:max-h-[60vh]
           bg-background border border-border/30 rounded-lg
           p-4 max-[767px]:p-3
+          overflow-y-auto
           ${tabContentClassName}
         `}
         style={{
-          // 강제로 고정 크기 적용 (상용 서비스 안정성)
-          minHeight: 'var(--tabs-content-min-height, 400px)',
+          // 모바일 우선 동적 높이 적용
+          minHeight: 'clamp(200px, 50vh, 400px)',
+          maxHeight: 'clamp(300px, 70vh, 600px)',
           borderRadius: 'var(--radius)',
           background: 'var(--background)',
           transition: 'none', // 크기 변경 애니메이션 비활성화
@@ -131,13 +141,13 @@ const Tabs: React.FC<TabsProps> = ({
           {tabs.map((tab) =>
             activeTab === tab.id ? (
               <motion.div
-                key={tab.id}
-                initial="initial"
+                key={tab.id}                initial="initial"
                 animate="animate"
                 exit="exit"
                 variants={contentVariants}
-                transition={{ duration: 0.2 }}                className={`
-                  w-full h-full relative
+                transition={{ duration: 0.15 }}
+                className={`
+                  w-full h-full relative overflow-y-auto
                   ${(() => {
                     switch (tab.contentType) {
                       case 'single-card':
@@ -145,7 +155,7 @@ const Tabs: React.FC<TabsProps> = ({
                       case 'multi-card-grid':
                         return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-min'; // 반응형 그리드
                       case 'vertical-stack': 
-                        return 'flex flex-col gap-3 max-h-full overflow-y-auto'; // 세로 스택 (스크롤 가능)
+                        return 'flex flex-col gap-3'; // 세로 스택
                       case 'full-width-section': 
                         return 'w-full h-full'; // 컨테이너 전체 사용
                       default:
@@ -154,9 +164,8 @@ const Tabs: React.FC<TabsProps> = ({
                   })()}
                 `}
                 style={{
-                  // 내부 콘텐츠도 컨테이너 크기에 맞춤
-                  minHeight: 'calc(var(--tabs-content-min-height, 400px) - var(--spacing-4) * 2)',
-                  maxHeight: 'calc(var(--tabs-content-min-height, 400px) - var(--spacing-4) * 2)',
+                  // 내부 콘텐츠 높이를 유연하게 설정
+                  minHeight: '100%',
                 }}
               >
                 {tab.content}
