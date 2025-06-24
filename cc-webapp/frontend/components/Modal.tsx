@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import Button from './Button';
 
-export type ModalSize = 'sm' | 'md' | 'lg' | 'full';
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -22,6 +22,7 @@ const sizeClassMap: Record<ModalSize, string> = {
   sm: 'w-full max-w-full md:max-w-modal-sm',
   md: 'w-full max-w-full md:max-w-modal-md',
   lg: 'w-full max-w-full md:max-w-modal-lg',
+  xl: 'w-full max-w-full md:max-w-modal-xl',
   full: 'w-full h-full max-w-full max-h-full',
 };
 
@@ -133,7 +134,7 @@ const Modal: React.FC<ModalProps> = ({
         >
           <motion.div
             ref={modalRef}
-            className={`glassmorphism-dark ${sizeClassMap[size]} bg-card rounded-lg shadow-xl p-6 relative flex flex-col focus:outline-none ${className}`}
+            className={`glassmorphism-dark ${sizeClassMap[size]} bg-card rounded-lg shadow-xl p-8 relative flex flex-col focus:outline-none ${className}`}
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? 'modal-title' : undefined}
@@ -150,13 +151,13 @@ const Modal: React.FC<ModalProps> = ({
                 variant="text"
                 size="md"
                 aria-label="Close"
-                className="absolute top-3 right-3 z-10"
+                className="absolute top-4 right-4 z-10"
                 onClick={onClose}
               >
                 <X size={20} />
               </Button>
-            )}            {title && <h2 id="modal-title" className="text-[10px] font-[var(--font-weight-semibold)] mb-2 text-[var(--foreground)]">{title}</h2>}
-            {description && <p id="modal-desc" className="text-[10px] mb-4 text-[var(--muted-foreground)]">{description}</p>}
+            )}            {title && <h2 id="modal-title" className="text-lg font-semibold mb-4 text-foreground pr-8">{title}</h2>}
+            {description && <p id="modal-desc" className="text-sm mb-6 text-muted-foreground">{description}</p>}
             <div>{children}</div>
           </motion.div>
         </motion.div>

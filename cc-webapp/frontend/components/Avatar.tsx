@@ -69,16 +69,15 @@ const Avatar: React.FC<AvatarProps> = ({
     <motion.div
       className={`
         relative flex-shrink-0 rounded-full overflow-hidden
-        flex items-center justify-center
-        bg-[var(--color-primary-charcoal)] text-[var(--color-text-secondary)]
-        border border-[var(--border)]
-        ${sizeClass} ${className}
-        ${isActive ? 'avatar-active-glow' : ''}
+        flex items-center justify-center        bg-[var(--color-primary-charcoal)] text-[var(--color-text-secondary)]
+        border-2 border-[var(--border)]        ${sizeClass} ${className}
+        ${isActive ? 'border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.6),_0_0_40px_rgba(34,197,94,0.3)]' : ''}
         ${(isLoading || imageLoading) ? 'avatar-shimmer-loading' : ''}
-      `}
-      whileHover={{ 
+      `}      whileHover={{ 
         scale: 1.1, 
-        boxShadow: '0 0 15px rgba(91, 48, 246, 0.5)' 
+        boxShadow: isActive 
+          ? '0 0 25px rgba(34, 197, 94, 0.8), 0 0 50px rgba(34, 197, 94, 0.4)'
+          : '0 0 15px rgba(91, 48, 246, 0.5)' 
       }}
       transition={{ type: "spring", stiffness: 400, damping: 10 }}
       role="img"
@@ -101,19 +100,9 @@ const Avatar: React.FC<AvatarProps> = ({
             </div>
           )}
         </>
-      ) : (
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--color-purple-primary)] to-[var(--color-purple-secondary)]">
+      ) : (        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--color-purple-primary)] to-[var(--color-purple-secondary)]">
           {renderFallback()}
         </div>
-      )}
-      
-      {/* 활성 상태 표시 점 */}
-      {isActive && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[var(--color-success)] border-2 border-[var(--background)] rounded-full"
-        />
       )}
     </motion.div>
   );

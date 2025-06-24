@@ -31,83 +31,81 @@ const RadioButton: React.FC<RadioButtonProps> = ({
       onChange(value);
     }
   };
+
   return (
-    <div className={`flex items-center gap-2 sm:gap-[var(--spacing-2)] py-1 sm:py-2 ${className}`}>
+    <div 
+      className={`
+        inline-flex items-center gap-3 min-w-0 w-full
+        ${className}
+      `}
+      onClick={handleClick}
+    >
+      <input
+        type="radio"
+        id={generatedId}
+        name={name}
+        value={value}
+        checked={checked}
+        onChange={() => onChange(value)}
+        disabled={disabled}
+        className="sr-only"
+        tabIndex={-1}
+      />
+      
       <motion.div
         className={`
-          relative flex-shrink-0 custom-radio
-          w-3 h-3 sm:w-[12px] sm:h-[12px]
-          rounded-full border border-opacity-60
-          flex items-center justify-center cursor-pointer
-          backdrop-blur-sm
-          transition-all duration-[var(--transition-normal)]
+          relative flex-shrink-0 cursor-pointer
+          w-5 h-5
+          rounded-full border-2 border-solid
+          flex items-center justify-center
+          transition-all duration-200 ease-in-out
           ${checked 
-            ? 'bg-gradient-to-br from-[var(--color-purple-primary)] to-[var(--color-purple-secondary)] border-[var(--color-purple-primary)] shadow-neon' 
-            : 'bg-[var(--card)]/80 border-[var(--border)]/60'
+            ? 'bg-purple-600 border-purple-600 shadow-purple-500/25 shadow-md' 
+            : 'bg-gray-800 border-gray-600 hover:bg-gray-700 hover:border-gray-500'
           }
-          hover:border-[var(--color-purple-muted)]/80
-          ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+          ${disabled 
+            ? 'opacity-50 cursor-not-allowed' 
+            : 'hover:shadow-lg active:scale-95'
+          }
           ${dotClassName}
         `}
-        whileTap={disabled ? {} : { scaleX: 1.1, scaleY: 0.9 }}
-        animate={checked ? { scale: [0.8, 1.2, 1] } : {}}
-        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        onClick={handleClick}
-        tabIndex={disabled ? -1 : 0}
+        whileHover={!disabled ? { scale: 1.05 } : {}}
+        whileTap={!disabled ? { scale: 0.9 } : {}}
         role="radio"
         aria-checked={checked}
         aria-disabled={disabled}
+        tabIndex={0}
         onKeyDown={(e) => {
-          if ((e.key === ' ' || e.key === 'Enter') && !disabled) {
+          if (e.key === ' ' || e.key === 'Enter') {
             e.preventDefault();
-            onChange(value);
+            if (!disabled) onChange(value);
           }
         }}
       >
-        <input
-          type="radio"
-          id={generatedId}
-          name={name}
-          value={value}
-          checked={checked}
-          onChange={() => onChange(value)}
-          disabled={disabled}
-          className="sr-only"
-          tabIndex={-1}
-        />
-        
-        <motion.div
-          initial={false}
-          animate={checked 
-            ? { scale: [0.5, 1.1, 1], opacity: 1 } 
-            : { scale: 0, opacity: 0 }
-          }
-          transition={{ type: "spring", stiffness: 500, damping: 20 }}
-          className="absolute w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[var(--foreground)]"
-        />
-        
-        {/* Neon Glow effect on checked state */}
         {checked && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{ 
-              boxShadow: '0 0 8px rgba(91, 48, 246, 0.5), inset 0 0 4px rgba(91, 48, 246, 0.3)' 
+            initial={{ opacity: 0, scale: 0.3 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.3 }}
+            transition={{ 
+              duration: 0.15,
+              ease: "easeOut"
             }}
+            className="w-2 h-2 bg-white rounded-full"
           />
         )}
       </motion.div>
-        {label && (
+      
+      {label && (
         <label 
           htmlFor={generatedId} 
           className={`
-            text-[var(--foreground)] text-[10px] sm:text-[12px]
-            font-[var(--font-weight-normal)] cursor-pointer select-none
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            flex-1 min-w-0
+            text-white text-sm font-normal 
+            select-none cursor-pointer 
+            leading-normal whitespace-nowrap overflow-hidden text-ellipsis
+            ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-gray-200'}
           `}
-          onClick={disabled ? undefined : handleClick}
         >
           {label}
         </label>

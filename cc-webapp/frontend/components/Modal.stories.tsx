@@ -25,14 +25,15 @@ export const Default: Story = {
     const [open, setOpen] = useState(true);
     return (
       <>
-        <Button onClick={() => setOpen(true)}>Open Modal</Button>
-        <Modal {...args} isOpen={open} onClose={() => setOpen(false)}>
-          <div style={{ padding: 24, textAlign: 'center' }}>
-            <h2 style={{ marginBottom: 12 }}>Hello Modal!</h2>
-            <p>This is a modal content area.</p>
-            <Button onClick={() => setOpen(false)}>
-              <span style={{ marginTop: 16, display: 'inline-block' }}>Close</span>
-            </Button>
+        <Button onClick={() => setOpen(true)}>Open Modal</Button>        <Modal {...args} isOpen={open} onClose={() => setOpen(false)}>
+          <div className="p-6 text-center space-y-4">
+            <h2 className="text-lg font-semibold">Hello Modal!</h2>
+            <p className="text-muted-foreground">This is a modal content area.</p>
+            <div className="flex justify-center gap-3 pt-4">
+              <Button variant="primary" onClick={() => setOpen(false)}>
+                Close
+              </Button>
+            </div>
           </div>
         </Modal>
       </>
@@ -62,13 +63,14 @@ export const Sizes: Story = {
             isOpen={open === size}
             onClose={() => setOpen(null)}
             title={`Modal ${size}`}
-            size={size}
-          >
-            <div style={{ padding: 24, textAlign: 'center' }}>
-              <h2>Hello {size} Modal!</h2>
-              <Button onClick={() => setOpen(null)}>
-                <span style={{ marginTop: 16, display: 'inline-block' }}>Close</span>
-              </Button>
+            size={size}          >
+            <div className="p-6 text-center space-y-4">
+              <h2 className="text-lg font-semibold">Hello {size} Modal!</h2>
+              <div className="flex justify-center gap-3 pt-4">
+                <Button variant="primary" onClick={() => setOpen(null)}>
+                  Close
+                </Button>
+              </div>
             </div>
           </Modal>
         ))}

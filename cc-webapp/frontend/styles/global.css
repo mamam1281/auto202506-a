@@ -212,14 +212,14 @@
   /* Button Sizes (height based on 8px grid) */
   --btn-height-md: 44px;
   --btn-height-lg: 56px;
-  /* --btn-height-sm: 32px; // 사용 안함 */
-  /* --btn-height-xl: 64px; // 사용 안함 */
+  /* --btn-height-sm: 32px; 사용 안함 */
+  /* --btn-height-xl: 64px; 사용 안함 */
 
   /* Button Padding (based on 8px grid) */
   --btn-padding-md: var(--spacing-2) var(--spacing-4); /* 16px 32px */
   --btn-padding-lg: var(--spacing-3) var(--spacing-5); /* 24px 40px */
-  /* --btn-padding-sm: 8px 12px; // 사용 안함 */
-  /* --btn-padding-xl: 24px 40px; // 사용 안함 */
+  /* --btn-padding-sm: 8px 12px; 사용 안함 */
+  /* --btn-padding-xl: 24px 40px; 사용 안함 */
   /* Input Sizes (height based on 8px grid) */
   --input-height-sm: var(--spacing-4); /* 32px */
   --input-height-md: var(--spacing-5); /* 40px */
@@ -424,6 +424,16 @@ body {
   color: var(--foreground);
   overflow-x: hidden; /* 가로 스크롤 방지 */
   -webkit-overflow-scrolling: touch; /* iOS 터치 스크롤 개선 */
+}
+
+/* 단락 요소 기본 간격 */
+p {
+  margin-bottom: var(--spacing-2);
+  line-height: var(--line-height-body);
+}
+
+p:last-child {
+  margin-bottom: 0; /* 마지막 단락은 마진 제거 */
 }
 
 /* 폰트 크기 유동적으로 설정 */
@@ -801,19 +811,21 @@ button {
       8px 8px 16px rgba(0, 0, 0, 0.3),
       -8px -8px 16px rgba(68, 68, 68, 0.5);
   }
-
   .animated-gradient {
-    background: linear-gradient(-45deg, var(--color-purple-primary), var(--color-purple-secondary), var(--color-purple-tertiary), var(--color-accent-red));
+    background: linear-gradient(-45deg, #5B30F6, #870DD1, #8054F2, #FF4516);
     background-size: 400% 400%;
     animation: gradient-shift 3s ease infinite;
+    will-change: background-position;
   }
   .animated-gradient-text {
-    background: linear-gradient(-45deg, var(--color-purple-primary), var(--color-purple-secondary), var(--color-purple-tertiary), var(--color-accent-red));
+    background: linear-gradient(-45deg, #5B30F6, #870DD1, #8054F2, #FF4516);
     background-size: 400% 400%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradient-shift 3s ease infinite;
+    will-change: background-position;
+    display: inline-block; /* 텍스트 클립이 더 잘 작동하도록 */
   }
 
   .blur-sm { filter: blur(4px); }
@@ -942,9 +954,8 @@ button {
     border-radius: 24px; /* 더 둥글게 pill 모양 */
     font-family: var(--font-primary);
     font-weight: var(--font-weight-semibold);
-    text-decoration: none;
-    cursor: pointer;
-    transition: var(--transition-normal);
+    text-decoration: none;    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s ease-out;
     position: relative;
     overflow: hidden;
     user-select: none;
@@ -976,86 +987,152 @@ button {
     box-shadow: 0 0 0 2px var(--background),
                 0 0 0 4px var(--ring); /* ring 색상 사용 */
   }
-
-  /* Primary Button (Blue) */
+  /* Primary Button (Blue) - Gradient + Glow */
   .btn-primary {
-    background: #5B30F6;
+    background: linear-gradient(135deg, #5B30F6 0%, #8054F2 100%);
     color: #fff;
+    box-shadow: 
+      0 4px 15px rgba(91, 48, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(91, 48, 246, 0.4);
   }
   .btn-primary:hover {
-    background: #8054F2;
+    background: linear-gradient(135deg, #8054F2 0%, #5B30F6 100%);
     color: #fff;
+    box-shadow: 
+      0 6px 20px rgba(91, 48, 246, 0.4),
+      0 0 25px rgba(91, 48, 246, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
   }
 
-  /* Secondary Button (Gray) */
+  /* Secondary Button (Gray) - Modern Glass */
   .btn-secondary {
-    background: #2d2d2d;
+    background: linear-gradient(135deg, rgba(45, 45, 45, 0.9) 0%, rgba(51, 51, 51, 0.9) 100%);
     color: #fff;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
   .btn-secondary:hover {
-    background: #333;
+    background: linear-gradient(135deg, rgba(51, 51, 51, 0.95) 0%, rgba(45, 45, 45, 0.95) 100%);
     color: #fff;
+    box-shadow: 
+      0 6px 20px rgba(0, 0, 0, 0.4),
+      0 0 15px rgba(255, 255, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
   }
 
-  /* Accent Button (Red) */
+  /* Accent Button (Orange/Red) - Fire Effect */
   .btn-accent {
-    background: #FF4516;
+    background: linear-gradient(135deg, #FF4516 0%, #F59E0B 100%);
     color: #fff;
+    box-shadow: 
+      0 4px 15px rgba(255, 69, 22, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 69, 22, 0.4);
   }
   .btn-accent:hover {
-    background: #F59E0B;
+    background: linear-gradient(135deg, #F59E0B 0%, #FF4516 100%);
     color: #fff;
-  }
-  /* Success Button (Green) */
+    box-shadow: 
+      0 6px 20px rgba(255, 69, 22, 0.4),
+      0 0 25px rgba(245, 158, 11, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+  }  /* Success Button (Green) - Nature Glow */
   .btn-success {
-    background: #10B981;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
     color: #fff;
+    box-shadow: 
+      0 4px 15px rgba(16, 185, 129, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
   }
   .btn-success:hover {
-    background: #059669;
+    background: linear-gradient(135deg, #059669 0%, #10B981 100%);
     color: #fff;
+    box-shadow: 
+      0 6px 20px rgba(16, 185, 129, 0.4),
+      0 0 25px rgba(16, 185, 129, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
   }
 
-  /* Error Button (Red) */
+  /* Error Button (Red) - Alert Glow */
   .btn-error {
-    background: #EF4444;
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
     color: #fff;
+    box-shadow: 
+      0 4px 15px rgba(239, 68, 68, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
   }
   .btn-error:hover {
-    background: #DC2626;
+    background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
     color: #fff;
+    box-shadow: 
+      0 6px 20px rgba(239, 68, 68, 0.4),
+      0 0 25px rgba(239, 68, 68, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
   }
 
-  /* Info Button (Cyan) */
+  /* Info Button (Cyan) - Ocean Glow */
   .btn-info {
-    background: #06B6D4;
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
     color: #fff;
+    box-shadow: 
+      0 4px 15px rgba(6, 182, 212, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(6, 182, 212, 0.4);
   }
   .btn-info:hover {
-    background: #0891B2;
+    background: linear-gradient(135deg, #0891B2 0%, #06B6D4 100%);
     color: #fff;
+    box-shadow: 
+      0 6px 20px rgba(6, 182, 212, 0.4),
+      0 0 25px rgba(6, 182, 212, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
   }
-
-  /* Outline Button */
+  /* Outline Button - Premium Border */
   .btn-outline {
-    background: transparent;
+    background: rgba(91, 48, 246, 0.05);
     border: 2px solid #5B30F6;
     color: #5B30F6;
+    backdrop-filter: blur(5px);
+    box-shadow: 
+      0 2px 10px rgba(91, 48, 246, 0.1),
+      inset 0 1px 0 rgba(91, 48, 246, 0.1);
   }
   .btn-outline:hover {
-    background: #5B30F6;
+    background: linear-gradient(135deg, #5B30F6 0%, #8054F2 100%);
     color: #fff;
+    border-color: #8054F2;
+    box-shadow: 
+      0 4px 15px rgba(91, 48, 246, 0.3),
+      0 0 20px rgba(91, 48, 246, 0.2);
+    transform: translateY(-1px);
   }
 
-  /* Text Button */
+  /* Text Button - Subtle Glow */
   .btn-text {
     background: transparent;
     color: #5B30F6;
     box-shadow: none;
+    border: 1px solid transparent;
   }
   .btn-text:hover {
-    background: rgba(91, 48, 246, 0.1);
-    color: #5B30F6;
+    background: linear-gradient(135deg, rgba(91, 48, 246, 0.1) 0%, rgba(128, 84, 242, 0.1) 100%);
+    color: #8054F2;
+    border: 1px solid rgba(91, 48, 246, 0.2);
+    box-shadow: 
+      0 2px 10px rgba(91, 48, 246, 0.1),
+      inset 0 1px 0 rgba(91, 48, 246, 0.05);
   }
 
   /* Neon Effect Button */
@@ -1070,17 +1147,25 @@ button {
     color: #1a1a2e;
     box-shadow: 0 0 20px #0ff, inset 0 0 20px #0ff;
   }
-
-  /* Glass Effect Button */
+  /* Glass Effect Button - Enhanced */
   .btn-glass {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;
+    box-shadow: 
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
   .btn-glass:hover {
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(15px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+    backdrop-filter: blur(16px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 
+      0 6px 20px rgba(0, 0, 0, 0.15),
+      0 0 25px rgba(255, 255, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
   }
 
   /* Animated Button */
@@ -1173,6 +1258,80 @@ button {
   }  .btn-fab:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  }
+  /*
+    Card 컴포넌트 스타일
+  */
+  .card {
+    /* 기본 카드 스타일 */
+    transition: all var(--transition-normal);
+  }
+  
+  .modern-mesh-card {
+    /* 2025년 트렌드: Gradient Mesh + Neural Network 패턴 */
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(120, 229, 255, 0.1) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.37),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+    .modern-mesh-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.008) 1px,
+        transparent 2px,
+        transparent 40px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        rgba(255, 255, 255, 0.008) 1px,
+        transparent 2px,
+        transparent 40px
+      );
+    pointer-events: none;
+  }
+  
+  .card.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 0 20px rgba(91, 48, 246, 0.15),
+      0 8px 32px rgba(0, 0, 0, 0.25);
+  }
+  
+  .modern-mesh-card.hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.4),
+      0 0 30px rgba(120, 119, 198, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+    /*
+    Tabs 컴포넌트 스타일
+  */
+  .tabs-container {
+    /* 탭 컨테이너 기본 스타일 */
+    position: relative;
+  }
+  
+  .tab-content {
+    /* 탭 콘텐츠 영역 기본 스타일 */
+    min-height: 100px; /* 콘텐츠 전환시 깜빡임 방지 */
   }
 
   /* GameCard 반응형 그리드 시스템 */

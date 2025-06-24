@@ -26,7 +26,7 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   activeTab,
   onTabClick,
 }) => {
-  const iconSize = 20;  return (
+  const iconSize = 24;  return (
     <nav className="bottom-nav-bar">
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
@@ -52,7 +52,7 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             <IconComponent 
               size={iconSize} 
               className="mb-[var(--spacing-0-5)] transition-colors duration-[var(--transition-normal)]" 
-            />            <span className="text-[var(--font-size-xs)] font-[var(--font-weight-medium)] transition-colors duration-[var(--transition-normal)]">
+            />            <span className="text-[10px] font-[var(--font-weight-medium)] transition-colors duration-[var(--transition-normal)]">
               {item.label}
             </span>
           </motion.button>

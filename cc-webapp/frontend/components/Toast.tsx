@@ -91,7 +91,7 @@ const Toast: React.FC<ToastProps> = ({
       role="alert"
       aria-live="polite"
     >
-      {IconComponent && <IconComponent size={iconSize} className="shrink-0" />}      <span className="flex-grow text-[var(--font-size-xs)] font-[var(--font-weight-medium)] leading-tight">
+      {IconComponent && <IconComponent size={iconSize} className="shrink-0" />}      <span className="flex-grow text-[13px] font-[var(--font-weight-medium)] leading-tight">
         {message}
       </span>
       {duration === 0 && (
