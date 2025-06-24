@@ -33,6 +33,7 @@ module.exports = {
         warning: 'var(--color-warning)',
         
         // Special Purpose Colors
+        'purple-primary': 'var(--color-purple-primary)', // Added for BottomNavigationBar
         'accent-red': 'var(--color-accent-red)',
         'accent-amber': 'var(--color-accent-amber)',
         'text-primary': 'var(--color-text-primary)',
