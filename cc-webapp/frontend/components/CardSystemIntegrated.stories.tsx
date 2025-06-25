@@ -48,10 +48,10 @@ export const AllCardsGallery: Story = {
           <h1 className="text-base font-bold text-[var(--foreground)]">
             카드 시스템 갤러리
           </h1>
-            <p className="text-sm text-[var(--muted-foreground)]">
-                다양한 카드 컴포넌트를 한눈에 확인해보세요.
-            </p>
-             </div>
+          <p className="text-sm text-[var(--muted-foreground)]">
+            다양한 카드 컴포넌트를 한눈에 확인해보세요.
+          </p>
+        </div>
 
         {/* 카드 그리드 */}
         <div className="space-y-4">

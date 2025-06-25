@@ -27,26 +27,41 @@ export const GameCard: React.FC<GameCardProps> = ({
     aria-label={title}
   >
     <BaseCard className="w-full max-w-sm min-h-[400px]">
-      <div className="w-full h-full flex flex-col">
-        {/* Top padding to push content down to 1/3 point */}
-        <div className="h-32 flex-shrink-0"></div>
+      <div className="w-full h-full flex flex-col items-center justify-center p-6" style={{ gap: '1.5rem' }}>
         
-        <div className="px-10 pb-10 flex-grow flex flex-col justify-center" style={{ gap: '1.1rem' }}>        <div className="text-center" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <div className="mx-auto p-4 rounded-lg bg-amber-400/20 w-fit">
-            {imageUrl ? (
-              <img src={imageUrl} alt={title} className="w-12 h-12 object-cover rounded-lg" />
-            ) : (
-              <div className="w-12 h-12 flex items-center justify-center text-amber-400 text-lg font-bold">
+        {/* 이미지 영역 - 중앙에 큰 이미지 */}
+        <div className="flex-shrink-0 flex items-center justify-center">
+          {imageUrl ? (
+            <img 
+              src={imageUrl} 
+              alt={title} 
+              className="w-32 h-32 object-cover rounded-xl shadow-lg border-2 border-white/10" 
+            />
+          ) : (
+            <div className="w-32 h-32 flex items-center justify-center bg-gradient-to-br from-purple-500/20 to-purple-700/20 border-2 border-purple-400/30 rounded-xl shadow-lg backdrop-blur-sm">
+              <span className="text-purple-400 text-4xl font-bold">
                 {imagePlaceholder}
-              </div>
-            )}
+              </span>
+            </div>
+          )}
+        </div>
+        
+        {/* 텍스트 정보 영역 */}
+        <div className="text-center flex-shrink-0" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <h3 className="text-lg font-semibold text-white leading-tight px-2">
+            {title}
+          </h3>
+          <div className="flex items-center justify-center gap-3 text-sm">
+            <span className="flex items-center gap-1 text-amber-400 font-medium">
+              ⭐️ {rating}
+            </span>
+            <span className="text-white/60">•</span>
+            <span className="text-white/80 font-medium">
+              {players}명
+            </span>
           </div>
-          <h3 className="text-base font-medium text-white truncate">{title}</h3>
-          <p className="text-sm text-gray-300">
-            ⭐️ {rating} • {players}명
-          </p>
         </div>
-        </div>
+        
       </div>
     </BaseCard>
   </div>

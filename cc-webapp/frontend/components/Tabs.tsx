@@ -55,19 +55,20 @@ const Tabs: React.FC<TabsProps> = ({
   };
 
   return (
-    <div className={`tabs-container ${className}`}>      {/* 탭 라벨 리스트 */}
+    <div className={`tabs-container ${className}`}>      {/* 탭 라벨 리스트 - 아이스 글래스모피즘 */}
       <div 
         ref={tabListRef}
         className={`
-          relative flex border-b-[1px] border-border
-          pt-3 pb-2
+          tabs-ice-glass
+          relative flex
+          pt-4 pb-3 px-2
           ${tabListClassName}
         `}
         style={{
-          minHeight: '48px', // 고정 높이
+          minHeight: '60px', // 고정 높이 증가
           display: 'grid',
           gridTemplateColumns: `repeat(${tabs.length}, 1fr)`, // 모든 탭을 균등하게 분배
-          gap: '0px'
+          gap: '4px' // 탭 간 간격 추가
         }}
       >        {tabs.map((tab) => (
           <button
@@ -75,17 +76,19 @@ const Tabs: React.FC<TabsProps> = ({
             ref={activeTab === tab.id ? activeTabRef : null} // 활성 탭에만 ref 연결
             onClick={() => onTabChange(tab.id)}
             className={`
-              relative py-3 px-2
+              tab-button-ice-glass
+              ${activeTab === tab.id ? 'active' : ''}
+              relative py-3 px-3
               text-sm font-medium
-              transition-all duration-normal cursor-pointer
+              cursor-pointer
+              rounded-lg
+              border-0
               ${activeTab === tab.id 
-                ? 'text-primary bg-accent/10' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                ? 'text-white' 
+                : 'text-white/70 hover:text-white'
               }
               whitespace-nowrap text-center
-              border-r border-border/30 last:border-r-0
-              hover:transform hover:-translate-y-[1px]
-              active:transform active:translate-y-0
+              transition-all duration-300
             `}
             style={{
               minHeight: '48px',
@@ -116,15 +119,15 @@ const Tabs: React.FC<TabsProps> = ({
             }}
           />
         )}
-      </div>      {/* 모바일 우선 반응형 마스터 컨테이너 */}
+      </div>      {/* 모바일 우선 반응형 마스터 컨테이너 - 아이스 글래스모피즘 */}
       <div
         className={`
-          tab-content-master-container mt-3
+          tab-content-ice-glass
+          tab-content-master-container
           w-full max-w-6xl mx-auto
           min-h-[250px] max-[767px]:min-h-[200px]
           max-h-[70vh] max-[767px]:max-h-[60vh]
-          bg-background border border-border/30 rounded-lg
-          p-4 max-[767px]:p-3
+          p-8 max-[767px]:p-6
           overflow-y-auto
           ${tabContentClassName}
         `}
@@ -132,9 +135,11 @@ const Tabs: React.FC<TabsProps> = ({
           // 모바일 우선 동적 높이 적용
           minHeight: 'clamp(200px, 50vh, 400px)',
           maxHeight: 'clamp(300px, 70vh, 600px)',
-          borderRadius: 'var(--radius)',
-          background: 'var(--background)',
           transition: 'none', // 크기 변경 애니메이션 비활성화
+          marginTop: '7px', // 탭과 정확히 7px 간격
+          marginBottom: '16px', // 하단에서 16px 오프셋
+          position: 'relative',
+          zIndex: 10, // 탭보다 낮은 z-index
         }}
       >
         <AnimatePresence mode="wait">
@@ -151,15 +156,15 @@ const Tabs: React.FC<TabsProps> = ({
                   ${(() => {
                     switch (tab.contentType) {
                       case 'single-card':
-                        return 'flex items-start justify-center pt-2'; // 단일 카드를 중앙 상단에 배치
+                        return 'flex items-start justify-center pt-6'; // 단일 카드를 중앙 상단에 배치, 여백 증가
                       case 'multi-card-grid':
-                        return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-min'; // 반응형 그리드
+                        return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-min py-6'; // 반응형 그리드 + 세로 간격 더욱 증가
                       case 'vertical-stack': 
-                        return 'flex flex-col gap-3'; // 세로 스택
+                        return 'flex flex-col gap-8 py-6'; // 세로 스택 + 간격 더욱 증가
                       case 'full-width-section': 
-                        return 'w-full h-full'; // 컨테이너 전체 사용
+                        return 'w-full h-full py-6'; // 컨테이너 전체 사용 + 여백 증가
                       default:
-                        return tab.customLayoutClass || 'flex flex-col gap-3'; // 기본 레이아웃
+                        return tab.customLayoutClass || 'flex flex-col gap-8 py-6'; // 기본 레이아웃 + 간격 더욱 증가
                     }
                   })()}
                 `}

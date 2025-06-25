@@ -32,7 +32,7 @@ const sizeClassMap: Record<ModalSize, string> = {
 // 모달 배경 효과별 클래스
 const variantClassMap: Record<ModalVariant, string> = {
   default: 'bg-card/80 border border-border/10 backdrop-filter backdrop-blur-[24px] backdrop-saturate-[200%] shadow-[0_16px_40px_rgba(var(--black-rgb),0.4),inset_0_1px_0_rgba(var(--pure-white-rgb),0.15),0_0_80px_rgba(var(--black-rgb),0.1)]',
-  ice: 'ice-glassmorphism',
+  ice: 'modal-ice-glass',
 };
 
 const Modal: React.FC<ModalProps> = ({
@@ -160,7 +160,7 @@ const Modal: React.FC<ModalProps> = ({
     <AnimatePresence>
       {isOpen && (        <motion.div          className={`
             fixed inset-0 z-50 flex items-end md:items-center justify-center 
-            bg-background/30 backdrop-blur-[20px] 
+            modal-overlay-ice-glass
             ${backdropClassName}
           `}
           variants={backdropVariants}
@@ -222,26 +222,43 @@ const Modal: React.FC<ModalProps> = ({
               >
                 <X size={20} />
               </Button>
-            )}            {title && (
-              <h2 
-                id="modal-title" 
-                className={`
-                  text-h3 font-semibold 
-                  mb-3 text-card-foreground 
-                  pr-6 leading-heading
-                  ${isMobile ? 'mt-3' : ''}
-                `}
-              >
-                {title}
-              </h2>
+            )}
+
+            {/* 모달 헤더 */}
+            {title && (
+              <div className="modal-header-ice-glass p-6 -m-6 mb-4">
+                <h2 
+                  id="modal-title" 
+                  className={`
+                    text-h3 font-semibold 
+                    text-white
+                    leading-heading
+                    ${isMobile ? 'mt-3' : ''}
+                  `}
+                >
+                  {title}
+                </h2>
+                
+                {description && (
+                  <p 
+                    id="modal-desc" 
+                    className="
+                      text-caption mt-2
+                      text-white/70 leading-body
+                    "
+                  >
+                    {description}
+                  </p>
+                )}
+              </div>
             )}
             
-            {description && (
+            {!title && description && (
               <p 
                 id="modal-desc" 
                 className="
                   text-caption mb-4 
-                  text-muted-foreground leading-body
+                  text-white/70 leading-body
                 "
               >
                 {description}
