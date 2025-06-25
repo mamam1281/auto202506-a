@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { Epilogue, Exo, IBM_Plex_Sans_KR } from 'next/font/google';
 
 // 1. 글로벌 CSS 임포트
-import './globals.css'; // Corrected path based on file structure
+import '../styles/global.css'; // 올바른 경로로 수정
 
 // 2. 클라이언트 컴포넌트 임포트
 import LayoutWrapper from './LayoutWrapper';

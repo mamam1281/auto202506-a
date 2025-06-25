@@ -4,7 +4,7 @@ interface TokenDisplayProps {
   amount: number;
   unit?: string;
   icon?: React.ReactNode;
-  variant?: 'default' | 'premium' | 'critical';
+  variant?: 'default' | 'neon' | 'premium' | 'critical';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -48,6 +48,12 @@ export const TokenDisplay: React.FC<TokenDisplayProps> = ({
       glow: 'var(--color-primary-purple)',
       textColor: 'var(--color-text-primary)'
     },
+    neon: {
+      background: 'rgba(139, 92, 246, 0.08)',
+      border: 'var(--color-purple-primary)',
+      glow: 'var(--color-purple-primary)',
+      textColor: 'var(--color-purple-primary)'
+    },
     premium: {
       background: 'rgba(245, 158, 11, 0.08)',
       border: 'var(--color-accent-amber)',
@@ -63,7 +69,7 @@ export const TokenDisplay: React.FC<TokenDisplayProps> = ({
   };
 
   const currentSize = sizeStyles[size];
-  const currentVariant = variantStyles[variant];
+  const currentVariant = variantStyles[variant] || variantStyles.default;
 
   return (
     <div
@@ -80,21 +86,12 @@ export const TokenDisplay: React.FC<TokenDisplayProps> = ({
         border: `1px solid ${currentVariant.border}`,
         backdropFilter: "blur(16px)",
         boxShadow: `
-          0 8px 32px rgba(0, 0, 0, 0.3),
+          0 4px 16px rgba(0, 0, 0, 0.2),
           0 0 0 1px rgba(255, 255, 255, 0.1),
           inset 0 1px 0 rgba(255, 255, 255, 0.2)
-        `,
-        filter: `drop-shadow(0 0 8px ${currentVariant.glow})`
+        `
       }}
     >
-      {/* 배경 그라데이션 오버레이 */}
-      <div 
-        className="absolute inset-0 rounded-[inherit] opacity-20"
-        style={{
-          background: `linear-gradient(135deg, ${currentVariant.glow}, transparent)`
-        }}
-      />
-      
       {/* 아이콘 */}
       {icon && (
         <div 
@@ -110,8 +107,7 @@ export const TokenDisplay: React.FC<TokenDisplayProps> = ({
         <span 
           className={`font-black tabular-nums ${currentSize.amount} tracking-tight`}
           style={{ 
-            color: currentVariant.textColor,
-            textShadow: `0 0 20px ${currentVariant.glow}40`
+            color: currentVariant.textColor
           }}
         >
           {amount.toLocaleString()}
@@ -125,15 +121,6 @@ export const TokenDisplay: React.FC<TokenDisplayProps> = ({
           {unit}
         </span>
       </div>
-      
-      {/* 반짝이는 효과 */}
-      <div 
-        className="absolute inset-0 rounded-[inherit] opacity-0 hover:opacity-100 transition-opacity duration-300"
-        style={{
-          background: `linear-gradient(45deg, transparent 30%, ${currentVariant.glow}20 50%, transparent 70%)`,
-          animation: 'shimmer 2s infinite'
-        }}
-      />
     </div>
   );
 };

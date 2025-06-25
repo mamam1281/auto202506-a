@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Diamond, Bell, Settings, UserCircle } from 'lucide-react';
 import Button from './Button';
 import { useSelector } from 'react-redux';
@@ -9,9 +9,13 @@ export interface AppHeaderProps {
   // points prop removed, cyber token balance will be sourced from Redux
   onNotificationsClick?: () => void;
   onSettingsClick?: () => void;
-  onProfileClick?: () => void; // Added for profile icon
+  onProfileClick?: () => void;
   hasNotifications?: boolean;
-  showTokenBalanceOnMobile?: boolean; // Renamed for clarity from showPointsOnMobile
+  showTokenBalanceOnMobile?: boolean;
+  // New responsive props
+  compact?: boolean; // For minimal header layout
+  showAppName?: boolean; // Control app name visibility
+  tokenDisplayVariant?: 'full' | 'compact' | 'icon-only'; // Token display modes
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({
@@ -21,8 +25,28 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   onProfileClick,
   hasNotifications = false,
   showTokenBalanceOnMobile = true,
+  compact = false,
+  showAppName = true,
+  tokenDisplayVariant = 'full',
 }) => {
   const cyberTokenBalance = useSelector((state: RootState) => state.cyberToken.balance);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Handle responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Initial check
+    handleResize();
+    
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleNotificationsClick = () => {
     if (onNotificationsClick) {
@@ -41,57 +65,131 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       onProfileClick();
     }
   };
+
+  // Responsive token display component
+  const TokenDisplay = () => {
+    if (!showTokenBalanceOnMobile && isMobile) {
+      return null;
+    }
+
+    const baseClasses = "flex items-center gap-1 flex-shrink-0 min-w-0";
+    const iconSize = compact ? 16 : 20;
+    
+    switch (tokenDisplayVariant) {
+      case 'icon-only':
+        return (
+          <div className={`${baseClasses} px-2 sm:px-3`}>
+            <Diamond 
+              size={iconSize}
+              className="text-neon-purple-3 flex-shrink-0"
+            />
+            <span className="hidden sm:inline text-foreground text-body font-medium whitespace-nowrap">
+              {cyberTokenBalance.toLocaleString()}
+            </span>
+          </div>
+        );
+      case 'compact':
+        return (
+          <div className={`${baseClasses} px-2`}>
+            <Diamond 
+              size={iconSize}
+              className="text-neon-purple-3 flex-shrink-0"
+            />
+            <span className="text-foreground text-sm font-medium whitespace-nowrap">
+              {cyberTokenBalance > 999 ? `${(cyberTokenBalance / 1000).toFixed(1)}K` : cyberTokenBalance.toLocaleString()}
+            </span>
+          </div>
+        );
+      case 'full':
+      default:
+        return (
+          <div className={`${baseClasses} px-3 sm:px-4`}>
+            <Diamond 
+              size={iconSize}
+              className="text-neon-purple-3 flex-shrink-0"
+            />
+            <span className="text-foreground text-body font-medium whitespace-nowrap">
+              {cyberTokenBalance.toLocaleString()}
+            </span>
+          </div>
+        );
+    }
+  };
+
+  // Responsive app name component
+  const AppName = () => {
+    if (!showAppName) return null;
+    
+    return (
+      <div className="flex-1 flex items-center justify-center px-2 sm:px-4 min-w-0">
+        <span className={`${compact ? 'text-lg' : 'heading-h3'} truncate text-center max-w-full`}>
+          {appName}
+        </span>
+      </div>
+    );
+  };
+
+  // Responsive action buttons
+  const ActionButtons = () => {
+    const buttonSize = compact ? "sm" : "md";
+    const iconSize = compact ? 18 : 20;
+    const baseButtonClasses = "p-1 hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full";
+    
+    return (
+      <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 px-2 sm:px-3">
+        <Button 
+          variant="text" 
+          iconOnly 
+          size={buttonSize}
+          icon={(props) => <Bell {...props} size={iconSize} />}
+          onClick={handleNotificationsClick}
+          className={`${baseButtonClasses} ${hasNotifications ? 'text-accent-amber animate-pulse' : 'text-muted-foreground hover:text-foreground'}`}
+          aria-label="알림"
+        />
+        
+        <Button 
+          variant="text" 
+          iconOnly 
+          size={buttonSize}
+          icon={(props) => <Settings {...props} size={iconSize} />}
+          onClick={handleSettingsClick}
+          className={`${baseButtonClasses} text-muted-foreground hover:text-foreground`}
+          aria-label="설정"
+        />
+        
+        <Button
+          variant="text"
+          iconOnly
+          size={buttonSize}
+          icon={(props) => <UserCircle {...props} size={iconSize} />}
+          onClick={handleProfileClick}
+          className={`${baseButtonClasses} text-muted-foreground hover:text-foreground`}
+          aria-label="프로필"
+        />
+      </div>
+    );
+  };
   return (
     <header
-      className="app-header layout-header-sticky safe-top pl-safe-left pr-safe-right h-[var(--app-header-height-mobile)] md:h-[var(--app-header-height-desktop)] glassmorphism-header"
-    >      <div className="container flex items-center h-full px-container-x relative"> {/* relative 추가 */}        {/* 좌측: 토큰 잔고 표시 */}
-        <div className={`${showTokenBalanceOnMobile ? 'flex' : 'hidden md:flex'} items-center gap-1 flex-shrink-0 min-w-0 pl-4 pr-4`}>
-          <Diamond 
-            size={20}
-            className="text-neon-purple-3 flex-shrink-0"
-          />
-          <span className="text-foreground text-body font-medium whitespace-nowrap">
-            {cyberTokenBalance.toLocaleString()}
-          </span>
-        </div>
+      className={`
+        app-header layout-header-sticky safe-top pl-safe-left pr-safe-right
+        ${compact 
+          ? 'h-12 sm:h-14' 
+          : 'h-[var(--app-header-height-mobile)] md:h-[var(--app-header-height-desktop)]'
+        }
+        glassmorphism-header
+        border-b border-border/20
+      `}
+    >
+      <div className="container flex items-center h-full relative max-w-full">
+        {/* Left: Token Balance - Responsive positioning */}
+        <TokenDisplay />
 
-        {/* 중앙: 로고/앱 이름 영역 - 겹침 방지를 위한 조건부 중앙 배치 */}
-        <div className="flex-1 flex items-center justify-center px-4">
-          <span className="heading-h3 truncate text-center">
-            {appName}
-          </span>
-        </div>
-        {/* 우측: 액션 아이콘들 */}
-        <div className="ml-auto flex items-center gap-app-header-icon flex-shrink-0"> {/* ml-auto 추가로 우측 정렬 */}
-          <Button 
-            variant="text" 
-            iconOnly 
-            size="md" 
-            icon={Bell}
-            onClick={handleNotificationsClick}
-            className={`p-1 hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full ${hasNotifications ? 'text-accent-amber animate-pulse' : 'text-muted-foreground hover:text-foreground'}`}
-            aria-label="알림"
-          />
-          
-          <Button 
-            variant="text" 
-            iconOnly 
-            size="md" 
-            icon={Settings}
-            onClick={handleSettingsClick}
-            className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full"
-            aria-label="설정"
-          />
-          <Button
-            variant="text"
-            iconOnly
-            size="md"
-            icon={UserCircle} // Added Profile Icon
-            onClick={handleProfileClick}
-            className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full"
-            aria-label="프로필"
-          />
-        </div>
+        {/* Center: App Name - Responsive sizing and visibility */}
+        <AppName />
+
+        {/* Right: Action Icons - Responsive sizing and spacing */}
+        <ActionButtons />
       </div>
     </header>
   );

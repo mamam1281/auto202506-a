@@ -1,24 +1,15 @@
 // cc-webapp/frontend/app/adult_content/page.jsx
 'use client';
 
-import React from 'react'; // React import for clarity
-import AdultContentViewer from '@/components/archive/AdultContentViewer';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
-import Head from 'next/head'; // For older Next.js versions or specific client-side title updates
+import Head from 'next/head';
 import { Home, ArrowLeft } from 'lucide-react';
-import { motion } from 'framer-motion'; // Added for animations
-import { useEffect } from 'react'; // For setting document title if needed
-
-// For Next.js 13+ App Router, metadata can be exported for server components:
-// export const metadata = {
-//   title: 'Exclusive Content - CC Webapp',
-//   description: 'View your unlocked adult content stages.',
-// };
+import Button from '../../components/Button';
 
 export default function AdultContentPage() {
-  const currentUserId = 1; // As per guideline, use 1 or accept as prop
+  const currentUserId = 1;
 
-  // If this page must be a Client Component and needs to set the title:
   useEffect(() => {
     document.title = 'Exclusive Content - CC Webapp';
   }, []);

@@ -239,6 +239,7 @@
   --app-header-height-desktop: 64px; /* 데스크톱 헤더 높이 */
   --app-header-padding-y: var(--spacing-2); /* 헤더 상하 패딩 (16px) */
   --app-header-icon-gap: var(--spacing-1); /* 헤더 아이콘 간 간격 (8px로 더 좁게) */
+  --bottom-nav-height: 80px; /* 하단 네비게이션 높이 */
 
   /* Border Radius */
   --radius-sm: 4px;
