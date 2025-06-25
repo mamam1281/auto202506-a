@@ -13,35 +13,40 @@ export function PointsCard({ currentPoints, weeklyChange, rank, nextReward }: Po
 
   return (
     <BaseCard variant="accent" className="w-full max-w-sm min-h-[300px]">
-      <div className="p-4 space-y-6 flex flex-col justify-between h-full">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Star className="w-5 h-5 text-[var(--color-accent-amber)]" />
-            <h3 className="text-base font-medium text-[var(--color-text-primary)]">포인트</h3>
+      <div className="w-full h-full flex flex-col">
+        {/* Top padding to push header down to 1/3 point */}
+        <div className="h-16 flex-shrink-0"></div>
+        
+        <div className="px-10 pb-10 flex-grow" style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+          <div className="flex items-center justify-between" style={{ marginBottom: '0.5rem' }}>
+            <div className="flex items-center gap-2">
+              <Star className="w-5 h-5 text-amber-300" />
+              <h3 className="text-base font-medium text-white">포인트</h3>
+            </div>
+            <div className="text-gray-300 text-sm">#{rank}</div>
           </div>
-          <div className="text-[var(--color-text-secondary)] text-sm">#{rank}</div>
-        </div>
 
-        <div className="space-y-2">
-          <div className="text-2xl font-bold text-[var(--color-accent-amber)]">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div className="text-2xl font-bold text-amber-400">
             {currentPoints.toLocaleString()}P
           </div>
           
-          <div className="flex items-center gap-2">
-            <TrendingUp className={`w-4 h-4 ${isPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`} />
-            <span className={`text-sm font-medium ${isPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`}>
+          <div className="flex items-center gap-2" style={{ marginBottom: '0.5rem' }}>
+            <TrendingUp className={`w-4 h-4 ${isPositive ? 'text-green-400' : 'text-red-400'}`} />
+            <span className={`text-sm font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
               {isPositive ? '+' : ''}{weeklyChange}P
             </span>
-            <span className="text-[var(--color-text-secondary)] text-sm">이번 주</span>
+            <span className="text-gray-300 text-sm">이번 주</span>
           </div>
         </div>
 
         {nextReward && (
-          <div className="p-3 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-            <div className="text-[var(--muted-foreground)] text-xs">다음 보상</div>
-            <div className="text-[var(--foreground)] text-sm font-medium mt-1">{nextReward}</div>
+          <div className="p-3 rounded-lg bg-black/30 border border-white/10" style={{ marginTop: '1.1rem' }}>
+            <div className="text-gray-400 text-xs">다음 보상</div>
+            <div className="text-white text-sm font-medium mt-1">{nextReward}</div>
           </div>
         )}
+      </div>
       </div>
     </BaseCard>
   );

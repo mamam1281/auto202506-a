@@ -6,6 +6,7 @@ import { NotificationCard } from './NotificationCard';
 import { RecentActivityCard } from './RecentActivityCard';
 import { InputCard } from './Inputcard';
 import { GameCard } from './GameCard';
+import { GameStatsCard } from './Gamestatscard';
 import { BaseCard } from './Basecard';
 
 const meta: Meta = {
@@ -29,7 +30,7 @@ type Story = StoryObj<typeof meta>;
 export const AllCardsShowcase: Story = {
   render: () => (
     <div className="p-4 md:p-8 min-h-screen" style={{ backgroundColor: 'var(--color-neutral-50)' }}>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="mb-8 text-center">
           <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">
             카드 컴포넌트 갤러리
@@ -130,11 +131,22 @@ export const AllCardsShowcase: Story = {
             />
           </div>
 
-          {/* InputFormCard */}
+          {/* GameStatsCard */}
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-gray-700 px-2">InputFormCard</h3>
-            <InputFormCard
-              title="사용자 입력 폼"
+            <h3 className="text-sm font-semibold text-gray-700 px-2">GameStatsCard</h3>
+            <GameStatsCard
+              gamesPlayed={127}
+              winRate={73.2}
+              bestScore={98765}
+              totalPlayTime="45시간 12분"
+            />
+          </div>
+
+          {/* InputCard */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold text-gray-700 px-2">InputCard</h3>
+            <InputCard
+              title="사용자 입력"
               onSubmit={(data) => console.log('Form submitted:', data)}
             />
           </div>
@@ -253,6 +265,13 @@ export const CompactGallery: Story = {
             rank={10}
           />
 
+          <GameStatsCard
+            gamesPlayed={50}
+            winRate={65.0}
+            bestScore={15000}
+            totalPlayTime="12시간"
+          />
+
           <ProfileCard
             name="사용자"
             username="user123"
@@ -267,7 +286,7 @@ export const CompactGallery: Story = {
             onAction={() => {}}
           />
 
-          <InputFormCard
+          <InputCard
             title="입력 폼"
             onSubmit={() => {}}
           />

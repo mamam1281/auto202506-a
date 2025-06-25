@@ -1750,8 +1750,8 @@ button {
     }
     
     .card-content {
-      gap: 16px; /* 모바일 콘텐츠 간격 축소 (28px → 16px) */
-      padding: var(--spacing-1); /* 8px로 축소 */
+      gap: 28px; /* 모바일 콘텐츠 간격 축소 (28px → 16px) */
+      padding: var(--spacing-2); /* 8px로 축소 */
     }
     
     .content-icon, .card-icon {

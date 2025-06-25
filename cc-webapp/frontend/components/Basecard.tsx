@@ -15,11 +15,11 @@ export function BaseCard({
   size = 'md'
 }: BaseCardProps) {
   const variants = {
-    default: 'bg-card border-border hover:bg-muted/50',
-    accent: 'bg-accent/10 border-accent/20 hover:bg-accent/15',
-    error: 'bg-destructive/10 border-destructive/20 hover:bg-destructive/15',
-    success: 'bg-chart-2/10 border-chart-2/20 hover:bg-chart-2/15',
-    info: 'bg-chart-1/10 border-chart-1/20 hover:bg-chart-1/15'
+    default: 'bg-black/10 border-white/10 hover:bg-black/20 text-white backdrop-blur-md',
+    accent: 'bg-purple-900/20 border-purple-400/20 hover:bg-purple-900/30 text-white backdrop-blur-md',
+    error: 'bg-red-900/20 border-red-400/20 hover:bg-red-900/30 text-white backdrop-blur-md',
+    success: 'bg-green-900/20 border-green-400/20 hover:bg-green-900/30 text-white backdrop-blur-md',
+    info: 'bg-blue-900/20 border-blue-400/20 hover:bg-blue-900/30 text-white backdrop-blur-md'
   };
 
   const sizes = {
@@ -30,15 +30,16 @@ export function BaseCard({
 
   return (
     <div className={cn(
-      'backdrop-blur-sm border transition-all duration-300',
-      'shadow-lg hover:shadow-xl transform hover:-translate-y-1',
+      'backdrop-blur-md border transition-all duration-300',
+      'shadow-2xl hover:shadow-3xl transform hover:-translate-y-1',
       'relative overflow-hidden',
       variants[variant],
       sizes[size],
       className
     )}>
-      {/* Glassmorphism overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+      {/* Enhanced dark glassmorphism overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/1 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
       
       <div className="relative z-10">
         {children}
