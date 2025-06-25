@@ -1,44 +1,183 @@
 import React from "react";
 import TokenDisplay from "./TokenDisplay";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertTriangle, TrendingUp } from "lucide-react";
 
 interface TokenBalanceWidgetProps {
   amount: number;
   loading?: boolean;
   criticalThreshold?: number;
   onClick?: () => void;
+  title?: string;
+  showTrend?: boolean;
+  trendPercentage?: number;
   className?: string;
 }
 
-// 상태: LOADING, NORMAL, CRITICAL (amount < criticalThreshold)
+// 완전히 새로운 토큰 잔액 위젯 - 현대적 대시보드 스타일
 export const TokenBalanceWidget: React.FC<TokenBalanceWidgetProps> = ({
   amount,
   loading = false,
   criticalThreshold = 100000,
   onClick,
+  title = "토큰 잔액",
+  showTrend = false,
+  trendPercentage = 0,
   className,
 }) => {
   const isCritical = amount < criticalThreshold;
+  const isPositiveTrend = trendPercentage > 0;
+
+  // 상태별 스타일
+  const getStatusStyles = () => {
+    if (loading) {
+      return {
+        border: 'var(--color-primary-purple)',
+        glow: 'var(--color-primary-purple)',
+        background: 'rgba(91, 48, 246, 0.05)'
+      };
+    }
+    if (isCritical) {
+      return {
+        border: 'var(--color-error)',
+        glow: 'var(--color-error)',
+        background: 'rgba(239, 68, 68, 0.08)'
+      };
+    }
+    return {
+      border: 'var(--color-accent-amber)',
+      glow: 'var(--color-accent-amber)',
+      background: 'rgba(245, 158, 11, 0.05)'
+    };
+  };
+
+  const statusStyles = getStatusStyles();
+
   return (
     <div
-      className={`relative flex items-center gap-3 px-4 py-3 rounded-2xl glassmorphism border border-[var(--color-primary-purple)] shadow-lg transition-all duration-300 min-w-[180px] sm:min-w-[220px] ${isCritical ? "ring-2 ring-[var(--color-accent-amber)]" : ""} ${className || ""}`.trim()}
+      className={`
+        relative group cursor-pointer
+        p-6 rounded-3xl
+        transition-all duration-300 ease-out
+        hover:scale-[1.02] hover:brightness-110
+        min-w-[280px] max-w-[400px]
+        ${className || ''}
+      `.trim()}
       style={{
-        background: "var(--color-glass-ice)",
-        backdropFilter: "blur(16px)",
+        fontFamily: "var(--font-primary)",
+        background: `linear-gradient(135deg, ${statusStyles.background}, rgba(255, 255, 255, 0.02))`,
+        border: `2px solid ${statusStyles.border}`,
+        backdropFilter: "blur(24px)",
+        boxShadow: `
+          0 20px 40px rgba(0, 0, 0, 0.4),
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          inset 0 2px 0 rgba(255, 255, 255, 0.2),
+          0 0 60px ${statusStyles.glow}20
+        `,
       }}
       onClick={onClick}
     >
-      {loading ? (
-        <Loader2 className="animate-spin text-[var(--color-primary-purple)] w-7 h-7 mr-2" />
-      ) : (
-        <TokenDisplay
-          amount={amount}
-          icon={<span className="inline-block w-5 h-5 bg-gradient-neon rounded-full" />}
-        />
+      {/* 상단 헤더 */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 
+          className="text-sm font-semibold uppercase tracking-wider opacity-80"
+          style={{ color: 'var(--color-text-secondary)' }}
+        >
+          {title}
+        </h3>
+        
+        {/* 상태 표시기 */}
+        <div className="flex items-center gap-2">
+          {isCritical && !loading && (
+            <div className="flex items-center gap-1">
+              <AlertTriangle 
+                className="w-4 h-4 animate-pulse" 
+                style={{ color: 'var(--color-error)' }}
+              />
+              <span 
+                className="text-xs font-medium"
+                style={{ color: 'var(--color-error)' }}
+              >
+                부족
+              </span>
+            </div>
+          )}
+          
+          {showTrend && !loading && (
+            <div className="flex items-center gap-1">
+              <TrendingUp 
+                className={`w-4 h-4 ${isPositiveTrend ? 'text-green-400' : 'text-red-400 rotate-180'}`}
+              />
+              <span 
+                className={`text-xs font-medium ${isPositiveTrend ? 'text-green-400' : 'text-red-400'}`}
+              >
+                {isPositiveTrend ? '+' : ''}{trendPercentage}%
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 메인 컨텐츠 */}
+      <div className="flex items-center justify-between">
+        {loading ? (
+          <div className="flex items-center gap-4">
+            <Loader2 
+              className="w-8 h-8 animate-spin" 
+              style={{ color: 'var(--color-primary-purple)' }}
+            />
+            <div>
+              <div 
+                className="h-8 w-32 rounded-xl animate-pulse mb-2"
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+              />
+              <div 
+                className="h-4 w-20 rounded-lg animate-pulse"
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+              />
+            </div>
+          </div>
+        ) : (
+          <TokenDisplay
+            amount={amount}
+            variant={isCritical ? 'critical' : 'premium'}
+            size="lg"
+            icon={
+              <div 
+                className="w-full h-full rounded-full flex items-center justify-center"
+                style={{
+                  background: `linear-gradient(135deg, ${statusStyles.glow}, ${statusStyles.glow}80)`,
+                  boxShadow: `0 0 20px ${statusStyles.glow}40`
+                }}
+              >
+                <span className="text-white font-bold text-xs">CC</span>
+              </div>
+            }
+          />
+        )}
+      </div>
+
+      {/* 하단 액션 힌트 */}
+      {onClick && !loading && (
+        <div 
+          className="mt-4 pt-4 border-t border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <p 
+            className="text-xs text-center opacity-60"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            클릭하여 자세히 보기
+          </p>
+        </div>
       )}
-      <span className="ml-auto text-xs sm:text-sm text-[var(--color-text-secondary)]" style={{fontFamily: "var(--font-primary)"}}>
-        {isCritical ? "잔액 부족!" : "토큰 잔액"}
-      </span>
+
+      {/* 호버 글로우 효과 */}
+      <div 
+        className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{
+          background: `linear-gradient(135deg, ${statusStyles.glow}10, transparent)`,
+          filter: `blur(1px)`
+        }}
+      />
     </div>
   );
 };

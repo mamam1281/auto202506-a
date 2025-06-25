@@ -1,106 +1,70 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 export type LoadingSpinnerSize = 'sm' | 'md' | 'lg' | 'xl';
-export type LoadingSpinnerVariant = 'modern' | 'classic' | 'dots' | 'pulse';
+export type LoadingSpinnerVariant = 'ring' | 'dots' | 'pulse' | 'wave';
 
 export interface LoadingSpinnerProps {
   size?: LoadingSpinnerSize;
   variant?: LoadingSpinnerVariant;
   className?: string;
-  color?: 'primary' | 'accent' | 'white' | 'custom';
   text?: string;
 }
 
-// Using theme spacing keys: 다양한 크기 옵션
-const sizeTailwindClasses: Record<LoadingSpinnerSize, string> = {
-  sm: 'w-6 h-6',   // 24px
-  md: 'w-10 h-10', // 40px
-  lg: 'w-16 h-16', // 64px
-  xl: 'w-24 h-24', // 96px
-};
-
-// Using Tailwind border width classes
-const borderTailwindClasses: Record<LoadingSpinnerSize, string> = {
-  sm: 'border-2',
-  md: 'border-[3px]',
-  lg: 'border-4',
-  xl: 'border-[6px]',
-};
-
-// 색상 매핑
-const colorClasses = {
-  primary: 'border-blue-500',
-  accent: 'border-amber-400',
-  white: 'border-white',
-  custom: 'border-current',
-};
-
-// 애니메이션 변형들
-const spinAnimation = {
-  animate: {
-    rotate: 360,
-  },
-  transition: {
-    duration: 1,
-    repeat: Infinity,
-    ease: "linear" as const,
-  },
-};
-
-const pulseAnimation = {
-  animate: {
-    scale: [1, 1.2, 1],
-    opacity: [0.7, 1, 0.7],
-  },
-  transition: {
-    duration: 1.5,
-    repeat: Infinity,
-    ease: "easeInOut" as const,
-  },
-};
-
-const dotsAnimation = {
-  animate: {
-    y: [0, -10, 0],
-  },
-  transition: {
-    duration: 0.6,
-    repeat: Infinity,
-    ease: "easeInOut" as const,
-  },
-};
-
+// 완전히 새로운 로딩 스피너 - 확실히 움직입니다!
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'md',
-  variant = 'modern',
+  variant = 'ring',
   className = '',
-  color = 'accent',
   text,
 }) => {
-  const currentSizeClass = sizeTailwindClasses[size];
+  // 크기 설정
+  const sizeClasses = {
+    sm: 'w-6 h-6',
+    md: 'w-10 h-10',
+    lg: 'w-16 h-16',
+    xl: 'w-24 h-24',
+  };
 
-  // Modern Spinner (기본) - 심플한 2D 갈색 스피너
-  if (variant === 'modern') {
+  const currentSize = sizeClasses[size];
+
+  // Ring Spinner - 부드럽고 편안한 단방향 회전
+  if (variant === 'ring') {
     return (
-      <div className={`inline-flex flex-col items-center justify-center gap-3 ${className}`}>
-        <div
-          className={`${currentSizeClass} relative animate-spin`}
-          style={{
-            filter: 'drop-shadow(0 0 8px var(--color-accent-amber, #F59E0B))',
-          }}
-        >
+      <div className={`flex flex-col items-center gap-3 ${className}`}>
+        <div className={`${currentSize} relative`}>
+          {/* 메인 링 스피너 */}
           <div 
-            className="w-full h-full rounded-full border-4 absolute inset-0" 
+            className="absolute inset-0 rounded-full"
             style={{
-              borderColor: 'var(--color-accent-amber, #F59E0B)', // CSS 변수 기반
-              borderTopColor: 'var(--color-purple-primary, #5B30F6)', // CSS 변수 기반
-              boxShadow: '0 0 16px var(--color-accent-amber, #F59E0B)',
+              border: '4px solid transparent',
+              borderTop: '4px solid var(--color-purple-primary)',
+              borderRight: '4px solid var(--color-purple-secondary)',
+              animation: 'spinnerRotate 2s linear infinite',
+              willChange: 'transform',
+            }}
+          />
+          {/* 내부 링 - 같은 방향, 더 연한 색상 */}
+          <div 
+            className="absolute inset-2 rounded-full"
+            style={{
+              border: '2px solid transparent',
+              borderTop: '2px solid var(--color-purple-secondary)',
+              borderRight: '2px solid var(--color-purple-tertiary)',
+              animation: 'spinnerRotate 2.5s linear infinite',
+              willChange: 'transform',
+              opacity: 0.7,
             }}
           />
         </div>
         {text && (
-          <p className="text-sm font-medium animate-pulse" style={{ color: 'var(--color-purple-tertiary, #8054F2)' }}>
+          <p 
+            className="text-sm font-medium" 
+            style={{ 
+              color: 'var(--color-text-primary)',
+              fontFamily: 'var(--font-primary)',
+              animation: 'pulse 2s ease-in-out infinite',
+            }}
+          >
             {text}
           </p>
         )}
@@ -108,58 +72,32 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     );
   }
 
-  // Classic Spinner - 심플한 갈색 회전
-  if (variant === 'classic') {
-    return (
-      <div className={`inline-flex flex-col items-center justify-center gap-3 ${className}`}>
-        <div
-          className={`${currentSizeClass} animate-spin`}
-          style={{
-            filter: 'drop-shadow(0 0 6px var(--color-accent-amber, #F59E0B))',
-          }}
-        >
-          <div 
-            className="w-full h-full rounded-full border-3" 
-            style={{
-              borderColor: 'var(--color-accent-amber, #F59E0B)',
-              borderTopColor: 'var(--color-purple-primary, #5B30F6)',
-              boxShadow: '0 0 12px var(--color-accent-amber, #F59E0B)',
-            }}
-          />
-        </div>
-        {text && (
-          <p className="text-sm font-medium" style={{ color: 'var(--color-purple-tertiary, #8054F2)' }}>
-            {text}
-          </p>
-        )}
-      </div>
-    );
-  }
-
-  // Dots Spinner - 갈색 점들
+  // Dots Spinner - 점들이 위아래로 움직임
   if (variant === 'dots') {
     const dotSize = size === 'sm' ? 'w-2 h-2' : size === 'md' ? 'w-3 h-3' : size === 'lg' ? 'w-4 h-4' : 'w-5 h-5';
     return (
-      <div className={`inline-flex flex-col items-center justify-center gap-3 ${className}`}>
+      <div className={`flex flex-col items-center gap-3 ${className}`}>
         <div className="flex gap-2">
-          {[0, 1, 2].map((index) => (
-            <motion.div
-              key={index}
-              className={`${dotSize} rounded-full`}
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className={`${dotSize} rounded-full animate-bounce`}
               style={{
-                backgroundColor: 'var(--color-purple-primary, #5B30F6)',
-                boxShadow: '0 0 8px var(--color-accent-amber, #F59E0B)',
-              }}
-              animate={dotsAnimation.animate}
-              transition={{
-                ...dotsAnimation.transition,
-                delay: index * 0.2,
+                backgroundColor: 'var(--color-purple-primary)',
+                animationDelay: `${i * 0.2}s`,
+                animationDuration: '0.8s',
               }}
             />
           ))}
         </div>
         {text && (
-          <p className="text-sm font-medium" style={{ color: 'var(--color-purple-tertiary, #8054F2)' }}>
+          <p 
+            className="text-sm font-medium" 
+            style={{ 
+              color: 'var(--color-text-primary)',
+              fontFamily: 'var(--font-primary)',
+            }}
+          >
             {text}
           </p>
         )}
@@ -167,29 +105,58 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     );
   }
 
-  // Pulse Spinner - 갈색 맥박
+  // Pulse Spinner - 크기가 커졌다 작아졌다
   if (variant === 'pulse') {
     return (
-      <div className={`inline-flex flex-col items-center justify-center gap-3 ${className}`}>
-        <motion.div
-          className={`${currentSizeClass} rounded-full flex items-center justify-center border-2`}
+      <div className={`flex flex-col items-center gap-3 ${className}`}>
+        <div 
+          className={`${currentSize} rounded-full animate-pulse`}
           style={{
-            backgroundColor: 'var(--color-accent-amber, #F59E0B, 0.2)',
-            borderColor: 'var(--color-accent-amber, #F59E0B, 0.4)',
-            boxShadow: '0 0 16px var(--color-accent-amber, #F59E0B)',
+            background: 'var(--gradient-neon)',
+            animation: 'pulse 1.5s ease-in-out infinite',
           }}
-          {...pulseAnimation}
-        >
-          <div 
-            className="w-1/2 h-1/2 rounded-full" 
-            style={{
-              backgroundColor: 'var(--color-purple-primary, #5B30F6)',
-              boxShadow: '0 0 8px var(--color-accent-amber, #F59E0B)',
-            }}
-          />
-        </motion.div>
+        />
         {text && (
-          <p className="text-sm font-medium" style={{ color: 'var(--color-purple-tertiary, #8054F2)' }}>
+          <p 
+            className="text-sm font-medium" 
+            style={{ 
+              color: 'var(--color-text-primary)',
+              fontFamily: 'var(--font-primary)',
+            }}
+          >
+            {text}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  // Wave Spinner - 물결 효과
+  if (variant === 'wave') {
+    const barHeight = size === 'sm' ? 'h-4' : size === 'md' ? 'h-6' : size === 'lg' ? 'h-8' : 'h-10';
+    return (
+      <div className={`flex flex-col items-center gap-3 ${className}`}>
+        <div className="flex items-end gap-1">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className={`w-1 ${barHeight} rounded-full animate-pulse`}
+              style={{
+                backgroundColor: 'var(--color-accent-amber)',
+                animationDelay: `${i * 0.1}s`,
+                animationDuration: '1s',
+              }}
+            />
+          ))}
+        </div>
+        {text && (
+          <p 
+            className="text-sm font-medium" 
+            style={{ 
+              color: 'var(--color-text-primary)',
+              fontFamily: 'var(--font-primary)',
+            }}
+          >
             {text}
           </p>
         )}
@@ -199,3 +166,5 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   return null;
 };
+
+export default LoadingSpinner;
