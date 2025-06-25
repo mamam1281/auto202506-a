@@ -84,24 +84,23 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   if (variant === 'modern') {
     return (
       <div className={`inline-flex flex-col items-center justify-center gap-3 ${className}`}>
-        <motion.div
-          className={`${currentSizeClass} relative`}
-          {...spinAnimation}
+        <div
+          className={`${currentSizeClass} relative animate-spin`}
           style={{
-            filter: 'drop-shadow(0 0 8px rgba(139, 69, 19, 0.6))', // 갈색 glow 효과
+            filter: 'drop-shadow(0 0 8px var(--color-accent-amber, #F59E0B))',
           }}
         >
           <div 
             className="w-full h-full rounded-full border-4 absolute inset-0" 
             style={{
-              borderColor: 'rgba(139, 69, 19, 0.2)', // 갈색 배경 테두리
-              borderTopColor: '#8B4513', // 갈색 활성 부분
-              boxShadow: '0 0 16px rgba(139, 69, 19, 0.4)', // 갈색 그림자
+              borderColor: 'var(--color-accent-amber, #F59E0B)', // CSS 변수 기반
+              borderTopColor: 'var(--color-purple-primary, #5B30F6)', // CSS 변수 기반
+              boxShadow: '0 0 16px var(--color-accent-amber, #F59E0B)',
             }}
           />
-        </motion.div>
+        </div>
         {text && (
-          <p className="text-sm font-medium animate-pulse" style={{ color: '#D2B48C' }}>
+          <p className="text-sm font-medium animate-pulse" style={{ color: 'var(--color-purple-tertiary, #8054F2)' }}>
             {text}
           </p>
         )}
@@ -113,24 +112,23 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   if (variant === 'classic') {
     return (
       <div className={`inline-flex flex-col items-center justify-center gap-3 ${className}`}>
-        <motion.div
-          className={`${currentSizeClass}`}
-          {...spinAnimation}
+        <div
+          className={`${currentSizeClass} animate-spin`}
           style={{
-            filter: 'drop-shadow(0 0 6px rgba(160, 82, 45, 0.5))', // 갈색 glow
+            filter: 'drop-shadow(0 0 6px var(--color-accent-amber, #F59E0B))',
           }}
         >
           <div 
             className="w-full h-full rounded-full border-3" 
             style={{
-              borderColor: 'rgba(160, 82, 45, 0.3)', // 갈색 배경
-              borderTopColor: '#A0522D', // 갈색 활성 부분
-              boxShadow: '0 0 12px rgba(160, 82, 45, 0.3)',
+              borderColor: 'var(--color-accent-amber, #F59E0B)',
+              borderTopColor: 'var(--color-purple-primary, #5B30F6)',
+              boxShadow: '0 0 12px var(--color-accent-amber, #F59E0B)',
             }}
           />
-        </motion.div>
+        </div>
         {text && (
-          <p className="text-sm font-medium" style={{ color: '#D2B48C' }}>
+          <p className="text-sm font-medium" style={{ color: 'var(--color-purple-tertiary, #8054F2)' }}>
             {text}
           </p>
         )}
@@ -141,7 +139,6 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   // Dots Spinner - 갈색 점들
   if (variant === 'dots') {
     const dotSize = size === 'sm' ? 'w-2 h-2' : size === 'md' ? 'w-3 h-3' : size === 'lg' ? 'w-4 h-4' : 'w-5 h-5';
-    
     return (
       <div className={`inline-flex flex-col items-center justify-center gap-3 ${className}`}>
         <div className="flex gap-2">
@@ -150,8 +147,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
               key={index}
               className={`${dotSize} rounded-full`}
               style={{
-                backgroundColor: '#8B4513', // 갈색
-                boxShadow: '0 0 8px rgba(139, 69, 19, 0.6)', // 갈색 glow
+                backgroundColor: 'var(--color-purple-primary, #5B30F6)',
+                boxShadow: '0 0 8px var(--color-accent-amber, #F59E0B)',
               }}
               animate={dotsAnimation.animate}
               transition={{
@@ -162,7 +159,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           ))}
         </div>
         {text && (
-          <p className="text-sm font-medium" style={{ color: '#D2B48C' }}>
+          <p className="text-sm font-medium" style={{ color: 'var(--color-purple-tertiary, #8054F2)' }}>
             {text}
           </p>
         )}
@@ -177,22 +174,22 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         <motion.div
           className={`${currentSizeClass} rounded-full flex items-center justify-center border-2`}
           style={{
-            backgroundColor: 'rgba(139, 69, 19, 0.2)', // 갈색 배경
-            borderColor: 'rgba(139, 69, 19, 0.4)', // 갈색 테두리
-            boxShadow: '0 0 16px rgba(139, 69, 19, 0.4)', // 갈색 glow
+            backgroundColor: 'var(--color-accent-amber, #F59E0B, 0.2)',
+            borderColor: 'var(--color-accent-amber, #F59E0B, 0.4)',
+            boxShadow: '0 0 16px var(--color-accent-amber, #F59E0B)',
           }}
           {...pulseAnimation}
         >
           <div 
             className="w-1/2 h-1/2 rounded-full" 
             style={{
-              backgroundColor: '#8B4513', // 갈색 중심
-              boxShadow: '0 0 8px rgba(139, 69, 19, 0.6)',
+              backgroundColor: 'var(--color-purple-primary, #5B30F6)',
+              boxShadow: '0 0 8px var(--color-accent-amber, #F59E0B)',
             }}
           />
         </motion.div>
         {text && (
-          <p className="text-sm font-medium" style={{ color: '#D2B48C' }}>
+          <p className="text-sm font-medium" style={{ color: 'var(--color-purple-tertiary, #8054F2)' }}>
             {text}
           </p>
         )}

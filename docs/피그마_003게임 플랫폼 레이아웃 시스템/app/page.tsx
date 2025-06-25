@@ -1,1 +1,0 @@
-// This file is no longer needed - removed in favor of traditional React structure

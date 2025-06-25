@@ -39,11 +39,11 @@ export const CustomProgress: React.FC<CustomProgressProps> = ({
     <div className={`w-full ${className}`}>
       {(showLabel || label) && (
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-white">
+          <span className="text-sm font-medium text-white" style={{fontFamily: "var(--font-primary)"}}>
             {label || 'Progress'}
           </span>
           {type === 'determinate' && (
-            <span className="text-sm text-white/70">
+            <span className="text-sm text-white/70" style={{fontFamily: "var(--font-primary)"}}>
               {Math.round(clampedValue)}%
             </span>
           )}
@@ -52,9 +52,11 @@ export const CustomProgress: React.FC<CustomProgressProps> = ({
       
       <div className={`custom-progress ${sizeClasses[size]}`}>
         <div
-          className={progressBarClass}
+          className={progressBarClass + (type === 'indeterminate' ? ' animate-spin' : '')}
           style={{
             width: type === 'determinate' ? `${clampedValue}%` : '100%',
+            background: 'var(--color-purple-primary, #5B30F6)',
+            boxShadow: '0 0 8px var(--color-accent-amber, #F59E0B)',
           }}
         />
       </div>
@@ -70,6 +72,7 @@ interface CustomCircularProgressProps {
   animated?: boolean;
   showLabel?: boolean;
   className?: string;
+  type?: 'determinate' | 'indeterminate'; // 추가
 }
 
 export const CustomCircularProgress: React.FC<CustomCircularProgressProps> = ({
@@ -79,6 +82,7 @@ export const CustomCircularProgress: React.FC<CustomCircularProgressProps> = ({
   animated = true,
   showLabel = false,
   className = '',
+  type = 'determinate', // 추가
 }) => {
   const clampedValue = Math.min(Math.max(value, 0), 100);
   const radius = (size - strokeWidth) / 2;
@@ -114,25 +118,25 @@ export const CustomCircularProgress: React.FC<CustomCircularProgressProps> = ({
           strokeDasharray={strokeDasharray}
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
-          className={animated ? 'transition-all duration-500 ease-out' : ''}
+          className={(animated && type === 'indeterminate') ? 'transition-all duration-500 ease-out animate-spin' : (animated ? 'transition-all duration-500 ease-out' : '')}
           style={{
-            filter: 'drop-shadow(0 0 6px rgba(139, 69, 19, 0.4))', // 갈색 glow
+            filter: 'drop-shadow(0 0 6px var(--color-accent-amber, #F59E0B))',
           }}
         />
         
         {/* Gradient definition */}
         <defs>
           <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#8B4513" />
-            <stop offset="50%" stopColor="#A0522D" />
-            <stop offset="100%" stopColor="#D2B48C" />
+            <stop offset="0%" stopColor="var(--color-purple-primary, #5B30F6)" />
+            <stop offset="50%" stopColor="var(--color-purple-secondary, #870DD1)" />
+            <stop offset="100%" stopColor="var(--color-accent-amber, #F59E0B)" />
           </linearGradient>
         </defs>
       </svg>
       
       {showLabel && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-sm font-medium text-white">
+          <span className="text-sm font-medium text-white" style={{fontFamily: "var(--font-primary)"}}>
             {Math.round(clampedValue)}%
           </span>
         </div>
