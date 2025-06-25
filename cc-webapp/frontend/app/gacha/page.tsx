@@ -2,8 +2,53 @@
 
 import { motion } from 'framer-motion';
 import { Plus, RotateCcw, Gift, Zap, ShieldHalf, Wand2, Crown } from 'lucide-react';
-import { Button } from '../../components/Button';
+import Button from '../../components/Button';
 import { ModernCard } from '../../components/ui/data-display/ModernCard';
+import { cn } from '../../components/utils';
+
+// Mock hooks and configs for placeholders
+const useTickets = () => ({
+  addTickets: (count: number) => console.log(`Adding ${count} tickets`),
+  resetTickets: (config: any) => console.log('Resetting tickets'),
+  state: { count: 10, spent: 0 }
+});
+
+const TIER_CONFIG = {
+  legendary: { color: 'text-yellow-400', glowColor: '#fbbf24' },
+  epic: { color: 'text-purple-400', glowColor: '#a855f7' },
+  rare: { color: 'text-blue-400', glowColor: '#3b82f6' },
+  common: { color: 'text-gray-400', glowColor: '#9ca3af' }
+};
+
+// Placeholder Card components
+function CardHeader({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={className}>{children}</div>;
+}
+
+function CardTitle({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <h3 className={className}>{children}</h3>;
+}
+
+function CardContent({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={className}>{children}</div>;
+}
+
+// Placeholder TicketProvider
+function TicketProvider({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
+
+// Placeholder GachaBox component
+function GachaBox() {
+  return (
+    <div className="flex items-center justify-center h-40 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg border border-purple-500/30">
+      <div className="text-center">
+        <Gift className="w-12 h-12 mx-auto mb-2 text-purple-400" />
+        <p className="text-sm text-gray-300">가챠 박스 (개발중)</p>
+      </div>
+    </div>
+  );
+}
 
 // Sub-component for the header actions, to easily use useTickets hook
 function GachaPageHeaderActions() {
@@ -151,7 +196,7 @@ function GachaPageContent() {
                         y: `${Math.random() * 100}vh`,
                         opacity: 0,
                     }}
-                    className="animate-particle-float" // Uses keyframes from globals.css
+                    className="animate-particle-float"
                 />
             );
         })}

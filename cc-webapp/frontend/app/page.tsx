@@ -1,122 +1,105 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
-
-// 프로젝트 표준 컴포넌트들만 사용
+import QuickStartItem from '../components/QuickStartItem';
 import GameCard from '../components/GameCard';
 import Button from '../components/Button';
-import QuickStartItem from '../components/QuickStartItem';
-import TokenDisplay from '../components/ui/data-display/TokenDisplay';
 
 export default function CleanCasinoDashboard() {
   const router = useRouter();
-  const [coins] = useState(2580);
-  const [gems] = useState(127);
 
-  // 게임 데이터 - 단순화
-  const featuredGames = [
-    {
-      id: 'cosmic-fortune',
-      title: 'Cosmic Fortune',
-      rating: 4.8,
-      players: '2.3K',
-      imagePlaceholder: '🌌',
-      onClick: () => router.push('/slots')
-    },
-    {
-      id: 'royal-roulette',
-      title: 'Royal Roulette',
-      rating: 4.7,
-      players: '1.8K',
-      imagePlaceholder: '🎰',
-      onClick: () => router.push('/roulette')
-    },
-    {
-      id: 'rps-battle',
-      title: 'RPS Battle',
-      rating: 4.5,
-      players: '956',
-      imagePlaceholder: '✂️',
-      onClick: () => router.push('/rps')
-    },
-    {
-      id: 'lucky-gacha',
-      title: 'Lucky Gacha',
-      rating: 4.9,
-      players: '3.1K',
-      imagePlaceholder: '🎁',
-      onClick: () => router.push('/gacha')
-    }
-  ];
-
-  // 빠른 액션들
   const quickActions = [
     {
       id: 'game-start',
       label: '게임 시작',
       iconPlaceholder: '🎮',
       iconBgColor: 'var(--color-purple-primary)',
-      onClick: () => router.push('/games')
+      onClick: () => console.log('게임 시작')
     },
     {
       id: 'deposit',
       label: '입금하기',
       iconPlaceholder: '💰',
       iconBgColor: 'var(--color-green-primary)',
-      onClick: () => router.push('/wallet')
+      onClick: () => console.log('입금하기')
     },
     {
       id: 'promotion',
       label: '프로모션',
       iconPlaceholder: '🎁',
       iconBgColor: 'var(--color-amber-primary)',
-      onClick: () => router.push('/promotions')
+      onClick: () => console.log('프로모션')
+    }
+  ];
+
+  const featuredGames = [
+    {
+      id: 'cosmic-fortune',
+      title: 'Cosmic Fortune',
+      rating: 4.8,
+      players: '23K명',
+      imagePlaceholder: '🚀',
+      category: 'cosmic',
+      onClick: () => console.log('Cosmic Fortune')
+    },
+    {
+      id: 'royal-roulette',
+      title: 'Royal Roulette',
+      rating: 4.7,
+      players: '18K명',
+      imagePlaceholder: '🎰',
+      category: 'casino',
+      onClick: () => router.push('/roulette')
+    },
+    {
+      id: 'rps-battle',
+      title: 'RPS Battle',
+      rating: 4.5,
+      players: '956명',
+      imagePlaceholder: '✂️',
+      category: 'battle',
+      onClick: () => console.log('RPS Battle')
+    },
+    {
+      id: 'lucky-gacha',
+      title: 'Lucky Gacha',
+      rating: 4.9,
+      players: '3.1K명',
+      imagePlaceholder: '🎁',
+      category: 'gacha',
+      onClick: () => console.log('Lucky Gacha')
     }
   ];
 
   return (
-    <div className="min-h-screen"
+    <div className="min-h-screen flex flex-col"
          style={{ 
            backgroundColor: 'var(--color-background-primary)',
            color: 'var(--color-text-primary)',
-           fontFamily: 'var(--font-primary)',
-           display: 'grid',
-           gridTemplateRows: 'var(--app-header-height-mobile) 1fr var(--bottom-nav-height)',
-           gridTemplateAreas: '"header" "main" "footer"'
+           fontFamily: 'var(--font-primary)'
          }}>
 
-      <style jsx>{`
-        @media (min-width: 768px) {
-          div {
-            grid-template-rows: var(--app-header-height-desktop) 1fr var(--bottom-nav-height);
-          }
-        }
-      `}</style>
-
-      {/* Main Content Area - 스크롤 가능한 중앙 정렬 */}
-      <div className="overflow-y-auto flex justify-center"
-           style={{
-             gridArea: 'main',
-             minHeight: '100%'
-           }}>
+      {/* Main Content - 스크롤 가능 영역 */}
+      <main className="flex-1 overflow-y-auto" 
+            style={{ 
+              paddingTop: 'calc(var(--app-header-height-mobile) + 1rem)',
+              paddingBottom: 'calc(var(--bottom-nav-height) + 1.5rem)'
+            }}>
         
-        <div className="w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
+        <div className="container mx-auto px-4 py-6 sm:py-8 lg:py-12 max-w-6xl space-y-8 sm:space-y-10 lg:space-y-12">
           
-          {/* 웰컴 섹션 */}
-          <div className="text-center mb-8">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+          {/* 웰컴 섹션 - 중앙 정렬 강화 */}
+          <div className="text-center px-4 py-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 break-words leading-tight">
               <span style={{ color: 'var(--color-purple-primary)' }}>환영합니다!</span>
             </h2>
-            <p className="text-base sm:text-lg" style={{ color: 'var(--color-text-secondary)' }}>
-              최고의 카지노 게임을 즐겨보세요
-            </p>
           </div>
 
           {/* 빠른 시작 */}
-          <section className="mb-12">
+          <section>
             <h3 className="text-xl sm:text-2xl font-bold mb-6">⚡ 빠른 시작</h3>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {quickActions.map((action) => (
                 <QuickStartItem
                   key={action.id}
@@ -131,19 +114,12 @@ export default function CleanCasinoDashboard() {
           </section>
 
           {/* 인기 게임 */}
-          <section className="mb-12">
+          <section>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl sm:text-2xl font-bold">🔥 인기 게임</h3>
-              <Button
-                variant="text"
-                size="sm"
-                onClick={() => router.push('/games')}
-              >
-                모든 게임 보기 →
-              </Button>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {featuredGames.map((game) => (
                 <GameCard
                   key={game.id}
@@ -158,30 +134,103 @@ export default function CleanCasinoDashboard() {
             </div>
           </section>
 
-          {/* 행동 유도 */}
-          <section className="text-center py-8 sm:py-12 mb-8">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-6 sm:mb-8">🎰 지금 시작하세요!</h3>
-            <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+          {/* 행동 유도 - 반응형 간격 적용 */}
+          <section className="text-center py-8 sm:py-12 lg:py-16 mb-12 sm:mb-16 lg:mb-8 w-full flex flex-col items-center justify-center">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6 sm:mb-8 lg:mb-10 px-4 break-words leading-tight text-center">
+              🎮 지금 시작하세요!
+            </h3>
+            <div className="w-full flex flex-col sm:flex-row px-4 gap-[10px] sm:gap-[15px] lg:gap-[20px]" 
+                 style={{ 
+                   display: 'flex !important', 
+                   justifyContent: 'center !important', 
+                   alignItems: 'center !important',
+                   maxWidth: '32rem',
+                   margin: '0 auto'
+                 }}>
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() => router.push('/games')}
-                className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4"
+                onClick={() => console.log('게임 플레이')}
+                className="w-full sm:w-auto min-w-[160px] sm:min-w-[180px] lg:min-w-[200px] py-3 sm:py-4 text-base sm:text-lg"
               >
                 🎮 게임 플레이
               </Button>
+              
               <Button
                 variant="secondary"
                 size="lg"
-                onClick={() => router.push('/wallet')}
-                className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4"
+                onClick={() => console.log('토큰 충전')}
+                className="w-full sm:w-auto min-w-[160px] sm:min-w-[180px] lg:min-w-[200px] py-3 sm:py-4 text-base sm:text-lg"
               >
                 💰 토큰 충전
               </Button>
             </div>
           </section>
+          
         </div>
-      </div>
+      </main>
+
+      <style jsx>{`
+        /* 모바일: 반응형, 데스크탑: 고정 크기 + 중앙 정렬 */
+        body {
+          overflow-x: hidden;
+        }
+        
+        .container {
+          margin-left: auto;
+          margin-right: auto;
+        }
+        
+        /* 반응형 패딩 조정 */
+        @media (min-width: 768px) {
+          main {
+            padding-top: calc(var(--app-header-height-desktop) + 1.5rem);
+            padding-bottom: calc(var(--bottom-nav-height) + 2rem);
+          }
+        }
+        
+        @media (min-width: 1024px) {
+          main {
+            padding-top: calc(var(--app-header-height-desktop) + 2rem);
+            padding-bottom: calc(var(--bottom-nav-height) + 2.5rem);
+          }
+        }
+        
+        /* 데스크탑에서만 고정 크기 + 중앙 정렬 */
+        @media (min-width: 1200px) {
+          body {
+            width: 1200px;
+            margin: 0 auto;
+            background: var(--color-background-primary);
+          }
+          
+          .container {
+            width: 1200px !important;
+            max-width: none !important;
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+        }
+        
+        /* 모든 화면에서 버튼 중앙 정렬 강화 */
+        .button-container {
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+          text-align: center !important;
+        }
+        
+        /* 섹션 자체도 중앙 정렬 */
+        section {
+          text-align: center !important;
+        }
+        
+        /* 모든 div에 중앙 정렬 강제 적용 */
+        section div {
+          justify-content: center !important;
+          align-items: center !important;
+        }
+      `}</style>
     </div>
   );
 }

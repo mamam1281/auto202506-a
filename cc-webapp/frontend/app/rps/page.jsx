@@ -1,14 +1,24 @@
 // cc-webapp/frontend/app/rps/page.jsx
 'use client';
 
-import React from 'react'; // React import for clarity
-import RPSGame from '@/components/archive/RPSGame';
-// import Head from 'next/head'; // For Pages Router. App Router uses metadata export.
-import { useEffect } from 'react'; // For setting document title if needed in client component
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 
+// Placeholder RPSGame component
+function RPSGame({ userId }) {
+  return (
+    <div className="flex items-center justify-center h-80 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg border border-purple-500/30">
+      <div className="text-center">
+        <div className="text-6xl mb-4">✂️</div>
+        <p className="text-lg text-gray-300">가위바위보 게임 (개발중)</p>
+        <p className="text-sm text-gray-500 mt-2">User ID: {userId}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function RPSPage() {
-  const currentUserId = 1; // As per guideline, using a placeholder
+  const currentUserId = 1;
 
   // If this page must be a Client Component and needs to set the title:
   useEffect(() => {

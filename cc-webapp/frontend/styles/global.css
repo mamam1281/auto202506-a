@@ -1156,7 +1156,6 @@ button {
     min-width: 120px; /* 64px에서 120px로 증가하여 고정 너비 확보 */
     min-height: 32px; /* 더 낮게 */
     font-size: 11px; /* 12px에서 11px로 추가 축소 */
-    line-height: 1.2;
   }
 
   .btn-primary, .btn-accent, .btn-success, .btn-error {
@@ -2240,5 +2239,15 @@ button {
     100% {
       transform: translateX(100%);
     }
+  }
+
+  /* Layout System - Header Sticky */
+  .layout-header-sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    width: 100%;
   }
 } /* @layer components 닫힘 */

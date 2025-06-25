@@ -1,13 +1,23 @@
 // cc-webapp/frontend/app/slots/page.jsx
 'use client';
 
-import React from 'react';
-import SlotMachine from '@/components/archive/SlotMachine';
-// import Head from 'next/head'; // For Pages Router. App Router uses metadata export.
-import { useEffect } from 'react'; // For setting document title if needed in client component
+import React, { useEffect } from 'react';
+
+// Placeholder SlotMachine component
+function SlotMachine({ userId }) {
+  return (
+    <div className="flex items-center justify-center h-80 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg border border-purple-500/30">
+      <div className="text-center">
+        <div className="text-6xl mb-4">🎰</div>
+        <p className="text-lg text-gray-300">슬롯 머신 (개발중)</p>
+        <p className="text-sm text-gray-500 mt-2">User ID: {userId}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function SlotsPage() {
-  const currentUserId = 1; // As per guideline, using a placeholder
+  const currentUserId = 1;
 
   // For App Router, metadata should ideally be exported from a Server Component,
   // or from this page if it were a Server Component.
