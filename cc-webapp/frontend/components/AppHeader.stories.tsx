@@ -189,10 +189,4 @@ export const GlassmorphismEffect: Story = {
   },
 };
 
-export const decorators = [
-  (Story) => (
-    <div style={{ paddingLeft: '1rem' }}> {/* pl-4와 동일한 16px 여백 */}
-      <Story />
-    </div>
-  ),
-];
+// decorators 제거 - 전역 Redux Provider 데코레이터를 사용해야 함

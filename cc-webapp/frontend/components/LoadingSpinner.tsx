@@ -35,35 +35,21 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   if (variant === 'modern') {
     return (
       <div className={`${currentSizeClass} inline-flex items-center justify-center ${className}`}>
-        <motion.div
-          className={`w-full h-full rounded-full box-border
+        <div
+          className={`loading-spinner w-full h-full rounded-full box-border
                       ${currentBorderWidthClass}
-                      border-muted border-t-primary border-r-[#A855F7]`} // slate-800 -> muted, purple-500 -> primary
-          // borderColor: '#1F2937', // border-muted (mapped from slate-800)
-          // borderTopColor: '#8B5CF6', // border-t-primary
-          // borderRightColor: '#A855F7' // No direct theme color, use arbitrary
-          animate={{ rotate: 360 }}
-          transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                      border-muted border-t-primary border-r-purple-500`}
         />
       </div>
     );
   }  // classic
   return (
     <div className={`${currentSizeClass} inline-flex items-center justify-center ${className}`}>
-      <motion.div
-        className="w-full h-full"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-      >
-        <div
-          className={`w-full h-full rounded-full box-border border-solid
-                      ${currentBorderWidthClass}
-                      border-transparent border-t-warning border-r-[#EAB308]`} // amber-500 -> warning
-          // borderColor: 'transparent', -> border-transparent
-          // borderTopColor: '#F59E0B', -> border-t-warning
-          // borderRightColor: '#EAB308' // No direct theme color, use arbitrary
-        />
-      </motion.div>
+      <div
+        className={`loading-spinner w-full h-full rounded-full box-border border-solid
+                    ${currentBorderWidthClass}
+                    border-transparent border-t-amber-500 border-r-yellow-500`}
+      />
     </div>
   );
 };

@@ -1,10 +1,7 @@
-/* Tailwind CSS directives - Base, Components, Utilities */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind CSS v4 directives */
+@import "tailwindcss";
 
-/* Custom variants for theming - e.g., dark mode */
-@custom-variant dark (&:is(.dark *));
+/* Custom variants for theming will be handled in tailwind.config.js */
 
 /*
   1. 컬러 시스템
@@ -1140,7 +1137,7 @@ button {
     user-select: none;
     white-space: nowrap;
     box-shadow: 0 2px 8px 0 rgba(91,48,246,0.08), 0 1px 4px 0 rgba(0,0,0,0.08);    padding: 8px 24px; /* 더 슬림하게 */
-    min-width: 64px;
+    min-width: 120px; /* 64px에서 120px로 증가하여 고정 너비 확보 */
     min-height: 32px; /* 더 낮게 */
     font-size: 11px; /* 12px에서 11px로 추가 축소 */
     line-height: 1.2;
@@ -1164,129 +1161,232 @@ button {
     box-shadow: 0 0 0 2px var(--background),
                 0 0 0 4px var(--ring); /* ring 색상 사용 */
   }
-  /* Primary Button (Blue) - Gradient + Glow */
+  /* Primary Button - 고정 색상 스타일 */
   .btn-primary {
-    background: linear-gradient(135deg, #5B30F6 0%, #8054F2 100%);
-    color: #fff;
+    background: var(--color-primary-charcoal) !important;
+    color: var(--color-text-primary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     box-shadow: 
-      0 4px 15px rgba(91, 48, 246, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(91, 48, 246, 0.4);
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   }
   .btn-primary:hover {
-    background: linear-gradient(135deg, #8054F2 0%, #5B30F6 100%);
-    color: #fff;
+    background: rgba(45, 45, 45, 0.9) !important;
+    color: var(--color-text-primary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
     box-shadow: 
-      0 6px 20px rgba(91, 48, 246, 0.4),
-      0 0 25px rgba(91, 48, 246, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-  }  /* Secondary Button (Gray) - 훨씬 더 연한 색상으로 수정 */
+      0 4px 12px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-1px) !important;
+  }
+  .btn-primary:active {
+    background: rgba(35, 35, 35, 1) !important;
+    box-shadow: 
+      inset 0 2px 4px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    transform: translateY(0) !important;
+  }  /* Secondary Button - 고정 색상 스타일 */
   .btn-secondary {
-    background: linear-gradient(135deg, #94A3B8 0%, #CBD5E1 100%);
-    color: #1E293B;
-    border: 1px solid #E2E8F0;
+    background: var(--color-neutral-dark) !important;
+    color: var(--color-text-primary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
     box-shadow: 
-      0 4px 15px rgba(148, 163, 184, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
   }
   .btn-secondary:hover {
-    background: linear-gradient(135deg, #CBD5E1 0%, #E2E8F0 100%);
-    color: #0F172A;
+    background: rgba(51, 51, 51, 0.9) !important;
+    color: var(--color-text-primary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
     box-shadow: 
-      0 6px 20px rgba(148, 163, 184, 0.35),
-      0 0 15px rgba(148, 163, 184, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    transform: translateY(-1px);
+      0 4px 12px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+    transform: translateY(-1px) !important;
+  }
+  .btn-secondary:active {
+    background: rgba(40, 40, 40, 1) !important;
+    box-shadow: 
+      inset 0 2px 4px rgba(0, 0, 0, 0.25),
+      0 1px 2px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(0) !important;
   }
 
-  /* Accent Button (Orange/Red) - Fire Effect */
+  /* Accent Button - 보라색 그라데이션 (글로우 효과 1단계 낮춤) */
   .btn-accent {
-    background: linear-gradient(135deg, #FF4516 0%, #F59E0B 100%);
+    background: linear-gradient(135deg, var(--color-purple-primary) 0%, var(--color-purple-secondary) 50%, var(--color-purple-tertiary) 100%);
     color: #fff;
     box-shadow: 
-      0 4px 15px rgba(255, 69, 22, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 69, 22, 0.4);
+      0 3px 12px rgba(91, 48, 246, 0.25),
+      0 0 15px rgba(135, 13, 209, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(91, 48, 246, 0.4);
+    position: relative;
+    overflow: hidden;
   }
+  
+  .btn-accent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-accent:hover::before {
+    left: 100%;
+  }
+  
   .btn-accent:hover {
-    background: linear-gradient(135deg, #F59E0B 0%, #FF4516 100%);
+    background: linear-gradient(135deg, var(--color-purple-secondary) 0%, var(--color-purple-tertiary) 50%, var(--color-purple-primary) 100%);
     color: #fff;
     box-shadow: 
-      0 6px 20px rgba(255, 69, 22, 0.4),
-      0 0 25px rgba(245, 158, 11, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-  }  /* Success Button (Green) - Nature Glow */
+      0 5px 18px rgba(91, 48, 246, 0.35),
+      0 0 20px rgba(128, 84, 242, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px) scale(1.02);
+  }  /* Success Button - 그린 그라데이션 (글로우 효과 1단계 낮춤) */
   .btn-success {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    background: linear-gradient(135deg, var(--color-success) 0%, #059669 50%, #34D399 100%);
     color: #fff;
     box-shadow: 
-      0 4px 15px rgba(16, 185, 129, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      0 3px 12px rgba(16, 185, 129, 0.25),
+      0 0 15px rgba(52, 211, 153, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(16, 185, 129, 0.4);
+    position: relative;
+    overflow: hidden;
   }
+  
+  .btn-success::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-success:hover::before {
+    left: 100%;
+  }
+  
   .btn-success:hover {
-    background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+    background: linear-gradient(135deg, #059669 0%, #34D399 50%, var(--color-success) 100%);
     color: #fff;
     box-shadow: 
-      0 6px 20px rgba(16, 185, 129, 0.4),
-      0 0 25px rgba(16, 185, 129, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
+      0 5px 18px rgba(16, 185, 129, 0.35),
+      0 0 20px rgba(52, 211, 153, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px) scale(1.02);
   }
-  /* Error Button (Red) - Alert Glow */
+
+  /* Error Button - 레드 그라데이션 (글로우 효과 1단계 낮춤) */
   .btn-error {
-    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-    color: #ffffff; /* 명확한 흰색으로 수정 */
+    background: linear-gradient(135deg, var(--color-error) 0%, #DC2626 50%, #EF4444 100%);
+    color: #ffffff;
     box-shadow: 
-      0 4px 15px rgba(239, 68, 68, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.4);
+      0 3px 12px rgba(185, 12, 41, 0.25),
+      0 0 15px rgba(239, 68, 68, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(185, 12, 41, 0.4);
+    position: relative;
+    overflow: hidden;
   }
+  
+  .btn-error::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-error:hover::before {
+    left: 100%;
+  }
+  
   .btn-error:hover {
-    background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
-    color: #ffffff; /* 명확한 흰색으로 수정 */
+    background: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, var(--color-error) 100%);
+    color: #ffffff;
     box-shadow: 
-      0 6px 20px rgba(239, 68, 68, 0.4),
-      0 0 25px rgba(239, 68, 68, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-  }  /* Info Button (Cyan/Teal) - 청록색으로 완전히 변경 */
-  .btn-info {
-    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
-    color: #fff;
-    box-shadow: 
-      0 4px 15px rgba(6, 182, 212, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(6, 182, 212, 0.4);
+      0 5px 18px rgba(185, 12, 41, 0.35),
+      0 0 20px rgba(239, 68, 68, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px) scale(1.02);
   }
-  .btn-info:hover {
-    background: linear-gradient(135deg, #0891B2 0%, #0E7490 100%);
+
+  /* Info Button - 시안 그라데이션 (글로우 효과 1단계 낮춤) */
+  .btn-info {
+    background: linear-gradient(135deg, var(--color-info) 0%, #0891B2 50%, #22D3EE 100%);
     color: #fff;
     box-shadow: 
-      0 6px 20px rgba(6, 182, 212, 0.4),
-      0 0 25px rgba(6, 182, 212, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-  }  /* Outline Button - 테두리 매우 명확하게 수정 */
-  .btn-outline {
-    background: rgba(91, 48, 246, 0.05);
-    border: 3px solid #5B30F6; /* 3px로 더 두껍게 */
-    color: #5B30F6;
+      0 3px 12px rgba(19, 91, 121, 0.25),
+      0 0 15px rgba(34, 211, 238, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(19, 91, 121, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.7s;
+  }
+  
+  .btn-info:hover::before {
+    left: 100%;
+  }
+  
+  .btn-info:hover {
+    background: linear-gradient(135deg, #0891B2 0%, #22D3EE 50%, var(--color-info) 100%);
+    color: #fff;
     box-shadow: 
-      0 2px 10px rgba(91, 48, 246, 0.15),
-      inset 0 0 20px rgba(91, 48, 246, 0.05);
-    font-weight: 700; /* 더 두꺼운 폰트 */
+      0 5px 18px rgba(19, 91, 121, 0.35),
+      0 0 20px rgba(34, 211, 238, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px) scale(1.02);
+  }  /* Outline Button - 이중 테두리 효과 */
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--color-purple-primary);
+    color: var(--color-purple-primary);
+    box-shadow: 
+      0 0 0 2px transparent,
+      inset 0 0 0 1px var(--color-purple-primary),
+      0 2px 8px rgba(91, 48, 246, 0.1);
+    font-weight: 600;
+    position: relative;
   }
   .btn-outline:hover {
-    background: linear-gradient(135deg, #5B30F6 0%, #8054F2 100%);
-    color: #fff;
-    border-color: #8054F2;
-    border-width: 3px; /* 호버 시에도 동일한 두께 유지 */
+    background: rgba(91, 48, 246, 0.05);
+    color: var(--color-purple-secondary);
+    border: 2px solid var(--color-purple-secondary);
     box-shadow: 
-      0 4px 15px rgba(91, 48, 246, 0.4),
-      0 0 25px rgba(91, 48, 246, 0.3);
+      0 0 0 2px var(--color-purple-primary),
+      inset 0 0 0 1px var(--color-purple-secondary),
+      0 4px 12px rgba(91, 48, 246, 0.2);
     transform: translateY(-1px);
   }
 
@@ -1381,17 +1481,26 @@ button {
     0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
     100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
   }/* Button Size Classes (더 슬림한 크기) */
+.btn-sm {
+  height: 28px;
+  padding: 4px 16px;
+  font-size: 10px;
+  border-radius: 18px;
+  min-width: 100px; /* 작은 버튼도 최소 너비 확보 */
+}
 .btn-md {
   height: 32px; /* 더 얇게 */
   padding: 6px 20px; /* 더 컴팩트 */
   font-size: 12px; /* 13px에서 12px로 축소 */
   border-radius: 20px;
+  min-width: 120px; /* 중간 버튼 최소 너비 */
 }
 .btn-lg {
   height: 36px; /* 더 얇게 */
   padding: 8px 24px;
   font-size: 13px; /* 14px에서 13px로 축소 */
   border-radius: 22px;
+  min-width: 140px; /* 큰 버튼 최소 너비 */
 }
 
 /* Button Icon Styles */
@@ -1874,5 +1983,63 @@ button {
   /* bg-gradient 유틸리티 클래스 추가 확인 */
   .bg-gradient {
     background-image: var(--gradient-purple-primary);
+  }
+
+  /* Bottom Navigation Bar - 하단 고정 네비게이션 */
+  .bottom-nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: var(--background);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    min-height: 80px;
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    min-width: 60px;
+    position: relative;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .nav-indicator-bar {
+    background: var(--color-purple-primary);
+  }
+
+  /* Loading Spinner 개선 */
+  .loading-spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Ice Glassmorphism 효과 추가 */
+  .ice-glassmorphism {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 } /* @layer components 닫힘 */

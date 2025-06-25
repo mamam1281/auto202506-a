@@ -62,21 +62,7 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
               damping: 17,
               duration: 0.2
             }}
-          >            {isActive && (
-              <motion.div 
-                className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full nav-indicator-bar"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0 }}
-                transition={{ 
-                  type: "spring", 
-                  stiffness: 500, 
-                  damping: 25,
-                  duration: 0.4 
-                }}
-                layoutId="activeIndicator" // framer-motion의 layoutId로 부드러운 전환
-              />
-            )}            <IconComponent 
+          >            <IconComponent 
               size={iconSize} 
               className={`mb-0.5 transition-colors duration-normal ${
                 isActive ? 'text-purple-primary' : 'text-muted-foreground'

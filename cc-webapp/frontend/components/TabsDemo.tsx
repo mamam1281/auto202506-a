@@ -1,10 +1,26 @@
 import React, { useState } from 'react';
 import Tabs, { TabItem } from './Tabs';
-import Card from './Card';
+import { BaseCard } from './Basecard';
 import Button from './Button';
 import Checkbox from './Checkbox';
 import RadioButton from './RadioButton';
 import { Home, User, Settings, Bell, Star } from 'lucide-react';
+
+// Card 컴포넌트를 BaseCard로 래핑
+const Card = ({ title, children, className, ...props }: { 
+  title?: string; 
+  children: React.ReactNode; 
+  className?: string; 
+}) => (
+  <BaseCard className={className} {...props}>
+    <div className="space-y-4">
+      {title && (
+        <h3 className="text-lg font-semibold text-card-foreground">{title}</h3>
+      )}
+      <div>{children}</div>
+    </div>
+  </BaseCard>
+);
 
 const TabsDemo: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');

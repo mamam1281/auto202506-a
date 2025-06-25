@@ -28,11 +28,11 @@ const Avatar: React.FC<AvatarProps> = ({
   // 크기 클래스 결정
   const sizeClass = (() => {
     switch (size) {
-      case 'sm': return 'w-10 h-10 text-[var(--font-size-body)]'; // 40px
-      case 'md': return 'w-12 h-12 text-[var(--font-size-h5)]'; // 48px
-      case 'lg': return 'w-16 h-16 text-[var(--font-size-h4)]'; // 64px
-      case 'xl': return 'w-20 h-20 text-[var(--font-size-h3)]'; // 80px
-      default: return 'w-12 h-12 text-[var(--font-size-h5)]';
+      case 'sm': return 'w-10 h-10'; // 40px
+      case 'md': return 'w-12 h-12'; // 48px
+      case 'lg': return 'w-16 h-16'; // 64px
+      case 'xl': return 'w-20 h-20'; // 80px
+      default: return 'w-12 h-12';
     }
   })();
 
@@ -46,10 +46,10 @@ const Avatar: React.FC<AvatarProps> = ({
 
   // 이모지 크기 매핑 (이모지를 더 크게 표시)
   const emojiSizeMapping = {
-    sm: 'text-lg', // 18px
-    md: 'text-xl', // 20px
-    lg: 'text-2xl', // 24px
-    xl: 'text-3xl', // 30px
+    sm: 'text-sm', // 14px
+    md: 'text-base', // 16px
+    lg: 'text-lg', // 18px
+    xl: 'text-xl', // 20px
   };
 
   // 대체 콘텐츠 결정
@@ -61,12 +61,12 @@ const Avatar: React.FC<AvatarProps> = ({
       if (isEmoji) {
         return <span className={`${emojiSizeMapping[size]} leading-none`}>{fallback}</span>;
       }
-      return <span className="uppercase font-[var(--font-weight-semibold)]">{fallback}</span>;
+      return <span className={`avatar-fallback ${size} uppercase font-semibold`}>{fallback}</span>;
     }
     if (alt && alt !== 'User Avatar') {
       // 이니셜 표시
       const initials = alt.split(' ').map(word => word.charAt(0)).join('').slice(0, 2);
-      return <span className="uppercase font-[var(--font-weight-semibold)]">{initials}</span>;
+      return <span className={`avatar-fallback ${size} uppercase font-semibold`}>{initials}</span>;
     }
     return <User size={iconSizeMapping[size]} className="text-[var(--color-text-secondary)]" />;
   };
@@ -116,7 +116,7 @@ const Avatar: React.FC<AvatarProps> = ({
             </div>
           )}
         </>
-      ) : (        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--color-purple-primary)] to-[var(--color-purple-secondary)]">
+      ) : (        <div className="avatar-fallback w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--color-purple-primary)] to-[var(--color-purple-secondary)]">
           {(isLoading && !src) ? (
             <div className="animate-spin rounded-full w-1/3 h-1/3 border-2 border-white border-t-transparent" />
           ) : (

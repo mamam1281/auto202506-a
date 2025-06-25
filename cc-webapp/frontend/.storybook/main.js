@@ -31,8 +31,7 @@ const config = {
     config.module.rules = config.module.rules.filter(rule => 
       !rule.test || !(rule.test instanceof RegExp) || !rule.test.test('.css')
     );
-    
-    // 전역 CSS 처리를 위한 새 규칙 추가
+      // 전역 CSS 처리를 위한 새 규칙 추가
     config.module.rules.push({
       test: /\.css$/,
       exclude: /\.module\.css$/,
@@ -54,8 +53,7 @@ const config = {
         },
       ],
     });
-    
-    // CSS 모듈 처리
+      // CSS 모듈 처리
     config.module.rules.push({
       test: /\.module\.css$/,
       use: [

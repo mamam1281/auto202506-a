@@ -2,7 +2,23 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 import Modal from './Modal';
 import Button from './Button';
-import Card from './Card';
+import { BaseCard } from './Basecard';
+
+// Card 컴포넌트를 BaseCard로 래핑
+const Card = ({ title, children, className, ...props }: { 
+  title?: string; 
+  children: React.ReactNode; 
+  className?: string; 
+}) => (
+  <BaseCard className={className} {...props}>
+    <div className="space-y-4">
+      {title && (
+        <h3 className="text-lg font-semibold text-card-foreground">{title}</h3>
+      )}
+      <div>{children}</div>
+    </div>
+  </BaseCard>
+);
 
 const meta: Meta<typeof Modal> = {
   title: 'Components/Modal',

@@ -2,7 +2,7 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'accent' | 'success' | 'error' | 'info' | 'outline' | 'text' | 'neon' | 'glass' | 'animated' | 'kakao-yellow' | 'kakao-blue' | 'kakao-gradient' | 'kakao-white';
+  variant?: 'primary' | 'secondary' | 'accent' | 'success' | 'error' | 'info' | 'outline' | 'text' | 'neon' | 'glass' | 'animated';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   iconOnly?: boolean;
   rounded?: boolean;
@@ -59,23 +59,15 @@ const Button: React.FC<ButtonProps> = ({
     if (onClick) onClick(e);
   };
   
-  // 카카오 스타일 버튼인지 확인
-  const isKakaoStyle = variant.startsWith('kakao-');
-  
   // 기본 클래스 및 변형 클래스 설정
-  const baseClasses = isKakaoStyle ? 'btn-kakao' : 'btn';
+  const baseClasses = 'btn';
   const variantClass = `btn-${variant}`;
-    // 크기 클래스 설정
-  let sizeClass = '';
-  if (isKakaoStyle) {
-    sizeClass = size === 'lg' ? 'btn-kakao-lg' : size === 'sm' ? 'btn-kakao-sm' : size === 'xs' ? 'btn-kakao-xs' : '';
-  } else {
-    sizeClass = iconOnly ? `btn-icon btn-icon-${size}` : `btn-${size}`;
-  }
+  
+  // 크기 클래스 설정
+  const sizeClass = iconOnly ? `btn-icon btn-icon-${size}` : `btn-${size}`;
   
   const roundedClass = rounded ? 'rounded-full' : '';
-  const rippleClass = ripple ? 'btn-ripple' : ''; // 모든 버튼에 리플 효과 적용 가능하도록 변경
-  const disabledClass = disabled && isKakaoStyle ? 'btn-kakao-disabled' : '';
+  const rippleClass = ripple ? 'btn-ripple' : '';
 
   const conditionalClasses: string[] = [];
   if (Icon && iconPosition === 'right' && !iconOnly) {
@@ -114,7 +106,6 @@ const Button: React.FC<ButtonProps> = ({
     sizeClass,
     roundedClass,
     rippleClass,
-    disabledClass,
     ...conditionalClasses,
     className,
   ].filter(Boolean).join(' ');

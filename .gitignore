@@ -208,3 +208,6 @@ node_modules/
 *.swp
 *.swo
 *~
+
+*storybook.log
+storybook-static

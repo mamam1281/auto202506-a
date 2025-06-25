@@ -48,15 +48,6 @@ module.exports = {  content: [
         'neon-purple': {
           '1': 'var(--neon-purple-1)',
           '2': 'var(--neon-purple-2)',
-          '3': 'var(--neon-purple-3)',
-          '4': 'var(--neon-purple-4)',
-        },
-        
-        'brand': {
-          'primary': 'var(--brand-primary)',
-          'secondary': 'var(--brand-secondary)',
-          'accent': 'var(--brand-accent)',
-          'highlight': 'var(--brand-highlight)',
         },
 
         // Gacha Tier Colors
