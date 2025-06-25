@@ -28,14 +28,14 @@ export function RecentActivityCard({ activities }: RecentActivityCardProps) {
   };
 
   return (
-    <BaseCard className="w-full max-w-sm">
-      <div className="p-4 space-y-4">
+    <BaseCard className="w-full max-w-sm min-h-[380px]">
+      <div className="p-4 space-y-6 flex flex-col h-full">
         <div className="flex items-center gap-2">
           <Clock className="w-5 h-5 text-[var(--muted-foreground)]" />
-          <h3 className="text-[var(--foreground)] font-medium">최근 활동</h3>
+          <h3 className="text-base font-medium text-[var(--color-text-primary)]">최근 활동</h3>
         </div>
 
-        <div className="space-y-3 max-h-48 overflow-y-auto">
+        <div className="space-y-3 max-h-56 overflow-y-auto flex-1">
           {activities.map((activity) => (
             <div key={activity.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-[var(--muted)]/30 transition-colors">
               <div className="flex-shrink-0 mt-1">

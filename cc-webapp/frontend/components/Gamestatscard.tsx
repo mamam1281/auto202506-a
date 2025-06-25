@@ -10,11 +10,11 @@ interface GameStatsCardProps {
 
 export function GameStatsCard({ gamesPlayed, winRate, bestScore, totalPlayTime }: GameStatsCardProps) {
   return (
-    <BaseCard variant="info" className="w-full max-w-sm">
-      <div className="p-4 space-y-4">
+    <BaseCard variant="info" className="w-full max-w-sm min-h-[350px]">
+      <div className="p-4 space-y-6 flex flex-col justify-between h-full">
         <div className="flex items-center gap-2">
           <Gamepad2 className="w-5 h-5 text-[var(--color-info)]" />
-          <h3 className="text-[var(--foreground)] font-medium">게임 통계</h3>
+          <h3 className="text-base font-medium text-[var(--color-text-primary)]">게임 통계</h3>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -48,7 +48,5 @@ export function GameStatsCard({ gamesPlayed, winRate, bestScore, totalPlayTime }
         </div>
       </div>
     </BaseCard>
-  );
-}
   );
 }

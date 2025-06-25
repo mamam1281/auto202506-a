@@ -1810,7 +1810,7 @@ button {
   }
   
   .card .btn:first-child {
-    margin-top: 10; /* 첫 번째 버튼은 위쪽 마진 제거 */
+    margin-top: 10px; /* 첫 번째 버튼은 위쪽 마진 제거 */
   }
   
   .card .btn:last-child {

@@ -4,7 +4,7 @@ import { PointsCard } from './PointsCard';
 import { ProfileCard } from './ProfileCard';
 import { NotificationCard } from './NotificationCard';
 import { RecentActivityCard } from './RecentActivityCard';
-import { InputFormCard } from './Inputcard';
+import { InputCard } from './Inputcard';
 import { GameCard } from './GameCard';
 import { BaseCard } from './Basecard';
 

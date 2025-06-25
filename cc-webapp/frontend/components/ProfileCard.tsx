@@ -27,8 +27,8 @@ export function ProfileCard({
   const progressPercentage = (experiencePoints / maxExperience) * 100;
 
   return (
-    <BaseCard className="w-full max-w-sm">
-      <div className="space-y-4">
+    <BaseCard className="w-full max-w-sm min-h-[320px]">
+      <div className="p-4 space-y-6 flex flex-col justify-between h-full">
         <div className="flex items-center gap-3">
           <div className="relative">
             <ImageWithFallback
@@ -42,8 +42,8 @@ export function ProfileCard({
           </div>
           
           <div className="flex-1">
-            <h4 className="text-card-foreground">{name}</h4>
-            <p className="text-muted-foreground">@{username}</p>
+            <h4 className="text-base font-medium text-[var(--color-text-primary)]">{name}</h4>
+            <p className="text-sm text-[var(--color-text-secondary)]">@{username}</p>
           </div>
 
           <Button

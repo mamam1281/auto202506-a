@@ -8,17 +8,10 @@ import { GameStatsCard } from './Gamestatscard';
 import { InputCard } from './Inputcard';
 import { NotificationCard } from './NotificationCard';
 import { PointsCard } from './PointsCard';
-import { ProfileCard } from './ProfileCard';
 import { RecentActivityCard } from './RecentActivityCard';
 
-// 버튼 컴포넌트들 (필요한 곳에서 사용)
+// 버튼 컴포넌트들
 import Button from './Button';
-import ButtonGroup from './ButtonGroup';
-
-// 새로운 UI 컴포넌트들
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
-import { Separator } from './separator';
-import ImageWithFallback from './ImageWithFallback';
 
 const meta: Meta<typeof BaseCard> = {
   title: 'Components/CardSystemIntegrated',
@@ -52,111 +45,129 @@ export const AllCardsGallery: Story = {
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* 제목 섹션 */}
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl md:text-4xl font-bold text-[var(--foreground)]">
+        <div className="text-center space-y-4 mb-8">
+          <h1 className="text-base font-bold text-[var(--foreground)]">
             카드 시스템 갤러리
           </h1>
-          <p className="text-lg text-[var(--muted-foreground)] max-w-2xl mx-auto">
+          <p className="text-sm text-[var(--muted-foreground)] max-w-2xl mx-auto">
             프로젝트의 모든 카드 컴포넌트를 확인할 수 있습니다.
           </p>
         </div>
 
         {/* 카드 그리드 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           
-          {/* 로그인 카드 */}
-          <InputCard
-            title="로그인"
-            onSubmit={action('login-submitted')}
-          />
+            {/* 로그인 카드 */}
+            <div className="mb-6">
+              <InputCard
+                title="로그인"
+                onSubmit={action('login-submitted')}
+              />
+            </div>
 
-          {/* 포인트 카드 */}
-          <PointsCard
-            currentPoints={12450}
-            weeklyChange={320}
-            rank={7}
-            nextReward="다음 보상 프리미엄 아이템"
-          />
+            {/* 포인트 카드 */}
+            <div className="mb-6">
+              <PointsCard
+                currentPoints={12450}
+                weeklyChange={320}
+                rank={7}
+                nextReward="다음 보상 프리미엄 아이템"
+              />
+            </div>
 
-          {/* 게임 통계 카드 */}
-          <GameStatsCard
-            gamesPlayed={127}
-            winRate={73.2}
-            bestScore={98765}
-            totalPlayTime="45시간 12분"
-          />
+            {/* 게임 통계 카드 */}
+            <div className="mb-6">
+              <GameStatsCard
+                gamesPlayed={127}
+                winRate={73.2}
+                bestScore={98765}
+                totalPlayTime="45시간 12분"
+              />
+            </div>
 
-          {/* 피드백 카드 - 성공 */}
-          <FeedbackCard
-            type="success"
-            title="업무 목표 달성!"
-            message="오늘 목표를 모두 완료했습니다."
-            onDismiss={action('dismissed')}
-          />
+            {/* 피드백 카드 - 성공 */}
+            <div className="mb-6">
+              <FeedbackCard
+                type="success"
+                title="업무 목표 달성!"
+                message="오늘 목표를 모두 완료했습니다."
+                onDismiss={action('dismissed')}
+              />
+            </div>
 
-          {/* 최근 활동 카드 */}
-          <RecentActivityCard
-            activities={[
-              {
-                id: '1',
-                type: 'game',
-                title: '퍼즐 게임 완료',
-                description: '레벨 15 클리어!',
-                timestamp: '2분 전'
-              },
-              {
-                id: '2',
-                type: 'achievement',
-                title: '새로운 업적 달성',
-                description: '연속 승리 10회',
-                timestamp: '1시간 전'
-              },
-              {
-                id: '3',
-                type: 'message',
-                title: '새 메시지',
-                description: '팀 채팅에 새 메시지가 있습니다',
-                timestamp: '2시간 전'
-              }
-            ]}
-          />
+            {/* 최근 활동 카드 */}
+            <div className="mb-6">
+              <RecentActivityCard
+                activities={[
+                  {
+                    id: '1',
+                    type: 'game',
+                    title: '퍼즐 게임 완료',
+                    description: '레벨 15 클리어!',
+                    timestamp: '2분 전'
+                  },
+                  {
+                    id: '2',
+                    type: 'achievement',
+                    title: '새로운 업적 달성',
+                    description: '연속 승리 10회',
+                    timestamp: '1시간 전'
+                  },
+                  {
+                    id: '3',
+                    type: 'message',
+                    title: '새 메시지',
+                    description: '팀 채팅에 새 메시지가 있습니다',
+                    timestamp: '2시간 전'
+                  }
+                ]}
+              />
+            </div>
 
-          {/* 프로필 카드 */}
-          <ProfileCard
-            name="김개발자"
-            username="@dev_kim"
-            avatarUrl="/api/placeholder/80/80"
-            level={25}
-            experiencePoints={750}
-            maxExperience={1000}
-            onViewProfile={action('view profile')}
-            onSettings={action('settings')}
-          />
+            {/* 피드백 카드 - 경고 */}
+            <div className="mb-6">
+              <FeedbackCard
+                type="warning"
+                title="주의 필요"
+                message="일부 설정을 확인해 주세요."
+                onDismiss={action('dismissed')}
+              />
+            </div>
 
-          {/* 알림 카드 */}
-          <NotificationCard
-            title="새로운 업데이트"
-            description="새로운 기능이 추가되었습니다."
-            actionText="확인"
-            onAction={action('action')}
-          />
+            {/* 피드백 카드 - 에러 */}
+            <div className="mb-6">
+              <FeedbackCard
+                type="error"
+                title="오류 발생"
+                message="연결에 문제가 발생했습니다."
+                onDismiss={action('dismissed')}
+              />
+            </div>
 
-          {/* 피드백 카드 - 경고 */}
-          <FeedbackCard
-            type="warning"
-            title="주의 필요"
-            message="일부 설정을 확인해 주세요."
-            onDismiss={action('dismissed')}
-          />
+            {/* 알림 카드 추가 */}
+            <div className="mb-6">
+              <NotificationCard
+                title="새로운 업데이트"
+                description="새로운 기능이 추가되었습니다. 지금 확인해보세요!"
+                actionText="확인하기"
+                onAction={action('notification action')}
+                onDismiss={action('notification dismissed')}
+              />
+            </div>
 
-          {/* 피드백 카드 - 에러 */}
-          <FeedbackCard
-            type="error"
-            title="오류 발생"
-            message="연결에 문제가 발생했습니다."
-            onDismiss={action('dismissed')}
-          />
-          
+            {/* 시스템 알림 카드 */}
+            <div className="mb-6">
+              <NotificationCard
+                title="시스템 점검 예정"
+                description="내일 새벽 2시~4시 시스템 점검이 예정되어 있습니다."
+                actionText="자세히 보기"
+                onAction={action('maintenance details')}
+                onDismiss={action('maintenance dismissed')}
+              />
+            </div>
+            
+          </div>
         </div>
       </div>
     </div>
@@ -269,6 +280,42 @@ export const RecentActivityShowcase: Story = {
   },
 };
 
+export const NotificationShowcase: Story = {
+  render: () => (
+    <div className="min-h-screen bg-[var(--background)] p-6 flex items-center justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
+        <NotificationCard
+          title="친구 요청"
+          description="새로운 친구 요청이 3개 있습니다."
+          actionText="확인하기"
+          onAction={action('friend requests')}
+          onDismiss={action('dismissed')}
+        />
+        <NotificationCard
+          title="일일 보상"
+          description="오늘의 로그인 보상을 받아보세요!"
+          actionText="수령하기"
+          onAction={action('daily reward')}
+        />
+        <NotificationCard
+          title="시스템 점검"
+          description="내일 새벽 2시~4시 시스템 점검이 예정되어 있습니다."
+          actionText="자세히 보기"
+          onAction={action('maintenance')}
+          onDismiss={action('dismissed')}
+        />
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: '다양한 알림 상황을 보여주는 카드들입니다.',
+      },
+    },
+  },
+};
+
 export const FeedbackCards: Story = {
   render: () => (
     <div className="min-h-screen bg-[var(--background)] p-6">
@@ -302,7 +349,7 @@ export const FeedbackCards: Story = {
   parameters: {
     docs: {
       description: {
-        story: '다양한 피드백 상태를 보여주는 카드들입니다.',
+        story: '성공, 경고, 오류 상황에 대한 피드백 카드들입니다.',
       },
     },
   },

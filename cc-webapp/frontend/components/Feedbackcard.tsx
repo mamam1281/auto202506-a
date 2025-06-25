@@ -22,14 +22,14 @@ export function FeedbackCard({ type, title, message, onDismiss }: FeedbackCardPr
   };
 
   return (
-    <BaseCard variant={variantMap[type]} className="w-full max-w-sm">
-      <div className="flex items-start justify-between p-4">
+    <BaseCard variant={variantMap[type]} className="w-full max-w-sm min-h-[200px]">
+      <div className="flex items-start justify-between p-4 h-full">
         <div className="flex items-start gap-3 flex-1">
           <div className="flex-shrink-0 mt-0.5">
             {iconMap[type]}
           </div>
           <div className="space-y-1">
-            <h4 className="text-[var(--foreground)] font-medium">{title}</h4>
+            <h4 className="text-base font-medium text-[var(--color-text-primary)]">{title}</h4>
             <p className="text-[var(--muted-foreground)] text-sm">{message}</p>
           </div>
         </div>

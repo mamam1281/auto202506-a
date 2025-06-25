@@ -12,14 +12,14 @@ export function PointsCard({ currentPoints, weeklyChange, rank, nextReward }: Po
   const isPositive = weeklyChange >= 0;
 
   return (
-    <BaseCard variant="accent" className="w-full max-w-sm">
-      <div className="p-4 space-y-4">
+    <BaseCard variant="accent" className="w-full max-w-sm min-h-[300px]">
+      <div className="p-4 space-y-6 flex flex-col justify-between h-full">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Star className="w-5 h-5 text-[var(--color-accent-amber)]" />
-            <h3 className="text-[var(--foreground)] font-medium">포인트</h3>
+            <h3 className="text-base font-medium text-[var(--color-text-primary)]">포인트</h3>
           </div>
-          <div className="text-[var(--muted-foreground)] text-sm">#{rank}</div>
+          <div className="text-[var(--color-text-secondary)] text-sm">#{rank}</div>
         </div>
 
         <div className="space-y-2">
@@ -32,7 +32,7 @@ export function PointsCard({ currentPoints, weeklyChange, rank, nextReward }: Po
             <span className={`text-sm font-medium ${isPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`}>
               {isPositive ? '+' : ''}{weeklyChange}P
             </span>
-            <span className="text-[var(--muted-foreground)] text-sm">이번 주</span>
+            <span className="text-[var(--color-text-secondary)] text-sm">이번 주</span>
           </div>
         </div>
 
