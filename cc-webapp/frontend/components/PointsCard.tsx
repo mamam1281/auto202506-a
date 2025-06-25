@@ -13,33 +13,33 @@ export function PointsCard({ currentPoints, weeklyChange, rank, nextReward }: Po
 
   return (
     <BaseCard variant="accent" className="w-full max-w-sm">
-      <div className="space-y-4">
+      <div className="p-4 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Star className="w-5 h-5 text-chart-5" />
-            <h3 className="text-card-foreground">포인트</h3>
+            <Star className="w-5 h-5 text-[var(--color-accent-amber)]" />
+            <h3 className="text-[var(--foreground)] font-medium">포인트</h3>
           </div>
-          <div className="text-muted-foreground">#{rank}</div>
+          <div className="text-[var(--muted-foreground)] text-sm">#{rank}</div>
         </div>
 
         <div className="space-y-2">
-          <div className="text-2xl text-chart-5">
+          <div className="text-2xl font-bold text-[var(--color-accent-amber)]">
             {currentPoints.toLocaleString()}P
           </div>
           
           <div className="flex items-center gap-2">
-            <TrendingUp className={`w-4 h-4 ${isPositive ? 'text-chart-2' : 'text-destructive'}`} />
-            <span className={`${isPositive ? 'text-chart-2' : 'text-destructive'}`}>
+            <TrendingUp className={`w-4 h-4 ${isPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`} />
+            <span className={`text-sm font-medium ${isPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`}>
               {isPositive ? '+' : ''}{weeklyChange}P
             </span>
-            <span className="text-muted-foreground">이번 주</span>
+            <span className="text-[var(--muted-foreground)] text-sm">이번 주</span>
           </div>
         </div>
 
         {nextReward && (
-          <div className="p-3 rounded-lg bg-card border border-border">
-            <div className="text-muted-foreground">다음 보상</div>
-            <div className="text-card-foreground">{nextReward}</div>
+          <div className="p-3 rounded-lg bg-[var(--card)] border border-[var(--border)]">
+            <div className="text-[var(--muted-foreground)] text-xs">다음 보상</div>
+            <div className="text-[var(--foreground)] text-sm font-medium mt-1">{nextReward}</div>
           </div>
         )}
       </div>

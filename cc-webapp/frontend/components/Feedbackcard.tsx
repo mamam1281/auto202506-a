@@ -10,9 +10,9 @@ interface FeedbackCardProps {
 
 export function FeedbackCard({ type, title, message, onDismiss }: FeedbackCardProps) {
   const iconMap = {
-    success: <Check className="w-5 h-5 text-chart-2" />,
-    error: <X className="w-5 h-5 text-destructive" />,
-    warning: <AlertCircle className="w-5 h-5 text-chart-5" />
+    success: <Check className="w-5 h-5 text-[var(--color-success)]" />,
+    error: <X className="w-5 h-5 text-[var(--color-error)]" />,
+    warning: <AlertCircle className="w-5 h-5 text-[var(--color-accent-amber)]" />
   };
 
   const variantMap = {
@@ -23,22 +23,22 @@ export function FeedbackCard({ type, title, message, onDismiss }: FeedbackCardPr
 
   return (
     <BaseCard variant={variantMap[type]} className="w-full max-w-sm">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between p-4">
         <div className="flex items-start gap-3 flex-1">
           <div className="flex-shrink-0 mt-0.5">
             {iconMap[type]}
           </div>
           <div className="space-y-1">
-            <h4 className="text-card-foreground">{title}</h4>
-            <p className="text-muted-foreground">{message}</p>
+            <h4 className="text-[var(--foreground)] font-medium">{title}</h4>
+            <p className="text-[var(--muted-foreground)] text-sm">{message}</p>
           </div>
         </div>
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className="flex-shrink-0 p-1 rounded-md hover:bg-muted/50 transition-colors"
+            className="flex-shrink-0 p-1 rounded-md hover:bg-[var(--muted)]/50 transition-colors"
           >
-            <X className="w-4 h-4 text-muted-foreground" />
+            <X className="w-4 h-4 text-[var(--muted-foreground)]" />
           </button>
         )}
       </div>

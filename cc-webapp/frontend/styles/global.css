@@ -156,13 +156,13 @@
   --font-mono: 'IBM Plex Sans KR', monospace;
 
   /* Heading Sizes */
-  --font-size-h1: 24px;
-  --font-size-h2: 22px;
-  --font-size-h3: 18px;
-  --font-size-h4: 16px; /* 추가: 가이드에는 없지만 h1-h3 사이로 자연스럽게 흐름 */
-  --font-size-h5: 14px; /* 추가: h4보다 2px 작은 크기 */
+  --font-size-h1: 22px;
+  --font-size-h2: 20px;
+  --font-size-h3: 16px;
+  --font-size-h4: 14px; /* 추가: 가이드에는 없지만 h1-h3 사이로 자연스럽게 흐름 */
+  --font-size-h5: 12px; /* 추가: h4보다 2px 작은 크기 */
   /* Body & Token Sizes */  
-  --font-size-body: 16px;
+  --font-size-body: 14px;
   --font-size-caption: 12px;
   --font-size-xs: 8px; /* BottomNavigationBar 한글 폰트 1px 줄임 */
   --font-size-token: 12px;
@@ -232,7 +232,7 @@
   --icon-xs: 12px;
   --icon-sm: 16px;
   --icon-md: 20px;
-  --icon-lg: 24px;
+  --icon-lg: 26px;
   --icon-xl: 36px; /* AppHeader 아이콘용 */
   /* App Header specific variables */
   --app-header-height-mobile: 56px; /* 모바일 헤더 높이 */
@@ -1662,15 +1662,15 @@ button {
     min-width: 0; /* flex/grid 아이템이 공간이 부족할 때 최소 0px까지 줄어들 수 있도록 허용 */
     max-width: 100%; /* 불필요하게 늘어나지 않도록 (안전장치) */
     height: auto; /* 콘텐츠에 따라 높이 자동 조절 (찌그러짐 방지) */
-    min-height: 200px; /* 최소 높이 원래대로 축소 (280px → 200px) */
+    min-height: 280px; /* 최소 높이 원래대로 축소 (280px → 200px) */
     display: flex;
     flex-direction: column;
     
     /* 카드 내부 패딩 - 모바일 친화적으로 조정 */
-    padding: 24px 20px; /* 세로 패딩 대폭 축소 (60px → 24px) */
+    padding: 24px 24px; /* 세로 패딩 대폭 축소 (60px → 24px) */
     
     /* 카드 내부 요소 간 기본 간격 - 가독성 최적화 */
-    gap: 12px; /* 40px → 12px로 대폭 축소하여 가독성 향상 */
+    gap: 16px; /* 40px → 12px로 대폭 축소하여 가독성 향상 */
     
     /* 텍스트 정렬 및 중앙 배치 - 중앙 정렬 복원! */
     align-items: center; /* flex-start → center로 복원 */
@@ -1772,7 +1772,7 @@ button {
   }
   
   .card-content-tight {
-    gap: 8px; /* 24px → 8px 더 촘촘하게 */
+    gap: 16px; /* 24px → 8px 더 촘촘하게 */
     padding: var(--spacing-1); /* 8px */
   }
   
@@ -1786,7 +1786,7 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center; /* flex-start → center 복원 */
-    gap: 8px; /* 20px → 8px 텍스트간 간격 축소 */
+    gap: 12px; /* 20px → 8px 텍스트간 간격 축소 */
     text-align: center;
     width: 100%;
   }
@@ -1796,9 +1796,9 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 84px; /* 72px → 84px 더 크게! */
-    height: 84px;
-    font-size: 84px;
+    width: 26px; /* 72px → 84px 더 크게! */
+    height: 26px;
+    font-size: 26px;
     flex-shrink: 0; /* 카드가 작아져도 아이콘 크기 유지 */
     margin-bottom: 16px; /* 아이콘 하단 여백 증가 (8px → 16px) */
   }
@@ -1810,11 +1810,11 @@ button {
   }
   
   .card .btn:first-child {
-    margin-top: 0; /* 첫 번째 버튼은 위쪽 마진 제거 */
+    margin-top: 10; /* 첫 번째 버튼은 위쪽 마진 제거 */
   }
   
   .card .btn:last-child {
-    margin-bottom: 0; /* 마지막 버튼은 아래쪽 마진 제거 */
+    margin-bottom: 10; /* 마지막 버튼은 아래쪽 마진 제거 */
   }
 
   /* 버튼 그룹이 있는 카드에서는 그룹 전체에 여백 */
@@ -1836,7 +1836,7 @@ button {
   /* GameCard 반응형 그리드 시스템 */
   .game-card {
     width: 100%; /* 그리드가 width를 제어하도록 */
-    height: 200px; /* 데스크톱 기본 높이 */
+    height: 280px; /* 데스크톱 기본 높이 */
     background: var(--color-primary-charcoal);
     border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);

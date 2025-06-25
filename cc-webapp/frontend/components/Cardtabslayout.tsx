@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { ElegantTabs, ElegantTabsList, ElegantTabsTrigger, ElegantTabsContent } from '../tabs/ElegantTabs';
-import { InputFormCard } from '../cards/InputFormCard';
-import { FeedbackCard } from '../cards/FeedbackCard';
-import { NotificationCard } from '../cards/NotificationCard';
-import { PointsCard } from '../cards/PointsCard';
-import { ProfileCard } from '../cards/ProfileCard';
-import { RecentActivityCard } from '../cards/RecentActivityCard';
-import { GameStatsCard } from '../cards/GameStatsCard';
+import { InputFormCard } from './Inputcard';
+import { FeedbackCard } from './Feedbackcard';
+import { NotificationCard } from './Notificationcard';
+import { PointsCard } from './Pointscard';
+import { ProfileCard } from './Profilecard';
+import { RecentActivityCard } from './Recentactivitycard';
+import { GameStatsCard } from './Gamestatscard';
 
 import { 
   Home, 

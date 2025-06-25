@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 // Assuming Button is now in @/components/Button
-import { Button } from '@/components/Button';
+import { Button } from '@/Button';
 import { HelpCircle, Info, ChevronUp, ChevronDown, ListOrdered, Award } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 // Assuming slotLogic.ts is in @/utils/slotLogic
