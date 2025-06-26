@@ -68,7 +68,7 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
             className="flex flex-col items-center gap-3 sm:gap-4"
           >
             <motion.div
-              key={currentThinkingEmojiIndex} // Key change triggers re-animation for emoji
+              key={`emoji-${currentThinkingEmojiIndex}`}
               initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
               exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
@@ -80,7 +80,7 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
             </motion.div>
             {/* Pulsing dots are a bit generic, using dynamic message instead */}
             <motion.p
-              key={currentThinkingMessageIndex} // Key change triggers re-animation for message
+              key={`msg-${currentThinkingMessageIndex}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -100,38 +100,44 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
             transition={{ duration:0.6, type: "spring" as const, stiffness: 200, damping: 15 }} // More dynamic spring
             className="flex flex-col items-center gap-2 sm:gap-3"
           >
-            <motion.div
-              initial={{ scale: 0.5, opacity: 0, rotate: -90 }}
-              animate={{
-                scale: [0.5, 1.25, 1], // Bounce effect
-                opacity: 1,
-                rotate: 0,
-              }}
-              transition={{
-                duration: 0.7,
-                ease: "backInOut",
-                times: [0, 0.7, 1]
-              }}
-              className="text-6xl sm:text-7xl lg:text-8xl" // Larger chosen emoji
-              style={{
-                color: choiceConfig[choice].colorVar,
-                filter: `drop-shadow(0 0 15px ${choiceConfig[choice].colorVar}66) drop-shadow(0 5px 10px rgba(0,0,0,0.4))`
-              }}
-            >
-              {choiceConfig[choice].emoji}
-            </motion.div>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
-              className="text-text-primary text-base sm:text-lg font-semibold" // Bolder label
-              style={{
-                 color: choiceConfig[choice].colorVar,
-                 textShadow: '0 1px 3px rgba(0,0,0,0.6)'
-              }}
-            >
-              {choiceConfig[choice].label}
-            </motion.p>
+            {choiceConfig[choice] && (
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0, rotate: -90 }}
+                animate={{
+                  scale: 1,
+                  opacity: 1,
+                  rotate: 0,
+                }}
+                transition={{
+                  duration: 0.7,
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 10,
+                  bounce: 0.5
+                }}
+                className="text-6xl sm:text-7xl lg:text-8xl" // Larger chosen emoji
+                style={{
+                  color: choiceConfig[choice].colorVar,
+                  filter: `drop-shadow(0 0 15px ${choiceConfig[choice].colorVar}66) drop-shadow(0 5px 10px rgba(0,0,0,0.4))`
+                }}
+              >
+                {choiceConfig[choice].emoji}
+              </motion.div>
+            )}
+            {choiceConfig[choice] && (
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="text-text-primary text-base sm:text-lg font-semibold" // Bolder label
+                style={{
+                  color: choiceConfig[choice].colorVar,
+                  textShadow: '0 1px 3px rgba(0,0,0,0.6)'
+                }}
+              >
+                {choiceConfig[choice].label}
+              </motion.p>
+            )}
           </motion.div>
         ) : (
           <motion.div

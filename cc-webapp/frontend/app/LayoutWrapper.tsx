@@ -44,8 +44,8 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
           hasNotifications={false}
         />
         
-        {/* 메인 콘텐츠 영역 - flex-grow로 공간 차지 */}
-        <main className="flex-grow">
+        {/* 메인 콘텐츠 영역 - 하단 네비게이션을 위한 패딩 추가 */}
+        <main className="flex-grow pb-20">
           {children}
         </main>
         

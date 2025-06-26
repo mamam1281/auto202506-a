@@ -33,8 +33,15 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   // Font size: text-xs (12px)
   return (
     <nav
-      className="bottom-nav-bar"
-      // global.css의 .bottom-nav-bar 클래스를 사용하여 완전한 하단 고정 보장
+      className="fixed bottom-0 left-0 right-0 z-50 h-20 w-full min-w-full bg-gray-900/95 border-t border-gray-700 backdrop-blur-md flex items-center justify-around px-4 py-2 shadow-lg"
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        minWidth: '100vw'
+      }}
     >
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
@@ -45,11 +52,10 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
               console.log('BottomNav onClick triggered:', item.id, item.path);
               onTabClick(item.id, item.path);
             }}            className={`
-              bottom-nav-item relative
-              transition-all duration-normal
+              flex flex-col items-center justify-center gap-0.5 p-2 rounded-xl min-w-14 transition-all duration-200
               ${isActive
-                ? 'text-purple-primary bg-purple-primary/10 shadow-lg' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
+                ? 'text-purple-400 bg-purple-400/10 shadow-lg' 
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
               }
             `}
             aria-current={isActive ? 'page' : undefined}
@@ -64,18 +70,12 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             }}
           >            <IconComponent 
               size={iconSize} 
-              className={`mb-0.5 transition-colors duration-normal ${
-                isActive ? 'text-purple-primary' : 'text-muted-foreground'
+              className={`mb-0.5 transition-colors duration-200 ${
+                isActive ? 'text-purple-400' : 'text-gray-400'
               }`} 
-              style={{
-                color: isActive ? 'var(--color-purple-primary)' : undefined
-              }}
-            />            <span className={`text-[10px] font-normal transition-colors duration-normal ${
-              isActive ? 'text-purple-primary/80' : 'text-muted-foreground/70'
+            />            <span className={`text-[10px] font-normal transition-colors duration-200 ${
+              isActive ? 'text-purple-300' : 'text-gray-500'
             }`}
-              style={{
-                color: isActive ? 'rgba(91, 48, 246, 0.8)' : 'rgba(209, 213, 219, 0.7)'
-              }}
             >
               {item.label}
             </span>

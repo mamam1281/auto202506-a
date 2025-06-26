@@ -75,7 +75,8 @@ export const ChoiceButtons: React.FC<ChoiceButtonsProps> = ({
   disabled
 }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5"> {/* Adjusted gaps */}
+    <div className="w-full flex justify-center">
+      <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-12 w-full max-w-3xl"> {/* 단순하고 확실한 중앙정렬 */}
       {(Object.entries(choiceConfig) as [Choice, typeof choiceConfig[Choice]][]).map(
         ([choice, config]) => {
           const isSelected = selectedChoice === choice;
@@ -112,8 +113,8 @@ export const ChoiceButtons: React.FC<ChoiceButtonsProps> = ({
                 aria-pressed={isSelected}
                 aria-label={`${config.label} 선택 버튼`}
                 className={`
-                  relative w-full h-20 sm:h-24 lg:h-[100px] xl:h-[110px] /* Harmonized height */
-                  flex flex-col items-center justify-center gap-1 sm:gap-1.5
+                  relative w-full h-24 sm:h-32 md:h-36 lg:h-40 xl:h-44 /* 모바일에서 더 적절한 높이 */
+                  flex flex-col items-center justify-center gap-2 sm:gap-3
                   rounded-xl sm:rounded-2xl /* Standardized border radius */
                   transition-all duration-300 ease-out /* Faster transition */
                   group overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
@@ -175,7 +176,7 @@ export const ChoiceButtons: React.FC<ChoiceButtonsProps> = ({
 
                 {/* Emoji */}
                 <motion.div
-                  className="text-2xl sm:text-3xl lg:text-4xl relative z-[5]" // Ensure emoji is above overlays
+                  className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl relative z-[5]" // 모바일에서 더 적절한 이모지 크기
                   animate={ isSelected ? { scale: [1, 1.15, 1] } : {} }
                   transition={{ duration: 0.7, ease: "backInOut" }} // Smoother pop
                   style={{ filter: 'drop-shadow(0 3px 5px rgba(0,0,0,0.35))' }}
@@ -185,7 +186,7 @@ export const ChoiceButtons: React.FC<ChoiceButtonsProps> = ({
 
                 {/* Label */}
                 <motion.span
-                  className="text-xs sm:text-sm lg:text-base font-semibold relative z-[5]" // Ensure label is above overlays
+                  className="text-xs sm:text-base md:text-lg lg:text-xl font-semibold relative z-[5]" // 모바일에서 더 적절한 라벨 크기
                   style={{
                     color: isSelected ? config.lightColorVar : 'var(--text-primary)',
                     textShadow: '0 1px 3px rgba(0,0,0,0.5)',
@@ -226,6 +227,7 @@ export const ChoiceButtons: React.FC<ChoiceButtonsProps> = ({
           );
         }
       )}
+      </div>
     </div>
   );
 };

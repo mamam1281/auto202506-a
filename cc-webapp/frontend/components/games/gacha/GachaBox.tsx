@@ -150,10 +150,10 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
 
   return (
     <div className={cn(
-      'w-full max-w-lg mx-auto p-4 sm:p-6 rounded-2xl',
+      'w-full max-w-lg mx-auto rounded-2xl',
       'bg-[var(--card)] border border-[var(--border)]',
       className
-    )}>
+    )} style={{ paddingTop: '48px', paddingBottom: '48px', paddingLeft: '24px', paddingRight: '24px' }}>
       {/* Ticket Counter is displayed above GachaBox */}
       <motion.div
         className="flex justify-center mb-4 sm:mb-6"

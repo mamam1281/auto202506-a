@@ -107,13 +107,13 @@ function ItemGallery() {
       transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
     >
       <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl sm:rounded-2xl overflow-hidden shadow-lg">
-        <div style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '16px', paddingRight: '16px' }}>
+        <div className="p-4 pb-0">
           <h3 className="text-lg sm:text-xl flex items-center justify-center sm:justify-start gap-2 text-[var(--foreground)] font-semibold">
             <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--primary)]" />
             <span>획득 가능한 아이템 등급</span>
           </h3>
         </div>
-        <div style={{ paddingTop: '0px', paddingBottom: '100px', paddingLeft: '16px', paddingRight: '16px' }}>
+        <div className="p-4 pt-0">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {galleryItems.map((item, index) => (
               <motion.div
@@ -216,7 +216,7 @@ function GachaPageContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
         >
-          <div style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl sm:rounded-2xl overflow-hidden shadow-xl p-6">
             <Suspense
               fallback={
                 <div className="flex items-center justify-center py-12">
@@ -239,7 +239,7 @@ function GachaPageContent() {
           transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
         >
           {/* Pity System */}
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
+          <div className="bg-[var(--card)] border border-[var(--border)] p-6 rounded-xl">
             <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)] flex items-center gap-2">
               <Gift className="w-5 h-5 text-[var(--primary)]" />
               보상 시스템
@@ -251,7 +251,7 @@ function GachaPageContent() {
           </div>
 
           {/* Tips */}
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
+          <div className="bg-[var(--card)] border border-[var(--border)] p-6 rounded-xl">
             <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)] flex items-center gap-2">
               <Zap className="w-5 h-5 text-[var(--secondary)]" />
               팁
