@@ -1,282 +1,232 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// import { SlotReel } from './SlotReel'; // To be created
-// import { BetControl } from './BetControl'; // To be created
-import { Button } from '@/components/Button'; // Assuming Button component is in @/components/Button
-import { Crown, Star, Zap, Diamond, TrendingUp, MessageSquare } from 'lucide-react';
-// import confetti from 'canvas-confetti'; // Will be properly imported later
-
-// Placeholder for slotLogic functions - to be replaced with actual imports
-const placeholderCheckWinCondition = (reels: string[], bet: number) => ({ isWin: false, payout: 0, winType: '', winningPositions: [] });
-const PLACEHOLDER_SYMBOLS = ['❓', '❓', '❓'];
-
-// Placeholder for Redux hooks - to be replaced
-const useAppSelector = (selector: any) => selector(mockReduxState);
-const mockReduxState = {
-  user: { cyberTokenBalance: 1000, streakCount: 0 },
-};
-// const useAppDispatch = () => (action: any) => console.log('Dispatching:', action);
-
+import Button from '../../Button';
+import { SlotReel } from './SlotReel';
+import { BetControl } from './BetControl';
+import { GameFooter } from './GameFooter';
+import { checkWinCondition, generateSpinResult } from '../../../utils/slotLogic';
+import { cn } from '../../../utils/cn';
+import { Trophy, Zap, Star, Volume2, VolumeX } from 'lucide-react';
 
 export type GameState = 'idle' | 'spinning' | 'result';
 
 interface SlotMachineProps {
   className?: string;
-  // Props from backend/Redux will be added: userId, initialTokenBalance, initialStreakCount etc.
 }
 
 export const SlotMachine: React.FC<SlotMachineProps> = ({ className }) => {
   const [gameState, setGameState] = useState<GameState>('idle');
-  const [reels, setReels] = useState<string[]>(['💎', '👑', '🎰']); // Initial symbols
-  const [betAmount, setBetAmount] = useState(10); // Default bet
-  const [winResult, setWinResult] = useState<any | null>(null); // Type from slotLogic
+  const [reels, setReels] = useState<string[]>(['💎', '🔔', '🍒']); // Initial symbols
+  const [betAmount, setBetAmount] = useState(10);
+  const [winResult, setWinResult] = useState<any | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [jackpot, setJackpot] = useState(125780); // Example initial jackpot
-
-  // State from Redux (placeholders for now)
-  const { cyberTokenBalance, streakCount } = useAppSelector(state => state.user);
-  // const dispatch = useAppDispatch();
-
-  // Mock API call duration
-  const API_CALL_DURATION = 1000; // ms
+  const [jackpot, setJackpot] = useState(125780);
+  const [balance, setBalance] = useState(1000);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+  const [shake, setShake] = useState(false);
 
   // Jackpot animation effect
   useEffect(() => {
     const interval = setInterval(() => {
-      setJackpot(prev => prev + Math.floor(Math.random() * 7) + 1);
+      setJackpot(prev => prev + Math.floor(Math.random() * 10) + 1);
     }, 2500);
     return () => clearInterval(interval);
   }, []);
 
   const handleSpin = useCallback(async () => {
-    // Logic to be implemented in later steps
-    // 1. Check if user has enough tokens
-    // 2. Set gameState to 'spinning', isSpinning to true
-    // 3. Deduct betAmount from cyberTokenBalance (via Redux action)
-    // 4. Call POST /games/slot/spin API
-    // 5. Handle API response: update reels, winResult, cyberTokenBalance, streakCount
-    // 6. Trigger animations, sounds, confetti
-    // 7. Set gameState to 'result', isSpinning to false
-    // 8. Call POST /api/actions, POST /api/feedback
-    console.log('Spin initiated');
+    if (balance < betAmount || isSpinning) return;
+
     setIsSpinning(true);
     setGameState('spinning');
+    setBalance(prev => prev - betAmount);
+    setWinResult(null);
+    setShake(false);
 
     // Simulate API call and reel spin
     setTimeout(() => {
-      const newReels = [
-        PLACEHOLDER_SYMBOLS[Math.floor(Math.random() * PLACEHOLDER_SYMBOLS.length)],
-        PLACEHOLDER_SYMBOLS[Math.floor(Math.random() * PLACEHOLDER_SYMBOLS.length)],
-        PLACEHOLDER_SYMBOLS[Math.floor(Math.random() * PLACEHOLDER_SYMBOLS.length)],
-      ];
+      const newReels = generateSpinResult();
+      const result = checkWinCondition(newReels, betAmount);
+      
       setReels(newReels);
-      const result = placeholderCheckWinCondition(newReels, betAmount);
       setWinResult(result);
-      setGameState('result');
-      setIsSpinning(false);
+      
       if (result.isWin) {
-        // triggerConfetti(); // Confetti logic to be added
-        console.log('WIN!', result.payout);
-      } else {
-        console.log('LOSE');
+        setBalance(prev => prev + result.payout);
+        if (result.payout > betAmount * 5) {
+          setShake(true);
+          setTimeout(() => setShake(false), 1000);
+        }
       }
-    }, 2000 + API_CALL_DURATION); // Staggered stop simulation + API
-  }, [betAmount, cyberTokenBalance]);
+      
+      setIsSpinning(false);
+      setGameState('result');
+      
+      // Reset to idle after showing result
+      setTimeout(() => {
+        setGameState('idle');
+      }, 3000);
+    }, 2000);
+  }, [betAmount, balance, isSpinning]);
 
-  const canSpin = cyberTokenBalance >= betAmount && !isSpinning;
+  const canSpin = balance >= betAmount && !isSpinning;
+
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return num.toString();
+  };
 
   return (
-    <div className={`w-full max-w-md mx-auto font-['Inter'] text-foreground ${className}`}>
-      {/* Premium Casino Style Frame */}
-      <div className="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 rounded-3xl border-2 border-[var(--brand-accent)] shadow-2xl p-4 sm:p-6 relative overflow-hidden modern-mesh-card ice-glassmorphism">
-        {/* Optional: Inner glowing border accents */}
-        <div className="absolute inset-0 rounded-3xl border-2 border-purple-500/30 animate-pulse pointer-events-none" style={{ animationDuration: '3s' }}></div>
-
-        {/* Jackpot Display */}
-        <div className="text-center mb-4 sm:mb-6">
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-amber-600/30 via-yellow-500/30 to-amber-600/30 border border-amber-400/50 rounded-2xl shadow-lg backdrop-blur-sm"
-            animate={{ boxShadow: ['0 0 10px rgba(251, 191, 36, 0.3)', '0 0 20px rgba(251, 191, 36, 0.5)', '0 0 10px rgba(251, 191, 36, 0.3)'] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <Crown className="h-5 w-5 sm:h-6 sm:w-6 text-amber-300 animate-glow" />
-            <div className="text-center">
-              <div className="text-sm sm:text-base font-bold text-amber-200 tracking-wider">MEGA JACKPOT</div>
-              <div className="text-xl sm:text-2xl font-bold text-amber-100">
-                {jackpot.toLocaleString()}
-              </div>
+    <motion.div
+      className={cn(
+        "w-full max-w-lg mx-auto bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] shadow-2xl overflow-hidden",
+        className
+      )}
+      animate={shake ? { x: [-5, 5, -5, 5, 0] } : {}}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] p-4 text-center relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-pulse"></div>
+        </div>
+        
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[var(--color-text-primary)] text-sm font-medium opacity-90">
+              Balance: <span className="text-[var(--color-accent-amber)] font-bold">{formatNumber(balance)}</span>
             </div>
-            <Crown className="h-5 w-5 sm:h-6 sm:w-6 text-amber-300 animate-glow" />
+            <Button
+              variant="text"
+              size="sm"
+              onClick={() => setIsSoundEnabled(!isSoundEnabled)}
+              className="text-[var(--color-text-primary)] hover:bg-white/10"
+            >
+              {isSoundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            </Button>
+          </div>
+          
+          <motion.div
+            className="text-center"
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <div className="text-[var(--color-text-primary)] text-xs opacity-75 mb-1">JACKPOT</div>
+            <div className="text-[var(--color-accent-amber)] text-xl sm:text-2xl font-bold tracking-wider">
+              <Trophy className="inline w-5 h-5 mr-2" />
+              {formatNumber(jackpot)}
+            </div>
           </motion.div>
         </div>
+      </div>
 
-        {/* Header/Title */}
-        <div className="text-center mb-4 sm:mb-6">
-          <motion.h1
-            className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 animate-glow"
-            // Add dynamic glow on win later
-          >
-            💎 ROYAL SLOTS 💎
-          </motion.h1>
-          <div className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent mt-2"></div>
-        </div>
-
-        {/* Reels Container Placeholder */}
-        <div className="relative mb-4 sm:mb-6">
-          <div className="bg-slate-900/70 rounded-2xl p-3 sm:p-4 border border-purple-500/30 shadow-inner">
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 h-32 sm:h-40">
-              {/* SlotReel components will go here */}
-              {reels.map((symbol, index) => (
-                <div key={index} className="bg-slate-800 rounded-lg flex items-center justify-center text-4xl sm:text-5xl border border-slate-700 shadow-md">
-                  {/* Placeholder for SlotReel component */}
-                  <span className="animate-pulse">{symbol}</span>
-                </div>
-              ))}
-            </div>
+      {/* Main Game Area */}
+      <div className="p-6">
+        {/* Slot Reels */}
+        <div className="mb-6">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 h-32 sm:h-36 mb-4">
+            {reels.map((symbol, index) => (
+              <SlotReel
+                key={index}
+                symbol={symbol}
+                isSpinning={isSpinning}
+                delayFactor={index * 0.3}
+                isWinning={winResult?.isWin && winResult?.winningPositions?.includes(index)}
+                className="bg-gradient-to-b from-[var(--color-surface-secondary)] to-[var(--color-surface-tertiary)]"
+              />
+            ))}
           </div>
-           {/* Reel Highlight Overlay (Decorative) */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-50 pointer-events-none animate-pulse" style={{animationDuration: '4s'}}></div>
+          
+          {/* Win Display */}
+          <AnimatePresence>
+            {winResult?.isWin && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.8 }}
+                className="text-center mb-4 p-3 bg-gradient-to-r from-[var(--color-accent-amber)]/20 to-[var(--color-accent-yellow)]/20 border border-[var(--color-accent-amber)]/50 rounded-lg"
+              >
+                <div className="flex items-center justify-center gap-2 text-[var(--color-accent-amber)] text-lg font-bold">
+                  <Star className="w-5 h-5" />
+                  WIN! +{winResult.payout}
+                  <Star className="w-5 h-5" />
+                </div>
+                <div className="text-[var(--color-text-secondary)] text-sm">
+                  {winResult.multiplier}x multiplier
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Win/Fail Feedback Placeholder */}
-        <AnimatePresence>
-          {gameState === 'result' && winResult && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="text-center mb-4 text-lg"
-            >
-              {winResult.isWin ? (
-                <div className="p-3 rounded-lg bg-green-500/20 text-green-300 border border-green-400/50">
-                  🎉 WIN! +{winResult.payout} (Type: {winResult.winType || 'Basic'}) 🎉
-                </div>
-              ) : (
-                <div className="p-3 rounded-lg bg-red-500/20 text-red-300 border border-red-400/50">
-                  😢 No Luck This Time! 😢
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Bet Controls */}
+        <BetControl
+          betAmount={betAmount}
+          setBetAmount={setBetAmount}
+          maxBet={Math.min(balance, 100)}
+          disabled={isSpinning}
+          className="mb-6"
+        />
 
-        {/* BetControl Placeholder - will be replaced by BetControl component */}
-        <div className="mb-4 sm:mb-6 p-3 bg-slate-800/50 rounded-xl border border-purple-500/20">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-purple-300">Bet Amount:</span>
-            <span className="text-lg font-bold text-orange-300">{betAmount} 💎</span>
-          </div>
-          {/* Actual BetControl component will have +/- buttons and quick bet options */}
-          <input
-            type="range"
-            min="5"
-            max="100"
-            step="5"
-            value={betAmount}
-            onChange={(e) => setBetAmount(Number(e.target.value))}
-            disabled={isSpinning}
-            className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
-          />
-        </div>
-
-        {/* Spin Button Area */}
-        <div className="mb-4 sm:mb-6">
+        {/* Spin Button */}
+        <div className="text-center mb-6">
           <Button
             onClick={handleSpin}
             disabled={!canSpin}
-            variant="primary" // Will use a more luxurious variant later
             size="lg"
-            className="w-full h-14 sm:h-16 text-lg sm:text-xl font-bold btn-animated bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-accent)] hover:from-[var(--brand-secondary)] hover:to-[var(--brand-highlight)] border-2 border-purple-300/70 text-white relative overflow-hidden shadow-xl hover:shadow-purple-500/50 active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed"
+            className={cn(
+              "w-full h-14 text-xl font-bold rounded-xl transition-all duration-200",
+              !canSpin 
+                ? "opacity-50 cursor-not-allowed" 
+                : "bg-gradient-to-r from-[var(--color-accent-amber)] to-[var(--color-accent-yellow)] hover:from-[var(--color-accent-yellow)] hover:to-[var(--color-accent-amber)] text-[var(--color-surface-primary)] shadow-lg hover:shadow-xl transform hover:scale-105"
+            )}
           >
-            {/* Neon pulse effect for button */}
-            {canSpin && <div className="absolute inset-0 rounded-lg border-2 border-purple-400 animate-neon-pulse opacity-70" style={{animationDuration: '1.5s'}}></div>}
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              {isSpinning ? (
-                <>
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                  >
-                    <Zap className="h-5 w-5 sm:h-6 sm:w-6" />
-                  </motion.div>
-                  SPINNING...
-                </>
-              ) : (
-                <>
-                  <Star className="h-5 w-5 sm:h-6 sm:w-6" />
-                  SPIN ({betAmount}💎)
-                </>
-              )}
-            </span>
-          </Button>
-        </div>
-
-        {/* State Display (Streak, Token Balance) */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-4 text-center mb-4 sm:mb-6">
-          <div className="p-2 sm:p-3 bg-slate-800/60 rounded-lg border border-purple-500/30">
-            <div className="text-xs sm:text-sm text-purple-300 mb-1">Cyber Tokens</div>
-            <div className="text-base sm:text-lg font-bold text-orange-300 flex items-center justify-center gap-1">
-              <Diamond size={16} className="opacity-80"/> {cyberTokenBalance.toLocaleString()}
-            </div>
-          </div>
-          <div className="p-2 sm:p-3 bg-slate-800/60 rounded-lg border border-purple-500/30">
-            <div className="text-xs sm:text-sm text-purple-300 mb-1">Current Streak</div>
-            <div className="text-base sm:text-lg font-bold text-orange-300 flex items-center justify-center gap-1">
-             <TrendingUp size={16} className="opacity-80"/> {streakCount}
-            </div>
-          </div>
-        </div>
-
-        {/* CJ AI Chat Display */}
-        <div className="mt-4 sm:mt-6 h-20"> {/* Reserve space for AI chat to prevent layout shift */}
-          <AnimatePresence mode="wait">
             <motion.div
-              key={aiChatMessage} // Animate when the message key changes
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.4, type: 'spring', stiffness: 200, damping: 25 }}
-              className="p-3 bg-gradient-to-r from-slate-800/70 via-slate-850/70 to-slate-800/70 rounded-xl border border-purple-500/40 shadow-md text-sm text-slate-200"
+              className="flex items-center justify-center gap-2"
+              animate={isSpinning ? { rotate: 360 } : {}}
+              transition={{ duration: 1, repeat: isSpinning ? Infinity : 0, ease: "linear" }}
             >
-              <div className="flex items-start gap-2.5">
-                <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-500 rounded-full flex items-center justify-center shadow-inner">
-                  <Sparkles className="w-4 h-4 text-white opacity-90" />
-                  {/* Changed from MessageSquare to Sparkles or Bot for more AI feel */}
-                </div>
-                <div className="flex-grow min-w-0">
-                  <div className="text-xs font-semibold text-purple-300 mb-0.5">CJ AI Says:</div>
-                  <p className="text-sm text-slate-200 leading-relaxed break-words">
-                    {aiChatMessage}
-                  </p>
-                </div>
-              </div>
+              <Zap className="w-6 h-6" />
+              {isSpinning ? 'SPINNING...' : 'SPIN'}
             </motion.div>
-          </AnimatePresence>
+          </Button>
+          
+          {!canSpin && balance < betAmount && (
+            <div className="text-[var(--color-status-error)] text-sm mt-2">
+              Insufficient balance
+            </div>
+          )}
+        </div>
+
+        {/* Game State Indicator */}
+        <div className="text-center mb-4">
+          <div className={cn(
+            "inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium",
+            gameState === 'idle' && "bg-[var(--color-surface-tertiary)] text-[var(--color-text-secondary)]",
+            gameState === 'spinning' && "bg-[var(--color-accent-blue)]/20 text-[var(--color-accent-blue)]",
+            gameState === 'result' && winResult?.isWin && "bg-[var(--color-status-success)]/20 text-[var(--color-status-success)]",
+            gameState === 'result' && !winResult?.isWin && "bg-[var(--color-text-muted)]/20 text-[var(--color-text-muted)]"
+          )}>
+            <div className={cn(
+              "w-2 h-2 rounded-full",
+              gameState === 'spinning' && "animate-pulse bg-[var(--color-accent-blue)]",
+              gameState === 'result' && winResult?.isWin && "bg-[var(--color-status-success)]",
+              gameState === 'result' && !winResult?.isWin && "bg-[var(--color-text-muted)]",
+              gameState === 'idle' && "bg-[var(--color-text-secondary)]"
+            )} />
+            {gameState === 'idle' && 'Ready to Play'}
+            {gameState === 'spinning' && 'Spinning...'}
+            {gameState === 'result' && (winResult?.isWin ? 'You Win!' : 'Try Again')}
+          </div>
         </div>
       </div>
-    </motion.div> // Closing the main motion.div for shake animation
-    // Original closing div was here, ensure it's correctly paired with the motion.div that has shake
+
+      {/* Footer */}
+      <GameFooter className="border-t border-[var(--color-border-secondary)]" />
+    </motion.div>
   );
 };
 
-// Default export for lazy loading or dynamic imports if needed
-  );
-};
-
-// Default export for lazy loading or dynamic imports if needed
 export default SlotMachine;
-
-// Helper: Define a simple Button component if not available globally or for quick prototyping
-// (This part would be removed if global Button is confirmed and fully compatible)
-// interface SimpleButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-//   variant?: string; // basic styling
-//   size?: string;
-// }
-// const SimpleButton: React.FC<SimpleButtonProps> = ({ children, className, ...props }) => (
-//   <button className={`px-4 py-2 rounded font-semibold transition-opacity disabled:opacity-50 ${className}`} {...props}>
-//     {children}
-//   </button>
-// );
-// --- End of placeholder Button ---

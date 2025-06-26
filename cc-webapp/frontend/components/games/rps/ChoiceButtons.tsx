@@ -15,23 +15,23 @@ const choiceConfig = {
   rock: {
     emoji: '🪨',
     label: '바위',
-    accentColorVar: 'var(--color-neutral-medium)', // Example: greyish for rock
-    lightColorVar: 'var(--color-neutral-light)',
-    shadowColorVar: 'rgba(var(--muted-rgb), 0.3)', // Using muted-rgb from globals.css
+    accentColorVar: 'var(--color-neutral-medium)', // Using neutral medium from globals.css
+    lightColorVar: 'var(--color-neutral-light)', // Using neutral light from globals.css  
+    shadowColorVar: 'rgba(160, 160, 160, 0.3)', // Using neutral medium with transparency
   },
   paper: {
     emoji: '📄',
     label: '보',
-    accentColorVar: 'var(--neon-purple-1)', // Using neon purple from globals.css
-    lightColorVar: 'var(--neon-purple-3)',
-    shadowColorVar: 'rgba(var(--accent-rgb), 0.4)', // Using accent-rgb for shadow
+    accentColorVar: 'var(--color-purple-primary)', // Using purple primary from globals.css
+    lightColorVar: 'var(--color-purple-tertiary)', // Using purple tertiary from globals.css
+    shadowColorVar: 'rgba(91, 48, 246, 0.4)', // Using purple primary with transparency
   },
   scissors: {
     emoji: '✂️',
     label: '가위',
-    accentColorVar: 'var(--color-info)', // Using info blue, similar to cyan
-    lightColorVar: 'var(--brand-highlight)', // A lighter shade, or another cyan/blue
-    shadowColorVar: 'rgba(var(--color-info-rgb), 0.4)', // Using info-rgb for shadow
+    accentColorVar: 'var(--color-info)', // Using info blue from globals.css
+    lightColorVar: 'var(--color-accent-amber)', // Using accent amber as lighter alternative
+    shadowColorVar: 'rgba(19, 91, 121, 0.4)', // Using info color with transparency
   }
 };
 
@@ -40,27 +40,27 @@ const buttonVariants = {
     scale: 1,
     y: 0,
     rotateX: 0,
-    transition: { type: "spring", stiffness: 300, damping: 30 }
+    transition: { type: "spring" as const, stiffness: 300, damping: 30 }
   },
   hover: {
     scale: 1.03, // Slightly reduced from example for subtlety
     y: -3,       // Slightly reduced
     rotateX: 4,  // Slightly reduced
     boxShadow: "0 10px 25px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)",
-    transition: { type: "spring", stiffness: 400, damping: 20 }
+    transition: { type: "spring" as const, stiffness: 400, damping: 20 }
   },
   tap: {
     scale: 0.97, // Slightly reduced
     y: 0,
     rotateX: 0,
     boxShadow: "0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(0,0,0,0.1)",
-    transition: { type: "spring", stiffness: 500, damping: 30 } // Adjusted stiffness/damping
+    transition: { type: "spring" as const, stiffness: 500, damping: 30 } // Adjusted stiffness/damping
   },
   selected: {
     scale: 1.05,
     y: -5,       // Slightly more pronounced when selected
     rotateX: 6,
-    transition: { type: "spring", stiffness: 250, damping: 20 } // Softer spring for selected state
+    transition: { type: "spring" as const, stiffness: 250, damping: 20 } // Softer spring for selected state
   },
   disabled: {
     scale: 0.95,

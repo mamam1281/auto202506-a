@@ -30,25 +30,25 @@ const resultConfig = {
     title: '🎉 승리!',
     message: '축하합니다! 당신이 이겼습니다!',
     colorVar: 'var(--color-success)',
-    glowColorVar: 'var(--color-success-rgb)', // For rgba usage in boxShadow
-    bgGradient: 'linear-gradient(135deg, rgba(var(--color-success-rgb), 0.15) 0%, rgba(var(--color-success-rgb), 0.05) 100%)',
-    borderColorVar: 'rgba(var(--color-success-rgb), 0.4)'
+    glowColorVar: '16, 185, 129', // Success green RGB values
+    bgGradient: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%)',
+    borderColorVar: 'rgba(16, 185, 129, 0.4)'
   },
   lose: {
     title: '😔 패배',
     message: '아쉽습니다. 다시 도전해보세요!',
     colorVar: 'var(--color-error)',
-    glowColorVar: 'var(--color-error-rgb)',
-    bgGradient: 'linear-gradient(135deg, rgba(var(--color-error-rgb), 0.15) 0%, rgba(var(--color-error-rgb), 0.05) 100%)',
-    borderColorVar: 'rgba(var(--color-error-rgb), 0.4)'
+    glowColorVar: '185, 12, 41', // Error red RGB values
+    bgGradient: 'linear-gradient(135deg, rgba(185, 12, 41, 0.15) 0%, rgba(185, 12, 41, 0.05) 100%)',
+    borderColorVar: 'rgba(185, 12, 41, 0.4)'
   },
   draw: {
     title: '🤝 무승부',
     message: '비겼습니다! 한 번 더 시도해보세요!',
-    colorVar: 'var(--color-warning)',
-    glowColorVar: 'var(--color-warning-rgb)',
-    bgGradient: 'linear-gradient(135deg, rgba(var(--color-warning-rgb), 0.15) 0%, rgba(var(--color-warning-rgb), 0.05) 100%)',
-    borderColorVar: 'rgba(var(--color-warning-rgb), 0.4)'
+    colorVar: 'var(--color-accent-amber)',
+    glowColorVar: '245, 158, 11', // Amber RGB values
+    bgGradient: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%)',
+    borderColorVar: 'rgba(245, 158, 11, 0.4)'
   }
 };
 
@@ -75,13 +75,13 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
       opacity: 1,
       scale: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 260, damping: 20, delay: 0.1 }
+      transition: { type: "spring" as const, stiffness: 260, damping: 20, delay: 0.1 }
     },
     exit: {
       opacity: 0,
       scale: 0.8,
       y: 30,
-      transition: { duration: 0.25, ease: "easeIn" }
+      transition: { duration: 0.25, ease: "easeIn" as const }
     }
   };
 

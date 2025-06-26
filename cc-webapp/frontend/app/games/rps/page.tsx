@@ -1,23 +1,15 @@
 'use client';
 
 import { Suspense } from 'react';
+import RPSGame from '../../../components/games/rps/RPSGame';
 
-// Placeholder LoadingSkeleton component
+// Loading skeleton for the RPS game
 function LoadingSkeleton() {
   return (
-    <div className="flex items-center justify-center h-80">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
-    </div>
-  );
-}
-
-// Placeholder RPSGame component
-function RPSGame() {
-  return (
-    <div className="flex items-center justify-center h-80 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg border border-purple-500/30">
+    <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center">
-        <div className="text-6xl mb-4">✂️</div>
-        <p className="text-lg text-gray-300">가위바위보 네온 게임 (개발중)</p>
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-accent mx-auto mb-4"></div>
+        <p className="text-muted-foreground">가위바위보 게임 로딩 중...</p>
       </div>
     </div>
   );
@@ -25,13 +17,8 @@ function RPSGame() {
 
 export default function RockPaperScissorsPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground p-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8">가위바위보 네온</h1>
-        <Suspense fallback={<LoadingSkeleton />}>
-          <RPSGame />
-        </Suspense>
-      </div>
-    </main>
+    <Suspense fallback={<LoadingSkeleton />}>
+      <RPSGame />
+    </Suspense>
   );
 }

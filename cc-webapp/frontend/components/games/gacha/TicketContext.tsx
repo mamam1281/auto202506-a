@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer, ReactNode, useCallback } from 'react';
-import type { GachaTier } from '../../../types/gacha'; // Adjusted import path
 
 // 티켓 상태 타입 정의
 interface TicketState {
@@ -99,7 +98,7 @@ export function TicketProvider({ children, initialScopedCount, initialScopedSpen
 
   const spendTicket = useCallback((): boolean => {
     if (state.count <= 0) {
-      console.warn("Attempted to spend ticket with zero balance.");
+      // Attempted to spend ticket with zero balance.
       return false;
     }
     dispatch({ type: 'SPEND_TICKET' });

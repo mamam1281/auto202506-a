@@ -58,9 +58,9 @@ const triggerWinConfetti = (): void => {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
   const colors = [
-    'var(--neon-purple-1)', 'var(--neon-purple-2)', 'var(--neon-purple-3)', 'var(--neon-purple-4)',
-    'var(--brand-accent)', 'var(--color-info)', 'var(--color-success)', 'var(--color-warning)',
-    '#a855f7', '#c084fc', '#e879f9', // Extra purples/pinks from example
+    'var(--color-purple-primary)', 'var(--color-purple-secondary)', 'var(--color-purple-tertiary)',
+    'var(--color-accent-red)', 'var(--color-info)', 'var(--color-success)', 'var(--color-accent-amber)',
+    '#a855f7', '#c084fc', '#e879f9', // Extra purples/pinks
     '#06b6d4', '#38bdf8', '#0ea5e9', // Extra cyans/blues
     '#10b981', '#34d399', '#6ee7b7', // Extra greens
     '#ec4899', '#f472b6', '#f9a8d4', // Extra pinks
@@ -103,7 +103,7 @@ const triggerWinConfetti = (): void => {
       top: ${centerY}px;
       font-size: ${size}px;
       color: ${color};
-      text-shadow: 0 0 8px ${color.replace('var(', 'rgba(var(--').replace(')', '-rgb),0.7)')}, 0 0 15px ${color.replace('var(', 'rgba(var(--').replace(')', '-rgb),0.5)')};
+      text-shadow: 0 0 8px ${color}, 0 0 15px ${color};
       pointer-events: none;
       user-select: none;
       z-index: ${10000 + i};
@@ -172,8 +172,8 @@ const addConfettiStyles = (): void => {
 
     @keyframes rps-victory-pulse { /* Renamed animation */
       0%, 100% { background: transparent; }
-      50% { background: radial-gradient(circle at 50% 50%, rgba(var(--color-success-rgb), 0.15) 0%, transparent 65%); }
-      /* Using CSS var --color-success-rgb directly */
+      50% { background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.15) 0%, transparent 65%); }
+      /* Using direct color value for success green with transparency */
     }
   `;
   document.head.appendChild(style);
@@ -193,7 +193,7 @@ const triggerVictoryFlash = (): void => {
 };
 
 // Call to add styles once when component mounts
-useEffect(() => {
+React.useEffect(() => {
   addConfettiStyles();
 }, []);
 
@@ -201,16 +201,14 @@ useEffect(() => {
 const backgroundVariants = {
   idle: {
     background: [
-      'radial-gradient(circle at 25% 75%, var(--neon-purple-1-t008) 0%, transparent 50%), radial-gradient(circle at 75% 25%, var(--color-info-t006) 0%, transparent 50%), linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%)',
-      'radial-gradient(circle at 75% 75%, var(--color-info-t008) 0%, transparent 50%), radial-gradient(circle at 25% 25%, var(--neon-purple-1-t006) 0%, transparent 50%), linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%)'
+      'radial-gradient(circle at 25% 75%, rgba(91, 48, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 75% 25%, rgba(19, 91, 121, 0.06) 0%, transparent 50%), linear-gradient(135deg, var(--color-primary-dark-navy) 0%, var(--color-primary-charcoal) 100%)',
+      'radial-gradient(circle at 75% 75%, rgba(19, 91, 121, 0.08) 0%, transparent 50%), radial-gradient(circle at 25% 25%, rgba(91, 48, 246, 0.06) 0%, transparent 50%), linear-gradient(135deg, var(--color-primary-dark-navy) 0%, var(--color-primary-charcoal) 100%)'
     ]
-    // Using placeholder transparent colors for vars not yet in globals.css
-    // e.g. var(--neon-purple-1-t008) would be rgba(var(--neon-purple-1-rgb), 0.08)
   },
   playing: {
     background: [
-      'radial-gradient(circle at 50% 50%, var(--neon-purple-1-t012) 0%, transparent 60%), radial-gradient(circle at 30% 70%, var(--color-info-t008) 0%, transparent 60%), linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%)',
-      'radial-gradient(circle at 70% 30%, var(--color-info-t012) 0%, transparent 60%), radial-gradient(circle at 30% 70%, var(--neon-purple-1-t008) 0%, transparent 60%), linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%)'
+      'radial-gradient(circle at 50% 50%, rgba(91, 48, 246, 0.12) 0%, transparent 60%), radial-gradient(circle at 30% 70%, rgba(19, 91, 121, 0.08) 0%, transparent 60%), linear-gradient(135deg, var(--color-primary-dark-navy) 0%, var(--color-primary-charcoal) 100%)',
+      'radial-gradient(circle at 70% 30%, rgba(19, 91, 121, 0.12) 0%, transparent 60%), radial-gradient(circle at 30% 70%, rgba(91, 48, 246, 0.08) 0%, transparent 60%), linear-gradient(135deg, var(--color-primary-dark-navy) 0%, var(--color-primary-charcoal) 100%)'
     ]
   }
 };
@@ -230,7 +228,7 @@ export const RPSGame: React.FC = () => {
   });
 
   // Load score from localStorage
-  useEffect(() => {
+  React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedScore = localStorage.getItem('rps-score');
       if (savedScore) {
@@ -246,7 +244,7 @@ export const RPSGame: React.FC = () => {
   }, []);
 
   // Save score to localStorage
-  useEffect(() => {
+  React.useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('rps-score', JSON.stringify(gameState.score));
     }
@@ -401,12 +399,12 @@ export const RPSGame: React.FC = () => {
   // This is a workaround. Ideally, these should be in globals.css or tailwind.config.js
   const cssVariablesStyle = `
     :root {
-      --neon-purple-1-t008: rgba(123, 41, 205, 0.08);
-      --color-info-t006: rgba(59, 130, 246, 0.06);
-      --color-info-t008: rgba(59, 130, 246, 0.08);
-      --neon-purple-1-t006: rgba(123, 41, 205, 0.06);
-      --neon-purple-1-t012: rgba(123, 41, 205, 0.12);
-      --color-info-t012: rgba(59, 130, 246, 0.12);
+      --neon-purple-1-t008: rgba(91, 48, 246, 0.08);
+      --color-info-t006: rgba(19, 91, 121, 0.06);
+      --color-info-t008: rgba(19, 91, 121, 0.08);
+      --neon-purple-1-t006: rgba(91, 48, 246, 0.06);
+      --neon-purple-1-t012: rgba(91, 48, 246, 0.12);
+      --color-info-t012: rgba(19, 91, 121, 0.12);
       --color-success-rgb-t01: rgba(16, 185, 129, 0.1); /* For victory flash */
     }
   `;
@@ -427,8 +425,8 @@ export const RPSGame: React.FC = () => {
         transition={{
           duration: 8,
           repeat: Infinity,
-          repeatType: "mirror", // "reverse" in example, "mirror" is also good
-          ease: "easeInOut"
+          repeatType: "mirror" as const, // "reverse" in example, "mirror" is also good
+          ease: "easeInOut" as const
         }}
       />
 
@@ -439,17 +437,16 @@ export const RPSGame: React.FC = () => {
           {/* Header */}
           <motion.header
             initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            animate={{ opacity: 1, y: 0 }}              transition={{ duration: 0.8, ease: "easeOut" as const }}
             className="text-center mb-8 sm:mb-12"
           >
             <motion.h1
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
-              transition={{ duration: 0.6, ease: "backOut" }}
+              transition={{ duration: 0.6, ease: "backOut" as const }}
               style={{
-                textShadow: '0 0 20px var(--neon-purple-3), 0 0 10px var(--neon-purple-1), 0 4px 8px rgba(0,0,0,0.8)'
+                textShadow: '0 0 20px var(--color-purple-tertiary), 0 0 10px var(--color-purple-primary), 0 4px 8px rgba(0,0,0,0.8)'
               }}
             >
               가위바위보
@@ -457,13 +454,13 @@ export const RPSGame: React.FC = () => {
 
             {/* Scoreboard */}
             <motion.div
-              className="mx-auto max-w-md modern-mesh-card" // Using a class from globals.css if available
+              className="mx-auto max-w-md bg-card/50 backdrop-blur-sm border border-border/20" // Using system CSS variables
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <div
-                className="rounded-2xl p-4 sm:p-6 glassmorphism-dark" // Using a class
+                className="rounded-2xl p-4 sm:p-6 bg-card/30 backdrop-blur-sm border border-border/10" // Using system variables
               >
                 <div className="grid grid-cols-3 gap-4 sm:gap-6">
                   {/* Player Wins */}
@@ -474,16 +471,16 @@ export const RPSGame: React.FC = () => {
                     aria-live="polite"
                   >
                     <motion.div
-                      className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 text-success" // Using semantic color
+                      className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 text-green-400" // Using Tailwind color
                       style={{ textShadow: '0 0 10px var(--color-success), 0 2px 4px rgba(0,0,0,0.8)'}}
                       animate={{
                         scale: gameState.result === 'win' ? [1, 1.2, 1] : 1,
                       }}
-                      transition={{ duration: 0.8, type: "spring", stiffness: 300 }}
+                      transition={{ duration: 0.8, type: "spring" as const, stiffness: 300 }}
                     >
                       {gameState.score.player}
                     </motion.div>
-                    <div className="text-xs sm:text-sm text-text-secondary font-medium" id="player-score-label">승리</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground font-medium" id="player-score-label">승리</div>
                   </motion.div>
 
                   {/* Draws */}
@@ -494,14 +491,14 @@ export const RPSGame: React.FC = () => {
                     aria-live="polite"
                   >
                     <motion.div
-                      className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 text-warning" // Using semantic color
-                      style={{ textShadow: '0 0 10px var(--color-warning), 0 2px 4px rgba(0,0,0,0.8)'}}
+                      className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 text-amber-400" // Using Tailwind color
+                      style={{ textShadow: '0 0 10px var(--color-accent-amber), 0 2px 4px rgba(0,0,0,0.8)'}}
                        animate={{ scale: gameState.result === 'draw' ? [1, 1.1, 1] : 1 }}
                       transition={{ duration: 0.6 }}
                     >
                       {gameState.score.draws}
                     </motion.div>
-                    <div className="text-xs sm:text-sm text-text-secondary font-medium" id="draw-score-label">무승부</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground font-medium" id="draw-score-label">무승부</div>
                   </motion.div>
 
                   {/* AI Wins */}
@@ -512,14 +509,14 @@ export const RPSGame: React.FC = () => {
                     aria-live="polite"
                   >
                     <motion.div
-                      className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 text-error" // Using semantic color
+                      className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 text-red-400" // Using Tailwind color
                       style={{ textShadow: '0 0 10px var(--color-error), 0 2px 4px rgba(0,0,0,0.8)'}}
                       animate={{ scale: gameState.result === 'lose' ? [1, 1.1, 1] : 1 }}
                       transition={{ duration: 0.6 }}
                     >
                       {gameState.score.ai}
                     </motion.div>
-                    <div className="text-xs sm:text-sm text-text-secondary font-medium" id="ai-score-label">패배</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground font-medium" id="ai-score-label">패배</div>
                   </motion.div>
                 </div>
               </div>
@@ -532,8 +529,8 @@ export const RPSGame: React.FC = () => {
             <motion.section
               initial={{ opacity: 0, x: -60 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 modern-mesh-card glassmorphism-dark"
+              transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" as const }}
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 bg-card/50 backdrop-blur-sm border border-border/20"
               role="region"
               aria-labelledby="player-section-heading"
             >
@@ -558,8 +555,8 @@ export const RPSGame: React.FC = () => {
             <motion.section
               initial={{ opacity: 0, x: 60 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 modern-mesh-card glassmorphism-dark"
+              transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" as const }}
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 bg-card/50 backdrop-blur-sm border border-border/20"
               role="region"
               aria-labelledby="ai-section-heading"
             >
@@ -585,17 +582,17 @@ export const RPSGame: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.5 }}
-            className="text-center p-4 mb-8 modern-mesh-card glassmorphism-dark rounded-xl min-h-[60px] flex items-center justify-center"
+            className="text-center p-4 mb-8 bg-card/30 backdrop-blur-sm border border-border/10 rounded-xl min-h-[60px] flex items-center justify-center"
             role="log"
             aria-live="polite"
           >
-            <p className="text-text-secondary">
+            <p className="text-muted-foreground">
               <span className="font-semibold text-accent">CJ AI:</span>
               <motion.span
                 key={gameState.cjaiMessage} // Trigger animation on message change
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                transition={{ duration: 0.3, ease: "easeOut" as const }}
                 className="ml-1.5 inline-block"
               >
                 {gameState.cjaiMessage}

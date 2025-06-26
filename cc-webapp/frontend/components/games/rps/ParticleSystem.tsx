@@ -23,15 +23,14 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 
 // Using CSS variables for colors from globals.css
 const NEON_COLORS = [
-  'var(--neon-purple-1)',
-  'var(--neon-purple-2)',
-  'var(--neon-purple-3)',
-  'var(--neon-purple-4)',
-  'var(--brand-accent)',
+  'var(--color-purple-primary)',
+  'var(--color-purple-secondary)',
+  'var(--color-purple-tertiary)',
+  'var(--color-accent-red)',
   'var(--color-info)', // A cyan-like blue
   'var(--color-success)', // A vibrant green
-  'var(--color-warning)', // Amber/Orange
-  'rgba(var(--foreground-rgb), 0.7)', // Whiteish accent
+  'var(--color-accent-amber)', // Amber/Orange
+  'rgba(255, 255, 255, 0.7)', // Whiteish accent
 ];
 
 const createParticle = (): Particle => {
@@ -66,7 +65,7 @@ const particleVariants = {
     transition: {
       duration: particle.duration,
       delay: particle.delay,
-      ease: "easeOut",
+      ease: "easeOut" as const,
       repeat: Infinity, // Particles will loop their animation
       repeatDelay: Math.random() * 2 + 1, // Staggered restart
     }
@@ -74,7 +73,7 @@ const particleVariants = {
   exit: {
     opacity: 0,
     scale: 0.2,
-    transition: { duration: 0.4, ease: "easeOut" }
+    transition: { duration: 0.4, ease: "easeOut" as const }
   }
 };
 
@@ -110,7 +109,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({ isActive, intens
       visible: {
           opacity: [0.3, 0.7, 0.3],
           scale: [0.9, 1.15, 0.9],
-          transition: { duration: 3.5, repeat: Infinity, ease: "easeInOut" }
+          transition: { duration: 3.5, repeat: Infinity, ease: "easeInOut" as const }
       }
   };
 
@@ -119,7 +118,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({ isActive, intens
     visible: {
         opacity: 1,
         rotate: 360,
-        transition: { duration: 25, repeat: Infinity, ease: "linear" }
+        transition: { duration: 25, repeat: Infinity, ease: "linear" as const }
     }
   };
 
@@ -200,11 +199,10 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({ isActive, intens
 export const ParticleSystemStyleInjector: React.FC = () => (
   <style>{`
     :root {
-      --neon-purple-1-t015: rgba(123, 41, 205, 0.15);
-      --neon-purple-3-t010: rgba(91, 48, 246, 0.10);
-      --neon-purple-1-t010: rgba(123, 41, 205, 0.10);
+      --neon-purple-1-t015: rgba(91, 48, 246, 0.15);
+      --neon-purple-3-t010: rgba(128, 84, 242, 0.10);
+      --neon-purple-1-t010: rgba(91, 48, 246, 0.10);
       --neon-purple-2-t005: rgba(135, 13, 209, 0.05);
-      /* --neon-purple-3-t010 is already defined */
       --neon-purple-4-t005: rgba(128, 84, 242, 0.05);
     }
   `}</style>

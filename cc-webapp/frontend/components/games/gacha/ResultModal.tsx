@@ -1,12 +1,11 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Dialog, DialogContent } from '../ui/dialog'; // Assuming shadcn/ui dialog
-import { Button } from '../ui/button'; // Assuming shadcn/ui button
+import Button from '../../Button';
 import type { GachaResult } from '../../../types/gacha';
 import { TIER_CONFIG } from '../../../types/gacha';
 import { Sparkles as SparklesIcon, Star as StarIcon, X } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { cn } from '../../../utils/cn';
 
 interface ResultModalProps {
   isOpen: boolean;
@@ -34,11 +33,18 @@ export function ResultModal({ isOpen, result, onClose }: ResultModalProps) {
   return (
     <AnimatePresence>
       {isOpen && result && (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent
-            className="max-w-md w-[calc(100%-2rem)] p-0 overflow-hidden border-0 bg-transparent shadow-none data-[state=open]:animate-none data-[state=closed]:animate-none"
-            onOpenAutoFocus={(e) => e.preventDefault()} // Prevent auto-focusing internal elements initially
-          >
+        <>
+          {/* Modal Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            onClick={onClose}
+          />
+          
+          {/* Modal Content */}
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-50 pointer-events-none">
             <motion.div
               initial={{ scale: 0.7, opacity: 0, y: 50 }}
               animate={{
@@ -53,7 +59,7 @@ export function ResultModal({ isOpen, result, onClose }: ResultModalProps) {
                 y: 30,
                 transition: { duration: 0.2, ease: "easeIn" }
               }}
-              className="relative rounded-xl sm:rounded-2xl overflow-hidden border-2"
+              className="relative rounded-xl sm:rounded-2xl overflow-hidden border-2 max-w-md w-full pointer-events-auto"
               style={{
                 borderColor: `${tierConfig.glowColor}BF`, // BF for ~75% opacity
                 background: `linear-gradient(160deg, rgba(var(--card-rgb),0.95) 0%, rgba(var(--background-rgb),0.95) 100%)`,
@@ -70,8 +76,8 @@ export function ResultModal({ isOpen, result, onClose }: ResultModalProps) {
                   maskComposite: 'exclude',
                   WebkitMaskComposite: 'xor',
                 }}
-                initial={{ ['--angle' as any]: '0deg' }}
-                animate={{ ['--angle' as any]: '360deg' }}
+                initial={{ ['--angle' as keyof CSSStyleDeclaration]: '0deg' }}
+                animate={{ ['--angle' as keyof CSSStyleDeclaration]: '360deg' }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
               />
 
@@ -109,16 +115,15 @@ export function ResultModal({ isOpen, result, onClose }: ResultModalProps) {
               </div>
 
               {/* Close button */}
-               <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onClose}
-                  className="absolute top-3 right-3 z-50 text-clear-muted hover:text-clear-primary hover:bg-white/10 rounded-full"
-                  aria-label="Close modal"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-
+              <Button
+                variant="text"
+                size="sm"
+                onClick={onClose}
+                className="absolute top-3 right-3 z-50 text-clear-muted hover:text-clear-primary hover:bg-white/10 rounded-full"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </Button>
 
               {/* Modal Content */}
               <div className="relative p-6 sm:p-8 text-center z-10">
@@ -213,22 +218,6 @@ export function ResultModal({ isOpen, result, onClose }: ResultModalProps) {
                         "transition-all duration-200 ease-out focus:outline-none focus:ring-4",
                         "text-clear-primary" // Text color
                     )}
-                    style={{
-                      borderColor: tierConfig.glowColor,
-                      background: `linear-gradient(135deg, ${tierConfig.gradientFrom}99, ${tierConfig.gradientTo}CC)`,
-                      boxShadow: `0 0 15px ${tierConfig.glowColor}50, 0 0 25px ${tierConfig.glowColor}30, inset 0 1px 0px ${tierConfig.glowColor}70`,
-                      textShadow: `1px 1px 2px rgba(0,0,0,0.7), 0 0 10px ${tierConfig.glowColor}50`,
-                    }}
-                    onHoverStart={(e) => {
-                        const target = e.target as HTMLButtonElement;
-                        target.style.boxShadow = `0 0 20px ${tierConfig.glowColor}80, 0 0 35px ${tierConfig.glowColor}60, inset 0 1px 0px ${tierConfig.glowColor}99`;
-                        target.style.transform = 'scale(1.03)';
-                    }}
-                    onHoverEnd={(e) => {
-                        const target = e.target as HTMLButtonElement;
-                        target.style.boxShadow = `0 0 15px ${tierConfig.glowColor}50, 0 0 25px ${tierConfig.glowColor}30, inset 0 1px 0px ${tierConfig.glowColor}70`;
-                        target.style.transform = 'scale(1)';
-                    }}
                   >
                     <StarIcon className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" />
                     확인
@@ -236,8 +225,8 @@ export function ResultModal({ isOpen, result, onClose }: ResultModalProps) {
                 </motion.div>
               </div>
             </motion.div>
-          </DialogContent>
-        </Dialog>
+          </div>
+        </>
       )}
     </AnimatePresence>
   );

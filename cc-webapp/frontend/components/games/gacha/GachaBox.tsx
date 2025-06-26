@@ -15,7 +15,7 @@ import {
   GachaTier
 } from '../../../types/gacha';
 import { useTickets } from './TicketContext';
-import { cn } from '../../utils/cn';
+import { cn } from '../../../utils/cn';
 
 interface GachaBoxProps {
   className?: string;
@@ -58,7 +58,7 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
     if (pityCount >= PITY_MAX_PULLS -1) { // -1 because current pull is the 90th
       selectedTier = 'legendary';
       itemFromPity = true;
-      console.log("PITY SYSTEM TRIGGERED! Guaranteed Legendary!");
+      // PITY SYSTEM TRIGGERED! Guaranteed Legendary!
     } else {
       const random = Math.random() * 100;
       let cumulativeProbability = 0;
@@ -75,7 +75,6 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
 
     const itemsOfTier = SAMPLE_ITEMS.filter(item => item.tier === selectedTier);
     if (itemsOfTier.length === 0) { // Fallback if no items for a tier (should not happen with good config)
-        console.warn(`No items found for tier: ${selectedTier}. Defaulting to common.`);
         const commonItems = SAMPLE_ITEMS.filter(item => item.tier === 'common');
         const fallbackItem = commonItems[Math.floor(Math.random() * commonItems.length)] || SAMPLE_ITEMS[0];
          return {
@@ -92,11 +91,9 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
     };
 
     // Mock Action Logging
-    console.log('[ACTION LOG] Gacha Pull Initiated. User:', 'currentUser', 'Result:', result);
     // Mock Emotional Feedback Trigger
-    console.log('[EMOTIONAL FEEDBACK] Analyzing result for feedback. Tier:', result.tier);
     if (result.tier === 'legendary' || result.tier === 'epic') {
-      console.log('[EMOTIONAL FEEDBACK] High tier item! Generating excited feedback.');
+      // High tier item! Generate excited feedback.
     }
 
     // Update pity count
@@ -116,7 +113,7 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
 
     const ticketSpent = spendTicket(); // Consume ticket from context
     if (!ticketSpent) {
-      console.warn("Failed to spend ticket, likely due to race condition or context issue.");
+      // Failed to spend ticket, likely due to race condition or context issue.
       setGachaState('ready');
       return;
     }
@@ -135,8 +132,8 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
         setShowResultModal(true);
       }, 800); // Allow GachaContainer reveal animation to play a bit
 
-    } catch (error) {
-      console.error('Gacha pull failed:', error);
+    } catch {
+      // Gacha pull failed
       // TODO: Potentially refund ticket if API call failed after deduction
       setGachaState('ready');
     }
@@ -152,7 +149,11 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
   };
 
   return (
-    <div className={cn('w-full max-w-lg mx-auto p-4 sm:p-6 rounded-2xl', className)}>
+    <div className={cn(
+      'w-full max-w-lg mx-auto p-4 sm:p-6 rounded-2xl',
+      'bg-[var(--card)] border border-[var(--border)]',
+      className
+    )}>
       {/* Ticket Counter is displayed above GachaBox */}
       <motion.div
         className="flex justify-center mb-4 sm:mb-6"
@@ -187,7 +188,7 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
           state={gachaState}
           tickets={ticketState.count}
           onPull={handlePull}
-          className="w-full max-w-xs sm:max-w-sm" // Constrain button width
+          className="w-full max-w-xs sm:max-w-sm"
         />
       </motion.div>
 
@@ -197,8 +198,6 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
         result={currentResult}
         onClose={handleCloseModal}
       />
-       {/* Pity Counter Display (for debugging/testing) */}
-       {/* <div className="text-center mt-4 text-xs text-clear-muted">Pity Count: {pityCount} / {PITY_MAX_PULLS}</div> */}
     </div>
   );
 }

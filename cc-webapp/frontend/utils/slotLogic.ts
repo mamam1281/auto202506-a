@@ -7,67 +7,17 @@ export interface WinResult {
   payout: number;
   winType?: string;
   winningPositions?: number[];
+  multiplier?: number;
 }
 
-export function checkWinCondition(reels: string[], betAmount: number): WinResult {
-  const result: WinResult = {
-    isWin: false,
-    payout: 0,
-    winningPositions: []
-  };
+// 랜덤 심볼 생성
+export function getRandomSymbol(): string {
+  return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+}
 
-  // 3개 모두 같은 경우 (트리플)
-  if (reels[0] === reels[1] && reels[1] === reels[2]) {
-    result.isWin = true;
-    result.winningPositions = [0, 1, 2];
-
-    switch (reels[0]) {
-      case '🍒':
-        result.payout = betAmount * 5;
-        result.winType = '🍒 체리 트리플! 🍒';
-        break;
-      case '🔔':
-        result.payout = betAmount * 10;
-        result.winType = '🔔 벨 트리플! 🔔';
-        break;
-      case '💎':
-        result.payout = betAmount * 20;
-        result.winType = '💎 다이아몬드 트리플! 💎';
-        break;
-      case '7️⃣':
-        result.payout = betAmount * 50;
-        result.winType = '7️⃣ 럭키 세븐! 7️⃣';
-        break;
-      case '⭐':
-        result.payout = betAmount * 100; // Base payout for triple stars, jackpot is separate
-        result.winType = '⭐ 스타 트리플! ⭐'; // Renamed from Mega Jackpot to differentiate
-        break;
-      default: // Should not happen with defined SYMBOLS
-        result.payout = betAmount * 2;
-        result.winType = '🎉 트리플 매치! 🎉';
-    }
-  }
-  // 2개가 같은 경우 (더블)
-  else if (reels[0] === reels[1]) {
-    result.isWin = true;
-    result.winningPositions = [0, 1];
-    result.payout = Math.floor(betAmount * 1.5);
-    result.winType = '🎯 더블 매치! 🎯';
-  }
-  else if (reels[1] === reels[2]) {
-    result.isWin = true;
-    result.winningPositions = [1, 2];
-    result.payout = Math.floor(betAmount * 1.5);
-    result.winType = '🎯 더블 매치! 🎯';
-  }
-  else if (reels[0] === reels[2]) {
-    result.isWin = true;
-    result.winningPositions = [0, 2];
-    result.payout = Math.floor(betAmount * 1.5);
-    result.winType = '🎯 더블 매치! 🎯';
-  }
-
-  return result;
+// 스핀 결과 생성
+export function generateSpinResult(): string[] {
+  return [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
 }
 
 // 심볼별 가중치 (낮을수록 자주 나옴)
@@ -124,4 +74,65 @@ export function isGlobalJackpotHit(betAmount: number, consecutiveSpins: number, 
     // And a "Triple Star" might be a condition for winning the displayed global jackpot amount.
     const chance = calculateJackpotChance(betAmount, consecutiveSpins);
     return Math.random() < chance;
+}
+
+export function checkWinCondition(reels: string[], betAmount: number): WinResult {
+  const result: WinResult = {
+    isWin: false,
+    payout: 0,
+    winningPositions: [],
+    multiplier: 0
+  };
+
+  // 3개 모두 같은 경우 (트리플)
+  if (reels[0] === reels[1] && reels[1] === reels[2]) {
+    result.isWin = true;
+    result.winningPositions = [0, 1, 2];
+
+    switch (reels[0]) {
+      case '🍒':
+        result.multiplier = 5;
+        result.payout = betAmount * result.multiplier;
+        result.winType = '🍒 체리 트리플! 🍒';
+        break;
+      case '🔔':
+        result.multiplier = 10;
+        result.payout = betAmount * result.multiplier;
+        result.winType = '🔔 벨 트리플! 🔔';
+        break;
+      case '💎':
+        result.multiplier = 20;
+        result.payout = betAmount * result.multiplier;
+        result.winType = '💎 다이아몬드 트리플! 💎';
+        break;
+      case '7️⃣':
+        result.multiplier = 50;
+        result.payout = betAmount * result.multiplier;
+        result.winType = '7️⃣ 럭키 세븐! 7️⃣';
+        break;
+      case '⭐':
+        result.multiplier = 100;
+        result.payout = betAmount * result.multiplier;
+        result.winType = '⭐ 잭팟! ⭐';
+        break;
+    }
+  }
+  // 2개 같은 경우 (페어)
+  else if (reels[0] === reels[1] || reels[1] === reels[2] || reels[0] === reels[2]) {
+    result.isWin = true;
+    result.multiplier = 1.5;
+    result.payout = Math.floor(betAmount * result.multiplier);
+    result.winType = '페어 매치!';
+    
+    // 매칭된 위치 찾기
+    if (reels[0] === reels[1]) {
+      result.winningPositions = [0, 1];
+    } else if (reels[1] === reels[2]) {
+      result.winningPositions = [1, 2];
+    } else {
+      result.winningPositions = [0, 2];
+    }
+  }
+
+  return result;
 }

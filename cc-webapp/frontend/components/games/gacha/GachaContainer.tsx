@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { GachaState, GachaTier, TIER_CONFIG, PARTICLE_CONFIGS } from '../../../types/gacha';
-import { cn } from '../../utils/cn';
+import { cn } from '../../../utils/cn';
 
 interface GachaContainerProps {
   state: GachaState;

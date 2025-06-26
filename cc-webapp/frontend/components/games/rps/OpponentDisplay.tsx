@@ -12,7 +12,7 @@ interface OpponentDisplayProps {
 // Configuration for choices, consistent with ChoiceButtons if needed, but primarily for emoji/label here
 const choiceConfig = {
   rock: { emoji: '🪨', label: '바위', colorVar: 'var(--color-neutral-medium)' },
-  paper: { emoji: '📄', label: '보', colorVar: 'var(--neon-purple-1)' },
+  paper: { emoji: '📄', label: '보', colorVar: 'var(--color-purple-primary)' },
   scissors: { emoji: '✂️', label: '가위', colorVar: 'var(--color-info)' }
 };
 
@@ -72,7 +72,7 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
               initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
               exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
-              transition={{ duration: 0.3, type: "spring", stiffness:300, damping:15 }}
+              transition={{ duration: 0.3, type: "spring" as const, stiffness:300, damping:15 }}
               className="text-4xl sm:text-5xl lg:text-6xl" // Larger emoji
               style={{ textShadow: '0 4px 10px rgba(0,0,0,0.3)'}}
             >
@@ -97,7 +97,7 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
             initial={{ opacity: 0, scale: 0.3, rotateY: -180, y: 30 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0, y: 0 }}
             exit={{ opacity: 0, scale: 0.5, rotateY: 180, y: -30 }}
-            transition={{ duration:0.6, type: "spring", stiffness: 200, damping: 15 }} // More dynamic spring
+            transition={{ duration:0.6, type: "spring" as const, stiffness: 200, damping: 15 }} // More dynamic spring
             className="flex flex-col items-center gap-2 sm:gap-3"
           >
             <motion.div

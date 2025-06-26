@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Sparkles, Loader2, AlertTriangle } from 'lucide-react';
 import type { GachaState } from '../../../types/gacha';
-import { cn } from '../../utils/cn';
+import { cn } from '../../../utils/cn';
 
 interface PullButtonProps {
   state: GachaState;
@@ -24,11 +24,7 @@ export function PullButton({ state, tickets, onPull, className = '' }: PullButto
     },
     pulling: {
       background: `linear-gradient(45deg, var(--color-accent-red), var(--color-accent-amber), var(--color-accent-red))`,
-      backgroundSize: ['100% 100%', '400% 400%'], // Prepare for animation
       borderColor: `rgba(var(--color-accent-amber-rgb), 0.7)`,
-      transition: {
-        backgroundSize: { duration: 0.1, ease: "linear" }, // Quick change to large size
-      }
     },
     disabled: {
       scale: 1,
@@ -36,14 +32,6 @@ export function PullButton({ state, tickets, onPull, className = '' }: PullButto
       borderColor: `rgba(var(--border-rgb), 0.5)`,
     },
   };
-
-  const backgroundAnimation = isPulling ? {
-      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-      transition: {
-        backgroundPosition: { duration: 2, repeat: Infinity, ease: 'linear' }
-      }
-  } : {};
-
 
   return (
     <motion.div className={cn('w-full', className)}>
@@ -58,14 +46,19 @@ export function PullButton({ state, tickets, onPull, className = '' }: PullButto
         )}
         variants={buttonVariants}
         initial="default"
-        animate={isDisabled ? "disabled" : isPulling ? "pulling" : "default"}
+        animate={{
+          ...(isDisabled ? buttonVariants.disabled : isPulling ? buttonVariants.pulling : buttonVariants.default),
+          ...(isPulling ? {
+            backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+            backgroundSize: '400% 400%',
+            transition: {
+              backgroundPosition: { duration: 2, repeat: Infinity, ease: 'linear' as const }
+            }
+          } : {})
+        }}
         whileHover={!isDisabled ? { scale: 1.03, y: -2, boxShadow: '0 0 20px rgba(var(--color-accent-red-rgb), 0.5)' } : {}}
         whileTap={!isDisabled ? { scale: 0.97, y: 1 } : {}}
         transition={{ duration: 0.2, type: 'spring', stiffness: 300 }}
-        style={{
-           // backgroundSize is handled by variants for pulling state
-        }}
-        {...backgroundAnimation} // Spread the backgroundPosition animation here
       >
         {/* Subtle Glowing Border Animation (only when not disabled) */}
         {!isDisabled && (
@@ -234,7 +227,7 @@ export function PullButton({ state, tickets, onPull, className = '' }: PullButto
                 className="text-xs sm:text-sm mt-0.5"
                 style={{ color: 'rgba(var(--color-error-rgb), 0.8)', textShadow: '1px 1px 2px rgba(0,0,0,0.3)' }}
               >
-                상단의 '+5 티켓' 버튼으로 충전하세요.
+                상단의 &lsquo;+5 티켓&rsquo; 버튼으로 충전하세요.
               </p>
             </div>
           </div>
