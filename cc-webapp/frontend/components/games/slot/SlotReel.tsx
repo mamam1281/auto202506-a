@@ -3,7 +3,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-import { SYMBOLS } from '../../../utils/slotLogic';
+// SYMBOLS can be imported from app/games/slots/page.tsx or defined here
+const SYMBOLS = ['🍒', '🔔', '💎', '7️⃣', '⭐'];
 
 interface SlotReelProps {
   symbol: string;

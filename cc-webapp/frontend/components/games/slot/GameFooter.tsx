@@ -5,8 +5,9 @@ import React, { useState } from 'react';
 import Button from '../../Button';
 import { HelpCircle, ChevronUp, ChevronDown, ListOrdered } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-// Assuming slotLogic.ts is in @/utils/slotLogic
-import { SYMBOLS } from '../../../utils/slotLogic';
+
+// Define SYMBOLS here to match the slot machine
+const SYMBOLS = ['🍒', '🔔', '💎', '7️⃣', '⭐'];
 
 interface GameFooterProps {
   className?: string;

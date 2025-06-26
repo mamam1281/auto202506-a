@@ -27,11 +27,11 @@ export default function CasinoDashboard() {
   const featuredGames = [
     {
       id: 'cosmic-fortune',
-      title: 'Cosmic Fortune',
-      rating: 4.8,
-      players: '23K명',
-      imagePlaceholder: '🌌',
-      onClick: () => router.push('/slots')
+      title: '코스믹 포츈',
+      rating: 4.9,
+      players: '31K명',
+      imagePlaceholder: '�',
+      onClick: () => router.push('/games/slots')
     },
     {
       id: 'royal-roulette',

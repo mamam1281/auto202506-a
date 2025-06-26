@@ -66,86 +66,6 @@ function GachaPageHeaderActions() {
   );
 }
 
-// Sub-component for the item gallery
-function ItemGallery() {
-  const galleryItems = [
-    { 
-      emoji: <Crown size={28} />, 
-      name: '전설급 아이템', 
-      tier: 'legendary',
-      color: 'text-[var(--gacha-tier-legendary)]',
-      probability: '3%'
-    },
-    { 
-      emoji: <Zap size={28} />, 
-      name: '에픽 아이템', 
-      tier: 'epic',
-      color: 'text-[var(--gacha-tier-epic)]',
-      probability: '12%'
-    },
-    { 
-      emoji: <ShieldHalf size={28} />, 
-      name: '레어 아이템', 
-      tier: 'rare',
-      color: 'text-[var(--gacha-tier-rare)]',
-      probability: '25%'
-    },
-    { 
-      emoji: <Wand2 size={28} />, 
-      name: '일반 아이템', 
-      tier: 'common',
-      color: 'text-[var(--gacha-tier-common)]',
-      probability: '60%'
-    },
-  ];
-
-  return (
-    <motion.div
-      className="mt-8 sm:mt-12"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
-    >
-      <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl sm:rounded-2xl overflow-hidden shadow-lg">
-        <div style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '16px', paddingRight: '16px' }}>
-          <h3 className="text-lg sm:text-xl flex items-center justify-center sm:justify-start gap-2 text-[var(--foreground)] font-semibold">
-            <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--primary)]" />
-            <span>획득 가능한 아이템 등급</span>
-          </h3>
-        </div>
-        <div style={{ paddingTop: '0px', paddingBottom: '100px', paddingLeft: '16px', paddingRight: '16px' }}>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            {galleryItems.map((item, index) => (
-              <motion.div
-                key={item.name}
-                className="bg-[var(--muted)]/50 border border-[var(--border)] p-3 sm:p-4 rounded-lg sm:rounded-xl text-center relative overflow-hidden group cursor-default shadow-md hover:shadow-xl transition-shadow duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 + index * 0.15, ease: "easeOut" }}
-                whileHover={{ scale: 1.04, y: -3, transition: { type: 'spring', stiffness: 300, damping: 10 } }}
-              >
-                <motion.div
-                  className={cn("text-3xl sm:text-4xl mb-2 flex justify-center items-center", item.color)}
-                  animate={{ scale: [1, 1.08, 1], rotate: [0, 2, -2, 0] }}
-                  transition={{ duration: 2.5 + index * 0.3, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  {item.emoji}
-                </motion.div>
-                <div className={cn("text-xs sm:text-sm font-medium mb-1", item.color)}>
-                  {item.name}
-                </div>
-                <div className="text-xs text-[var(--muted-foreground)]">
-                  {item.probability}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 // Main Gacha Page Content
 function GachaPageContent() {
   return (
@@ -196,9 +116,9 @@ function GachaPageContent() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
       >
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-6xl mx-auto flex flex-col items-center justify-center gap-2 sm:gap-3">
           <motion.h1
-            className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] bg-clip-text text-transparent"
+            className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] bg-clip-text text-transparent text-center"
             whileHover={{ scale: 1.02 }}
           >
             가챠 시스템
@@ -208,55 +128,58 @@ function GachaPageContent() {
       </motion.header>
 
       {/* Main Content Area */}
-      <main className="px-4 py-6 sm:py-8 max-w-6xl mx-auto w-full">
+      <main className="px-4 py-6 sm:py-8 max-w-6xl mx-auto w-full flex flex-col items-center">
         {/* GachaBox Wrapper */}
-        <motion.div
-          className="mb-8 sm:mb-12 relative"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-        >
-          <div style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
-                </div>
-              }
-            >
-              <GachaBox />
-            </Suspense>
-          </div>
-        </motion.div>
+        <div className="w-full flex flex-col items-center justify-center gap-8 sm:gap-12">
+          <motion.div
+            className="relative w-full flex justify-center"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+          >
+            <div className="min-w-[280px] max-w-[420px] w-full mx-auto" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
+                  </div>
+                }
+              >
+                <GachaBox />
+              </Suspense>
+            </div>
+          </motion.div>
+        </div>
 
-        <ItemGallery />
+        {/* GachaBox와 Information Section 사이 충분한 세로 간격 */}
+        <div className="h-10 sm:h-16" />
 
         {/* Information Section */}
         <motion.div
-          className="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="mt-0 w-full flex flex-col md:flex-row items-center justify-center gap-6"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
         >
           {/* Pity System */}
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
-            <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)] flex items-center gap-2">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl min-w-[280px] max-w-[420px] w-full mx-auto md:mx-0 md:flex-1 flex flex-col items-center justify-center" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
+            <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)] flex items-center gap-2 justify-center">
               <Gift className="w-5 h-5 text-[var(--primary)]" />
               보상 시스템
             </h3>
-            <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
+            <p className="text-sm text-[var(--muted-foreground)] leading-relaxed text-center">
               90회 연속으로 전설 아이템을 획득하지 못하면, 
               다음 뽑기에서 반드시 전설 아이템을 획득합니다.
             </p>
           </div>
 
           {/* Tips */}
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
-            <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)] flex items-center gap-2">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl min-w-[280px] max-w-[420px] w-full mx-auto md:mx-0 md:flex-1 flex flex-col items-center justify-center" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
+            <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)] flex items-center gap-2 justify-center">
               <Zap className="w-5 h-5 text-[var(--secondary)]" />
               팁
             </h3>
-            <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
+            <p className="text-sm text-[var(--muted-foreground)] leading-relaxed text-center">
               티켓은 게임 플레이나 출석 보상을 통해 획득할 수 있습니다. 
               전략적으로 사용하여 원하는 아이템을 얻어보세요!
             </p>

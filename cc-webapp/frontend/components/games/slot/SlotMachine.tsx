@@ -2,13 +2,96 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Button from '../../Button';
-import { SlotReel } from './SlotReel';
-import { BetControl } from './BetControl';
-import { GameFooter } from './GameFooter';
-import { checkWinCondition, generateSpinResult } from '../../../utils/slotLogic';
 import { cn } from '../../../utils/cn';
-import { Trophy, Zap, Star, Volume2, VolumeX } from 'lucide-react';
+import Button from '../../Button';
+import { Gem, Star, Trophy, Zap, Volume2, VolumeX } from 'lucide-react';
+import SlotReel from './SlotReel';
+import BetControl from './BetControl';
+import GameFooter from './GameFooter';
+
+// SYMBOLS은 실제 게임에서 사용할 심볼입니다
+const SYMBOLS = ['🍒', '🔔', '💎', '7️⃣', '⭐'];
+
+// 스핀 결과 생성
+const generateSpinResult = (): string[] => {
+  return [
+    SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
+    SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
+    SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
+  ];
+};
+
+// 승리 조건 확인 및 배당 계산
+const checkWinCondition = (reels: string[], betAmount: number): any => {
+  const symbolMap: { [key: string]: number } = {};
+  let allSame = true;
+  
+  // 카운팅 및 모두 같은지 확인
+  for (let i = 0; i < reels.length; i++) {
+    symbolMap[reels[i]] = (symbolMap[reels[i]] || 0) + 1;
+    if (i > 0 && reels[i] !== reels[0]) {
+      allSame = false;
+    }
+  }
+
+  // 승리 조건 확인
+  if (allSame) {
+    // 잭팟 - 3개의 별
+    if (reels[0] === '⭐') {
+      return {
+        isWin: true,
+        payout: betAmount * 100,
+        multiplier: 100,
+        winningPositions: [0, 1, 2],
+        type: "jackpot"
+      };
+    }
+    // 일반 3개 매치
+    const multipliers: { [key: string]: number } = {
+      '7️⃣': 50,
+      '💎': 20,
+      '🔔': 10,
+      '🍒': 5
+    };
+    const multiplier = multipliers[reels[0]] || 5;
+    return {
+      isWin: true,
+      payout: betAmount * multiplier,
+      multiplier: multiplier,
+      winningPositions: [0, 1, 2],
+      type: "triple"
+    };
+  } 
+  else {
+    // 2개 매칭 확인
+    for (const symbol in symbolMap) {
+      if (symbolMap[symbol] === 2) {
+        const winningPositions: number[] = [];
+        for (let i = 0; i < reels.length; i++) {
+          if (reels[i] === symbol) {
+            winningPositions.push(i);
+          }
+        }
+        return {
+          isWin: true,
+          payout: Math.floor(betAmount * 1.5),
+          multiplier: 1.5,
+          winningPositions,
+          type: "double"
+        };
+      }
+    }
+  }
+
+  // 패배
+  return {
+    isWin: false,
+    payout: 0,
+    multiplier: 0,
+    winningPositions: [],
+    type: "loss"
+  };
+};
 
 export type GameState = 'idle' | 'spinning' | 'result';
 
@@ -16,9 +99,9 @@ interface SlotMachineProps {
   className?: string;
 }
 
-export const SlotMachine: React.FC<SlotMachineProps> = ({ className }) => {
+export const SlotMachine = ({ className }: SlotMachineProps) => {
   const [gameState, setGameState] = useState<GameState>('idle');
-  const [reels, setReels] = useState<string[]>(['💎', '🔔', '🍒']); // Initial symbols
+  const [reels, setReels] = useState<string[]>(['💎', '🔔', '🍒']);
   const [betAmount, setBetAmount] = useState(10);
   const [winResult, setWinResult] = useState<any | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -27,14 +110,14 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ className }) => {
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [shake, setShake] = useState(false);
 
-  // Jackpot animation effect
+  // 잭팟 애니메이션 효과
   useEffect(() => {
     const interval = setInterval(() => {
       setJackpot(prev => prev + Math.floor(Math.random() * 10) + 1);
     }, 2500);
     return () => clearInterval(interval);
   }, []);
-
+  
   const handleSpin = useCallback(async () => {
     if (balance < betAmount || isSpinning) return;
 
@@ -44,7 +127,7 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ className }) => {
     setWinResult(null);
     setShake(false);
 
-    // Simulate API call and reel spin
+    // 스핀 결과 생성 및 적용
     setTimeout(() => {
       const newReels = generateSpinResult();
       const result = checkWinCondition(newReels, betAmount);
@@ -54,16 +137,15 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ className }) => {
       
       if (result.isWin) {
         setBalance(prev => prev + result.payout);
-        if (result.payout > betAmount * 5) {
+        if (result.type === "jackpot") {
           setShake(true);
-          setTimeout(() => setShake(false), 1000);
         }
       }
       
       setIsSpinning(false);
       setGameState('result');
       
-      // Reset to idle after showing result
+      // 일정 시간 후 대기 상태로 되돌리기
       setTimeout(() => {
         setGameState('idle');
       }, 3000);
