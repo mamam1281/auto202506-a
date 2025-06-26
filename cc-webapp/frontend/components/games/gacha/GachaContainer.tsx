@@ -49,14 +49,14 @@ export function GachaContainer({ state, tier, className = '' }: GachaContainerPr
       <motion.div
         className={cn("relative transform-3d", boxSizeClasses)}
         animate={{
-          rotateY: state === 'pulling' ? [0, 720, 0] : 0, // More rotation
-          rotateX: state === 'pulling' ? [0, 20, -20, 0] : 0,
-          scale: state === 'reveal' ? 1.1 : state === 'pulling' ? 1.05 : 1,
-          z: state === 'pulling' ? [0, 40, 0, -20, 0] : 0,
+          rotateY: state === 'pulling' ? [0, 360] : 0, // Smoother single rotation
+          scale: state === 'reveal' ? 1.1 : state === 'pulling' ? 1.02 : 1,
+          y: state === 'pulling' ? [0, -10, 0] : 0, // Gentle bounce instead of complex 3D
         }}
         transition={{
-          duration: state === 'pulling' ? 2.5 : 0.8, // Slightly longer for pulling
+          duration: state === 'pulling' ? 2.0 : 0.8, // Consistent timing
           ease: state === 'pulling' ? 'easeInOut' : 'backOut', // backOut for reveal pop
+          repeat: state === 'pulling' ? Infinity : 0,
         }}
         style={{
           transformStyle: 'preserve-3d',
@@ -110,8 +110,13 @@ export function GachaContainer({ state, tier, className = '' }: GachaContainerPr
               >
                 {/* Enhanced Tier Icon (e.g., from TIER_CONFIG or default) */}
                 <motion.div
-                  className={`text-4xl sm:text-5xl md:text-7xl mb-2`}
-                  style={{ color: tierConfig.glowColor }}
+                  className={`text-4xl sm:text-5xl md:text-7xl mb-2 flex items-center justify-center`}
+                  style={{ 
+                    color: tierConfig.glowColor,
+                    aspectRatio: '1/1',
+                    width: 'fit-content',
+                    margin: '0 auto'
+                  }}
                   animate={{
                     scale: [1, 1.15, 1],
                     textShadow: [
@@ -153,10 +158,15 @@ export function GachaContainer({ state, tier, className = '' }: GachaContainerPr
                 }}
               >
                 <motion.div
-                  className="text-5xl sm:text-6xl md:text-8xl"
-                  style={{ color: 'var(--color-accent-red)'}}
+                  className="text-5xl sm:text-6xl md:text-8xl flex items-center justify-center"
+                  style={{ 
+                    color: 'var(--color-accent-red)',
+                    aspectRatio: '1/1',
+                    width: 'fit-content',
+                    margin: '0 auto'
+                  }}
                   animate={state === 'pulling' ? {
-                    rotateY: [0, 180, 360],
+                    scale: [1, 1.1, 1],
                     filter: [
                         'drop-shadow(0 0 8px var(--color-accent-red))',
                         'drop-shadow(0 0 15px var(--color-accent-amber))',
@@ -174,7 +184,7 @@ export function GachaContainer({ state, tier, className = '' }: GachaContainerPr
                   transition={{
                     duration: state === 'pulling' ? 1.5 : 0,
                     repeat: state === 'pulling' ? Infinity : 0,
-                    ease: 'linear'
+                    ease: 'easeInOut'
                   }}
                 >
                   📦

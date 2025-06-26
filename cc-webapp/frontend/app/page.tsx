@@ -8,14 +8,11 @@ import { motion } from 'framer-motion';
 import GameCard from '../components/GameCard';
 import Button from '../components/Button';
 import QuickStartItem from '../components/QuickStartItem';
-import TokenDisplay from '../components/ui/data-display/TokenDisplay';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function CasinoDashboard() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [coins, setCoins] = useState(2580);
-  const [gems, setGems] = useState(127);
 
   // 시뮬레이션: 페이지 로딩
   useEffect(() => {

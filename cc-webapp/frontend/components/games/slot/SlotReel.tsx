@@ -35,8 +35,7 @@ export const SlotReel: React.FC<SlotReelProps> = ({
         },
       },
     },
-    stopped: (finalSymbol: string) => {
-      const finalIndex = reelSymbols.indexOf(finalSymbol);
+    stopped: (_finalSymbol: string) => {
       // Calculate final position for the symbol
       // For now, simple transition to center position
       return {

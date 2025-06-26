@@ -53,7 +53,7 @@ export function GameFooter({ className }: GameFooterProps) {
 
 
   return (
-    <footer className={`w-full p-4 text-sm ${className || ''}`}>
+    <div className={`bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] shadow-2xl p-10 sm:p-14 ${className || ''}`}>
       <div className="max-w-md mx-auto space-y-3">
 
         <div className="text-center">
@@ -151,7 +151,7 @@ export function GameFooter({ className }: GameFooterProps) {
           )}
         </AnimatePresence>
       </div>
-    </footer>
+    </div>
   );
 }
 

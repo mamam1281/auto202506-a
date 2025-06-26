@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, RotateCcw, Gift, Zap, ShieldHalf, Wand2, Crown } from 'lucide-react';
+import { Plus, RotateCcw, Gift, Zap } from 'lucide-react';
 import Button from '../../components/Button';
 import { GachaBox } from '../../components/games/gacha/GachaBox';
 import { TicketProvider, useTickets } from '../../components/games/gacha/TicketContext';
