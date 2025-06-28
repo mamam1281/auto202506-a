@@ -7,7 +7,6 @@ import SlotMachineHeader2 from './SlotMachineHeader2';
 import { SlotMachineMain } from './SlotMachineReels';
 import BetControl from './BetControl';
 import SlotMachineButton from './SlotMachineButton';
-import SlotMachineInfo from './SlotMachineInfo';
 
 // SYMBOLS은 실제 게임에서 사용할 심볼입니다
 const SYMBOLS = ['🍒', '🔔', '💎', '7️⃣', '⭐'];
@@ -170,35 +169,43 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
       transition={{ duration: 0.5 }}
     >
       {/* Header 1 - Jackpot Display */}
-      <SlotMachineHeader1 
-        jackpot={jackpot} 
-        className="w-full mb-[15px]"
-      />
+      <div className="w-full" style={{ marginBottom: '40px' }}>
+        <SlotMachineHeader1 
+          jackpot={jackpot} 
+          className="w-full"
+        />
+      </div>
 
       {/* Header 2 - Balance & Sound */}
-      <SlotMachineHeader2 
-        balance={balance}
-        isSoundEnabled={isSoundEnabled}
-        setIsSoundEnabled={setIsSoundEnabled}
-        className="w-full mb-[15px]"
-      />
+      <div className="w-full" style={{ marginBottom: '50px' }}>
+        <SlotMachineHeader2 
+          balance={balance}
+          isSoundEnabled={isSoundEnabled}
+          setIsSoundEnabled={setIsSoundEnabled}
+          className="w-full"
+        />
+      </div>
 
       {/* Main - Slot Reels */}
-      <SlotMachineMain 
-        reels={reels}
-        isSpinning={isSpinning}
-        winResult={winResult}
-        className="w-full mb-[15px]"
-      />
+      <div className="w-full" style={{ marginBottom: '70px' }}>
+        <SlotMachineMain 
+          reels={reels}
+          isSpinning={isSpinning}
+          winResult={winResult}
+          className="w-full"
+        />
+      </div>
 
       {/* Control - Bet Controls */}
-      <BetControl
-        betAmount={betAmount}
-        setBetAmount={setBetAmount}
-        maxBet={Math.min(balance, 100)}
-        disabled={isSpinning}
-        className="w-full mb-[15px]"
-      />
+      <div className="w-full" style={{ marginBottom: '60px' }}>
+        <BetControl
+          betAmount={betAmount}
+          setBetAmount={setBetAmount}
+          maxBet={Math.min(balance, 100)}
+          disabled={isSpinning}
+          className="w-full"
+        />
+      </div>
 
       {/* Button - Spin Button */}
       <SlotMachineButton
@@ -209,11 +216,6 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
         winResult={winResult}
         balance={balance}
         betAmount={betAmount}
-        className="w-full mb-[15px]"
-      />
-
-      {/* Info - Game Rules & Help */}
-      <SlotMachineInfo 
         className="w-full"
       />
     </motion.div>

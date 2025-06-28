@@ -27,7 +27,7 @@ export const SlotMachineMain: React.FC<SlotMachineMainProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`w-full bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] shadow-2xl py-[15px] px-8 sm:px-12 mx-auto ${className}`}>
+    <div className={`w-full bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] py-[20px] px-8 sm:px-12 mx-auto ${className}`}>
       {/* Slot Reels */}
       <div className="w-full flex justify-center mb-6">
         <div className="grid grid-cols-3 gap-4 sm:gap-6 h-32 sm:h-40">

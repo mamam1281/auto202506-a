@@ -20,7 +20,8 @@ export const SlotMachineHeader1: React.FC<SlotMachineHeader1Props> = ({
   };
 
   return (
-    <div className={`w-full bg-gradient-to-r from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] rounded-2xl border border-[var(--color-border-primary)] shadow-2xl py-[15px] px-8 sm:px-12 text-center relative overflow-hidden mx-auto ${className}`}>
+    <div className={`w-full bg-gradient-to-r from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] rounded-2xl border border-[var(--color-border-primary)] px-8 sm:px-12 text-center relative overflow-hidden mx-auto 
+    ${className}`} style={{ paddingTop: '20px', paddingBottom: '20px' }}>
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-pulse"></div>
       </div>

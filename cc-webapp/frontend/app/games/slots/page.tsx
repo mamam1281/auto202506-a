@@ -44,9 +44,9 @@ function CosmicFortuneGamePage() {
         </motion.div>
 
         {/* Main Game Container */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-20 flex justify-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-[300px] min-h-screen flex justify-center">
           <motion.div
-            className="w-full max-w-2xl"
+            className="w-full max-w-2xl min-h-screen flex flex-col justify-start pt-20"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}

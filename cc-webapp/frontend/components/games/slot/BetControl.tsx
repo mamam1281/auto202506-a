@@ -46,10 +46,10 @@ export const BetControl: React.FC<BetControlProps> = ({
   };
 
   return (
-    <div className={cn("w-full bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] shadow-2xl py-[15px] px-8 sm:px-12 mx-auto", className)}>
+    <div className={cn("w-full bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] py-[20px] px-8 sm:px-12 mx-auto", className)}>
       {/* Bet Amount Adjust Buttons & Display */}
-      <div className="w-full flex flex-col items-center justify-center mb-6">
-        <div className="mb-4 text-center">
+      <div style={{ marginBottom: "60px" }}>
+        <div style={{ marginBottom: "20px", textAlign: "center" }}>
           <h3 className="text-lg sm:text-xl font-semibold text-[var(--color-accent-amber)]">베팅 금액 조절</h3>
           <p className="text-sm text-[var(--color-text-secondary)] mt-1">베팅 금액을 선택하여 더 큰 상금에 도전하세요</p>
         </div>
@@ -94,8 +94,8 @@ export const BetControl: React.FC<BetControlProps> = ({
       </div>
 
       {/* Quick Bet Options with Card Title */}
-      <div className="w-full pt-4">
-        <div className="mb-3 text-center">
+      <div className="w-full">
+        <div style={{ marginBottom: "30px", textAlign: "center" }}>
           <h3 className="text-lg sm:text-xl font-semibold text-[var(--color-accent-amber)]">빠른 베팅 선택</h3>
           <p className="text-sm text-[var(--color-text-secondary)] mt-1">원하는 베팅 금액을 빠르게 선택하세요</p>
         </div>
@@ -109,10 +109,10 @@ export const BetControl: React.FC<BetControlProps> = ({
               variant={betAmount === amount ? "primary" : "outline"}
               size="sm"
               className={cn(
-                "text-sm sm:text-base px-4 py-2 min-w-[60px] h-10 transition-all duration-200 border-2",
+                "text-sm sm:text-base px-4 py-2 min-w-[60px] h-10 transition-all duration-200 border-2 shadow-xl",
                 betAmount === amount ? 
                   "bg-gradient-to-r from-[var(--color-accent-amber)] to-[var(--color-accent-yellow)] border-[var(--color-accent-amber)] shadow-lg shadow-[var(--color-accent-amber)]/20" : 
-                  "hover:border-[var(--color-accent-amber)]/50"
+                  "hover:border-[var(--color-accent-amber)]/50 hover:shadow-xl hover:shadow-[var(--color-accent-amber)]/10"
               )}
             >
               {amount}

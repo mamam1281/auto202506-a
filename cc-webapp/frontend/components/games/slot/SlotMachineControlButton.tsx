@@ -75,7 +75,6 @@ export const SlotMachineControlButton: React.FC<SlotMachineControlButtonProps> =
             gameState === 'result' && !winResult?.isWin && "bg-[var(--color-text-muted)]",
             gameState === 'idle' && "bg-[var(--color-text-secondary)]"
           )} />
-          {gameState === 'idle' && 'Ready to Play'}
           {gameState === 'spinning' && 'Spinning...'}
           {gameState === 'result' && (winResult?.isWin ? 'You Win!' : 'Try Again')}
         </div>

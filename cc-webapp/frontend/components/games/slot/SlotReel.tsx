@@ -70,7 +70,7 @@ export const SlotReel: React.FC<SlotReelProps> = ({
 
   return (
     <div
-      className={`relative h-full w-full bg-gradient-to-b from-[var(--color-surface-secondary)] via-[var(--color-surface-tertiary)] to-[var(--color-surface-secondary)] rounded-lg border border-[var(--color-accent-purple)]/50 shadow-inner overflow-hidden flex items-center justify-center ${className}`}
+      className={`relative h-full w-full bg-gradient-to-b from-[var(--color-surface-secondary)] via-[var(--color-surface-tertiary)] to-[var(--color-surface-secondary)] rounded-lg border border-[var(--color-accent-purple)]/50 shadow-xl shadow-inner overflow-hidden flex items-center justify-center ${className}`}
     >
       {/* Cylinder background effect - subtle */}
       <div className="absolute inset-0 opacity-20">

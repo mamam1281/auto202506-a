@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 // Assuming Button is now in @/components/Button
 import Button from '../../Button';
-import { HelpCircle, ChevronUp, ChevronDown, ListOrdered } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Define SYMBOLS here to match the slot machine
@@ -56,35 +55,25 @@ export function GameFooter({ className }: GameFooterProps) {
     <div className={`bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] shadow-2xl p-10 sm:p-14 ${className || ''}`}>
       <div className="max-w-md mx-auto space-y-3">
 
-        <div className="text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--color-accent-amber)]/20 to-[var(--color-accent-amber)]/10 border border-[var(--color-accent-amber)]/30 rounded-full backdrop-blur-sm">
-            <div className="w-1.5 h-1.5 bg-[var(--color-accent-amber)]/80 rounded-full animate-pulse"></div>
-            <span className="font-['Exo_2',_sans-serif] text-amber-200 font-medium text-xs tracking-wider">PREMIUM CASINO EXPERIENCE</span>
-            <div className="w-1.5 h-1.5 bg-[var(--color-accent-amber)]/80 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-          </div>
-        </div>
-
         <div className="flex gap-3 justify-center">
           <Button
             onClick={() => setShowRules(!showRules)}
             variant="outline"
             size="sm"
-            className="flex-1 h-10 bg-slate-800/70 border-purple-500/40 text-purple-300 hover:bg-slate-700/70 hover:border-purple-400/60 rounded-lg shadow-md"
+            className="flex-1 h-10 bg-slate-800/70 border-purple-500/40 text-purple-300 
+            hover:bg-slate-700/70 hover:border-purple-400/60 rounded-lg shadow-md"
           >
-            <ListOrdered className="h-4 w-4 mr-1.5" />
             <span className="font-medium">게임 규칙</span>
-            {showRules ? <ChevronUp className="h-4 w-4 ml-auto" /> : <ChevronDown className="h-4 w-4 ml-auto" />}
           </Button>
 
           <Button
             onClick={() => setShowHelp(!showHelp)}
             variant="outline"
             size="sm"
-            className="flex-1 h-10 bg-slate-800/70 border-purple-500/40 text-purple-300 hover:bg-slate-700/70 hover:border-purple-400/60 rounded-lg shadow-md"
+            className="flex-1 h-10 bg-slate-800/70 border-purple-500/40 text-purple-300 
+            hover:bg-slate-700/70 hover:border-purple-400/60 rounded-lg shadow-md"
           >
-            <HelpCircle className="h-4 w-4 mr-1.5" />
             <span className="font-medium">도움말</span>
-            {showHelp ? <ChevronUp className="h-4 w-4 ml-auto" /> : <ChevronDown className="h-4 w-4 ml-auto" />}
           </Button>
         </div>
 
@@ -95,11 +84,13 @@ export function GameFooter({ className }: GameFooterProps) {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="bg-slate-800/60 rounded-lg p-3 sm:p-4 border border-purple-500/30 backdrop-blur-sm text-slate-300 space-y-2"
+              className="bg-slate-800/60 rounded-lg p-3 sm:p-4 border border-purple-500/30 
+              backdrop-blur-sm text-slate-300 space-y-2"
             >
-              <h3 className="text-base font-semibold text-purple-300 mb-2 flex items-center gap-2"><ListOrdered size={18}/> 게임 규칙 & 심볼 페이아웃</h3>
+              <h3 className="text-base font-semibold text-purple-300 mb-2">게임 규칙 & 심볼 페이아웃</h3>
               {Payouts.map(p => (
-                <div key={p.description} className="flex justify-between items-center p-1.5 bg-slate-900/50 rounded-md text-xs sm:text-sm">
+                <div key={p.description} className="flex justify-between items-center p-1.5 
+                bg-slate-900/50 rounded-md text-xs sm:text-sm">
                   <span>{p.description}</span>
                   <span className="font-bold text-amber-300">{p.payout}</span>
                 </div>
@@ -122,7 +113,7 @@ export function GameFooter({ className }: GameFooterProps) {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="bg-slate-800/60 rounded-lg p-3 sm:p-4 border border-purple-500/30 backdrop-blur-sm text-slate-300 space-y-3"
             >
-              <h3 className="text-base font-semibold text-purple-300 mb-2 flex items-center gap-2"><HelpCircle size={18}/> 도움말</h3>
+              <h3 className="text-base font-semibold text-purple-300 mb-2">도움말</h3>
               <div className="text-xs sm:text-sm">
                 <h4 className="font-semibold text-purple-200/90 mb-0.5">🎯 게임 방법</h4>
                 <ol className="list-decimal list-inside space-y-0.5 pl-1">
