@@ -5,6 +5,7 @@ import { Epilogue, Exo, IBM_Plex_Sans_KR } from 'next/font/google';
 
 // 1. 글로벌 CSS 임포트
 import '../styles/global.css'; // 올바른 경로로 수정
+import '../styles/miniapp-override.css'; // 미니앱 전용 스타일
 
 // 2. 클라이언트 컴포넌트 임포트
 import LayoutWrapper from './LayoutWrapper';
@@ -114,7 +115,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body 
-        className="theme-dark min-h-screen min-h-dvh bg-[var(--background)] text-[var(--foreground)] antialiased overflow-x-hidden safe-py"
+        className="theme-dark h-screen bg-[var(--background)] text-[var(--foreground)] antialiased"
         suppressHydrationWarning
       >
         {/* 6. 클라이언트 래퍼로 상태 관리 위임 */}

@@ -34,33 +34,29 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   return (
     <Provider store={store}>
       <div className="miniapp-container">
-        <div className="game-platform-layout flex flex-col min-h-screen">
-          {/* AppHeader - 고정 상단 */}
-          <div className="miniapp-header">
-            <AppHeader
-              appName="CasinoClub"
-              onProfileClick={handleProfileClick}
-              onNotificationsClick={handleNotificationsClick}
-              onSettingsClick={handleSettingsClick}
-              showTokenBalanceOnMobile={true}
-              hasNotifications={false}
-            />
-          </div>
-          
-          {/* 메인 콘텐츠 영역 - 고정 크기 컨테이너 */}
-          <main className="flex-grow pb-20 pt-[var(--app-header-height-mobile)] md:pt-[var(--app-header-height-desktop)]">
-            <div className="miniapp-content min-h-screen">
-              {children}
-            </div>
-          </main>
-          
-          {/* BottomNavigationBar - 고정 하단 */}
-          <div className="miniapp-bottom-nav">
-            <BottomNavigationBar
-              activeTab={activeTab}
-              onTabClick={handleTabClick}
-            />
-          </div>
+        {/* AppHeader - 고정 상단 */}
+        <div className="miniapp-header">
+          <AppHeader
+            appName="CasinoClub"
+            onProfileClick={handleProfileClick}
+            onNotificationsClick={handleNotificationsClick}
+            onSettingsClick={handleSettingsClick}
+            showTokenBalanceOnMobile={true}
+            hasNotifications={false}
+          />
+        </div>
+        
+        {/* 메인 콘텐츠 영역 - 단일 스크롤 */}
+        <div className="miniapp-content">
+          {children}
+        </div>
+        
+        {/* BottomNavigationBar - 고정 하단 */}
+        <div className="miniapp-bottom-nav">
+          <BottomNavigationBar
+            activeTab={activeTab}
+            onTabClick={handleTabClick}
+          />
         </div>
       </div>
     </Provider>

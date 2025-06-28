@@ -172,7 +172,7 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
       style={{ pointerEvents: 'auto' }} // CSS 강제 활성화
     >
       {/* Header 1 - Jackpot Display */}
-      <div className="w-full" style={{ marginBottom: '10px' }}>
+      <div className="w-full" style={{ marginBottom: '8px' }}>
         <SlotMachineHeader1 
           jackpot={jackpot} 
           className="w-full"
@@ -180,7 +180,7 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
       </div>
 
       {/* Header 2 - Balance & Sound */}
-      <div className="w-full" style={{ marginBottom: '10px' }}>
+      <div className="w-full" style={{ marginBottom: '8px' }}>
         <SlotMachineHeader2 
           balance={balance}
           isSoundEnabled={isSoundEnabled}
@@ -190,7 +190,7 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
       </div>
 
       {/* Main - Slot Reels */}
-      <div className="w-full" style={{ marginBottom: '70px' }}>
+      <div className="w-full" style={{ marginBottom: '16px' }}>
         <SlotMachineMain 
           reels={reels}
           isSpinning={isSpinning}
@@ -200,7 +200,7 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
       </div>
 
       {/* Control - Bet Controls */}
-      <div className="w-full" style={{ marginBottom: '60px' }}>
+      <div className="w-full" style={{ marginBottom: '16px' }}>
         <BetControl
           betAmount={betAmount}
           setBetAmount={setBetAmount}

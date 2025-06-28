@@ -86,7 +86,7 @@ export default function CasinoDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" 
+      <div className="h-screen flex items-center justify-center" 
            style={{ backgroundColor: 'var(--color-background-primary)' }}>
         <LoadingSpinner size="xl" variant="ring" text="카지노 로딩 중..." />
       </div>
@@ -94,7 +94,7 @@ export default function CasinoDashboard() {
   }
 
   return (
-    <div className="min-h-screen w-full"
+    <div className="h-screen w-full"
          style={{ 
            backgroundColor: 'var(--color-background-primary)',
            color: 'var(--color-text-primary)',
@@ -102,10 +102,10 @@ export default function CasinoDashboard() {
            overflow: 'hidden' // 가로 스크롤 방지
          }}>
 
-      {/* Main Content - 고정 크기 컨테이너로 변경 */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden w-full">
+      {/* Main Content - 스크롤 가능한 콘텐츠 */}
+      <div className="w-full" style={{ minHeight: 'calc(100vh + 200px)' }}> 
         
-        <div className="miniapp-content py-6 sm:py-8">
+        <div className="py-6 sm:py-8">
         
         {/* 웰컴 섹션 */}
         <motion.div 
@@ -188,7 +188,7 @@ export default function CasinoDashboard() {
 
         {/* 인기 게임 섹션 - 프로젝트 표준 GameCard 사용 */}
         <motion.section
-          style={{ marginBottom: '100px' }} // 마지막 섹션은 더 큰 마진 (바텀 네비 고려)
+          style={{ marginBottom: '40px' }} // 바텀 네비 여백은 CSS padding으로 처리
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.6 }}

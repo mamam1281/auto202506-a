@@ -2,8 +2,20 @@
 
 import { motion } from 'framer-motion';
 import { Sparkles, Loader2, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import type { GachaState } from '../../../types/gacha';
 import { cn } from '../../../utils/cn';
+
+interface ParticleData {
+  id: number;
+  left: number;
+  top: number;
+  scale: number;
+  duration: number;
+  delay: number;
+  yOffset: number;
+  repeatDelay: number;
+}
 
 interface PullButtonProps {
   state: GachaState;
@@ -15,6 +27,22 @@ interface PullButtonProps {
 export function PullButton({ state, tickets, onPull, className = '' }: PullButtonProps) {
   const isDisabled = state !== 'ready' || tickets < 1;
   const isPulling = state === 'pulling';
+  const [particles, setParticles] = useState<ParticleData[]>([]);
+
+  // 클라이언트에서만 파티클 데이터 생성
+  useEffect(() => {
+    const particleData: ParticleData[] = Array.from({ length: 5 }, (_, i) => ({
+      id: i,
+      left: 10 + Math.random() * 80,
+      top: 20 + Math.random() * 60,
+      scale: 1 + Math.random() * 0.5,
+      duration: 0.8 + Math.random() * 0.4,
+      delay: Math.random() * 0.2,
+      yOffset: -10 - Math.random() * 10,
+      repeatDelay: 1 + Math.random() * 1,
+    }));
+    setParticles(particleData);
+  }, []);
 
   const buttonVariants = {
     default: {
@@ -75,27 +103,27 @@ export function PullButton({ state, tickets, onPull, className = '' }: PullButto
         {/* Animated Background for pulling state is handled by motion.button style + animate prop */}
 
         {/* Minimal Particle Effects on Hover (only when not disabled and not pulling) */}
-        {!isDisabled && !isPulling && (
+        {!isDisabled && !isPulling && particles.length > 0 && (
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            {[...Array(5)].map((_, i) => (
+            {particles.map((particle) => (
               <motion.div
-                key={`hover-particle-${i}`}
+                key={`hover-particle-${particle.id}`}
                 className="absolute w-1.5 h-1.5 rounded-full bg-[var(--color-accent-amber)]"
                 style={{
-                  left: `${10 + Math.random() * 80}%`,
-                  top: `${20 + Math.random() * 60}%`,
+                  left: `${particle.left}%`,
+                  top: `${particle.top}%`,
                 }}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{
                   opacity: [0, 1, 0],
-                  scale: [0, 1 + Math.random() * 0.5, 0],
-                  y: [0, -10 - Math.random() * 10],
+                  scale: [0, particle.scale, 0],
+                  y: [0, particle.yOffset],
                 }}
                 transition={{
-                  duration: 0.8 + Math.random() * 0.4,
-                  delay: Math.random() * 0.2,
+                  duration: particle.duration,
+                  delay: particle.delay,
                   repeat: Infinity,
-                  repeatDelay: 1 + Math.random() * 1,
+                  repeatDelay: particle.repeatDelay,
                 }}
               />
             ))}

@@ -1,12 +1,25 @@
 'use client';
 
 import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { Plus, RotateCcw, Gift, Zap } from 'lucide-react';
 import Button from '../../components/Button';
-import { GachaBox } from '../../components/games/gacha/GachaBox';
 import { TicketProvider, useTickets } from '../../components/games/gacha/TicketContext';
 import { cn } from '../../utils/cn';
+
+// Dynamic import to avoid hydration issues
+const GachaBox = dynamic(
+  () => import('../../components/games/gacha/GachaBox').then(mod => ({ default: mod.GachaBox })),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
+      </div>
+    )
+  }
+);
 
 // Header actions component
 function GachaPageHeaderActions() {
@@ -69,9 +82,9 @@ function GachaPageHeaderActions() {
 // Main Gacha Page Content
 function GachaPageContent() {
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      {/* Floating Background Particles */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+    <div className="w-full bg-[var(--background)] text-[var(--foreground)] pb-6" style={{ minHeight: 'calc(100vh + 200px)' }}>
+      {/* Floating Background Particles - LayoutWrapper 내부에서 작동 */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
         {[...Array(8)].map((_, i) => {
           const size = Math.random() * 2.5 + 0.5;
           const duration = Math.random() * 20 + 15;
@@ -89,13 +102,13 @@ function GachaPageContent() {
                 backgroundColor: color,
               }}
               initial={{
-                x: `${Math.random() * 100}vw`,
-                y: `${Math.random() * 100}vh`,
+                x: `${Math.random() * 100}%`,
+                y: `${Math.random() * 100}%`,
                 opacity: 0,
               }}
               animate={{
-                x: `${Math.random() * 100}vw`,
-                y: `${Math.random() * 100}vh`,
+                x: `${Math.random() * 100}%`,
+                y: `${Math.random() * 100}%`,
                 opacity: [0, 0.3, 0],
               }}
               transition={{
@@ -109,14 +122,14 @@ function GachaPageContent() {
         })}
       </div>
 
-      {/* Page Header - 고정 크기 컨테이너 */}
+      {/* Page Header - 상단 고정이 아닌 일반 섹션 */}
       <motion.header
-        className="sticky top-0 z-40 py-3 sm:py-4 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)] shadow-md"
-        initial={{ y: -100, opacity: 0 }}
+        className="py-4 bg-[var(--background)] border-b border-[var(--border)]"
+        initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
       >
-        <div className="miniapp-header px-4 sm:px-6 flex flex-col items-center justify-center gap-2 sm:gap-3">
+        <div className="w-full flex flex-col items-center justify-center gap-3">
           <motion.h1
             className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] bg-clip-text text-transparent text-center"
             whileHover={{ scale: 1.02 }}
@@ -127,43 +140,28 @@ function GachaPageContent() {
         </div>
       </motion.header>
 
-      {/* Main Content Area - 고정 크기 컨테이너 */}
-      <main className="miniapp-content py-6 sm:py-8 w-full flex flex-col items-center">
-        {/* GachaBox Wrapper */}
-        <div className="w-full flex flex-col items-center justify-center gap-8 sm:gap-12">
-          <motion.div
-            className="relative w-full flex justify-center"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-          >
-            <div className="min-w-[280px] max-w-[420px] w-full mx-auto" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
-              <Suspense
-                fallback={
-                  <div className="flex items-center justify-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
-                  </div>
-                }
-              >
-                <GachaBox />
-              </Suspense>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* GachaBox와 Information Section 사이 충분한 세로 간격 */}
-        <div className="h-10 sm:h-16" />
-
-        {/* Information Section */}
+      {/* Main Content Area - 중앙정렬 */}
+      <main className="py-6 w-full flex flex-col items-center">
+        {/* GachaBox Wrapper - 중앙정렬 */}
         <motion.div
-          className="mt-0 w-full flex flex-col md:flex-row items-center justify-center gap-6"
+          className="w-full flex justify-center mb-6"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+        >
+          <GachaBox />
+        </motion.div>
+
+        {/* Information Section - 중앙정렬 */}
+        <motion.div
+          className="w-full flex flex-col md:flex-row items-center justify-center gap-4 max-w-2xl"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
         >
           {/* Pity System */}
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl min-w-[280px] max-w-[420px] w-full mx-auto md:mx-0 md:flex-1 flex flex-col items-center justify-center" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
-            <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)] flex items-center gap-2 justify-center">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl w-full flex flex-col items-center justify-center p-4">
+            <h3 className="text-lg font-semibold mb-3 text-[var(--foreground)] flex items-center gap-2 justify-center">
               <Gift className="w-5 h-5 text-[var(--primary)]" />
               보상 시스템
             </h3>
@@ -174,8 +172,8 @@ function GachaPageContent() {
           </div>
 
           {/* Tips */}
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl min-w-[280px] max-w-[420px] w-full mx-auto md:mx-0 md:flex-1 flex flex-col items-center justify-center" style={{ paddingTop: '100px', paddingBottom: '100px', paddingLeft: '24px', paddingRight: '24px' }}>
-            <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)] flex items-center gap-2 justify-center">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl w-full flex flex-col items-center justify-center p-4">
+            <h3 className="text-lg font-semibold mb-3 text-[var(--foreground)] flex items-center gap-2 justify-center">
               <Zap className="w-5 h-5 text-[var(--secondary)]" />
               팁
             </h3>

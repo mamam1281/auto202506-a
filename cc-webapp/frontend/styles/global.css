@@ -5,34 +5,48 @@
 
 /*
   미니앱 스타일 고정 크기 컨테이너
-  텔레그램 미니앱처럼 모든 디바이스에서 일관된 크기 제공
+  상용 미니앱처럼 단일 스크롤로 깔끔하게 구현
 */
 .miniapp-container {
   max-width: 420px;
   width: 100%;
   margin: 0 auto;
-  min-height: 100vh;
+  height: 100vh;
   position: relative;
   background: var(--color-primary-dark-navy);
+  overflow: hidden; /* 컨테이너 자체는 스크롤 없음 */
+  display: flex;
+  flex-direction: column;
 }
 
 .miniapp-content {
+  flex: 1;
   width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
   padding: 0 16px;
+  overflow-y: auto; /* 여기서만 스크롤 */
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* 스크롤바 영역 보정 */
+  box-sizing: border-box;
+  /* 스크롤바가 나타나도 중앙 정렬 유지 */
+  scrollbar-gutter: stable;
+  /* 스크롤 작동을 위한 높이 설정 */
+  min-height: 0;
+  height: 100%;
 }
 
 .miniapp-header {
   max-width: 420px;
   width: 100%;
   margin: 0 auto;
+  flex-shrink: 0; /* 고정 크기 */
 }
 
 .miniapp-bottom-nav {
   max-width: 420px;
   width: 100%;
   margin: 0 auto;
+  flex-shrink: 0; /* 고정 크기 */
 }
 
 /*

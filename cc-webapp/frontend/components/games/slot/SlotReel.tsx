@@ -1,10 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 // SYMBOLS can be imported from app/games/slots/page.tsx or defined here
 const SYMBOLS = ['🍒', '🔔', '💎', '7️⃣', '⭐'];
+
+interface ParticleData {
+  id: number;
+  width: number;
+  height: number;
+  xOffset: number;
+  yOffset: number;
+  duration: number;
+  delay: number;
+}
 
 interface SlotReelProps {
   symbol: string;
@@ -22,6 +32,21 @@ export const SlotReel: React.FC<SlotReelProps> = ({
   className,
 }) => {
   const reelSymbols = SYMBOLS; // Use the actual imported SYMBOLS array
+  const [particles, setParticles] = useState<ParticleData[]>([]);
+
+  // 클라이언트에서만 파티클 데이터 생성
+  useEffect(() => {
+    const particleData: ParticleData[] = Array.from({ length: 5 }, (_, i) => ({
+      id: i,
+      width: Math.random() * 3 + 2,
+      height: Math.random() * 3 + 2,
+      xOffset: (Math.random() - 0.5) * 60,
+      yOffset: (Math.random() - 0.5) * 60,
+      duration: 0.8 + Math.random() * 0.5,
+      delay: Math.random() * 0.5,
+    }));
+    setParticles(particleData);
+  }, []);
 
   // Animation variants for the reel itself (the symbols container)
   const reelAnimationVariants = {
@@ -107,26 +132,26 @@ export const SlotReel: React.FC<SlotReelProps> = ({
           {symbol}
           {isWinning && (
             <>
-              {/* Particle effects - simplified for now */}
-              {[...Array(5)].map((_, i) => (
+              {/* Particle effects - 클라이언트에서만 렌더링 */}
+              {particles.map((particle) => (
                 <motion.div
-                  key={i}
+                  key={particle.id}
                   className="absolute rounded-full bg-[var(--color-accent-amber)]"
                   style={{
-                    width: Math.random() * 3 + 2,
-                    height: Math.random() * 3 + 2,
+                    width: particle.width,
+                    height: particle.height,
                   }}
                   initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
                   animate={{
                     opacity: [0, 1, 0],
                     scale: [0, 1, 0.5],
-                    x: (Math.random() - 0.5) * 60,
-                    y: (Math.random() - 0.5) * 60,
+                    x: particle.xOffset,
+                    y: particle.yOffset,
                   }}
                   transition={{
-                    duration: 0.8 + Math.random() * 0.5,
+                    duration: particle.duration,
                     repeat: Infinity,
-                    delay: Math.random() * 0.5,
+                    delay: particle.delay,
                   }}
                 />
               ))}

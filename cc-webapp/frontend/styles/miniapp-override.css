@@ -1,0 +1,111 @@
+/* 미니앱 전용 스타일 - 상용 미니앱처럼 깔끔한 단일 스크롤 구현 */
+
+html {
+  height: 100%;
+  overflow: hidden; /* 전체 페이지 스크롤 방지 */
+}
+
+body {
+  overflow: hidden !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 커스텀 스크롤바 - 반투명 스타일 (모든 브라우저 지원) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Firefox 스크롤바 - 반투명 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+/* IE 스크롤바 색상 (지원되는 경우) */
+body {
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+/* 미니앱 컨테이너 - Flexbox 레이아웃으로 상용 미니앱 구조 */
+.miniapp-container {
+  height: 100vh !important;
+  max-width: 420px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* 헤더 - 고정 크기, 중앙정렬 */
+.miniapp-header {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 420px !important;
+  margin: 0 auto !important;
+  z-index: 10 !important;
+}
+
+/* 메인 콘텐츠 - 유일한 스크롤 영역, 중앙정렬 */
+.miniapp-content {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  width: 100% !important;
+  position: relative !important;
+  /* 스크롤바 공간 보정 */
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+  /* 스크롤바가 나타나도 중앙 정렬 유지 */
+  scrollbar-gutter: stable !important;
+  /* 스크롤 작동을 위한 최소 높이 설정 */
+  min-height: 0 !important;
+  /* 스크롤 영역 강제 활성화 */
+  height: auto !important;
+  /* 하단 패딩 추가 - 바텀 네비와 겹치지 않도록 */
+  padding-bottom: 80px !important;
+}
+
+/* 바텀 네비 - 고정 크기, 중앙정렬 */
+.miniapp-bottom-nav {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 420px !important;
+  margin: 0 auto !important;
+  z-index: 10 !important;
+}
+
+/* 기존 스크롤 관련 클래스들 제거 */
+.game-platform-layout {
+  height: auto !important;
+  min-height: auto !important;
+}
+
+main {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  flex-grow: 0 !important;
+}

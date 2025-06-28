@@ -6,7 +6,7 @@ import SlotMachine from '../../components/games/slot/SlotMachine';
 
 export default function SlotPage() {
   return (
-    <div className="miniapp-container min-h-screen bg-gradient-to-br from-[var(--color-surface-primary)] via-[var(--color-surface-secondary)] to-[var(--color-surface-tertiary)] flex flex-col">
+    <div className="h-screen bg-gradient-to-br from-[var(--color-surface-primary)] via-[var(--color-surface-secondary)] to-[var(--color-surface-tertiary)] flex flex-col overflow-hidden">
       {/* Header - 고정 크기 컨테이너 */}
       <motion.header 
         className="bg-gradient-to-r from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] shadow-xl border-b border-[var(--color-border-primary)]"

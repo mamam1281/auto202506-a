@@ -152,11 +152,12 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
     <div className={cn(
       'w-full max-w-lg mx-auto rounded-2xl',
       'bg-[var(--card)] border border-[var(--border)]',
+      'flex flex-col items-center justify-center',
       className
-    )} style={{ paddingTop: '48px', paddingBottom: '48px', paddingLeft: '24px', paddingRight: '24px' }}>
+    )} style={{ paddingTop: '32px', paddingBottom: '32px', paddingLeft: '20px', paddingRight: '20px' }}>
       {/* Ticket Counter is displayed above GachaBox */}
       <motion.div
-        className="flex justify-center mb-4 sm:mb-6"
+        className="flex justify-center mb-4"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -164,9 +165,9 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
         <TicketCounter />
       </motion.div>
 
-      {/* Gacha Container */}
+      {/* Gacha Container - 중앙정렬 */}
       <motion.div
-        className="mb-6 sm:mb-8"
+        className="mb-6 w-full flex justify-center"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
@@ -177,9 +178,9 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
         />
       </motion.div>
 
-      {/* Pull Button */}
+      {/* Pull Button - 중앙정렬 */}
       <motion.div
-        className="flex justify-center"
+        className="flex justify-center w-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
@@ -188,7 +189,7 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
           state={gachaState}
           tickets={ticketState.count}
           onPull={handlePull}
-          className="w-full max-w-xs sm:max-w-sm"
+          className="w-full max-w-xs"
         />
       </motion.div>
 

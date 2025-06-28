@@ -27,8 +27,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   showAppName = true,
   tokenDisplayVariant = 'full',
 }) => {
-  const router = useRouter();
-  const pathname = usePathname();
+  const cyberTokenBalance = useSelector((state: RootState) => state.cyberToken.balance);
   const [isMobile, setIsMobile] = useState(false);
 
   // Handle responsive behavior
@@ -47,49 +46,72 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Check if we're on the home page
-  const isHomePage = pathname === '/';
-
-  // Handle back navigation
-  const handleBackClick = () => {
-    if (window.history.length > 1) {
-      router.back();
-    } else {
-      router.push('/');
+  const handleNotificationsClick = () => {
+    if (onNotificationsClick) {
+      onNotificationsClick();
     }
   };
 
-  const handleNotificationsClick = () => {
-    console.log('Notifications clicked');
-    onNotificationsClick?.();
-  };
-
   const handleSettingsClick = () => {
-    console.log('Settings clicked');
-    onSettingsClick?.();
+    if (onSettingsClick) {
+      onSettingsClick();
+    }
   };
 
   const handleProfileClick = () => {
-    console.log('Profile clicked');
-    onProfileClick?.();
+    if (onProfileClick) {
+      onProfileClick();
+    }
   };
 
-  // Back Button Component (replaces token display)
-  const BackButton = () => {
-    if (isHomePage) return <div className="w-8 h-8" />; // Spacer for home page
+  // Responsive token display component
+  const TokenDisplay = () => {
+    if (!showTokenBalanceOnMobile && isMobile) {
+      return null;
+    }
+
+    const baseClasses = "flex items-center gap-1 flex-shrink-0 min-w-0";
+    const iconSize = compact ? 16 : 20;
     
-    return (
-      <Button
-        variant="text"
-        iconOnly
-        size={compact ? "sm" : "md"}
-        onClick={handleBackClick}
-        className="p-2 hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full text-muted-foreground hover:text-foreground"
-        aria-label="뒤로가기"
-      >
-        <ArrowLeft size={compact ? 18 : 20} />
-      </Button>
-    );
+    switch (tokenDisplayVariant) {
+      case 'icon-only':
+        return (
+          <div className={`${baseClasses} px-2 sm:px-3`}>
+            <Diamond 
+              size={iconSize}
+              className="text-neon-purple-3 flex-shrink-0"
+            />
+            <span className="hidden sm:inline text-foreground text-body font-medium whitespace-nowrap">
+              {cyberTokenBalance.toLocaleString()}
+            </span>
+          </div>
+        );
+      case 'compact':
+        return (
+          <div className={`${baseClasses} px-2`}>
+            <Diamond 
+              size={iconSize}
+              className="text-neon-purple-3 flex-shrink-0"
+            />
+            <span className="text-foreground text-sm font-medium whitespace-nowrap">
+              {cyberTokenBalance > 999 ? `${(cyberTokenBalance / 1000).toFixed(1)}K` : cyberTokenBalance.toLocaleString()}
+            </span>
+          </div>
+        );
+      case 'full':
+      default:
+        return (
+          <div className={`${baseClasses} px-3 sm:px-4`}>
+            <Diamond 
+              size={iconSize}
+              className="text-neon-purple-3 flex-shrink-0"
+            />
+            <span className="text-foreground text-body font-medium whitespace-nowrap">
+              {cyberTokenBalance.toLocaleString()}
+            </span>
+          </div>
+        );
+    }
   };
 
   // Responsive app name component
@@ -98,7 +120,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     
     return (
       <div className="flex-1 flex items-center justify-center px-2 sm:px-4 min-w-0">
-        <span className={`${compact ? 'text-lg' : 'text-xl'} font-bold truncate text-center max-w-full text-[var(--foreground)]`}>
+        <span className={`${compact ? 'text-lg' : 'heading-h3'} truncate text-center max-w-full`}>
           {appName}
         </span>
       </div>
@@ -117,59 +139,55 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           variant="text" 
           iconOnly 
           size={buttonSize}
+          icon={(props) => <Bell {...props} size={iconSize} />}
           onClick={handleNotificationsClick}
           className={`${baseButtonClasses} ${hasNotifications ? 'text-accent-amber animate-pulse' : 'text-muted-foreground hover:text-foreground'}`}
           aria-label="알림"
-        >
-          <Bell size={iconSize} />
-        </Button>
+        />
         
         <Button 
           variant="text" 
           iconOnly 
           size={buttonSize}
+          icon={(props) => <Settings {...props} size={iconSize} />}
           onClick={handleSettingsClick}
           className={`${baseButtonClasses} text-muted-foreground hover:text-foreground`}
           aria-label="설정"
-        >
-          <Settings size={iconSize} />
-        </Button>
+        />
         
         <Button
           variant="text"
           iconOnly
           size={buttonSize}
+          icon={(props) => <UserCircle {...props} size={iconSize} />}
           onClick={handleProfileClick}
           className={`${baseButtonClasses} text-muted-foreground hover:text-foreground`}
           aria-label="프로필"
-        >
-          <UserCircle size={iconSize} />
-        </Button>
+        />
       </div>
     );
   };
-
   return (
     <header
       className={`
-        sticky top-0 z-40 w-full
+        app-header fixed top-0 left-0 right-0 z-20 safe-top pl-safe-left pr-safe-right
         ${compact 
           ? 'h-12 sm:h-14' 
-          : 'h-16'
+          : 'h-[var(--app-header-height-mobile)] md:h-[var(--app-header-height-desktop)]'
         }
-        bg-[var(--background)]/90 backdrop-blur-md
-        border-b border-[var(--border)]
+        glassmorphism-header
+        border-b border-border/20
         flex justify-center
       `}
     >
-      <div className="w-full max-w-[420px] flex items-center h-full relative px-4">
-        {/* Left: Back Button (replaces token display) */}
-        <BackButton />
+      <div className="w-full max-w-[480px] flex items-center h-full relative px-4">
+        {/* Left: Token Balance - Responsive positioning */}
+        <TokenDisplay />
 
-        {/* Center: App Name */}
+        {/* Center: App Name - Responsive sizing and visibility */}
         <AppName />
 
-        {/* Right: Action Icons */}
+        {/* Right: Action Icons - Responsive sizing and spacing */}
         <ActionButtons />
       </div>
     </header>

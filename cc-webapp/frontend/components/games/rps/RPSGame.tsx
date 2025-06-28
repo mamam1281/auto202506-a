@@ -399,7 +399,7 @@ export const RPSGame: React.FC = () => {
     {/* Inject styles for game specific styles */}
     <style>{cssVariablesStyle}</style>
 
-    <div className="miniapp-container min-h-screen relative overflow-hidden bg-background text-foreground">
+    <div className="h-screen w-full relative overflow-hidden bg-background text-foreground flex flex-col">
       {/* Dynamic Background for RPSGame itself */}
       <motion.div
         className="absolute inset-0 -z-10"
@@ -411,17 +411,17 @@ export const RPSGame: React.FC = () => {
         }}
       />
 
-      <div className="relative z-10 w-full flex flex-col items-center justify-center miniapp-content py-6 sm:py-8">
-        <div className="w-full flex flex-col items-center justify-center">
-          {/* Header */}
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-start py-4 overflow-y-auto">
+        <div className="w-full max-w-md flex flex-col items-center">
+          {/* Header - 타이틀 */}
           <motion.header
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" as const }}
-            className="text-center mb-8 sm:mb-12" // 간격 줄임
+            className="text-center mb-5" // 20px 간격으로 조정
           >
             <motion.h1
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6"
+              className="text-3xl font-bold text-foreground"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.6, ease: "backOut" as const }}
@@ -433,19 +433,19 @@ export const RPSGame: React.FC = () => {
             </motion.h1>
           </motion.header>
 
-          {/* Game Area */}
-          <div className="flex flex-col gap-6 sm:gap-8 mb-8 w-full items-center justify-center">
+          {/* Game Area - 플레이어 게임 섹션 */}
+          <div className="flex flex-col gap-4 w-full items-center">
             {/* Player Section */}
             <motion.section
               initial={{ opacity: 0, x: -60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" as const }}
-              className="w-full relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-10 bg-card/50 backdrop-blur-sm border border-border/20 flex flex-col items-center justify-center text-center"
+              className="w-full relative overflow-hidden rounded-xl p-4 bg-card/50 backdrop-blur-sm border border-border/20 flex flex-col items-center justify-center text-center"
               role="region"
               aria-labelledby="player-section-heading"
             >
               <motion.h2
-                className="text-xl sm:text-2xl lg:text-3xl font-semibold text-text-primary mb-6 sm:mb-8"
+                className="text-lg font-semibold text-text-primary mb-4"
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
@@ -466,12 +466,12 @@ export const RPSGame: React.FC = () => {
               initial={{ opacity: 0, x: 60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" as const }}
-              className="w-full relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-10 bg-card/50 backdrop-blur-sm border border-border/20 flex flex-col items-center justify-center text-center"
+              className="w-full relative overflow-hidden rounded-xl p-4 bg-card/50 backdrop-blur-sm border border-border/20 flex flex-col items-center justify-center text-center"
               role="region"
               aria-labelledby="ai-section-heading"
             >
               <motion.h2
-                className="text-xl sm:text-2xl lg:text-3xl font-semibold text-text-primary mb-6 sm:mb-8"
+                className="text-lg font-semibold text-text-primary mb-4"
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.8 }}
@@ -492,12 +492,11 @@ export const RPSGame: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.5 }}
-            className="text-center mb-6 bg-card/30 backdrop-blur-sm border border-border/10 rounded-xl min-h-[60px] flex items-center justify-center"
-            style={{ paddingTop: '50px', paddingBottom: '50px' }}
+            className="text-center my-4 bg-card/30 backdrop-blur-sm border border-border/10 rounded-xl min-h-[50px] flex items-center justify-center px-4 py-3 w-full"
             role="log"
             aria-live="polite"
           >
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               <span className="font-semibold text-accent">CJ AI:</span>
               <motion.span
                 key={gameState.cjaiMessage} // Trigger animation on message change
@@ -513,14 +512,14 @@ export const RPSGame: React.FC = () => {
 
           {/* Scoreboard - CJ AI 아래로 이동, 완전 가운데 정렬 */}
           <motion.div
-            className="w-full flex justify-center mb-8"
+            className="w-full flex justify-center mb-4"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.9, duration: 0.5 }}
           >
-            <div className="bg-card/50 backdrop-blur-sm border border-border/20 rounded-2xl">
-              <div className="bg-card/30 backdrop-blur-sm border border-border/10 rounded-2xl" style={{ paddingTop: '35px', paddingBottom: '35px', paddingLeft: '32px', paddingRight: '32px' }}>
-                <div className="grid grid-cols-3 gap-8 sm:gap-12">
+            <div className="bg-card/50 backdrop-blur-sm border border-border/20 rounded-xl">
+              <div className="bg-card/30 backdrop-blur-sm border border-border/10 rounded-xl px-6 py-4">
+                <div className="grid grid-cols-3 gap-6">
                   {/* Player Wins */}
                   <motion.div
                     className="text-center"
@@ -529,7 +528,7 @@ export const RPSGame: React.FC = () => {
                     aria-live="polite"
                   >
                     <motion.div
-                      className="text-3xl sm:text-4xl font-bold mb-3 text-green-400"
+                      className="text-2xl font-bold mb-2 text-green-400"
                       style={{ textShadow: '0 0 15px var(--color-success), 0 4px 8px rgba(0,0,0,0.8)'}}
                       animate={{
                         scale: gameState.result === 'win' ? 1.2 : 1,
@@ -538,7 +537,7 @@ export const RPSGame: React.FC = () => {
                     >
                       {gameState.score.player}
                     </motion.div>
-                    <div className="text-base sm:text-lg text-muted-foreground font-medium" id="player-score-label">승리</div>
+                    <div className="text-sm text-muted-foreground font-medium" id="player-score-label">승리</div>
                   </motion.div>
 
                   {/* Draws */}
@@ -549,14 +548,14 @@ export const RPSGame: React.FC = () => {
                     aria-live="polite"
                   >
                     <motion.div
-                      className="text-3xl sm:text-4xl font-bold mb-3 text-amber-400"
+                      className="text-2xl font-bold mb-2 text-amber-400"
                       style={{ textShadow: '0 0 15px var(--color-accent-amber), 0 4px 8px rgba(0,0,0,0.8)'}}
                       animate={{ scale: gameState.result === 'draw' ? [1, 1.1, 1] : 1 }}
                       transition={{ duration: 0.6 }}
                     >
                       {gameState.score.draws}
                     </motion.div>
-                    <div className="text-base sm:text-lg text-muted-foreground font-medium" id="draw-score-label">무승부</div>
+                    <div className="text-sm text-muted-foreground font-medium" id="draw-score-label">무승부</div>
                   </motion.div>
 
                   {/* AI Wins */}
@@ -567,20 +566,19 @@ export const RPSGame: React.FC = () => {
                     aria-live="polite"
                   >
                     <motion.div
-                      className="text-3xl sm:text-4xl font-bold mb-3 text-red-400"
+                      className="text-2xl font-bold mb-2 text-red-400"
                       style={{ textShadow: '0 0 15px var(--color-error), 0 4px 8px rgba(0,0,0,0.8)'}}
                       animate={{ scale: gameState.result === 'lose' ? [1, 1.1, 1] : 1 }}
                       transition={{ duration: 0.6 }}
                     >
                       {gameState.score.ai}
                     </motion.div>
-                    <div className="text-base sm:text-lg text-muted-foreground font-medium" id="ai-score-label">패배</div>
+                    <div className="text-sm text-muted-foreground font-medium" id="ai-score-label">패배</div>
                   </motion.div>
                 </div>
               </div>
             </div>
           </motion.div>
-
 
           {/* Result Screen */}
           <AnimatePresence>
