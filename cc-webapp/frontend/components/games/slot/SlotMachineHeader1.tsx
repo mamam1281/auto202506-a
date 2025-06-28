@@ -20,8 +20,9 @@ export const SlotMachineHeader1: React.FC<SlotMachineHeader1Props> = ({
   };
 
   return (
-    <div className={`w-full bg-gradient-to-r from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] rounded-2xl border border-[var(--color-border-primary)] px-8 sm:px-12 text-center relative overflow-hidden mx-auto 
-    ${className}`} style={{ paddingTop: '20px', paddingBottom: '20px' }}>
+    <div className={`w-full bg-gradient-to-r from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] 
+      rounded-2xl border border-[var(--color-border-primary)] px-8 sm:px-12 text-center relative overflow-hidden mx-auto 
+    ${className}`} style={{ paddingTop: '10px', paddingBottom: '10px' }}>
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-pulse"></div>
       </div>
@@ -33,7 +34,8 @@ export const SlotMachineHeader1: React.FC<SlotMachineHeader1Props> = ({
           transition={{ duration: 2, repeat: Infinity }}
         >
           <div className="text-[var(--color-text-primary)] text-xs md:text-sm opacity-75 mb-3 sm:mb-4">JACKPOT</div>
-          <div className="text-[var(--color-accent-amber)] text-2xl sm:text-4xl font-bold tracking-wider flex items-center justify-center">
+          <div className="text-[var(--color-accent-amber)] text-2xl sm:text-4xl 
+          font-bold tracking-wider flex items-center justify-center">
             <Trophy className="w-7 h-7 md:w-8 md:h-8 mr-4" />
             {formatNumber(jackpot)}
           </div>

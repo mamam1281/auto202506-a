@@ -30,7 +30,7 @@ export const SlotMachineMain: React.FC<SlotMachineMainProps> = ({
     <div className={`w-full bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] py-[20px] px-8 sm:px-12 mx-auto ${className}`}>
       {/* Slot Reels */}
       <div className="w-full flex justify-center mb-6">
-        <div className="grid grid-cols-3 gap-4 sm:gap-6 h-32 sm:h-40">
+        <div className="grid grid-cols-3 gap-4 sm:gap-6 h-40 sm:h-48">
           {reels.map((symbol, index) => (
             <SlotReel
               key={index}
@@ -53,7 +53,8 @@ export const SlotMachineMain: React.FC<SlotMachineMainProps> = ({
             exit={{ opacity: 0, y: -20, scale: 0.8 }}
             className="w-full text-center p-4 sm:p-6 bg-gradient-to-r from-[var(--color-accent-amber)]/30 to-[var(--color-accent-yellow)]/30 border-2 border-[var(--color-accent-amber)]/50 rounded-xl mx-auto"
           >
-            <div className="flex items-center justify-center gap-3 text-[var(--color-accent-amber)] text-xl sm:text-2xl font-bold mb-2">
+            <div className="flex items-center justify-center gap-3 text-[var(--color-accent-amber)] 
+            text-xl sm:text-2xl font-bold mb-2">
               <Star className="w-6 h-6" />
               WIN! +{winResult.payout}
               <Star className="w-6 h-6" />

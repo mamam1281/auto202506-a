@@ -48,7 +48,7 @@ export const BetControl: React.FC<BetControlProps> = ({
   return (
     <div className={cn("w-full bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] py-[20px] px-8 sm:px-12 mx-auto", className)}>
       {/* Bet Amount Adjust Buttons & Display */}
-      <div style={{ marginBottom: "60px" }}>
+      <div style={{ marginBottom: "50px" }}>
         <div style={{ marginBottom: "20px", textAlign: "center" }}>
           <h3 className="text-lg sm:text-xl font-semibold text-[var(--color-accent-amber)]">베팅 금액 조절</h3>
           <p className="text-sm text-[var(--color-text-secondary)] mt-1">베팅 금액을 선택하여 더 큰 상금에 도전하세요</p>
@@ -59,10 +59,10 @@ export const BetControl: React.FC<BetControlProps> = ({
             onClick={decreaseBet}
             disabled={disabled || betAmount <= minBet}
             className={cn(
-              "h-12 w-12 sm:h-14 sm:w-14 text-[var(--color-accent-amber)] rounded-xl shadow-xl transform transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-amber)]/50 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed",
+              "h-12 w-12 sm:h-14 sm:w-14 text-[var(--color-accent-amber)] rounded-xl shadow-xl transform transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-amber)]/50 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center",
               disabled || betAmount <= minBet 
                 ? "bg-[var(--color-surface-tertiary)] border-2 border-[var(--color-border-secondary)]" 
-                : "bg-gradient-to-b from-[var(--color-surface-secondary)]/70 to-[var(--color-surface-tertiary)]/70 border-2 border-[var(--color-accent-amber)]/30 hover:from-[var(--color-surface-primary)]/70 hover:to-[var(--color-surface-secondary)]/70 hover:border-[var(--color-accent-amber)]/50 active:scale-95"
+                : "bg-gradient-to-b from-[var(--color-accent-amber)]/20 to-[var(--color-accent-amber)]/10 border-2 border-[var(--color-accent-amber)]/60 hover:from-[var(--color-accent-amber)]/30 hover:to-[var(--color-accent-amber)]/20 hover:border-[var(--color-accent-amber)]/80 active:scale-95"
             )}
             whileTap={!(disabled || betAmount <= minBet) ? { scale: 0.90 } : {}}
           >
@@ -81,10 +81,10 @@ export const BetControl: React.FC<BetControlProps> = ({
             onClick={increaseBet}
             disabled={disabled || betAmount >= maxBet}
             className={cn(
-              "h-12 w-12 sm:h-14 sm:w-14 text-[var(--color-accent-amber)] rounded-xl shadow-xl transform transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-amber)]/50 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed",
+              "h-12 w-12 sm:h-14 sm:w-14 text-[var(--color-accent-amber)] rounded-xl shadow-xl transform transition-all duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-amber)]/50 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center",
               disabled || betAmount >= maxBet 
                 ? "bg-[var(--color-surface-tertiary)] border-2 border-[var(--color-border-secondary)]" 
-                : "bg-gradient-to-b from-[var(--color-surface-secondary)]/70 to-[var(--color-surface-tertiary)]/70 border-2 border-[var(--color-accent-amber)]/30 hover:from-[var(--color-surface-primary)]/70 hover:to-[var(--color-surface-secondary)]/70 hover:border-[var(--color-accent-amber)]/50 active:scale-95"
+                : "bg-gradient-to-b from-[var(--color-accent-amber)]/20 to-[var(--color-accent-amber)]/10 border-2 border-[var(--color-accent-amber)]/60 hover:from-[var(--color-accent-amber)]/30 hover:to-[var(--color-accent-amber)]/20 hover:border-[var(--color-accent-amber)]/80 active:scale-95"
             )}
             whileTap={!(disabled || betAmount >= maxBet) ? { scale: 0.90 } : {}}
           >

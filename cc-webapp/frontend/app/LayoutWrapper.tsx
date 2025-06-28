@@ -44,8 +44,8 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
           hasNotifications={false}
         />
         
-        {/* 메인 콘텐츠 영역 - 하단 네비게이션을 위한 패딩 추가 */}
-        <main className="flex-grow pb-20">
+        {/* 메인 콘텐츠 영역 - 고정 헤더와 하단 네비게이션을 위한 패딩 추가 */}
+        <main className="flex-grow pb-20 pt-[var(--app-header-height-mobile)] md:pt-[var(--app-header-height-desktop)]">
           {children}
         </main>
         

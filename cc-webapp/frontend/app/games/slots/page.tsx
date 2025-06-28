@@ -19,34 +19,48 @@ function LoadingSkeleton() {
 // 코스믹 포츈 슬롯 게임 페이지
 function CosmicFortuneGamePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary-dark-navy)] via-[var(--color-primary-charcoal)] to-[var(--color-primary-dark-navy)] relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary-dark-navy)] via-[var(--color-primary-charcoal)] 
+    to-[var(--color-primary-dark-navy)] relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-[var(--color-accent-purple)] rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-[var(--color-accent-blue)] rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-[var(--color-accent-amber)] rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        <div className="absolute top-10 left-10 w-72 h-72 bg-[var(--color-accent-purple)] 
+        rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+        <div className="absolute top-30 right-10 w-72 h-72 bg-[var(--color-accent-blue)] 
+        rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-[var(--color-accent-amber)] 
+        rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="relative z-10">
-        {/* Header */}
-        <motion.div 
-          className="text-center py-16 sm:py-20"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h1 className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-[var(--color-accent-amber)] via-[var(--color-accent-yellow)] to-[var(--color-accent-amber)] bg-clip-text text-transparent mb-4 tracking-wide">
+      {/* Page Header - 가챠 페이지와 동일한 구조 */}
+      <motion.header
+        className="sticky top-0 z-40 py-3 sm:py-4 px-4 sm:px-6 bg-gradient-to-br from-[var(--color-primary-dark-navy)]/80 via-[var(--color-primary-charcoal)]/80 to-[var(--color-primary-dark-navy)]/80 backdrop-blur-md border-b border-[var(--border)]/20"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+      >
+        <div className="max-w-6xl mx-auto flex flex-col items-center justify-center gap-2 sm:gap-3">
+          <motion.h1
+            className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-[var(--color-accent-amber)] via-[var(--color-accent-yellow)] to-[var(--color-accent-amber)] bg-clip-text text-transparent text-center tracking-wide"
+            whileHover={{ scale: 1.02 }}
+          >
             코스믹 포츈
-          </h1>
-          <p className="text-lg sm:text-xl text-[var(--color-text-secondary)] font-medium">
+          </motion.h1>
+          <motion.p 
+            className="text-lg sm:text-xl text-[var(--color-text-secondary)] font-medium text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
             우주에서 가장 스릴 넘치는 슬롯 머신
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
+      </motion.header>
 
-        {/* Main Game Container */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-[300px] min-h-screen flex justify-center">
+      {/* Main Game Container */}
+      <main className="px-4 py-6 sm:py-8 max-w-6xl mx-auto w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center justify-center">
           <motion.div
-            className="w-full max-w-2xl min-h-screen flex flex-col justify-start pt-20"
+            className="w-full max-w-2xl"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -54,7 +68,7 @@ function CosmicFortuneGamePage() {
             <SlotMachine />
           </motion.div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
