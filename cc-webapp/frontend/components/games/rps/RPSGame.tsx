@@ -399,7 +399,7 @@ export const RPSGame: React.FC = () => {
     {/* Inject styles for game specific styles */}
     <style>{cssVariablesStyle}</style>
 
-    <div className="min-h-screen relative overflow-hidden bg-background text-foreground">
+    <div className="miniapp-container min-h-screen relative overflow-hidden bg-background text-foreground">
       {/* Dynamic Background for RPSGame itself */}
       <motion.div
         className="absolute inset-0 -z-10"
@@ -411,8 +411,8 @@ export const RPSGame: React.FC = () => {
         }}
       />
 
-      <div className="relative z-10 w-full flex flex-col items-center justify-center px-4 py-6 sm:py-8">
-        <div className="w-full max-w-6xl mx-auto flex flex-col items-center justify-center">
+      <div className="relative z-10 w-full flex flex-col items-center justify-center miniapp-content py-6 sm:py-8">
+        <div className="w-full flex flex-col items-center justify-center">
           {/* Header */}
           <motion.header
             initial={{ opacity: 0, y: -30 }}
@@ -434,13 +434,13 @@ export const RPSGame: React.FC = () => {
           </motion.header>
 
           {/* Game Area */}
-          <div className="flex flex-col gap-6 sm:gap-8 mb-8 w-full max-w-4xl mx-auto items-center justify-center">
+          <div className="flex flex-col gap-6 sm:gap-8 mb-8 w-full items-center justify-center">
             {/* Player Section */}
             <motion.section
               initial={{ opacity: 0, x: -60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" as const }}
-              className="w-full max-w-2xl mx-auto relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-10 bg-card/50 backdrop-blur-sm border border-border/20 flex flex-col items-center justify-center text-center"
+              className="w-full relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-10 bg-card/50 backdrop-blur-sm border border-border/20 flex flex-col items-center justify-center text-center"
               role="region"
               aria-labelledby="player-section-heading"
             >
@@ -466,7 +466,7 @@ export const RPSGame: React.FC = () => {
               initial={{ opacity: 0, x: 60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" as const }}
-              className="w-full max-w-2xl mx-auto relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-10 bg-card/50 backdrop-blur-sm border border-border/20 flex flex-col items-center justify-center text-center"
+              className="w-full relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-10 bg-card/50 backdrop-blur-sm border border-border/20 flex flex-col items-center justify-center text-center"
               role="region"
               aria-labelledby="ai-section-heading"
             >

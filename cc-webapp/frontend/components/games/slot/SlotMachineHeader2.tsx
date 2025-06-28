@@ -26,7 +26,7 @@ export const SlotMachineHeader2: React.FC<SlotMachineHeader2Props> = ({
   return (
     <div className={`w-full bg-gradient-to-br from-[var(--color-surface-primary)] 
     to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] 
-    px-8 sm:px-12 mx-auto ${className}`} style={{ paddingBottom: '10px' }}>
+    px-6 sm:px-12 mx-auto ${className}`} style={{ paddingBottom: '4px' }}>
       <div className="w-full flex items-center justify-center">
         <div className="w-full flex items-center justify-between">
           <div className="text-[var(--color-text-primary)] text-sm md:text-base font-medium opacity-90">

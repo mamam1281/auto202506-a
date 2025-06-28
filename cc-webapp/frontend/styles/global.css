@@ -4,6 +4,38 @@
 /* Custom variants for theming will be handled in tailwind.config.js */
 
 /*
+  미니앱 스타일 고정 크기 컨테이너
+  텔레그램 미니앱처럼 모든 디바이스에서 일관된 크기 제공
+*/
+.miniapp-container {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  background: var(--color-primary-dark-navy);
+}
+
+.miniapp-content {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.miniapp-header {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.miniapp-bottom-nav {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/*
   1. 컬러 시스템
   모든 디자인 토큰의 기반이 되는 색상 팔레트와 그라데이션을 정의합니다.
 */

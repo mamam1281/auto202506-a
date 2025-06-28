@@ -172,16 +172,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   return (
     <header
       className={`
-        app-header fixed top-0 left-0 right-0 z-50 safe-top pl-safe-left pr-safe-right
+        app-header fixed top-0 left-0 right-0 z-20 safe-top pl-safe-left pr-safe-right
         ${compact 
           ? 'h-12 sm:h-14' 
           : 'h-[var(--app-header-height-mobile)] md:h-[var(--app-header-height-desktop)]'
         }
         glassmorphism-header
         border-b border-border/20
+        flex justify-center
       `}
     >
-      <div className="container flex items-center h-full relative max-w-full">
+      <div className="w-full max-w-[480px] flex items-center h-full relative px-4">
         {/* Left: Token Balance - Responsive positioning */}
         <TokenDisplay />
 

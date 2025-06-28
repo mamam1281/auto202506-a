@@ -10,6 +10,9 @@ import Button from '../components/Button';
 import QuickStartItem from '../components/QuickStartItem';
 import LoadingSpinner from '../components/LoadingSpinner';
 
+// 게임 팝업 유틸리티
+import { openGamePopup } from '../utils/gamePopup';
+
 export default function CasinoDashboard() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -20,15 +23,15 @@ export default function CasinoDashboard() {
     return () => clearTimeout(timer);
   }, []);
 
-  // 게임 데이터
+  // 게임 데이터 - 팝업으로 열기
   const featuredGames = [
     {
       id: 'cosmic-fortune',
       title: '코스믹 포츈',
       rating: 4.9,
       players: '31K명',
-      imagePlaceholder: '�',
-      onClick: () => router.push('/games/slots')
+      imagePlaceholder: '🎰',
+      onClick: () => openGamePopup('slots')
     },
     {
       id: 'royal-roulette',
@@ -44,7 +47,7 @@ export default function CasinoDashboard() {
       rating: 4.5,
       players: '956명',
       imagePlaceholder: '✂️',
-      onClick: () => router.push('/games/rps')
+      onClick: () => openGamePopup('rps')
     },
     {
       id: 'lucky-gacha',
@@ -52,18 +55,18 @@ export default function CasinoDashboard() {
       rating: 4.9,
       players: '3.1K명',
       imagePlaceholder: '🎁',
-      onClick: () => router.push('/gacha')
+      onClick: () => openGamePopup('gacha')
     }
   ];
 
-  // 빠른 시작 액션들
+  // 빠른 시작 액션들 - 일부 팝업으로 열기
   const quickActions = [
     {
       id: 'game-start',
       label: '게임 시작',
       iconPlaceholder: '🎮',
       iconBgColor: 'var(--color-purple-primary)',
-      onClick: () => router.push('/games')
+      onClick: () => openGamePopup('slots') // 슬롯 게임 팝업으로 시작
     },
     {
       id: 'deposit',
@@ -99,10 +102,10 @@ export default function CasinoDashboard() {
            overflow: 'hidden' // 가로 스크롤 방지
          }}>
 
-      {/* Main Content - 스크롤 가능 영역 */}
+      {/* Main Content - 고정 크기 컨테이너로 변경 */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden w-full">
         
-        <div className="w-full max-w-full px-4 py-6 sm:py-8 lg:py-12">
+        <div className="miniapp-content py-6 sm:py-8">
         
         {/* 웰컴 섹션 */}
         <motion.div 
@@ -131,7 +134,7 @@ export default function CasinoDashboard() {
             <Button
               variant="primary"
               size="lg"
-              onClick={() => router.push('/games')}
+              onClick={() => openGamePopup('slots')} // 팝업으로 게임 시작
             >
               🎮 게임 플레이
             </Button>
@@ -145,7 +148,7 @@ export default function CasinoDashboard() {
             <Button
               variant="accent"
               size="lg"
-              onClick={() => router.push('/promotions')}
+              onClick={() => openGamePopup('gacha')} // 가챠 팝업으로 열기
             >
               🎁 보너스 받기
             </Button>

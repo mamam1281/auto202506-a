@@ -91,7 +91,7 @@ export const SlotReel: React.FC<SlotReelProps> = ({
           {reelSymbols.map((s, i) => (
             <div
               key={i}
-              className="flex items-center justify-center w-full min-h-[calc(100%/1.5)] text-4xl sm:text-5xl text-[var(--color-text-muted)] opacity-70" // Show roughly 1.5 symbols at a time
+              className="flex items-center justify-center w-full min-h-[calc(100%/1.5)] text-5xl sm:text-6xl text-[var(--color-text-muted)] opacity-70" // Show roughly 1.5 symbols at a time
             >
               {s}
             </div>
@@ -99,7 +99,7 @@ export const SlotReel: React.FC<SlotReelProps> = ({
         </motion.div>
       ) : (
         <motion.div
-          className="flex items-center justify-center h-full w-full text-4xl sm:text-5xl"
+          className="flex items-center justify-center h-full w-full text-5xl sm:text-6xl"
           variants={winningSymbolVariants}
           initial="initial"
           animate={isWinning ? 'winning' : 'initial'}

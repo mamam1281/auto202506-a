@@ -126,8 +126,10 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
     return () => clearInterval(interval);
   }, []);
   
-  const handleSpin = useCallback(async () => {
-    if (balance < betAmount || isSpinning) return;
+  const handleSpin = useCallback(() => {
+    if (balance < betAmount || isSpinning) {
+      return;
+    }
 
     setIsSpinning(true);
     setGameState('spinning');
@@ -167,9 +169,10 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
       className={`w-full mx-auto flex flex-col items-center ${className}`}
       animate={shake ? { x: [-5, 5, -5, 5, 0] } : {}}
       transition={{ duration: 0.5 }}
+      style={{ pointerEvents: 'auto' }} // CSS 강제 활성화
     >
       {/* Header 1 - Jackpot Display */}
-      <div className="w-full" style={{ marginBottom: '40px' }}>
+      <div className="w-full" style={{ marginBottom: '10px' }}>
         <SlotMachineHeader1 
           jackpot={jackpot} 
           className="w-full"
@@ -177,7 +180,7 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
       </div>
 
       {/* Header 2 - Balance & Sound */}
-      <div className="w-full" style={{ marginBottom: '50px' }}>
+      <div className="w-full" style={{ marginBottom: '10px' }}>
         <SlotMachineHeader2 
           balance={balance}
           isSoundEnabled={isSoundEnabled}

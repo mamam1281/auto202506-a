@@ -33,16 +33,16 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   // Font size: text-xs (12px)
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 h-20 w-full min-w-full bg-gray-900/95 border-t border-gray-700 backdrop-blur-md flex items-center justify-around px-4 py-2 shadow-lg"
+      className="fixed bottom-0 left-0 right-0 z-50 h-20 w-full bg-gray-900/95 border-t border-gray-700 backdrop-blur-md flex justify-center"
       style={{
         position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
         width: '100%',
-        minWidth: '100vw'
       }}
     >
+      <div className="w-full max-w-[480px] flex items-center justify-around px-4 py-2">
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
         const IconComponent = item.icon;        return (
@@ -82,6 +82,7 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
           </motion.button>
         );
       })}
+      </div>
     </nav>
   );
 };

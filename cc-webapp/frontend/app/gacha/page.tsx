@@ -109,14 +109,14 @@ function GachaPageContent() {
         })}
       </div>
 
-      {/* Page Header */}
+      {/* Page Header - 고정 크기 컨테이너 */}
       <motion.header
-        className="sticky top-0 z-40 py-3 sm:py-4 px-4 sm:px-6 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)] shadow-md"
+        className="sticky top-0 z-40 py-3 sm:py-4 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)] shadow-md"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
       >
-        <div className="max-w-6xl mx-auto flex flex-col items-center justify-center gap-2 sm:gap-3">
+        <div className="miniapp-header px-4 sm:px-6 flex flex-col items-center justify-center gap-2 sm:gap-3">
           <motion.h1
             className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] bg-clip-text text-transparent text-center"
             whileHover={{ scale: 1.02 }}
@@ -127,8 +127,8 @@ function GachaPageContent() {
         </div>
       </motion.header>
 
-      {/* Main Content Area */}
-      <main className="px-4 py-6 sm:py-8 max-w-6xl mx-auto w-full flex flex-col items-center">
+      {/* Main Content Area - 고정 크기 컨테이너 */}
+      <main className="miniapp-content py-6 sm:py-8 w-full flex flex-col items-center">
         {/* GachaBox Wrapper */}
         <div className="w-full flex flex-col items-center justify-center gap-8 sm:gap-12">
           <motion.div

@@ -32,13 +32,17 @@ export const SlotMachineButton: React.FC<SlotMachineButtonProps> = ({
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
 
+  const handleSpinClick = () => {
+    onSpin();
+  };
+
   return (
     <>
       <div className={`w-full bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] py-[20px] px-8 sm:px-12 mx-auto ${className}`}>
       {/* Spin Button */}
       <div className="w-full text-center" style={{ marginBottom: "30px" }}>
         <Button
-          onClick={onSpin}
+          onClick={handleSpinClick}
           disabled={!canSpin}
           size="lg"
           className={cn(

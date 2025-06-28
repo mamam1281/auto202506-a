@@ -25,16 +25,18 @@ const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="game-specific-layout flex flex-col min-h-screen bg-background">
-      <AppHeader
-        appName="Game Mode" // Or pass specific game name
-        onProfileClick={handleProfileClick}
-        onNotificationsClick={handleNotificationsClick}
-        onSettingsClick={handleSettingsClick}
-        showTokenBalanceOnMobile={true} // Typically still want to see balance
-        hasNotifications={false} // Example
-      />
-      <main className="flex-grow w-full flex flex-col items-center justify-center p-2 md:p-4">
+    <div className="miniapp-container game-specific-layout flex flex-col min-h-screen bg-background">
+      <div className="miniapp-header">
+        <AppHeader
+          appName="Game Mode" // Or pass specific game name
+          onProfileClick={handleProfileClick}
+          onNotificationsClick={handleNotificationsClick}
+          onSettingsClick={handleSettingsClick}
+          showTokenBalanceOnMobile={true} // Typically still want to see balance
+          hasNotifications={false} // Example
+        />
+      </div>
+      <main className="flex-grow w-full flex flex-col items-center justify-center miniapp-content py-2 md:py-4">
         {/*
           Layout for the game itself.
           Using flex to center content, but games might need more specific structures.

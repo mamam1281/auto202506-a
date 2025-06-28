@@ -22,12 +22,12 @@ export const SlotMachineHeader1: React.FC<SlotMachineHeader1Props> = ({
   return (
     <div className={`w-full bg-gradient-to-r from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] 
       rounded-2xl border border-[var(--color-border-primary)] px-8 sm:px-12 text-center relative overflow-hidden mx-auto 
-    ${className}`} style={{ paddingTop: '10px', paddingBottom: '10px' }}>
+    ${className}`} style={{ paddingTop: '5px', paddingBottom: '5px' }}>
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-pulse"></div>
       </div>
       
-      <div className="relative z-10 w-full flex flex-col items-center justify-center">
+      <div className="relative z-5 w-full flex flex-col items-center justify-center">
         <motion.div
           className="w-full text-center flex flex-col items-center justify-center"
           animate={{ scale: [1, 1.05, 1] }}

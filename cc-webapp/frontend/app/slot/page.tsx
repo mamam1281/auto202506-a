@@ -6,15 +6,15 @@ import SlotMachine from '../../components/games/slot/SlotMachine';
 
 export default function SlotPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[var(--color-surface-primary)] via-[var(--color-surface-secondary)] to-[var(--color-surface-tertiary)] flex flex-col">
-      {/* Header */}
+    <div className="miniapp-container min-h-screen bg-gradient-to-br from-[var(--color-surface-primary)] via-[var(--color-surface-secondary)] to-[var(--color-surface-tertiary)] flex flex-col">
+      {/* Header - 고정 크기 컨테이너 */}
       <motion.header 
         className="bg-gradient-to-r from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] shadow-xl border-b border-[var(--color-border-primary)]"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="miniapp-header px-4 py-6">
           <div className="text-center">
             <motion.h1 
               className="text-3xl sm:text-4xl font-bold text-[var(--color-text-primary)] mb-2"
@@ -36,9 +36,9 @@ export default function SlotPage() {
         </div>
       </motion.header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-2xl">
+      {/* Main Content - 고정 크기 컨테이너 */}
+      <main className="flex-1 flex items-center justify-center miniapp-content py-4 sm:py-6 lg:py-8">
+        <div className="w-full">
           <motion.div
             initial={{ scale: 0.9, opacity: 0, y: 50 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}

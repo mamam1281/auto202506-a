@@ -47,13 +47,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    minimumScale: 1,
-  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   alternates: {
     canonical: '/',
@@ -89,6 +82,17 @@ export const metadata: Metadata = {
   },
 };
 
+// 5. Viewport 설정 (Next.js 15 요구사항)
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  minimumScale: 1,
+  themeColor: '#000000',
+  colorScheme: 'dark light',
+};
+
 export interface RootLayoutProps {
   children: React.ReactNode;
 }
@@ -108,8 +112,6 @@ export default function RootLayout({
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="color-scheme" content="dark light" />
       </head>
       <body 
         className="theme-dark min-h-screen min-h-dvh bg-[var(--background)] text-[var(--foreground)] antialiased overflow-x-hidden safe-py"

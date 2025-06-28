@@ -30,7 +30,7 @@ export const SlotMachineMain: React.FC<SlotMachineMainProps> = ({
     <div className={`w-full bg-gradient-to-br from-[var(--color-surface-primary)] to-[var(--color-surface-secondary)] rounded-2xl border border-[var(--color-border-primary)] py-[20px] px-8 sm:px-12 mx-auto ${className}`}>
       {/* Slot Reels */}
       <div className="w-full flex justify-center mb-6">
-        <div className="grid grid-cols-3 gap-4 sm:gap-6 h-40 sm:h-48">
+        <div className="grid grid-cols-3 gap-6 sm:gap-8 h-40 sm:h-48 w-full max-w-md mx-auto">
           {reels.map((symbol, index) => (
             <SlotReel
               key={index}
@@ -38,7 +38,7 @@ export const SlotMachineMain: React.FC<SlotMachineMainProps> = ({
               isSpinning={isSpinning}
               delayFactor={index * 0.3}
               isWinning={winResult?.isWin && winResult?.winningPositions?.includes(index)}
-              className="bg-gradient-to-b from-[var(--color-surface-secondary)] to-[var(--color-surface-tertiary)] shadow-xl shadow-black/40 border-2 border-[var(--color-border-primary)]"
+              className="bg-gradient-to-b from-[var(--color-surface-secondary)] to-[var(--color-surface-tertiary)] shadow-xl shadow-black/40 border-2 border-[var(--color-border-primary)] min-w-[100px] sm:min-w-[120px]"
             />
           ))}
         </div>
