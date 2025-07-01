@@ -35,26 +35,39 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 h-20 w-full border-t flex justify-center"
       style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        width: '100vw',
-        height: '80px',
-        backgroundColor: 'rgba(26, 26, 26, 0.95)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        borderTop: '1px solid #374151',
-        zIndex: 50,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: 0,
-        padding: 0,
-        boxSizing: 'border-box',
+        position: 'fixed !important' as any,
+        bottom: '0 !important' as any,
+        left: '0 !important' as any,
+        right: '0 !important' as any,
+        width: '100vw !important' as any,
+        height: '80px !important' as any,
+        backgroundColor: 'rgba(26, 26, 26, 0.95) !important' as any,
+        backdropFilter: 'blur(10px) !important' as any,
+        WebkitBackdropFilter: 'blur(10px) !important' as any,
+        borderTop: '1px solid #374151 !important' as any,
+        zIndex: '999 !important' as any,
+        display: 'flex !important' as any,
+        justifyContent: 'center !important' as any,
+        alignItems: 'center !important' as any,
+        margin: '0 !important' as any,
+        padding: '0 !important' as any,
+        boxSizing: 'border-box !important' as any,
+        maxWidth: 'none !important' as any,
+        transform: 'none !important' as any,
+        inset: 'auto 0 0 0 !important' as any,
       }}
     >
-      <div className="w-full flex items-center justify-around" style={{ height: '100%', padding: 0 }}>
+      <div 
+        className="w-full flex items-center justify-around" 
+        style={{ 
+          height: '100%', 
+          padding: 0, 
+          margin: 0,
+          maxWidth: '420px',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}
+      >
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
         const IconComponent = item.icon;        return (
@@ -64,14 +77,17 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
               console.log('BottomNav onClick triggered:', item.id, item.path);
               onTabClick(item.id, item.path);
             }}            className={`
-              flex flex-col items-center justify-center gap-0.5 p-4 rounded-xl min-w-14 transition-all duration-200
+              flex flex-col items-center justify-center gap-0.5 rounded-xl min-w-14 transition-all duration-200
               ${isActive
                 ? 'bg-purple-400/20 shadow-lg' 
                 : 'hover:bg-white/10'
               }
             `}
             style={{
-              color: isActive ? '#5B30F6' : '#ffffff'
+              color: isActive ? '#5B30F6' : '#ffffff',
+              padding: '8px 16px',
+              margin: 0,
+              boxSizing: 'border-box',
             }}
             aria-current={isActive ? 'page' : undefined}
             aria-label={`${item.label} 탭`}

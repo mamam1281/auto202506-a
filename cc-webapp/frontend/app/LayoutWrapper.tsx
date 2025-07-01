@@ -48,13 +48,13 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
         <div className="miniapp-content">
           {children}
         </div>
-        
-        {/* BottomNavigationBar - 고정 하단 (CSS fixed 적용) */}
-        <BottomNavigationBar
-          activeTab={activeTab}
-          onTabClick={handleTabClick}
-        />
       </div>
+      
+      {/* BottomNavigationBar - miniapp-container 밖으로 빼서 완전 독립 */}
+      <BottomNavigationBar
+        activeTab={activeTab}
+        onTabClick={handleTabClick}
+      />
     </Provider>
   );
 }

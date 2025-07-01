@@ -84,9 +84,13 @@ export function PullButton({ state, tickets, onPull, className = '' }: PullButto
             }
           } : {})
         }}
-        whileHover={!isDisabled ? { scale: 1.03, y: -2, boxShadow: '0 0 20px rgba(var(--color-accent-red-rgb), 0.5)' } : {}}
-        whileTap={!isDisabled ? { scale: 0.97, y: 1 } : {}}
-        transition={{ duration: 0.2, type: 'spring', stiffness: 300 }}
+        whileHover={!isDisabled ? { 
+          backgroundColor: 'rgba(255, 69, 22, 0.9)' 
+        } : {}}
+        whileTap={!isDisabled ? { 
+          backgroundColor: 'rgba(255, 69, 22, 1)' 
+        } : {}}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
       >
         {/* Subtle Glowing Border Animation (only when not disabled) */}
         {!isDisabled && (

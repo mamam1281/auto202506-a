@@ -1,73 +1,114 @@
-/* 가위바위보 팝업 전용 스타일 (400x750) */
-/* 이 파일은 가위바위보 팝업에서만 사용되며, 다른 게임이나 메인 앱에는 영향을 주지 않습니다 */
+/* 가위바위보 팝업 전용 스타일 (400x750 완전 압축) */
+/* 슬롯/가챠처럼 화면에 모든 기능이 다 나타나도록 최대 압축 */
 
 .rps-popup-compact {
-  /* 전체 컨테이너 최적화 */
+  /* 전체 화면 고정, 스크롤 완전 제거 */
   height: 100vh !important;
+  min-height: 100vh !important;
+  max-height: 100vh !important;
   overflow: hidden !important;
-  padding: 8px !important;
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  /* 최소 패딩으로 공간 확보 */
+  padding: 4px !important;
+  /* 전체 배경 */
+  background: linear-gradient(135deg, 
+    rgba(139, 69, 19, 0.9) 0%,
+    rgba(160, 82, 45, 0.85) 100%
+  ) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding-top: 60px !important; /* 헤더 공간 */
+  padding-bottom: 100px !important; /* 바텀네비 공간 */
 }
 
+/* 메인 게임 컨테이너 - 최대 압축 */
 .rps-popup-compact .game-container {
-  height: calc(100vh - 16px) !important;
+  width: 100% !important;
+  max-width: 380px !important;
+  height: calc(100vh - 160px) !important; /* 헤더+바텀네비 제외 */
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
-  gap: 8px !important;
+  gap: 4px !important; /* 최소 간격 */
+  overflow: hidden !important;
 }
 
-/* 헤더 영역 압축 */
+/* 헤더 영역 - 최대 압축 */
 .rps-popup-compact .game-header {
-  padding: 8px 12px !important;
-  margin-bottom: 6px !important;
+  padding: 4px 8px !important; /* 기존 8px 12px에서 압축 */
+  margin-bottom: 4px !important; /* 기존 6px에서 압축 */
   height: auto !important;
-  min-height: 60px !important;
+  min-height: 40px !important; /* 기존 60px에서 압축 */
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .rps-popup-compact .score-display {
-  font-size: 14px !important;
-  padding: 4px 8px !important;
-  margin: 2px !important;
+  font-size: 12px !important; /* 기존 14px에서 압축 */
+  padding: 2px 4px !important; /* 기존 4px 8px에서 압축 */
+  margin: 1px !important; /* 기존 2px에서 압축 */
+  line-height: 1.2 !important;
 }
 
-/* 메인 게임 영역 */
+/* 메인 게임 영역 - 압축 */
 .rps-popup-compact .game-main {
   flex: 1 !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: center !important;
+  justify-content: space-evenly !important; /* space-between에서 변경 */
   align-items: center !important;
-  padding: 8px !important;
-  gap: 12px !important;
+  padding: 4px !important; /* 기존 8px에서 압축 */
+  gap: 6px !important; /* 기존 12px에서 압축 */
+  overflow: hidden !important;
 }
 
-/* 선택지 영역 */
+/* AI vs 플레이어 대결 화면 - 압축 */
 .rps-popup-compact .opponent-display {
-  height: 180px !important; /* 압축 */
-  margin-bottom: 12px !important;
+  height: 120px !important; /* 기존 180px에서 대폭 압축 */
+  margin-bottom: 6px !important; /* 기존 12px에서 압축 */
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 4px 8px !important;
 }
 
 .rps-popup-compact .choice-display {
-  font-size: 48px !important; /* AI/플레이어 선택 표시 크기 */
-  margin: 8px !important;
+  font-size: 32px !important; /* 기존 48px에서 압축 */
+  margin: 4px !important; /* 기존 8px에서 압축 */
+  line-height: 1 !important;
+  text-align: center !important;
 }
 
-/* 선택 버튼들 */
+/* 선택 버튼들 - 압축 */
 .rps-popup-compact .choice-buttons {
-  padding: 8px !important;
-  gap: 8px !important;
-  margin-top: 12px !important;
+  padding: 4px !important; /* 기존 8px에서 압축 */
+  gap: 4px !important; /* 기존 8px에서 압축 */
+  margin-top: 6px !important; /* 기존 12px에서 압축 */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
 }
 
 .rps-popup-compact .choice-button {
-  width: 80px !important;
-  height: 80px !important;
-  font-size: 32px !important;
-  border-radius: 12px !important;
-  margin: 4px !important;
+  width: 60px !important; /* 기존 80px에서 압축 */
+  height: 60px !important; /* 기존 80px에서 압축 */
+  font-size: 24px !important; /* 기존 32px에서 압축 */
+  border-radius: 8px !important; /* 기존 12px에서 압축 */
+  margin: 2px !important; /* 기존 4px에서 압축 */
+  padding: 0 !important;
+  min-width: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
 }
 
-/* 결과 화면 */
+/* 결과 화면 - 압축 */
 .rps-popup-compact .result-screen {
   position: absolute !important;
   top: 0 !important;
@@ -75,7 +116,9 @@
   right: 0 !important;
   bottom: 0 !important;
   z-index: 50 !important;
-  padding: 16px !important;
+  padding: 8px !important; /* 기존 16px에서 압축 */
+  padding-top: 60px !important; /* 헤더 공간 */
+  padding-bottom: 100px !important; /* 바텀네비 공간 */
 }
 
 .rps-popup-compact .result-content {
@@ -84,20 +127,41 @@
   flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
-  gap: 16px !important;
+  gap: 8px !important; /* 기존 16px에서 압축 */
+  max-width: 380px !important;
+  margin: 0 auto !important;
 }
 
 .rps-popup-compact .result-title {
-  font-size: 24px !important;
+  font-size: 18px !important; /* 기존 24px에서 압축 */
   font-weight: 700 !important;
-  margin-bottom: 8px !important;
+  margin-bottom: 4px !important; /* 기존 8px에서 압축 */
+  line-height: 1.2 !important;
+  text-align: center !important;
 }
 
 .rps-popup-compact .result-message {
-  font-size: 16px !important;
+  font-size: 14px !important; /* 기존 16px에서 압축 */
   text-align: center !important;
-  line-height: 1.4 !important;
-  margin-bottom: 12px !important;
+  line-height: 1.3 !important; /* 기존 1.4에서 압축 */
+  margin-bottom: 6px !important; /* 기존 12px에서 압축 */
+  padding: 0 8px !important;
+}
+
+/* 승부 결과 대형 이모지 표시 - 압축 */
+.rps-popup-compact .result-emoji {
+  font-size: 40px !important; /* 기존 60px에서 압축 */
+  margin: 4px 0 !important; /* 기존 8px에서 압축 */
+  line-height: 1 !important;
+}
+
+/* 게임 재시작 버튼 - 압축 */
+.rps-popup-compact .restart-button {
+  padding: 8px 16px !important; /* 기존 12px 24px에서 압축 */
+  font-size: 14px !important; /* 기존 16px에서 압축 */
+  margin-top: 8px !important; /* 기존 16px에서 압축 */
+  min-height: 40px !important; /* 기존 48px에서 압축 */
+  border-radius: 8px !important;
 }
 
 /* 프로젝트 기준 컬러 테마 적용 */
