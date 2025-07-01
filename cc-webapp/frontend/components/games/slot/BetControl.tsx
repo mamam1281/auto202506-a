@@ -51,7 +51,6 @@ export const BetControl: React.FC<BetControlProps> = ({
       <div style={{ marginBottom: "50px" }}>
         <div style={{ marginBottom: "20px", textAlign: "center" }}>
           <h3 className="text-lg sm:text-xl font-semibold text-[var(--color-accent-amber)]">베팅 금액 조절</h3>
-          <p className="text-sm text-[var(--color-text-secondary)] mt-1">베팅 금액을 선택하여 더 큰 상금에 도전하세요</p>
         </div>
       
         <div className="w-full flex items-center justify-center gap-4 sm:gap-6 mb-4">
@@ -69,7 +68,7 @@ export const BetControl: React.FC<BetControlProps> = ({
             <Minus className="h-5 w-5 sm:h-6 sm:w-6" />
           </motion.button>
 
-          <div className="text-center px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-[var(--color-accent-amber)]/30 via-[var(--color-accent-yellow)]/30 to-[var(--color-accent-amber)]/30 border-2 border-[var(--color-accent-amber)]/50 rounded-2xl backdrop-blur-sm shadow-xl min-w-[160px] sm:min-w-[200px]">
+          <div className="text-center px-3 py-1 sm:px-8 sm:py-4 bg-gradient-to-r from-[var(--color-accent-amber)]/30 via-[var(--color-accent-yellow)]/30 to-[var(--color-accent-amber)]/30 border-2 border-[var(--color-accent-amber)]/50 rounded-2xl backdrop-blur-sm shadow-xl min-w-[160px] sm:min-w-[200px]">
             <div className="text-sm font-medium text-[var(--color-accent-amber)]/90 mb-1 tracking-wide">현재 베팅액</div>
             <div className="text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)] flex items-center justify-center gap-2">
               <Gem size={20} className="opacity-80 inline-block" />
@@ -97,10 +96,9 @@ export const BetControl: React.FC<BetControlProps> = ({
       <div className="w-full">
         <div style={{ marginBottom: "30px", textAlign: "center" }}>
           <h3 className="text-lg sm:text-xl font-semibold text-[var(--color-accent-amber)]">빠른 베팅 선택</h3>
-          <p className="text-sm text-[var(--color-text-secondary)] mt-1">원하는 베팅 금액을 빠르게 선택하세요</p>
         </div>
         
-        <div className="w-full flex justify-center gap-2 sm:gap-3 flex-wrap">
+        <div className="w-full flex justify-center gap-2 sm:gap-3">{/* flex-wrap 제거하여 한 줄로 배치 */}
           {quickBetOptions.map((amount) => (
             <Button
               key={amount}
@@ -109,7 +107,7 @@ export const BetControl: React.FC<BetControlProps> = ({
               variant={betAmount === amount ? "primary" : "outline"}
               size="sm"
               className={cn(
-                "text-sm sm:text-base px-4 py-2 min-w-[60px] h-10 transition-all duration-200 border-2 shadow-xl",
+                "btn-outline btn-sm text-sm sm:text-base px-2 py-2 min-w-[32px] h-10 transition-all duration-200 border-2 shadow-xl",
                 betAmount === amount ? 
                   "bg-gradient-to-r from-[var(--color-accent-amber)] to-[var(--color-accent-yellow)] border-[var(--color-accent-amber)] shadow-lg shadow-[var(--color-accent-amber)]/20" : 
                   "hover:border-[var(--color-accent-amber)]/50 hover:shadow-xl hover:shadow-[var(--color-accent-amber)]/10"

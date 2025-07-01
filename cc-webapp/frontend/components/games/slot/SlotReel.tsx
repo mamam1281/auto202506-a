@@ -116,20 +116,52 @@ export const SlotReel: React.FC<SlotReelProps> = ({
           {reelSymbols.map((s, i) => (
             <div
               key={i}
-              className="flex items-center justify-center w-full min-h-[calc(100%/1.5)] text-5xl sm:text-6xl text-[var(--color-text-muted)] opacity-70" // Show roughly 1.5 symbols at a time
+              className="flex items-center justify-center w-full min-h-[calc(100%/1.5)] text-5xl sm:text-6xl text-[var(--color-text-muted)] opacity-70"
+              style={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                lineHeight: '1'
+              }}
             >
-              {s}
+              <span style={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                lineHeight: '1'
+              }}>
+                {s}
+              </span>
             </div>
           ))}
         </motion.div>
       ) : (
         <motion.div
           className="flex items-center justify-center h-full w-full text-5xl sm:text-6xl"
+          style={{ 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            lineHeight: '1',
+            height: '100%',
+            width: '100%'
+          }}
           variants={winningSymbolVariants}
           initial="initial"
           animate={isWinning ? 'winning' : 'initial'}
         >
-          {symbol}
+          <span style={{ 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            lineHeight: '1'
+          }}>
+            {symbol}
+          </span>
           {isWinning && (
             <>
               {/* Particle effects - 클라이언트에서만 렌더링 */}

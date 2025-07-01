@@ -1,13 +1,10 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
 import { closeGamePopup, isPopupWindow } from '../utils/gamePopup';
 
 interface GamePopupLayoutProps {
   children: React.ReactNode;
-  title: string;
-  showCloseButton?: boolean;
 }
 
 /**
@@ -15,9 +12,7 @@ interface GamePopupLayoutProps {
  * 독립적인 팝업 창에서 게임을 실행할 때 사용
  */
 export default function GamePopupLayout({ 
-  children, 
-  title, 
-  showCloseButton = true 
+  children
 }: GamePopupLayoutProps) {
   useEffect(() => {
     // 팝업 창이 아닌 경우 경고
@@ -25,8 +20,18 @@ export default function GamePopupLayout({
       console.warn('GamePopupLayout should only be used in popup windows');
     }
 
-    // 팝업 창 제목 설정
-    document.title = title;
+    // 팝업 창 크기 보고
+    const reportPopupSize = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      console.log(`🎰 슬롯 팝업 크기: 가로 ${width}px × 세로 ${height}px`);
+    };
+
+    // 초기 크기 보고
+    reportPopupSize();
+
+    // 리사이즈 시 크기 보고
+    window.addEventListener('resize', reportPopupSize);
 
     // ESC 키로 창 닫기
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -36,12 +41,12 @@ export default function GamePopupLayout({
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [title]);
-
-  const handleCloseClick = () => {
-    closeGamePopup();
-  };
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', reportPopupSize);
+    };
+  }, []);
 
   return (
     <div className="game-popup-layout">
@@ -66,62 +71,15 @@ export default function GamePopupLayout({
           overflow: hidden;
         }
         
-        .game-popup-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 8px 12px;
-          background: var(--color-primary-charcoal);
-          border-bottom: 1px solid var(--border);
-          min-height: 40px;
-          flex-shrink: 0;
-        }
-        
         .game-popup-content {
           flex: 1;
           overflow: hidden;
           display: flex;
           flex-direction: column;
         }
-        
-        .game-popup-close-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 28px;
-          height: 28px;
-          border: none;
-          background: transparent;
-          color: var(--color-text-secondary);
-          cursor: pointer;
-          border-radius: 4px;
-          transition: all 0.2s ease;
-        }
-        
-        .game-popup-close-btn:hover {
-          background: var(--color-primary-dark-navy);
-          color: var(--color-text-primary);
-        }
       `}</style>
 
-      {/* 팝업 헤더 */}
-      <div className="game-popup-header">
-        <h1 className="text-sm font-semibold truncate flex-1 mr-2">
-          {title}
-        </h1>
-        {showCloseButton && (
-          <button
-            onClick={handleCloseClick}
-            className="game-popup-close-btn"
-            title="창 닫기 (ESC)"
-            aria-label="창 닫기"
-          >
-            <X size={16} />
-          </button>
-        )}
-      </div>
-
-      {/* 게임 콘텐츠 */}
+      {/* 게임 콘텐츠 - 전체 화면 사용 */}
       <div className="game-popup-content">
         {children}
       </div>

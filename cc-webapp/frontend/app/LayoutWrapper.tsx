@@ -34,30 +34,26 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   return (
     <Provider store={store}>
       <div className="miniapp-container">
-        {/* AppHeader - 고정 상단 */}
-        <div className="miniapp-header">
-          <AppHeader
-            appName="CasinoClub"
-            onProfileClick={handleProfileClick}
-            onNotificationsClick={handleNotificationsClick}
-            onSettingsClick={handleSettingsClick}
-            showTokenBalanceOnMobile={true}
-            hasNotifications={false}
-          />
-        </div>
+        {/* AppHeader - 고정 상단 (CSS fixed 적용) */}
+        <AppHeader
+          appName="CasinoClub"
+          onProfileClick={handleProfileClick}
+          onNotificationsClick={handleNotificationsClick}
+          onSettingsClick={handleSettingsClick}
+          showTokenBalanceOnMobile={true}
+          hasNotifications={false}
+        />
         
         {/* 메인 콘텐츠 영역 - 단일 스크롤 */}
         <div className="miniapp-content">
           {children}
         </div>
         
-        {/* BottomNavigationBar - 고정 하단 */}
-        <div className="miniapp-bottom-nav">
-          <BottomNavigationBar
-            activeTab={activeTab}
-            onTabClick={handleTabClick}
-          />
-        </div>
+        {/* BottomNavigationBar - 고정 하단 (CSS fixed 적용) */}
+        <BottomNavigationBar
+          activeTab={activeTab}
+          onTabClick={handleTabClick}
+        />
       </div>
     </Provider>
   );

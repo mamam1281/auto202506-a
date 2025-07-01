@@ -15,7 +15,7 @@ export const QuickStartItem: React.FC<QuickStartItemProps> = ({
   onClick,
 }) => (
   <div
-    className="quick-start-item glassmorphism-dark flex flex-col items-center justify-center gap-2 cursor-pointer hover-lift transition-all duration-200 p-3"
+    className="quick-start-item glassmorphism-purple flex flex-col items-center justify-center gap-2 cursor-pointer p-3"
     style={{
       '--icon-bg': iconBgColor,
       height: 'var(--content-card-size, 120px)',

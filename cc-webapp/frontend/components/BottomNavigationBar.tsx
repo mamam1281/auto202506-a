@@ -33,16 +33,26 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   // Font size: text-xs (12px)
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 h-20 w-full bg-gray-900/95 border-t border-gray-700 backdrop-blur-md flex justify-center"
+      className="fixed bottom-0 left-0 right-0 z-50 h-20 w-full border-t flex justify-center"
       style={{
         position: 'fixed',
         bottom: 0,
-        left: 0,
-        right: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
         width: '100%',
+        maxWidth: '420px',
+        height: '80px',
+        backgroundColor: 'rgba(26, 26, 26, 0.95)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        borderTop: '1px solid #374151',
+        zIndex: 50,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
-      <div className="w-full max-w-[480px] flex items-center justify-around px-4 py-2">
+      <div className="w-full max-w-[420px] flex items-center justify-around px-4 py-2" style={{ height: '100%' }}>
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
         const IconComponent = item.icon;        return (
@@ -54,10 +64,13 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             }}            className={`
               flex flex-col items-center justify-center gap-0.5 p-2 rounded-xl min-w-14 transition-all duration-200
               ${isActive
-                ? 'text-purple-400 bg-purple-400/10 shadow-lg' 
-                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                ? 'bg-purple-400/20 shadow-lg' 
+                : 'hover:bg-white/10'
               }
             `}
+            style={{
+              color: isActive ? '#5B30F6' : '#ffffff'
+            }}
             aria-current={isActive ? 'page' : undefined}
             aria-label={`${item.label} 탭`}
             whileTap={{ scale: 0.95 }}
@@ -71,10 +84,10 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
           >            <IconComponent 
               size={iconSize} 
               className={`mb-0.5 transition-colors duration-200 ${
-                isActive ? 'text-purple-400' : 'text-gray-400'
+                isActive ? 'text-purple-400' : 'text-white'
               }`} 
             />            <span className={`text-[10px] font-normal transition-colors duration-200 ${
-              isActive ? 'text-purple-300' : 'text-gray-500'
+              isActive ? 'text-purple-300' : 'text-white'
             }`}
             >
               {item.label}

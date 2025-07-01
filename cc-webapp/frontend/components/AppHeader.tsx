@@ -79,16 +79,13 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     if (isHomePage) return <div className="w-8 h-8" />; // Spacer for home page
     
     return (
-      <Button
-        variant="text"
-        iconOnly
-        size={compact ? "sm" : "md"}
+      <button
         onClick={handleBackClick}
-        className="p-2 hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full text-muted-foreground hover:text-foreground"
+        className="p-2 hover:bg-white/20 active:scale-95 transition-all duration-normal rounded-full text-white"
         aria-label="뒤로가기"
       >
         <ArrowLeft size={compact ? 18 : 20} />
-      </Button>
+      </button>
     );
   };
 
@@ -98,7 +95,15 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     
     return (
       <div className="flex-1 flex items-center justify-center px-2 sm:px-4 min-w-0">
-        <span className={`${compact ? 'text-lg' : 'text-xl'} font-bold truncate text-center max-w-full text-[var(--foreground)]`}>
+        <span 
+          className={`${compact ? 'text-lg' : 'text-xl'} font-bold truncate text-center max-w-full`} 
+          style={{ 
+            color: '#ffffff',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+            fontWeight: '700',
+            letterSpacing: '0.02em'
+          }}
+        >
           {appName}
         </span>
       </div>
@@ -109,58 +114,56 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   const ActionButtons = () => {
     const buttonSize = compact ? "sm" : "md";
     const iconSize = compact ? 18 : 20;
-    const baseButtonClasses = "p-1 hover:bg-muted/50 active:scale-95 transition-all duration-normal rounded-full";
+    const baseButtonClasses = "p-1 hover:bg-white/20 active:scale-95 transition-all duration-normal rounded-full";
     
     return (
       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 px-2 sm:px-3">
-        <Button 
-          variant="text" 
-          iconOnly 
-          size={buttonSize}
+        <button
           onClick={handleNotificationsClick}
-          className={`${baseButtonClasses} ${hasNotifications ? 'text-accent-amber animate-pulse' : 'text-muted-foreground hover:text-foreground'}`}
+          className={`${baseButtonClasses} ${hasNotifications ? 'text-amber-400' : 'text-white'}`}
           aria-label="알림"
         >
           <Bell size={iconSize} />
-        </Button>
+        </button>
         
-        <Button 
-          variant="text" 
-          iconOnly 
-          size={buttonSize}
+        <button
           onClick={handleSettingsClick}
-          className={`${baseButtonClasses} text-muted-foreground hover:text-foreground`}
+          className={`${baseButtonClasses} text-white`}
           aria-label="설정"
         >
           <Settings size={iconSize} />
-        </Button>
+        </button>
         
-        <Button
-          variant="text"
-          iconOnly
-          size={buttonSize}
+        <button
           onClick={handleProfileClick}
-          className={`${baseButtonClasses} text-muted-foreground hover:text-foreground`}
+          className={`${baseButtonClasses} text-white`}
           aria-label="프로필"
         >
           <UserCircle size={iconSize} />
-        </Button>
+        </button>
       </div>
     );
   };
 
   return (
     <header
-      className={`
-        sticky top-0 z-40 w-full
-        ${compact 
-          ? 'h-12 sm:h-14' 
-          : 'h-16'
-        }
-        bg-[var(--background)]/90 backdrop-blur-md
-        border-b border-[var(--border)]
-        flex justify-center
-      `}
+      className="fixed top-0 left-0 right-0 w-full h-16 border-b border-gray-700 flex justify-center z-50"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(26, 26, 26, 0.95)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        borderBottom: '1px solid #374151',
+        width: '100%',
+        height: '64px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 50,
+      }}
     >
       <div className="w-full max-w-[420px] flex items-center h-full relative px-4">
         {/* Left: Back Button (replaces token display) */}

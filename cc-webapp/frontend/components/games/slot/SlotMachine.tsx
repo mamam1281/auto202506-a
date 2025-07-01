@@ -171,26 +171,8 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
       transition={{ duration: 0.5 }}
       style={{ pointerEvents: 'auto' }} // CSS 강제 활성화
     >
-      {/* Header 1 - Jackpot Display */}
+      {/* Main - Slot Reels (압축된 여백) */}
       <div className="w-full" style={{ marginBottom: '8px' }}>
-        <SlotMachineHeader1 
-          jackpot={jackpot} 
-          className="w-full"
-        />
-      </div>
-
-      {/* Header 2 - Balance & Sound */}
-      <div className="w-full" style={{ marginBottom: '8px' }}>
-        <SlotMachineHeader2 
-          balance={balance}
-          isSoundEnabled={isSoundEnabled}
-          setIsSoundEnabled={setIsSoundEnabled}
-          className="w-full"
-        />
-      </div>
-
-      {/* Main - Slot Reels */}
-      <div className="w-full" style={{ marginBottom: '16px' }}>
         <SlotMachineMain 
           reels={reels}
           isSpinning={isSpinning}
@@ -199,8 +181,8 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
         />
       </div>
 
-      {/* Control - Bet Controls */}
-      <div className="w-full" style={{ marginBottom: '16px' }}>
+      {/* Control - Bet Controls (압축된 여백) */}
+      <div className="w-full" style={{ marginBottom: '8px' }}>
         <BetControl
           betAmount={betAmount}
           setBetAmount={setBetAmount}
@@ -210,7 +192,7 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
         />
       </div>
 
-      {/* Button - Spin Button */}
+      {/* Button - Spin Button (압축된 여백) */}
       <SlotMachineButton
         onSpin={handleSpin}
         canSpin={canSpin}
@@ -221,6 +203,16 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
         betAmount={betAmount}
         className="w-full"
       />
+
+      {/* Header 2 - Balance & Sound (압축된 여백) */}
+      <div className="w-full" style={{ marginTop: '8px' }}>
+        <SlotMachineHeader2 
+          balance={balance}
+          isSoundEnabled={isSoundEnabled}
+          setIsSoundEnabled={setIsSoundEnabled}
+          className="w-full"
+        />
+      </div>
     </motion.div>
   );
 };

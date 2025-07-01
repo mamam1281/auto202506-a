@@ -20,8 +20,8 @@ export const DEFAULT_GAME_POPUP_CONFIG: Partial<GamePopupConfig> = {
 // 게임별 창 설정
 export const GAME_POPUP_CONFIGS: Record<string, GamePopupConfig> = {
   slots: {
-    width: 420,
-    height: 680,
+    width: 400,
+    height: 900,
     title: '코스믹 포츈 - 슬롯 머신',
     url: '/games/slots/popup',
     resizable: false,

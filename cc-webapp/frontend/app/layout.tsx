@@ -115,7 +115,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body 
-        className="theme-dark h-screen bg-[var(--background)] text-[var(--foreground)] antialiased"
+        className="theme-dark min-h-screen bg-[var(--background)] text-[var(--foreground)] antialiased"
         suppressHydrationWarning
       >
         {/* 6. 클라이언트 래퍼로 상태 관리 위임 */}

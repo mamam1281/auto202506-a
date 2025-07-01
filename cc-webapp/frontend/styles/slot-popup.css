@@ -1,0 +1,389 @@
+/* 슬롯 팝업 전용 압축 스타일 */
+/* 이 파일은 슬롯 팝업에서만 사용되며, 다른 게임이나 메인 앱에는 영향을 주지 않습니다 */
+
+.slot-popup-compact .grid.grid-cols-3 {
+  height: 120px !important; /* 기존 160px에서 압축 */
+  gap: 16px !important; /* 기존 24px에서 압축 */
+}
+
+.slot-popup-compact .bg-gradient-to-br.rounded-2xl {
+  padding: 8px 16px !important; /* 기존 20px 32px에서 압축 */
+  margin-bottom: 12px !important; /* 기존 16px에서 압축 */
+}
+
+.slot-popup-compact .bg-gradient-to-br.rounded-2xl.border.border-\[var\(--color-border-primary\)\] {
+  padding: 6px 16px !important; /* 기존 10px 32px에서 압축 */
+  margin-bottom: 12px !important; /* 기존 24px에서 압축 */
+}
+
+.slot-popup-compact .w-full.flex.justify-center {
+  margin-bottom: 8px !important; /* 기존 24px에서 압축 */
+}
+
+.slot-popup-compact .text-center.px-3.py-1 {
+  padding: 2px 8px !important; /* 기존 4px 12px에서 압축 */
+  min-width: 120px !important; /* 기존 160px에서 압축 */
+}
+
+.slot-popup-compact .bg-gradient-to-br.from-\[var\(--color-surface-primary\)\].to-\[var\(--color-surface-secondary\)\].rounded-2xl.border.border-\[var\(--color-border-primary\)\].px-3 {
+  padding: 2px 8px !important; /* 기존 4px 12px에서 압축 */
+}
+
+.slot-popup-compact .grid .relative.h-full.w-full {
+  min-width: 80px !important; /* 기존 100px에서 압축 */
+  padding: 4px !important; /* 기존 8px에서 압축 */
+  border-width: 1px !important; /* 기존 2px에서 압축 */
+}
+
+.slot-popup-compact .text-5xl {
+  font-size: 32px !important; /* 기존 48px에서 압축 */
+}
+
+.slot-popup-compact .text-6xl {
+  font-size: 36px !important; /* 기존 60px에서 압축 */
+}
+
+/* 슬롯머신 컴포넌트 여백 압축 */
+.slot-popup-compact div[style*="margin-bottom:50px"] {
+  margin-bottom: 20px !important; /* 50px에서 압축 */
+}
+
+.slot-popup-compact div[style*="margin-bottom:30px"] {
+  margin-bottom: 12px !important; /* 30px에서 압축 */
+}
+
+.slot-popup-compact div[style*="margin-bottom:16px"] {
+  margin-bottom: 8px !important; /* 16px에서 압축 */
+}
+
+.slot-popup-compact div[style*="margin-top:16px"] {
+  margin-top: 8px !important; /* 16px에서 압축 */
+}
+
+/* 빠른 베팅 버튼 간격 압축 */
+.slot-popup-compact .w-full.flex.justify-center.gap-2 {
+  gap: 4px !important; /* 기존 8px에서 압축 */
+}
+
+/* 전체 슬롯머신 컨테이너 패딩 압축 */
+.slot-popup-compact .bg-gradient-to-br.p-1 {
+  padding: 2px !important; /* 기존 4px에서 압축 */
+}
+
+/* =============== 고급스러운 카지노 테마 스타일 =============== */
+
+/* 1) 각 컴포넌트 카드 배경 및 테두리 - 우리 기준컬러 (퍼플, 블랙, 남색) */
+.slot-popup-compact .bg-gradient-to-br.rounded-2xl {
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.95) 0%,     /* 남색 베이스 */
+    rgba(30, 41, 59, 0.9) 25%,     /* 진한 남색 */
+    rgba(51, 65, 85, 0.85) 50%,    /* 회색 남색 */
+    rgba(30, 41, 59, 0.9) 75%,     /* 진한 남색 */
+    rgba(15, 23, 42, 0.95) 100%    /* 남색 베이스 */
+  ) !important;
+  border: 2px solid rgba(147, 51, 234, 0.4) !important; /* 퍼플 테두리 */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(147, 51, 234, 0.15) !important; /* 퍼플 글로우 */
+  backdrop-filter: blur(10px) !important;
+}
+
+.slot-popup-compact .bg-gradient-to-br.rounded-2xl.border.border-\[var\(--color-border-primary\)\] {
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.98) 0%,     /* 진한 남색 */
+    rgba(30, 41, 59, 0.95) 50%,    /* 중간 남색 */
+    rgba(15, 23, 42, 0.98) 100%    /* 진한 남색 */
+  ) !important;
+  border: 2px solid rgba(147, 51, 234, 0.5) !important; /* 진한 퍼플 테두리 */
+  box-shadow: 
+    0 6px 24px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 15px rgba(147, 51, 234, 0.2) !important; /* 퍼플 글로우 */
+}
+
+/* Balance 섹션 특별 스타일 - 레드 포인트 */
+.slot-popup-compact .bg-gradient-to-br.from-\[var\(--color-surface-primary\)\].to-\[var\(--color-surface-secondary\)\] {
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.95) 0%,     /* 남색 베이스 */
+    rgba(30, 41, 59, 0.9) 50%,     /* 진한 남색 */
+    rgba(15, 23, 42, 0.95) 100%    /* 남색 베이스 */
+  ) !important;
+  border: 1.5px solid rgba(220, 38, 38, 0.4) !important; /* 레드 테두리 */
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    0 0 12px rgba(220, 38, 38, 0.2) !important; /* 레드 글로우 */
+}
+
+/* 2) 스핀버튼 - 우리 기준컬러 테마 (퍼플 메인) + 고급 애니메이션 */
+.slot-popup-compact .btn.btn-primary {
+  background: linear-gradient(135deg, 
+    #7c3aed 0%,      /* 퍼플 */
+    #8b5cf6 25%,     /* 밝은 퍼플 */
+    #7c3aed 50%,     /* 퍼플 */
+    #6d28d9 75%,     /* 진한 퍼플 */
+    #5b21b6 100%     /* 딥 퍼플 */
+  ) !important;
+  border: 2px solid #8b5cf6 !important;
+  box-shadow: 
+    0 8px 24px rgba(124, 58, 237, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 20px rgba(124, 58, 237, 0.3) !important; /* 퍼플 글로우 */
+  color: #ffffff !important; /* 흰색 텍스트 */
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important; /* 부드러운 애니메이션 */
+  transform: translateY(0) scale(1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* 스핀버튼 애니메이션 효과 */
+.slot-popup-compact .btn.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.8s;
+}
+
+.slot-popup-compact .btn.btn-primary:hover::before {
+  left: 100%;
+}
+
+.slot-popup-compact .btn.btn-primary:hover {
+  background: linear-gradient(135deg, 
+    #8b5cf6 0%,      /* 밝은 퍼플 */
+    #a78bfa 25%,     /* 더 밝은 퍼플 */
+    #8b5cf6 50%,     /* 밝은 퍼플 */
+    #7c3aed 75%,     /* 퍼플 */
+    #6d28d9 100%     /* 진한 퍼플 */
+  ) !important;
+  box-shadow: 
+    0 16px 40px rgba(124, 58, 237, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 0 40px rgba(124, 58, 237, 0.6) !important;
+  transform: translateY(-3px) scale(1.05) !important; /* 호버시 위로 + 확대 */
+}
+
+.slot-popup-compact .btn.btn-primary:active {
+  transform: translateY(1px) scale(0.98) !important; /* 클릭시 아래로 + 축소 */
+  box-shadow: 
+    0 4px 16px rgba(124, 58, 237, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.1s ease !important; /* 클릭 반응은 빠르게 */
+}
+
+/* 3) 스핀버튼 크기 조정 - 상용앱게임 수준 */
+.slot-popup-compact .btn.btn-primary {
+  height: 56px !important; /* 기존보다 높게 */
+  min-width: 200px !important; /* 기존보다 넓게 */
+  font-size: 18px !important; /* 텍스트 크기 증가 */
+  border-radius: 12px !important; /* 둥근 모서리 */
+  padding: 16px 32px !important; /* 넉넉한 패딩 */
+}
+
+/* 숫자 버튼들 - 원래 모양 유지, 우리 기준컬러 애니메이션 적용 */
+.slot-popup-compact .btn.btn-outline {
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.9) 0%,      /* 남색 베이스 */
+    rgba(30, 41, 59, 0.8) 50%,     /* 진한 남색 */
+    rgba(15, 23, 42, 0.9) 100%     /* 남색 베이스 */
+  ) !important;
+  border: 1.5px solid rgba(147, 51, 234, 0.5) !important; /* 퍼플 테두리 */
+  color: #a855f7 !important; /* 퍼플 텍스트 */
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; /* 부드러운 애니메이션 */
+  transform: translateY(0) scale(1) !important; /* 초기 상태 */
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* 버튼 애니메이션 글로우 효과 */
+.slot-popup-compact .btn.btn-outline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.4), transparent);
+  transition: left 0.6s;
+}
+
+.slot-popup-compact .btn.btn-outline:hover::before {
+  left: 100%;
+}
+
+.slot-popup-compact .btn.btn-outline:hover {
+  background: linear-gradient(135deg, 
+    rgba(147, 51, 234, 0.15) 0%,   /* 퍼플 호버 */
+    rgba(147, 51, 234, 0.25) 50%,
+    rgba(147, 51, 234, 0.15) 100%
+  ) !important;
+  border-color: rgba(147, 51, 234, 0.8) !important; /* 진한 퍼플 테두리 */
+  color: #c084fc !important; /* 밝은 퍼플 텍스트 */
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(147, 51, 234, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important; /* 퍼플 글로우 */
+  transform: translateY(-2px) scale(1.02) !important; /* 살짝 위로 + 약간 확대 */
+}
+
+.slot-popup-compact .btn.btn-outline:active {
+  background: linear-gradient(135deg, 
+    rgba(147, 51, 234, 0.3) 0%,
+    rgba(147, 51, 234, 0.4) 50%,
+    rgba(147, 51, 234, 0.3) 100%
+  ) !important;
+  transform: translateY(1px) scale(0.98) !important; /* 클릭시 살짝 아래로 + 축소 */
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 0 10px rgba(147, 51, 234, 0.2) !important;
+}
+
+/* 선택된 숫자 버튼 - 레드 테마 + 애니메이션 */
+.slot-popup-compact .btn.btn-outline.bg-gradient-to-r {
+  background: linear-gradient(135deg, 
+    #dc2626 0%,      /* 레드 */
+    #ef4444 25%,     /* 밝은 레드 */
+    #dc2626 50%,     /* 레드 */
+    #b91c1c 75%,     /* 진한 레드 */
+    #991b1b 100%     /* 딥 레드 */
+  ) !important;
+  border: 2px solid #ef4444 !important;
+  color: #ffffff !important; /* 흰색 텍스트 */
+  font-weight: 700 !important;
+  box-shadow: 
+    0 8px 24px rgba(220, 38, 38, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 20px rgba(220, 38, 38, 0.4) !important; /* 레드 글로우 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-1px) scale(1.05) !important; /* 선택시 살짝 위로 + 확대 */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* 선택된 버튼 펄스 애니메이션 */
+.slot-popup-compact .btn.btn-outline.bg-gradient-to-r::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.3) 0%, transparent 70%);
+  animation: pulse-red 2s infinite;
+  border-radius: inherit;
+}
+
+@keyframes pulse-red {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.slot-popup-compact .btn.btn-outline.bg-gradient-to-r:hover {
+  background: linear-gradient(135deg, 
+    #ef4444 0%,      /* 밝은 레드 */
+    #f87171 25%,     /* 더 밝은 레드 */
+    #ef4444 50%,     /* 밝은 레드 */
+    #dc2626 75%,     /* 레드 */
+    #b91c1c 100%     /* 진한 레드 */
+  ) !important;
+  box-shadow: 
+    0 12px 32px rgba(220, 38, 38, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 30px rgba(220, 38, 38, 0.5) !important;
+  transform: translateY(-2px) scale(1.08) !important;
+}
+
+/* 4) 게임규칙/도움말 버튼 크기 수정 */
+.slot-popup-compact .btn.btn-ghost,
+.slot-popup-compact .btn.btn-secondary {
+  height: 44px !important; /* 적당한 높이 */
+  min-width: 120px !important; /* 적당한 너비 */
+  font-size: 14px !important;
+  padding: 12px 20px !important;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.7) 0%,
+    rgba(30, 41, 59, 0.6) 100%
+  ) !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  color: #cbd5e1 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+.slot-popup-compact .btn.btn-ghost:hover,
+.slot-popup-compact .btn.btn-secondary:hover {
+  background: linear-gradient(135deg, 
+    rgba(30, 41, 59, 0.8) 0%,
+    rgba(51, 65, 85, 0.7) 100%
+  ) !important;
+  border-color: rgba(148, 163, 184, 0.5) !important;
+  color: #f1f5f9 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 베팅액 표시 컨테이너 - 퍼플 테마 + 반짝이는 애니메이션 */
+.slot-popup-compact .text-center.px-3.py-1 {
+  background: linear-gradient(90deg, 
+    rgba(147, 51, 234, 0.3) 0%,    /* 퍼플 */
+    rgba(168, 85, 247, 0.4) 25%,   /* 밝은 퍼플 */
+    rgba(196, 132, 252, 0.3) 50%,  /* 더 밝은 퍼플 */
+    rgba(168, 85, 247, 0.4) 75%,   /* 밝은 퍼플 */
+    rgba(147, 51, 234, 0.3) 100%   /* 퍼플 */
+  ) !important;
+  border: 2px solid rgba(147, 51, 234, 0.6) !important; /* 퍼플 테두리 */
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 15px rgba(147, 51, 234, 0.25) !important; /* 퍼플 글로우 */
+  color: #ffffff !important; /* 흰색 텍스트 */
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+}
+
+/* 베팅액 표시 반짝이는 효과 */
+.slot-popup-compact .text-center.px-3.py-1::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: 100%; }
+}
+
+/* 베팅액이 변경될 때 애니메이션 */
+.slot-popup-compact .text-center.px-3.py-1:hover {
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 0 20px rgba(147, 51, 234, 0.35) !important;
+  transform: scale(1.02) !important;
+}

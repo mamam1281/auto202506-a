@@ -65,71 +65,70 @@ export default function CasinoDashboard() {
       id: 'game-start',
       label: '게임 시작',
       iconPlaceholder: '🎮',
-      iconBgColor: 'var(--color-purple-primary)',
+      iconBgColor: '#5B30F6',
       onClick: () => openGamePopup('slots') // 슬롯 게임 팝업으로 시작
     },
     {
       id: 'deposit',
       label: '입금하기',
       iconPlaceholder: '💰',
-      iconBgColor: 'var(--color-green-primary)',
+      iconBgColor: '#10B981',
       onClick: () => router.push('/wallet')
     },
     {
       id: 'promotion',
       label: '프로모션',
       iconPlaceholder: '🎁',
-      iconBgColor: 'var(--color-amber-primary)',
+      iconBgColor: '#F59E0B',
       onClick: () => router.push('/promotions')
     }
   ];
 
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center" 
-           style={{ backgroundColor: 'var(--color-background-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center" 
+           style={{ backgroundColor: '#1a1a1a' }}>
         <LoadingSpinner size="xl" variant="ring" text="카지노 로딩 중..." />
       </div>
     );
   }
 
   return (
-    <div className="h-screen w-full"
+    <div className="min-h-screen w-full"
          style={{ 
-           backgroundColor: 'var(--color-background-primary)',
-           color: 'var(--color-text-primary)',
+           backgroundColor: '#1a1a1a',
+           color: '#ffffff',
            fontFamily: 'var(--font-primary)',
            overflow: 'hidden' // 가로 스크롤 방지
          }}>
 
       {/* Main Content - 스크롤 가능한 콘텐츠 */}
-      <div className="w-full" style={{ minHeight: 'calc(100vh + 200px)' }}> 
+      <div className="w-full min-h-full" style={{ backgroundColor: '#1a1a1a' }}> 
         
-        <div className="py-6 sm:py-8">
+        <div className="py-2 sm:py-4">
         
         {/* 웰컴 섹션 */}
         <motion.div 
           className="text-center"
-          style={{ marginBottom: '40px', marginTop: '10px' }} // 타이틀을 위로, 작은 마진
+          style={{ marginBottom: '10px', marginTop: '10px' }} 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-6xl font-bold mb-4">
-            <div className="py-1"></div>
-            <span style={{ color: 'var(--color-purple-primary)' }}>환영합니다!</span>
+          <h2 className="text-4xl md:text-6xl font-bold mb-1">
+            <span style={{ color: '#5B30F6' }}>환영합니다!</span>
           </h2>
          </motion.div>
 
         {/* 행동 유도 섹션 - 상단으로 이동 */}
         <motion.section 
           className="text-center py-8"
-          style={{ marginBottom: '60px' }} // 중간 마진
+          style={{ marginBottom: '30px' }} 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <h3 className="text-3xl font-bold mb-6">🎰 게임을 시작하세요!</h3>
+          <h3 className="text-3xl font-bold mb-3">🎰 게임을 시작하세요!</h3>
           <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4 w-full max-w-full overflow-hidden">
             <Button
               variant="primary"
@@ -157,13 +156,13 @@ export default function CasinoDashboard() {
 
         {/* 빠른 시작 액션들 - 프로젝트 표준 컴포넌트 사용 */}
         <motion.section
-          style={{ marginBottom: '100px' }} // 인기게임과 100픽셀 간격
+          style={{ marginBottom: '100px' }} 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.6 }}
         >
-          <h3 className="text-xl sm:text-2xl font-bold mb-6">⚡ 빠른 시작</h3>
-          <div style={{ marginTop: '20px' }}> {/* 타이틀과 카드 사이 간격 */}
+          <h3 className="text-xl sm:text-2xl font-bold mb-2">⚡ 빠른 시작</h3>
+          <div style={{ marginTop: '20px' }}> 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 w-full max-w-full overflow-hidden">
             {quickActions.map((action, index) => (
               <motion.div
@@ -183,12 +182,12 @@ export default function CasinoDashboard() {
               </motion.div>
             ))}
           </div>
-          </div> {/* 타이틀과 카드 사이 간격 컨테이너 닫기 */}
+          </div>
         </motion.section>
 
         {/* 인기 게임 섹션 - 프로젝트 표준 GameCard 사용 */}
         <motion.section
-          style={{ marginBottom: '40px' }} // 바텀 네비 여백은 CSS padding으로 처리
+          style={{ marginBottom: '40px' }} 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.6 }}
@@ -197,7 +196,7 @@ export default function CasinoDashboard() {
             <h3 className="text-2xl font-bold">🔥 인기 게임</h3>
             </div>
           
-          <div style={{ marginTop: '20px' }}> {/* 타이틀과 카드 사이 간격 */}
+          <div style={{ marginTop: '20px' }}> 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full max-w-full overflow-hidden">
             {featuredGames.map((game, index) => (
               <motion.div
@@ -218,7 +217,7 @@ export default function CasinoDashboard() {
               </motion.div>
             ))}
           </div>
-          </div> {/* 타이틀과 카드 사이 간격 컨테이너 닫기 */}
+          </div>
         </motion.section>
         
         </div>

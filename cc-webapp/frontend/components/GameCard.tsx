@@ -20,7 +20,7 @@ export const GameCard: React.FC<GameCardProps> = ({
   onClick,
 }) => (
   <div 
-    className="cursor-pointer hover:scale-105 transition-transform w-full"
+    className="cursor-pointer game-card-smooth transition-transform w-full"
     onClick={onClick}
     tabIndex={0}
     role="button"
