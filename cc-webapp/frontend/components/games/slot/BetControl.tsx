@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Button from '../../Button';
 import { Minus, Plus, Gem } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 
@@ -100,21 +99,19 @@ export const BetControl: React.FC<BetControlProps> = ({
         
         <div className="w-full flex justify-center gap-2 sm:gap-3">{/* flex-wrap 제거하여 한 줄로 배치 */}
           {quickBetOptions.map((amount) => (
-            <Button
+            <button
               key={amount}
               onClick={() => handleQuickBetSelect(amount)}
               disabled={disabled}
-              variant={betAmount === amount ? "primary" : "outline"}
-              size="sm"
               className={cn(
-                "btn-outline btn-sm text-sm sm:text-base px-2 py-2 min-w-[32px] h-10 transition-all duration-200 border-2 shadow-xl",
+                "text-sm sm:text-base px-2 py-2 min-w-[32px] h-10 rounded-lg border-2 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
                 betAmount === amount ? 
-                  "bg-gradient-to-r from-[var(--color-accent-amber)] to-[var(--color-accent-yellow)] border-[var(--color-accent-amber)] shadow-lg shadow-[var(--color-accent-amber)]/20" : 
-                  "hover:border-[var(--color-accent-amber)]/50 hover:shadow-xl hover:shadow-[var(--color-accent-amber)]/10"
+                  "bg-[var(--color-accent-red)] border-[var(--color-accent-red)] text-white" : 
+                  "bg-transparent border-[var(--color-border-primary)] text-[var(--color-text-primary)] hover:border-[var(--color-accent-red)] hover:text-[var(--color-accent-red)]"
               )}
             >
               {amount}
-            </Button>
+            </button>
           ))}
         </div>
       </div>

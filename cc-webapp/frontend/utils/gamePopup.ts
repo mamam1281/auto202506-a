@@ -29,15 +29,15 @@ export const GAME_POPUP_CONFIGS: Record<string, GamePopupConfig> = {
   },
   rps: {
     width: 400,
-    height: 600,
+    height: 750,
     title: 'RPS Battle',
     url: '/games/rps/popup',
     resizable: false,
     scrollbars: false,
   },
   gacha: {
-    width: 450,
-    height: 700,
+    width: 400,
+    height: 750,
     title: 'Lucky Gacha',
     url: '/gacha/popup',
     resizable: false,

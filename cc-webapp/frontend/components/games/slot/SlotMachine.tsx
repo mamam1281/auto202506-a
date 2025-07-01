@@ -7,6 +7,7 @@ import SlotMachineHeader2 from './SlotMachineHeader2';
 import { SlotMachineMain } from './SlotMachineReels';
 import BetControl from './BetControl';
 import SlotMachineButton from './SlotMachineButton';
+import WinParticleEffect from './WinParticleEffect';
 
 // SYMBOLS은 실제 게임에서 사용할 심볼입니다
 const SYMBOLS = ['🍒', '🔔', '💎', '7️⃣', '⭐'];
@@ -213,6 +214,15 @@ export const SlotMachine = ({ className }: SlotMachineProps) => {
           className="w-full"
         />
       </div>
+
+      {/* Win Particle Effect - 당첨 시 파티클 효과 */}
+      {winResult?.isWin && (
+        <WinParticleEffect 
+          isWin={winResult.isWin}
+          winType={winResult.type}
+          onComplete={() => setWinResult(null)}
+        />
+      )}
     </motion.div>
   );
 };

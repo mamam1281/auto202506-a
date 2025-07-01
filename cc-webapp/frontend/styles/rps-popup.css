@@ -1,0 +1,255 @@
+/* 가위바위보 팝업 전용 스타일 (400x750) */
+/* 이 파일은 가위바위보 팝업에서만 사용되며, 다른 게임이나 메인 앱에는 영향을 주지 않습니다 */
+
+.rps-popup-compact {
+  /* 전체 컨테이너 최적화 */
+  height: 100vh !important;
+  overflow: hidden !important;
+  padding: 8px !important;
+}
+
+.rps-popup-compact .game-container {
+  height: calc(100vh - 16px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+/* 헤더 영역 압축 */
+.rps-popup-compact .game-header {
+  padding: 8px 12px !important;
+  margin-bottom: 6px !important;
+  height: auto !important;
+  min-height: 60px !important;
+}
+
+.rps-popup-compact .score-display {
+  font-size: 14px !important;
+  padding: 4px 8px !important;
+  margin: 2px !important;
+}
+
+/* 메인 게임 영역 */
+.rps-popup-compact .game-main {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 8px !important;
+  gap: 12px !important;
+}
+
+/* 선택지 영역 */
+.rps-popup-compact .opponent-display {
+  height: 180px !important; /* 압축 */
+  margin-bottom: 12px !important;
+}
+
+.rps-popup-compact .choice-display {
+  font-size: 48px !important; /* AI/플레이어 선택 표시 크기 */
+  margin: 8px !important;
+}
+
+/* 선택 버튼들 */
+.rps-popup-compact .choice-buttons {
+  padding: 8px !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+}
+
+.rps-popup-compact .choice-button {
+  width: 80px !important;
+  height: 80px !important;
+  font-size: 32px !important;
+  border-radius: 12px !important;
+  margin: 4px !important;
+}
+
+/* 결과 화면 */
+.rps-popup-compact .result-screen {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 50 !important;
+  padding: 16px !important;
+}
+
+.rps-popup-compact .result-content {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+
+.rps-popup-compact .result-title {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  margin-bottom: 8px !important;
+}
+
+.rps-popup-compact .result-message {
+  font-size: 16px !important;
+  text-align: center !important;
+  line-height: 1.4 !important;
+  margin-bottom: 12px !important;
+}
+
+/* 프로젝트 기준 컬러 테마 적용 */
+.rps-popup-compact {
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.98) 0%,     /* 남색 베이스 */
+    rgba(30, 41, 59, 0.95) 50%,    /* 진한 남색 */
+    rgba(15, 23, 42, 0.98) 100%    /* 남색 베이스 */
+  ) !important;
+  color: #ffffff !important;
+}
+
+/* 게임 카드/컨테이너 */
+.rps-popup-compact .bg-gradient-to-br,
+.rps-popup-compact .game-card {
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.95) 0%,     /* 남색 베이스 */
+    rgba(30, 41, 59, 0.9) 25%,     /* 진한 남색 */
+    rgba(51, 65, 85, 0.85) 50%,    /* 회색 남색 */
+    rgba(30, 41, 59, 0.9) 75%,     /* 진한 남색 */
+    rgba(15, 23, 42, 0.95) 100%    /* 남색 베이스 */
+  ) !important;
+  border: 2px solid rgba(147, 51, 234, 0.4) !important; /* 퍼플 테두리 */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(147, 51, 234, 0.15) !important; /* 퍼플 글로우 */
+  backdrop-filter: blur(10px) !important;
+  border-radius: 16px !important;
+}
+
+/* 선택 버튼 기본 스타일 - 깔끔하고 눈이 편한 컬러 */
+.rps-popup-compact .choice-button {
+  background: rgba(15, 23, 42, 0.9) !important; /* 진한 남색 배경 */
+  border: 2px solid rgba(147, 51, 234, 0.3) !important; /* 연한 퍼플 테두리 */
+  color: #cbd5e1 !important; /* 연한 회색 텍스트 */
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.2s ease !important;
+}
+
+.rps-popup-compact .choice-button:hover {
+  background: rgba(30, 41, 59, 0.9) !important; /* 살짝 밝은 남색 */
+  border-color: rgba(147, 51, 234, 0.5) !important; /* 진한 퍼플 테두리 */
+  color: #f1f5f9 !important; /* 밝은 회색 텍스트 */
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.rps-popup-compact .choice-button:active {
+  transform: translateY(0) !important;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 점수 표시 */
+.rps-popup-compact .score-display {
+  background: linear-gradient(135deg, 
+    rgba(220, 38, 38, 0.2) 0%,     /* 연한 레드 */
+    rgba(239, 68, 68, 0.3) 50%,    /* 중간 레드 */
+    rgba(220, 38, 38, 0.2) 100%    /* 연한 레드 */
+  ) !important;
+  border: 1px solid rgba(220, 38, 38, 0.4) !important; /* 레드 테두리 */
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+/* 결과 화면 색상 */
+.rps-popup-compact .result-screen.win {
+  background: linear-gradient(135deg, 
+    rgba(22, 163, 74, 0.95) 0%,
+    rgba(34, 197, 94, 0.9) 100%
+  ) !important;
+}
+
+.rps-popup-compact .result-screen.lose {
+  background: linear-gradient(135deg, 
+    rgba(220, 38, 38, 0.95) 0%,
+    rgba(239, 68, 68, 0.9) 100%
+  ) !important;
+}
+
+.rps-popup-compact .result-screen.draw {
+  background: linear-gradient(135deg, 
+    rgba(107, 114, 128, 0.95) 0%,
+    rgba(156, 163, 175, 0.9) 100%
+  ) !important;
+}
+
+/* 버튼들 - 게임 재시작 등 */
+.rps-popup-compact .btn-primary {
+  background: linear-gradient(135deg, 
+    #7c3aed 0%,      /* 퍼플 */
+    #8b5cf6 25%,     /* 밝은 퍼플 */
+    #7c3aed 50%,     /* 퍼플 */
+    #6d28d9 75%,     /* 진한 퍼플 */
+    #5b21b6 100%     /* 딥 퍼플 */
+  ) !important;
+  border: 2px solid #8b5cf6 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 12px 24px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+.rps-popup-compact .btn-primary:hover {
+  background: linear-gradient(135deg, 
+    #8b5cf6 0%,
+    #a78bfa 25%,
+    #8b5cf6 50%,
+    #7c3aed 75%,
+    #6d28d9 100%
+  ) !important;
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 텍스트 크기 최적화 */
+.rps-popup-compact h1 {
+  font-size: 20px !important;
+  margin-bottom: 8px !important;
+}
+
+.rps-popup-compact h2 {
+  font-size: 18px !important;
+  margin-bottom: 6px !important;
+}
+
+.rps-popup-compact h3 {
+  font-size: 16px !important;
+  margin-bottom: 4px !important;
+}
+
+.rps-popup-compact p {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  margin-bottom: 4px !important;
+}
+
+/* 스크롤바 숨김 */
+.rps-popup-compact::-webkit-scrollbar {
+  display: none !important;
+}
+
+.rps-popup-compact {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}

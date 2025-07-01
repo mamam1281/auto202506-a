@@ -154,7 +154,7 @@ export function GachaBox({ className = '' }: GachaBoxProps) {
       'bg-[var(--card)] border border-[var(--border)]',
       'flex flex-col items-center justify-center',
       className
-    )} style={{ paddingTop: '32px', paddingBottom: '32px', paddingLeft: '20px', paddingRight: '20px' }}>
+    )}>
       {/* Ticket Counter is displayed above GachaBox */}
       <motion.div
         className="flex justify-center mb-4"

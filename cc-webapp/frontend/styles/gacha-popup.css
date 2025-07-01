@@ -1,0 +1,127 @@
+/* 가챠 팝업 전용 모던 컬러 테마 (400x750) */
+/* 이 파일은 가챠 팝업에서만 사용되며, 다른 게임이나 메인 앱에는 영향을 주지 않습니다 */
+
+.gacha-popup-colorful {
+  /* 전체 배경을 심플한 그라데이션으로 */
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.98) 0%,      /* 진한 남색 */
+    rgba(30, 41, 59, 0.95) 50%,     /* 중간 남색 */
+    rgba(15, 23, 42, 0.98) 100%     /* 진한 남색 */
+  ) !important;
+}
+
+/* 가챠 박스 카드 - 모던하고 깔끔한 글로우 (가장 바깥 컨테이너에만) */
+.gacha-popup-colorful .bg-\[var\(--card\)\] {
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.95) 0%,      /* 진한 남색 베이스 */
+    rgba(30, 41, 59, 0.9) 25%,      /* 중간 남색 */
+    rgba(51, 65, 85, 0.85) 50%,     /* 회색 남색 */
+    rgba(30, 41, 59, 0.9) 75%,      /* 중간 남색 */
+    rgba(15, 23, 42, 0.95) 100%     /* 진한 남색 베이스 */
+  ) !important;
+  border: 2px solid rgba(147, 51, 234, 0.4) !important; /* 퍼플 테두리 */
+  box-shadow: 
+    0 0 30px rgba(147, 51, 234, 0.3),
+    0 0 60px rgba(147, 51, 234, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 티켓 카운터 - 모던한 글래스모피즘 디자인 */
+.gacha-popup-colorful .glass-strong {
+  background: rgba(255, 255, 255, 0.1) !important; /* 글래스 효과 */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  /* 크기 줄이기 */
+  padding: 8px 16px !important;
+  min-width: 120px !important;
+  transform: scale(1) !important;
+}
+
+/* 가챠 컨테이너 (상자) - 모던한 글래스모피즘 */
+.gacha-popup-colorful .glass-crystal {
+  background: rgba(255, 255, 255, 0.08) !important; /* 더 연한 글래스 */
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 20px !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  /* 애니메이션 제거 */
+}
+
+/* 가챠 상자 이모지 - 자연스럽고 깔끔하게 */
+.gacha-popup-colorful .text-5xl,
+.gacha-popup-colorful .text-6xl,
+.gacha-popup-colorful .text-8xl {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+  text-shadow: none !important; /* 과도한 글로우 제거 */
+  /* 애니메이션 제거 */
+}
+
+/* 가챠 뽑기 버튼 - 모던 모피즘 디자인 */
+.gacha-popup-colorful button {
+  background: #6366f1 !important; /* 모던한 인디고 */
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 
+    0 4px 12px rgba(99, 102, 241, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  text-shadow: none !important; /* 텍스트 그림자 제거 */
+  transition: all 0.2s ease !important;
+  /* 크기 줄이기 */
+  padding: 12px 24px !important;
+  min-height: 48px !important;
+  font-size: 16px !important;
+}
+
+.gacha-popup-colorful button:hover {
+  background: #5855eb !important; /* 호버 시 약간 어두운 인디고 */
+  box-shadow: 
+    0 6px 20px rgba(99, 102, 241, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1) !important; /* 모피즘 효과 */
+  transform: translateY(-2px) scale(1.02) !important; /* 살짝 부풀어 오르는 효과 */
+}
+
+/* 티켓 개수 텍스트 - 모던한 화이트 */
+.gacha-popup-colorful .text-clear-primary,
+.gacha-popup-colorful .tabular-nums {
+  color: #ffffff !important; /* 깔끔한 화이트 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+
+/* 티켓 라벨 텍스트 - 모던한 그레이 */
+.gacha-popup-colorful .text-clear-muted {
+  color: #d1d5db !important; /* 라이트 그레이 */
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* 가챠 상자 라벨 - 모던한 그레이 */
+.gacha-popup-colorful p {
+  color: #e5e7eb !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* 결과 모달 버튼 - 정상적인 크기로 */
+.gacha-popup-colorful .result-modal button,
+.gacha-popup-colorful [role="dialog"] button {
+  padding: 8px 16px !important; /* 모달 버튼은 작게 */
+  min-height: 36px !important; /* 작은 높이 */
+  font-size: 14px !important; /* 작은 텍스트 */
+  font-weight: 600 !important;
+}
+
+/* 과도한 애니메이션과 파티클 효과 제거 */
+/* 모든 keyframes 애니메이션 제거 */

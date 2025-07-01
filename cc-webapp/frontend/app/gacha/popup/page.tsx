@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import GamePopupLayout from '../../../components/GamePopupLayout';
 import { GachaBox } from '../../../components/games/gacha/GachaBox';
 import { TicketProvider } from '../../../components/games/gacha/TicketContext';
+import '../../../styles/gacha-popup.css';
 
 // 팝업 창용 로딩 스켈레톤
 function PopupLoadingSkeleton() {
@@ -20,9 +21,9 @@ function PopupLoadingSkeleton() {
 // 팝업 창용 가챠 게임 컨텐츠
 function GachaGamePopupContent() {
   return (
-    <div className="w-full h-full overflow-y-auto bg-[var(--background)] p-4">
+    <div className="w-full h-full overflow-y-auto bg-[var(--background)] gacha-popup-colorful">
       <div className="w-full max-w-full mx-auto h-full flex flex-col justify-center">
-        <div className="flex-1 flex items-center justify-center py-8">
+        <div className="flex-1 flex items-center justify-center">
           <div className="w-full max-w-[360px]">
             <Suspense fallback={<PopupLoadingSkeleton />}>
               <GachaBox />
@@ -30,12 +31,7 @@ function GachaGamePopupContent() {
           </div>
         </div>
         
-        {/* 간단한 설명 */}
-        <div className="mt-4 text-center">
-          <p className="text-xs text-[var(--muted-foreground)]">
-            티켓을 사용해 아이템을 획득하세요!
-          </p>
-        </div>
+        {/* 간단한 설명 제거 */}
       </div>
     </div>
   );
@@ -45,7 +41,7 @@ function GachaGamePopupContent() {
 export default function GachaPopupPage() {
   return (
     <TicketProvider>
-      <GamePopupLayout title="Lucky Gacha">
+      <GamePopupLayout>
         <GachaGamePopupContent />
       </GamePopupLayout>
     </TicketProvider>
