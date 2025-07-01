@@ -37,10 +37,9 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
       style={{
         position: 'fixed',
         bottom: 0,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '100%',
-        maxWidth: '420px',
+        left: 0,
+        right: 0,
+        width: '100vw',
         height: '80px',
         backgroundColor: 'rgba(26, 26, 26, 0.95)',
         backdropFilter: 'blur(10px)',
@@ -50,9 +49,12 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box',
       }}
     >
-      <div className="w-full max-w-[420px] flex items-center justify-around px-4 py-2" style={{ height: '100%' }}>
+      <div className="w-full flex items-center justify-around" style={{ height: '100%', padding: 0 }}>
       {navItems.map((item) => {
         const isActive = activeTab === item.id;
         const IconComponent = item.icon;        return (
@@ -62,7 +64,7 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
               console.log('BottomNav onClick triggered:', item.id, item.path);
               onTabClick(item.id, item.path);
             }}            className={`
-              flex flex-col items-center justify-center gap-0.5 p-2 rounded-xl min-w-14 transition-all duration-200
+              flex flex-col items-center justify-center gap-0.5 p-4 rounded-xl min-w-14 transition-all duration-200
               ${isActive
                 ? 'bg-purple-400/20 shadow-lg' 
                 : 'hover:bg-white/10'

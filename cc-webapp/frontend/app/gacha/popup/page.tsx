@@ -21,17 +21,11 @@ function PopupLoadingSkeleton() {
 // 팝업 창용 가챠 게임 컨텐츠
 function GachaGamePopupContent() {
   return (
-    <div className="w-full h-full overflow-y-auto bg-[var(--background)] gacha-popup-colorful">
-      <div className="w-full max-w-full mx-auto h-full flex flex-col justify-center">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="w-full max-w-[360px]">
-            <Suspense fallback={<PopupLoadingSkeleton />}>
-              <GachaBox />
-            </Suspense>
-          </div>
-        </div>
-        
-        {/* 간단한 설명 제거 */}
+    <div className="gacha-popup-colorful">
+      <div className="w-full max-w-[360px]">
+        <Suspense fallback={<PopupLoadingSkeleton />}>
+          <GachaBox />
+        </Suspense>
       </div>
     </div>
   );

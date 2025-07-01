@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../Button';
 import type { GachaResult } from '../../../types/gacha';
 import { TIER_CONFIG } from '../../../types/gacha';
-import { Sparkles as SparklesIcon, Star as StarIcon, X } from 'lucide-react';
+import { Sparkles as SparklesIcon, Star as StarIcon } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 
 interface ResultModalProps {
@@ -114,16 +114,7 @@ export function ResultModal({ isOpen, result, onClose }: ResultModalProps) {
                 ))}
               </div>
 
-              {/* Close button */}
-              <Button
-                variant="text"
-                size="sm"
-                onClick={onClose}
-                className="absolute top-3 right-3 z-50 text-clear-muted hover:text-clear-primary hover:bg-white/10 rounded-full"
-                aria-label="Close modal"
-              >
-                <X className="w-5 h-5" />
-              </Button>
+
 
               {/* Modal Content */}
               <div className="relative p-6 sm:p-8 text-center z-10">
@@ -212,14 +203,14 @@ export function ResultModal({ isOpen, result, onClose }: ResultModalProps) {
                 >
                   <Button
                     onClick={onClose}
-                    size="lg"
+                    size="sm"
                     className={cn(
-                        "w-full min-h-[48px] sm:min-h-[52px] text-lg sm:text-xl font-bold border-2 rounded-lg",
-                        "transition-all duration-200 ease-out focus:outline-none focus:ring-4",
+                        "px-4 py-2 min-h-[36px] text-sm font-medium border-2 rounded-lg",
+                        "transition-all duration-200 ease-out focus:outline-none focus:ring-2",
                         "text-clear-primary" // Text color
                     )}
                   >
-                    <StarIcon className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" />
+                    <StarIcon className="w-4 h-4 mr-2" />
                     확인
                   </Button>
                 </motion.div>

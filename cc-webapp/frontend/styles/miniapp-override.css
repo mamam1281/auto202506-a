@@ -66,16 +66,17 @@ body {
 .miniapp-header {
   position: fixed !important;
   top: 0 !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  left: 0 !important;
+  right: 0 !important;
   width: 100% !important;
   max-width: 420px !important;
   height: 64px !important;
-  z-index: 50 !important;
+  z-index: 100 !important;
   background-color: rgba(26, 26, 26, 0.95) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
   border-bottom: 1px solid #374151 !important;
+  margin: 0 auto !important;
 }
 
 /* 메인 콘텐츠 - 유일한 스크롤 영역, 중앙정렬, 헤더와 바텀네비 공간 확보 */
@@ -107,16 +108,18 @@ body {
 .miniapp-bottom-nav {
   position: fixed !important;
   bottom: 0 !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  left: 0 !important;
+  right: 0 !important;
   width: 100% !important;
   max-width: 420px !important;
-  height: 80px !important;
+  height: 0px !important;
   z-index: 50 !important;
   background-color: rgba(26, 26, 26, 0.95) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
   border-top: 1px solid #374151 !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
 }
 
 /* 기존 스크롤 관련 클래스들 제거 */
