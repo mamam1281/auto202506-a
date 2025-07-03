@@ -1,438 +1,133 @@
-/* 가챠 팝업 전용 룰렛 스타일 밝고 선명한 컬러 테마 - 전체 화면 레이아웃 */
-/* 이 파일은 가챠 팝업에서만 사용되며, 다른 게임이나 메인 앱에는 영향을 주지 않습니다 */
+/* 가챠 팝업/페이지 전용 스타일 - 통일된 glassmorphism & 버튼 시스템 (2025-07-03) */
 
-/* 가챠 팝업 전체 화면 레이아웃 - 간단하고 안전한 중앙 정렬 */
+/* 1. 컬러 시스템 (청록/짙은 컬러) */
+:root {
+  --gacha-cyan-main: #069487;
+  --gacha-cyan-dark: #0a5c53;
+  --gacha-cyan-light: #23aa8f;
+  --gacha-cyan-gradient: linear-gradient(135deg, #069487 0%, #117c55 100%);
+  --gacha-cyan-gradient-dark: linear-gradient(135deg, #0a5c53 0%, #117c55 100%);
+  --gacha-cyan-border: #117c55;
+}
+
+/* 2. 전체 배경 */
 .gacha-popup-colorful {
-  /* 전체 배경을 청록/민트 2컬러 그라데이션으로 */
-  background: linear-gradient(135deg, 
-    rgba(6, 134, 119, 0.95) 0%,    /* 청록 */
-    rgba(17, 124, 85, 0.726) 100%   /* 민트 */
-  ) !important;
-  /* 전체 화면 높이 사용, 스크롤 완전 제거 */
-  height: 100vh !important;
+  background: var(--gacha-cyan-gradient) !important;
   min-height: 100vh !important;
-  max-height: 100vh !important;
-  overflow: hidden !important;
-  /* 세로 정렬을 flex-start로 변경하여 위쪽 배치 */
-  display: flex !important;
-  align-items: flex-start !important;
-  justify-content: center !important;
-  /* 콘텐츠를 위쪽으로 배치 - 20-30px 더 내림 */
-  padding-top: 90px !important; /* 기존 60px에서 30px 추가 */
-  padding-bottom: 100px !important; /* 바텀 네비 공간 확보 */
-  /* 기본 패딩 */
-  padding-left: 16px !important;
-  padding-right: 16px !important;
-}
-
-/* 가챠 박스 카드 - 내부 사이즈 조정으로 스크롤 방지 */
-.gacha-popup-colorful .bg-\[var\(--card\)\] {
-  background: linear-gradient(135deg, 
-    rgba(164, 212, 208, 0.25) 0%,   /* 밝은 화이트 글래스 */
-    rgba(35, 170, 143, 0.2) 100%   /* 라이트 민트 */
-  ) !important;
-  border: 2px solid rgba(6, 63, 56, 0.6) !important; /* 청록 테두리 */
-  box-shadow: 
-    0 0 40px rgba(12, 5, 53, 0.4),
-    0 0 80px rgba(52, 211, 153, 0.3),
-    0 12px 40px rgba(0, 0, 0, 0.3),
-    inset 0 2px 0 rgba(255, 255, 255, 0.144) !important;
-  /* 내부 여유공간 활용해서 스크롤 방지 */
-  padding: 8px 12px !important; /* 기존 패딩 줄임 */
-  height: auto !important;
-  max-height: calc(100vh - 220px) !important; /* 상단(90px)+하단(100px)+여유(30px) 제외 */
-  overflow: hidden !important; /* 스크롤 방지 */
+  width: 100vw !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: center !important; /* 중앙 정렬로 변경 */
-  /* 완전 중앙 정렬 강화 */
-  align-items: center !important; /* 내부 요소들 가로 중앙 정렬 */
-  margin: 0 auto !important; /* 컨테이너 자체 가로 중앙 정렬 */
-  width: 100% !important; /* 전체 너비 사용 */
-  max-width: 360px !important; /* 최대 너비 제한 */
-  text-align: center !important; /* 텍스트 중앙 정렬 */
-}
-
-/* 티켓 카운터 - 이모티콘 효과 제거 */
-.gacha-popup-colorful .glass-strong {
-  background: rgba(255, 255, 255, 0.089) !important;
-  border: 1px solid rgba(20, 184, 166, 0.5) !important;
-  border-radius: 16px !important;
-  backdrop-filter: blur(15px) !important;
-  box-shadow: 
-    0 8px 32px rgba(20, 184, 166, 0.3),
-    0 4px 12px rgba(52, 211, 153, 0.2),
-    inset 0 2px 0 rgba(255, 255, 255, 0.4) !important;
-  padding: 8px 16px !important;
-  min-width: 120px !important;
-  transform: scale(1) !important;
-}
-
-/* 티켓 카운터 내부 반짝임 효과 제거 */
-.gacha-popup-colorful .glass-strong svg,
-.gacha-popup-colorful .glass-strong .w-3,
-.gacha-popup-colorful .glass-strong .h-3 {
-  display: none !important; /* 스파클 아이콘 숨기기 */
-}
-
-/* 티켓 카운터 파티클 효과 제거 */
-.gacha-popup-colorful .glass-strong .absolute.w-1.h-1 {
-  display: none !important; /* 파티클 숨기기 */
-}
-
-/* 가챠 컨테이너 (상자) - 청록/민트 글래스모피즘 */
-.gacha-popup-colorful .glass-crystal {
-  background: rgba(255, 255, 255, 0.2) !important; /* 밝은 글래스 */
-  border: 1px solid rgba(43, 219, 154, 0.4) !important; /* 민트 테두리 */
-  border-radius: 20px !important;
-  backdrop-filter: blur(15px) !important;
-  box-shadow: 
-    0 8px 32px rgba(52, 211, 153, 0.25),
-    0 4px 16px rgba(20, 184, 166, 0.2),
-    inset 0 2px 0 rgba(255, 255, 255, 0.3) !important;
-  /* 애니메이션 제거 */
-  overflow: hidden !important;
-  /* 강력한 중앙 정렬 */
-  width: 200px !important; /* 고정 너비로 변경 */
-  margin: 0 auto !important; /* 중앙 정렬 */
-  display: flex !important;
-  justify-content: center !important; /* 내부 요소 중앙 정렬 */
   align-items: center !important;
-  text-align: center !important; /* 텍스트 중앙 정렬 */
-  /* 크기 설정 */
-  padding: 16px !important; /* 기존보다 줄임 */
-  min-height: 120px !important; /* 최소 높이 설정 */
-  max-height: 150px !important; /* 최대 높이 제한 */
-  /* 추가 중앙 정렬 보강 */
-  flex-direction: column !important;
-  gap: 8px !important;
+  justify-content: flex-start !important;
+  padding-top: 64px !important;
+  padding-bottom: 64px !important;
 }
 
-/* 가챠 상자 이모지 - 가챠 컨테이너는 크게, 다른 곳은 작게 */
-.gacha-popup-colorful .text-5xl,
-.gacha-popup-colorful .text-6xl,
-.gacha-popup-colorful .text-8xl {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
-  text-shadow: none !important; /* 과도한 글로우 제거 */
-  transform: scale(0.5) !important; /* 기본적으로 작게 */
-  /* 애니메이션 제거 */
+/* 3. 카드/컴포넌트 glassmorphism 통일 */
+.gacha-popup-colorful .gacha-ticket-display,
+.gacha-popup-colorful .glassmorphism,
+.gacha-popup-colorful .gacha-box-card,
+.gacha-popup-colorful .gacha-container-card {
+  background: rgba(255,255,255,0.13) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-radius: 18px !important;
+  border: 1.5px solid #fff3 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 1.5px 0 rgba(255,255,255,0.08) inset !important;
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
-/* 가챠 컨테이너 내부 이모지만 크게 */
-.gacha-popup-colorful .glass-crystal .text-4xl,
-.gacha-popup-colorful .glass-crystal .text-5xl,
-.gacha-popup-colorful .glass-crystal .text-6xl,
-.gacha-popup-colorful .glass-crystal .text-7xl,
-.gacha-popup-colorful .glass-crystal .text-8xl {
-  transform: scale(1.2) !important; /* 가챠 상자 이모지는 크게 */
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3)) !important;
-  display: block !important;
-  text-align: center !important;
-  margin: 0 auto !important;
-}
-
-/* 가챠 뽑기 버튼 - 작고 깔끔한 최종 스타일 */
-.gacha-popup-colorful button {
-  background: linear-gradient(135deg, #14b8a6 0%, #34d399 100%) !important;
-  border: 1px solid #5eead4 !important;
-  border-radius: 6px !important;
-  color: #ffffff !important;
-  font-weight: 500 !important;
-  text-shadow: none !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
-  /* 아주 작은 크기로 강제 설정 */
-  padding: 4px 8px !important;
-  min-height: 28px !important;
-  max-height: 32px !important;
-  font-size: 11px !important;
-  max-width: 100px !important;
-  width: auto !important;
-  height: auto !important;
-  /* 모든 효과 제거 */
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  position: relative !important;
-  overflow: hidden !important;
-  display: inline-block !important;
-  line-height: 1.2 !important;
-}
-
-/* 뽑기 버튼 구체적 타겟팅 - 최종 보장 */
-.gacha-popup-colorful .bg-gradient-to-r button,
-.gacha-popup-colorful .glass-crystal + * button,
-.gacha-popup-colorful [class*="button"] {
-  padding: 4px 8px !important;
-  min-height: 28px !important;
-  max-height: 32px !important;
-  font-size: 11px !important;
-  max-width: 100px !important;
-  width: auto !important;
-  height: auto !important;
-  line-height: 1.2 !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  scale: 1 !important;
-}
-
-/* 메탈 빛 효과 완전 제거 */
-.gacha-popup-colorful button::before {
-  display: none !important; /* 빛 효과 완전 숨김 */
-}
-
-.gacha-popup-colorful button:hover {
-  background: linear-gradient(135deg, #0f766e 0%, #10b981 100%) !important;
-  border-color: #5eead4 !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-}
-
-/* 빛 이동 효과 제거됨 */
-
-/* 티켓 개수 텍스트 - 밝은 골드 색상 */
-.gacha-popup-colorful .text-clear-primary,
-.gacha-popup-colorful .tabular-nums {
-  color: hsl(0, 0%, 100%) !important; /* 밝은 골드 색상 */
-  text-shadow: 0 1px 3px rgba(131, 136, 126, 0.616), 0.4, 0.4 !important;
-  font-size: 18px !important;
+/* 4. 버튼(가챠뽑기/충전) 통일 */
+.gacha-popup-colorful .gacha-play-btn,
+.gacha-popup-colorful .gacha-charge-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
   font-weight: 700 !important;
+  font-size: 1.15rem !important;
+  border: none !important;
+  border-radius: 14px !important;
+  background: linear-gradient(90deg, #23aa8f 0%, #117c55 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 24px #117c5533 !important;
+  padding: 0.9rem 2.2rem !important;
+  min-height: 48px !important;
+  max-height: 56px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  transition: background 0.18s, box-shadow 0.18s !important;
+}
+.gacha-popup-colorful .gacha-play-btn:hover,
+.gacha-popup-colorful .gacha-charge-btn:hover {
+  background: linear-gradient(90deg, #117c55 0%, #23aa8f 100%) !important;
+  box-shadow: 0 8px 32px #117c5555 !important;
 }
 
-/* 티켓 라벨 텍스트 - 밝은 화이트 */
-.gacha-popup-colorful .text-clear-muted {
-  color: #f8fafc !important; /* 밝은 화이트 */
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* 가챠 상자 라벨 - 밝은 화이트 */
-.gacha-popup-colorful p {
-  color: #f8fafc !important;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
-  font-size: 16px !important;
-  font-weight: 600 !important;
-}
-
-/* 모달 팝업 안전한 표시 - 잘림 방지 */
-.gacha-popup-colorful .result-modal button,
-.gacha-popup-colorful [role="dialog"] button {
-  background: linear-gradient(135deg, #14b8a6 0%, #0b553a 100%) !important; /* 청록-민트 */
-  border: 1px solid #5eead4 !important;
-  padding: 8px 16px !important; /* 모달 버튼은 작게 */
-  min-height: 32px !important; /* 작은 높이 */
-  font-size: 14px !important; /* 작은 텍스트 */
-  font-weight: 600 !important;
-  height: auto !important; /* 높이 자동 */
-  width: auto !important; /* 전체 폭 제거 */
-  margin: 0 auto !important; /* 중앙 정렬 */
-  display: inline-flex !important; /* 인라인 flex로 적절한 크기 */
-  box-shadow: 
-    0 2px 8px rgba(20, 184, 166, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-}
-
-/* 모달 컨테이너 - 잘림 방지를 위한 z-index와 position 보장 */
-.gacha-popup-colorful [role="dialog"] {
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  z-index: 9999 !important;
-  max-width: 90vw !important;
-  max-height: 90vh !important;
-  overflow: visible !important;
-}
-
-/* 과도한 애니메이션과 파티클 효과 제거 */
-/* 모든 keyframes 애니메이션 제거 */
-
-/* 티켓 카운터 애니메이션 효과 완전 제거 */
-.gacha-popup-colorful .glass-strong * {
-  animation: none !important;
-  transform: none !important;
-}
-
-/* 티켓 카운터 hover 효과 제거 */
-.gacha-popup-colorful .glass-strong:hover {
-  transform: none !important;
-  scale: 1 !important;
-}
-
-/* 티켓 아이콘 회전 애니메이션 제거 */
-.gacha-popup-colorful .glass-strong svg[class*="lucide"] {
-  animation: none !important;
-  transform: none !important;
-}
-
-/* 모든 keyframe 애니메이션 제거 */
-.gacha-popup-colorful .glass-strong .animate-pulse,
-.gacha-popup-colorful .glass-strong .animate-spin,
-.gacha-popup-colorful .glass-strong .animate-bounce {
-  animation: none !important;
-}
-
-/* 가챠 컨테이너 전체 레이아웃 - 기본 세로 배치 */
-.gacha-popup-colorful .space-y-4,
-.gacha-popup-colorful .space-y-6 {
-  /* 기본 세로 간격 */
-  display: block !important;
-}
-
-/* 가챠 박스 기본 고정 스타일 */
-.gacha-popup-colorful .w-full.max-w-\[360px\] {
-  /* 콘텐츠 영역 기본 설정 */
-  width: 100% !important;
-  max-width: 360px !important;
-}
-
-/* 가챠 카드 영역 기본 스타일 */
-.gacha-popup-colorful .bg-\[var\(--card\)\] { 
-  /* 카드 영역 기본 설정 */
-  width: 100% !important;
-  border-radius: 16px !important;
-}
-
-/* 가챠 카드 내부 콘텐츠 크기 조정 - 스크롤 방지 */
-.gacha-popup-colorful .bg-\[var\(--card\)\] > div {
-  overflow: hidden !important; /* 스크롤 방지 */
-  height: auto !important;
-  max-height: 100% !important;
+/* 5. 티켓 디스플레이(상단) */
+.gacha-popup-colorful .gacha-ticket-display {
+  min-width: 110px !important;
+  max-width: 180px !important;
+  padding: 0.7rem 1.5rem !important;
+  font-size: 1.08rem !important;
+  margin-bottom: 0.5rem !important;
+  border-radius: 14px !important;
   display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important; /* 간격 줄임 */
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
 }
 
-/* 가챠 카드 내부 각 섹션 크기 조정 */
-.gacha-popup-colorful .bg-\[var\(--card\)\] .space-y-4,
-.gacha-popup-colorful .bg-\[var\(--card\)\] .space-y-6 {
-  gap: 6px !important; /* 기존 간격 줄임 */
-  display: flex !important;
-  flex-direction: column !important;
+/* 6. 가챠 박스 카드(중앙) */
+.gacha-popup-colorful .gacha-box-card,
+.gacha-popup-colorful .gacha-container-card {
+  width: 100% !important;
+  max-width: 420px !important;
+  min-width: 320px !important;
+  margin: 0 auto 1.5rem auto !important;
+  padding: 1.5rem 1.5rem 1.2rem 1.5rem !important;
+  border-radius: 18px !important;
 }
 
-/* 티켓 카운터 크기 줄임 */
-.gacha-popup-colorful .glass-strong {
-  padding: 6px 12px !important; /* 기존 8px 16px에서 줄임 */
-  min-width: 100px !important; /* 기존 120px에서 줄임 */
-  font-size: 14px !important; /* 폰트 크기 줄임 */
+/* 7. 버튼 간격 - 가챠뽑기/충전 사이 gap 축소 */
+.gacha-popup-colorful .gacha-play-btn + .gacha-charge-btn {
+  margin-top: 0.5rem !important;
 }
 
-/* 뽑기 버튼 크기 조정 - 중복 제거됨 */
-
-/* 가챠 팝업 페이지에서 완전한 스크롤 제거 */
-body:has(.gacha-popup-colorful) {
-  overflow: hidden !important;
-  height: 100vh !important;
-  max-height: 100vh !important;
+/* 8. 버튼 텍스트 길이에 맞게 */
+.gacha-popup-colorful .gacha-play-btn,
+.gacha-popup-colorful .gacha-charge-btn {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
 }
 
-html:has(.gacha-popup-colorful) {
-  overflow: hidden !important;
-  height: 100vh !important;
-  max-height: 100vh !important;
+/* 9. 기타 요소 통일 */
+.gacha-popup-colorful .gacha-ticket-display span,
+.gacha-popup-colorful .gacha-play-btn span,
+.gacha-popup-colorful .gacha-charge-btn span {
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
 }
 
-/* 미니앱 컨테이너가 가챠 팝업일 때 스크롤 제거 */
-.miniapp-container:has(.gacha-popup-colorful) {
-  overflow: hidden !important;
-  height: 100vh !important;
-  max-height: 100vh !important;
-}
-
-.miniapp-content:has(.gacha-popup-colorful) {
-  overflow: hidden !important;
-  height: 100vh !important;
-  max-height: 100vh !important;
-  padding: 0 !important;
-}
-
-/* 모든 버튼 애니메이션과 과한 액션 완전 제거 - 최종 통합 스타일 */
-.gacha-popup-colorful button,
-.gacha-popup-colorful button:hover,
-.gacha-popup-colorful button:active,
-.gacha-popup-colorful button:focus {
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  outline: none !important;
-  scale: 1 !important;
-}
-
-/* 모든 scale, translate 효과 무력화 */
+/* 10. 스크롤바 제거 */
+.gacha-popup-colorful,
 .gacha-popup-colorful * {
-  animation: none !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.gacha-popup-colorful::-webkit-scrollbar,
+.gacha-popup-colorful *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
 }
 
-/* 뽑기 버튼과 상자 버튼 완전 고정 */
-.gacha-popup_colorful .bg-gradient-to-r button,
-.gacha-popup_colorful .glass-crystal button {
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  scale: 1 !important;
-}
+/* 11. 가챠 결과 모달 - CSS 제거 (인라인 스타일 사용) */
 
-/* 가챠 상자 내부 모든 요소 가로 중앙 정렬 강화 */
-.gacha-popup-colorful .glass-crystal > * {
-  margin-left: auto !important;
-  margin-right: auto !important;
-  text-align: center !important;
-  display: block !important;
-}
-
-.gacha-popup-colorful .glass-crystal div {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-}
-
-.gacha-popup-colorful .glass-crystal p {
-  text-align: center !important;
-  margin: 0 auto !important;
-}
-
-/* 가챠 상자 부모 컨테이너들 중앙 정렬 강화 */
-.gacha-popup-colorful .mb-6.w-full.flex.justify-center {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  width: 100% !important;
-  margin: 0 auto !important;
-}
-
-.gacha-popup-colorful .relative.flex.items-center.justify-center {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  width: 200px !important; /* 고정 크기 */
-  height: 200px !important; /* 고정 크기 */
-  margin: 0 auto !important;
-}
-
-.gacha-popup-colorful .transform-3d {
-  width: 200px !important; /* 고정 크기 */
-  height: 200px !important; /* 고정 크기 */
-  margin: 0 auto !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-}
-
-/* Tailwind CSS 클래스 오버라이드 */
-.gacha-popup_colorful .w-44,
-.gacha-popup_colorful .w-52,
-.gacha-popup_colorful .w-60 {
-  width: 200px !important;
-}
-
-.gacha-popup_colorful .h-44,
-.gacha-popup_colorful .h-52,
-.gacha-popup_colorful .h-60 {
-  height: 200px !important;
-}
+/* 버튼은 기존 스타일 유지 */
