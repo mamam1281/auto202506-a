@@ -1,0 +1,202 @@
+/* rps-theme.css - 모던/고급스러운 효과 추가 */
+
+.rps-root {
+  min-height: 100vh;
+  min-width: 100vw;
+  position: relative;
+  overflow-x: hidden;
+  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'sans-serif';
+  /* 배경 그라데이션 + subtle 입자 */
+  background:
+    linear-gradient(135deg, #0f172a 0%, #1e293b 100%),
+    radial-gradient(circle at 60% 20%, rgba(56,189,248,0.10) 0%, transparent 70%),
+    radial-gradient(circle at 30% 80%, rgba(16,185,129,0.10) 0%, transparent 70%);
+  /* 미세한 입자 효과 */
+}
+
+.rps-root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.01) 2px, transparent 3px 100px),
+    repeating-radial-gradient(circle at 80% 70%, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.01) 2px, transparent 3px 100px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.rps-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.rps-title {
+  letter-spacing: 0.01em;
+  font-weight: 900;
+  font-size: 2.2rem;
+  color: #fff;
+  text-shadow: 0 2px 8px #0a2233, 0 1px 0 #fff, 0 0 16px #38bdf8, 0 0 2px #135B79, 0 4px 12px #135B79, 0 0 0 #fff;
+  background: linear-gradient(90deg, #38bdf8 10%, #1db67d 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rps-header {
+  margin-bottom: 24px;
+}
+
+.rps-btn {
+  transition: 
+    background 0.18s cubic-bezier(.7,0,.7,1),
+    color 0.18s cubic-bezier(.7,0,.7,1),
+    box-shadow 0.18s cubic-bezier(.7,0,.7,1),
+    border 0.18s cubic-bezier(.7,0,.7,1),
+    transform 0.13s cubic-bezier(.7,0,.7,1);
+  will-change: background, color, box-shadow, border, transform;
+  background: rgba(30,41,59,0.85);
+  color: #fff;
+  border: 1.5px solid #38bdf8;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(56,189,248,0.10), 0 1px 2px #222;
+  cursor: pointer;
+  outline: none;
+}
+
+.rps-btn:hover, .rps-btn:focus-visible {
+  background: linear-gradient(90deg, #38bdf8 0%, #1db67d 100%);
+  color: #fff;
+  border-color: #1db67d;
+  box-shadow: 0 4px 16px rgba(56,189,248,0.18), 0 2px 8px #1db67d;
+  transform: translateY(-2px) scale(1.03);
+}
+
+.rps-btn:active {
+  background: #1e293b;
+  color: #fff;
+  border-color: #38bdf8;
+  box-shadow: 0 1px 2px #222;
+  transform: scale(0.98);
+}
+
+.rps-modal {
+  /* glassmorphism + 입체감 */
+  background: linear-gradient(135deg, rgba(30,41,59,0.92) 0%, rgba(15,23,42,0.93) 100%);
+  border: 1.5px solid #38bdf8;
+  box-shadow: 0 8px 32px 0 rgba(56,189,248,0.18), 0 2px 8px 0 rgba(30,58,138,0.10), 0 1.5px 0 #fff;
+  backdrop-filter: blur(8px) saturate(1.1);
+  border-radius: 18px;
+  color: #fff;
+  transition: box-shadow 0.18s cubic-bezier(.7,0,.7,1);
+}
+
+.rps-modal .rps-btn {
+  margin-top: 12px;
+  width: 100%;
+  font-size: 1.1rem;
+}
+
+.rps-modal .rps-btn:hover {
+  background: linear-gradient(90deg, #38bdf8 0%, #1db67d 100%);
+  color: #fff;
+  border-color: #1db67d;
+  box-shadow: 0 4px 16px rgba(56,189,248,0.18), 0 2px 8px #1db67d;
+}
+
+.rps-modal .rps-btn:active {
+  background: #1e293b;
+  color: #fff;
+  border-color: #38bdf8;
+}
+
+.rps-player, .rps-ai {
+  margin-bottom: 16px;
+}
+
+.rps-choice-btn {
+  transition: 
+    background 0.18s cubic-bezier(.7,0,.7,1),
+    color 0.18s cubic-bezier(.7,0,.7,1),
+    box-shadow 0.18s cubic-bezier(.7,0,.7,1),
+    border 0.18s cubic-bezier(.7,0,.7,1),
+    transform 0.13s cubic-bezier(.7,0,.7,1);
+  will-change: background, color, box-shadow, border, transform;
+  background: rgba(255,255,255,0.13);
+  color: #1e293b;
+  border: 1.5px solid #38bdf8;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(56,189,248,0.10), 0 1px 2px #222;
+  cursor: pointer;
+  outline: none;
+  padding: 12px 20px;
+}
+
+.rps-choice-btn:hover, .rps-choice-btn:focus-visible {
+  background: linear-gradient(90deg, #38bdf8 0%, #1db67d 100%);
+  color: #fff;
+  border-color: #1db67d;
+  box-shadow: 0 4px 16px rgba(56,189,248,0.18), 0 2px 8px #1db67d;
+  transform: translateY(-2px) scale(1.04);
+}
+
+.rps-choice-btn:active {
+  background: #1e293b;
+  color: #fff;
+  border-color: #38bdf8;
+  box-shadow: 0 1px 2px #222;
+  transform: scale(0.98);
+}
+
+/* subtle 빛 효과 (배경에 미세하게 움직이는 빛) */
+@keyframes rps-light-move {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.rps-root::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(120deg, rgba(255,255,255,0.08) 0%, rgba(56,189,248,0.10) 50%, rgba(16,185,129,0.10) 100%);
+  background-size: 200% 200%;
+  animation: rps-light-move 8s linear infinite alternate;
+  opacity: 0.7;
+}
+
+/* subtle 입자 효과 (배경에 미세하게 움직이는 입자) */
+@keyframes rps-particle-move {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(20px) scale(1.05); }
+}
+.rps-root::before {
+  animation: rps-particle-move 6s ease-in-out infinite alternate;
+}
+
+/* 카드/모달 호버 효과 */
+.modern-mesh-card {
+  transition: box-shadow 0.18s cubic-bezier(.7,0,.7,1), transform 0.13s cubic-bezier(.7,0,.7,1);
+  will-change: box-shadow, transform;
+}
+.modern-mesh-card:hover, .modern-mesh-card:focus-visible {
+  box-shadow: 0 12px 32px 0 rgba(56,189,248,0.18), 0 4px 16px 0 rgba(30,58,138,0.13), 0 2px 8px #1db67d;
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* 인터랙션 피드백(클릭시 scale) */
+.btn-animated:active {
+  transform: scale(0.97);
+}

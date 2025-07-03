@@ -37,13 +37,18 @@ export function GachaModal({ isOpen, result, onClose }: GachaModalProps) {
               exit={{ scale: 0.8, opacity: 0, y: 30 }}
               className="pointer-events-auto w-full max-w-sm"
               style={{
-                background: 'rgba(255, 255, 255, 0.95)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
+                background: `linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)`,
+                backdropFilter: 'blur(25px)',
+                WebkitBackdropFilter: 'blur(25px)',
                 borderRadius: '24px',
                 border: `3px solid ${tierColor.border}`,
-                boxShadow: `0 20px 40px rgba(0,0,0,0.3), 0 0 60px ${tierColor.glow}`,
-                padding: '32px',
+                boxShadow: `
+                  0 25px 50px rgba(0,0,0,0.4), 
+                  0 0 80px ${tierColor.glow}, 
+                  inset 0 2px 0 rgba(255,255,255,0.8),
+                  inset 0 -2px 0 rgba(0,0,0,0.1)
+                `,
+                padding: '28px',
               }}
             >
               {/* Tier Badge */}
@@ -89,10 +94,11 @@ export function GachaModal({ isOpen, result, onClose }: GachaModalProps) {
               <div className="text-center">
                 <button
                   onClick={onClose}
-                  className="px-8 py-4 rounded-xl font-bold text-white text-lg transition-transform duration-200 hover:scale-105"
+                  className="px-6 py-2.5 rounded-lg font-bold text-white text-sm transition-all duration-200 hover:scale-105 hover:shadow-lg"
                   style={{
                     background: `linear-gradient(135deg, ${tierColor.color}, ${tierColor.color}CC)`,
-                    boxShadow: `0 6px 20px ${tierColor.glow}`,
+                    boxShadow: `0 4px 12px ${tierColor.glow}, inset 0 1px 0 rgba(255,255,255,0.3)`,
+                    border: '1px solid rgba(255,255,255,0.2)',
                   }}
                 >
                   확인

@@ -55,71 +55,102 @@ export function GachaContainer() {
 
   return (
     <div 
-      className="min-h-screen flex flex-col items-center justify-center p-4"
+      className="h-screen flex flex-col items-center p-4"
       style={{
         background: 'linear-gradient(135deg, #0f766e 0%, #065f46 100%)',
+        maxHeight: '750px',
+        maxWidth: '400px',
+        margin: '0 auto',
+        gap: '15px',
       }}
     >
       {/* Ticket Display */}
       <div 
-        className="mb-8 px-6 py-3 rounded-2xl flex items-center gap-3"
+        className="px-2 py-2 rounded-xl flex items-center gap-1 justify-center"
         style={{
-          background: 'rgba(255, 255, 255, 0.2)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
+          background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
           border: '1px solid rgba(255, 255, 255, 0.3)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
-        <span className="text-2xl">🎫</span>
-        <span className="text-white font-bold text-lg">{tickets}</span>
+        <span className="text-2xl drop-shadow-lg">🎫</span>
+        <span className="text-white font-bold drop-shadow-md" style={{fontSize: '18px'}}>{tickets}</span>
       </div>
 
       {/* Gacha Box */}
       <div 
-        className="mb-8 p-8 rounded-3xl text-center"
+        className="w-full flex flex-col items-center justify-center px-4 py-4 rounded-3xl text-center"
         style={{
-          background: 'rgba(255, 255, 255, 0.15)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          width: '100%',
-          maxWidth: '400px',
+          background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '2px solid rgba(255, 255, 255, 0.3)',
+          boxShadow: '0 16px 48px rgba(0, 0, 0, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.1)',
+          transform: isPlaying ? 'scale(1.02)' : 'scale(1)',
+          transition: 'transform 0.3s ease-out',
+          maxWidth: '310px',
+          height: '250px',
         }}
       >
-        <div className={`text-8xl mb-6 transition-transform duration-500 ${isPlaying ? 'animate-bounce' : ''}`}>
+        <div 
+          className={`text-8xl mb-3 transition-all duration-500 ${isPlaying ? 'animate-bounce scale-110' : ''}`}
+          style={{
+            filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))',
+          }}
+        >
           📦
         </div>
-        <h2 className="text-white text-2xl font-bold mb-2">가챠 상자</h2>
-        <p className="text-white/80 text-sm">신비로운 아이템을 획득하세요!</p>
+        <h2 className="text-white text-xl font-bold mb-1 drop-shadow-lg">가챠 상자</h2>
+        <p className="text-white/80 text-xs drop-shadow-md">신비로운 아이템을 획득하세요!</p>
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-col gap-4 w-full max-w-xs">
+      <div className="flex flex-col gap-3 w-full">
         <button
           onClick={handlePull}
           disabled={tickets <= 0 || isPlaying}
-          className="px-8 py-4 rounded-xl font-bold text-white text-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          className="w-full h-8 rounded-lg font-bold text-white text-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100"
           style={{
             background: tickets > 0 && !isPlaying 
-              ? 'linear-gradient(135deg, #14b8a6 0%, #0f766e 100%)'
-              : '#6b7280',
+              ? 'linear-gradient(145deg, #10b981 0%, #059669 50%, #047857 100%)'
+              : 'linear-gradient(145deg, #6b7280 0%, #4b5563 100%)',
             boxShadow: tickets > 0 && !isPlaying 
-              ? '0 6px 20px rgba(20, 184, 166, 0.4)'
-              : 'none',
+              ? '0 6px 20px rgba(16, 185, 129, 0.3), 0 2px 8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.1)'
+              : '0 3px 12px rgba(107, 114, 128, 0.25), inset 0 1px 0 rgba(255,255,255,0.1)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            borderTop: '1px solid rgba(255,255,255,0.3)',
           }}
         >
-          {isPlaying ? '뽑는 중...' : '가챠 뽑기'}
+          {isPlaying ? (
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              뽑는 중...
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-2xl drop-shadow-lg">🎰</span>
+              가챠 뽑기
+            </div>
+          )}
         </button>
 
         <button
           onClick={handleRecharge}
-          className="px-8 py-3 rounded-xl font-semibold text-white text-base transition-all duration-200 hover:scale-105"
+          className="h-8 rounded-lg font-semibold text-white text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] mx-auto px-4"
           style={{
-            background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-            boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4)',
+            background: 'linear-gradient(145deg,rgb(58, 50, 34) 0%,rgb(156, 88, 11) 50%, #b45309 100%)',
+            boxShadow: '0 4px 15px rgba(245, 158, 11, 0.3), 0 1px 6px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.1)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            borderTop: '1px solid rgba(255,255,255,0.3)',
+            width: 'fit-content',
           }}
         >
-          티켓 충전 (+10)
+          <div className="flex items-center justify-center gap-1">
+            <span className="text-sm">⚡</span>
+            티켓 충전
+          </div>
         </button>
       </div>
 
