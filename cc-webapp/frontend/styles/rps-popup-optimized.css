@@ -1,0 +1,481 @@
+/* 가위바위보 팝업 최적화 스타일 (400x750 버튼 최대 확대) */
+/* 상단/하단 패딩 제거, /* 메인 게임 영역 - 전체 너비 사용 */
+.rp/* AI vs 플레이어 대결 화면 - 전체 너비 사용 */
+.rps-popup-optimized .opponent-display {
+  height: 80px !important; /* 높이 축소 */
+  margin: 8px 0 !important; /* 좌우 마진 제거 */
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 8px 12px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(5px) !important;
+  box-sizing: border-box !important;
+}zed .game-main {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  padding: 8px 0 !important; /* 좌우 패딩 제거 */
+  gap: 12px !important;
+  overflow: visible !important;
+  min-height: auto !important;
+  width: 100% !important;
+}
+
+.rps-popup-optimized {
+  /* 전체 화면 고정, 스크롤 완전 제거 */
+  height: 100vh !important;
+  min-height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  /* 패딩 완전 제거 */
+  padding: 0 !important;
+  margin: 0 !important;
+  /* 전체 배경 */
+  background: linear-gradient(135deg, 
+    rgba(30, 58, 138, 0.95) 0%,
+    rgba(59, 130, 246, 0.9) 100%
+  ) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* 메인 게임 컨테이너 - 스크롤 허용 */
+.rps-popup-optimized .game-container {
+  width: 100% !important;
+  max-width: 400px !important;
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important; /* 간격 축소 */
+  overflow-y: auto !important; /* 스크롤 허용 */
+  overflow-x: hidden !important;
+  padding: 4px !important; /* 패딩 축소 */
+}
+
+/* 헤더 영역 - 전체 너비 사용 */
+.rps-popup-optimized .game-header {
+  padding: 8px 12px !important;
+  margin: 0 !important; /* 모든 마진 제거 */
+  height: auto !important;
+  min-height: 50px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.rps-popup-optimized .token-display {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding: 6px 8px !important;
+  margin: 2px !important;
+  line-height: 1.2 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  white-space: nowrap !important; /* 텍스트 줄바꿈 방지 */
+  text-align: center !important;
+  display: block !important;
+  width: 100% !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(5px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 메인 게임 영역 - 압축된 간격 */
+.rps-popup-optimized .game-main {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important; /* 상단부터 배치 */
+  align-items: center !important;
+  padding: 4px 8px !important; /* 패딩 축소 */
+  gap: 8px !important; /* 간격 축소 */
+  overflow: visible !important;
+  min-height: auto !important;
+}
+
+/* 하단 여백 확보 - 압축된 여백 */
+.rps-popup-optimized .game-main > *:last-child {
+  margin-bottom: 8px !important; /* 하단 여백 축소 */
+}
+
+/* AI vs 플레이어 대결 화면 - 전체 너비 사용 */
+.rps-popup-optimized .opponent-display {
+  height: 70px !important;
+  margin: 6px 0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 8px 12px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(5px) !important;
+  box-sizing: border-box !important;
+}
+
+/* AI 선택 라벨 - 줄바꿈 방지 */
+.rps-popup-optimized .opponent-display h2 {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.rps-popup-optimized .choice-display {
+  font-size: 56px !important; /* 크기 확대 */
+  margin: 12px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+  backdrop-filter: blur(8px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  min-width: 100px !important;
+  min-height: 100px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* 선택 버튼들 - 최적화된 간격 */
+.rps-popup-optimized .choice-buttons {
+  padding: 10px 12px !important;
+  gap: 10px !important;
+  margin: 10px 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 360px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
+.rps-popup-optimized .choice-button {
+  /* 버튼 크기 최적화 */
+  width: 100px !important;
+  height: 100px !important;
+  font-size: 48px !important;
+  border-radius: 16px !important;
+  margin: 0 !important; /* 그리드에서 마진 제거 */
+  padding: 8px !important;
+  min-width: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  
+  /* 그라데이션 버튼 스타일 */
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.15) 100%
+  ) !important;
+  border: 3px solid rgba(255, 255, 255, 0.4) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+}
+
+.rps-popup-optimized .choice-button:hover {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.3) 100%
+  ) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  transform: translateY(-4px) scale(1.05) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.rps-popup-optimized .choice-button:active {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* 결과 화면 */
+.rps-popup-optimized .result-screen {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 50 !important;
+  padding: 16px !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.rps-popup-optimized .result-content {
+  width: 100% !important;
+  max-width: 360px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 16px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.rps-popup-optimized .result-title {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  margin-bottom: 8px !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.rps-popup-optimized .result-message {
+  font-size: 18px !important;
+  text-align: center !important;
+  line-height: 1.4 !important;
+  margin-bottom: 16px !important;
+  padding: 0 8px !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+
+
+/* 승리 스타일 */
+.rps-popup-optimized .result-screen.win {
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.9) 0%,
+    rgba(16, 185, 129, 0.85) 100%
+  ) !important;
+}
+
+.rps-popup-optimized .result-screen.lose {
+  background: linear-gradient(135deg, 
+    rgba(239, 68, 68, 0.9) 0%,
+    rgba(220, 38, 38, 0.85) 100%
+  ) !important;
+}
+
+.rps-popup-optimized .result-screen.draw {
+  background: linear-gradient(135deg, 
+    rgba(107, 114, 128, 0.9) 0%,
+    rgba(156, 163, 175, 0.85) 100%
+  ) !important;
+}
+
+/* 버튼들 - 게임 재시작 등 */
+.rps-popup-optimized .btn-primary {
+  background: linear-gradient(135deg, 
+    #7c3aed 0%,
+    #8b5cf6 25%,
+    #7c3aed 50%,
+    #6d28d9 75%,
+    #5b21b6 100%
+  ) !important;
+  border: 2px solid #8b5cf6 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 12px 20px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
+  transition: all 0.2s ease !important;
+  font-size: 14px !important;
+  min-width: 100px !important;
+  cursor: pointer !important;
+  margin: 0 4px !important;
+}
+
+.rps-popup-optimized .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, 
+    #8b5cf6 0%,
+    #a78bfa 25%,
+    #8b5cf6 50%,
+    #7c3aed 75%,
+    #6d28d9 100%
+  ) !important;
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+.rps-popup-optimized .btn-primary:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+/* 텍스트 크기 최적화 */
+.rps-popup-optimized h1 {
+  font-size: 20px !important;
+  margin-bottom: 4px !important;
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.rps-popup-optimized h2 {
+  font-size: 16px !important;
+  margin-bottom: 4px !important;
+  color: #ffffff !important;
+}
+
+.rps-popup-optimized h3 {
+  font-size: 14px !important;
+  margin-bottom: 2px !important;
+  color: #ffffff !important;
+}
+
+.rps-popup-optimized p {
+  font-size: 14px !important;
+  line-height: 1.3 !important;
+  margin-bottom: 4px !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* 스크롤바 숨김 */
+.rps-popup-optimized::-webkit-scrollbar {
+  display: none !important;
+}
+
+.rps-popup-optimized {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* 반응형 - 매우 작은 화면에서도 버튼 크기 유지 */
+@media (max-width: 400px) {
+  .rps-popup-optimized .choice-button {
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 48px !important;
+    margin: 4px !important;
+  }
+}
+
+/* 터치 디바이스 최적화 */
+@media (hover: none) and (pointer: coarse) {
+  .rps-popup-optimized .choice-button {
+    /* 모바일에서 터치 영역 확장 */
+    min-width: 120px !important;
+    min-height: 120px !important;
+    padding: 8px !important;
+  }
+  
+  .rps-popup-optimized .choice-button:hover {
+    /* 모바일에서 hover 효과 제거 */
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.1) 100%
+    ) !important;
+    transform: none !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+/* CJ AI 메시지 - 줄바꿈 방지 */
+.rps-popup-optimized .text-center p {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+  width: 100% !important;
+  display: block !important;
+  text-align: center !important;
+}
+
+/* 게임 컨트롤 버튼들 - 전체 너비 사용 */
+.rps-popup-optimized .text-center {
+  width: 100% !important;
+  margin: 8px 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.rps-popup-optimized .space-x-3 {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  flex-wrap: nowrap !important;
+}
+
+.rps-popup-optimized .btn-primary {
+  white-space: nowrap !important;
+  font-size: 11px !important;
+  padding: 6px 12px !important;
+  font-weight: 600 !important;
+  min-width: auto !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  backdrop-filter: blur(8px) !important;
+  transition: all 0.3s ease !important;
+}
+
+.rps-popup-optimized .btn-primary:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* VS 표시 - 전체 너비 사용 */
+.rps-popup-optimized .my-2 {
+  margin: 6px 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.rps-popup-optimized .text-xl {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 플레이어 선택 영역 - 전체 너비 사용 */
+.rps-popup-optimized .player-choice {
+  width: 100% !important;
+  margin: 8px 0 !important;
+  padding: 8px 12px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(5px) !important;
+  box-sizing: border-box !important;
+}
+
+.rps-popup-optimized .player-choice h2 {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  white-space: nowrap !important;
+  margin: 0 0 4px 0 !important;
+  padding: 0 !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  width: 100% !important;
+}

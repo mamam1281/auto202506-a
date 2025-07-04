@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChoiceButtons } from './ChoiceButtons';
-import { OpponentDisplay } from './OpponentDisplay';
-import { ResultScreen } from './ResultScreen';
+import { ChoiceButtons } from './ChoiceButtons-Popup';
+import { OpponentDisplay } from './OpponentDisplay-new';
+import { ResultScreen } from './ResultScreen-new';
 
 export type Choice = 'rock' | 'paper' | 'scissors';
 export type GameResult = 'win' | 'lose' | 'draw' | null;
@@ -28,7 +28,7 @@ interface GameState {
 }
 
 const CHOICES: Choice[] = ['rock', 'paper', 'scissors'];
-const AI_THINKING_TIME = 150;
+const AI_THINKING_TIME = 1200; // 적절한 AI 생각 시간
 
 const getGameResult = (playerChoice: Choice, aiChoice: Choice): GameResult => {
   if (playerChoice === aiChoice) return 'draw';
@@ -44,13 +44,73 @@ const getAIChoice = (): Choice => {
   return CHOICES[Math.floor(Math.random() * CHOICES.length)];
 };
 
-const backgroundVariants = {
-  idle: {
-    background: 'linear-gradient(135deg, var(--color-primary-dark-navy) 0%, var(--color-primary-charcoal) 100%)'
-  },
-  playing: {
-    background: 'linear-gradient(135deg, var(--color-primary-dark-navy) 0%, var(--color-primary-charcoal) 100%)'
+// CJ AI 메시지 생성 함수
+const generateCJMessage = (result: GameResult, streak: number): string => {
+  const messages = {
+    win: [
+      "대단해요! 🎉 계속 이런 식으로 해보세요!",
+      "훌륭한 선택이었어요! 🌟 다음 라운드도 기대돼요!",
+      "완벽한 전략이네요! 💫 계속 승리하세요!",
+    ],
+    lose: [
+      "아쉽네요! 😅 다음엔 더 좋은 결과가 있을 거예요!",
+      "괜찮아요! 🤗 경험이 쌓이면 더 잘하게 될 거예요!",
+      "포기하지 마세요! 💪 다시 한 번 도전해보세요!",
+    ],
+    draw: [
+      "우연의 일치네요! 🤝 서로 비슷한 생각을 했군요!",
+      "무승부도 나쁘지 않아요! 🎯 다시 도전해보세요!",
+      "똑같은 선택이라니! 🤔 다음엔 어떻게 될까요?",
+    ],
+  };
+
+  const streakMessages: Record<string, string[]> = {
+    win: streak >= 3 ? [`대단한 연승이에요! 🔥 ${streak}연승 달성!`] : [],
+    lose: streak >= 3 ? [`${streak}연패... 😔 하지만 곧 운이 돌아올 거예요!`] : [],
+    draw: []
+  };
+
+  if (result && streakMessages[result] && streakMessages[result].length > 0) {
+    return streakMessages[result][0];
   }
+
+  if (result && messages[result] && messages[result].length > 0) {
+    return messages[result][Math.floor(Math.random() * messages[result].length)];
+  }
+
+  return "게임을 시작해 보세요! 행운을 빌어요! 🚀";
+};
+
+// 애니메이션 variants
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut" as const,
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const headerVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" as const },
+  },
+};
+
+const scoreVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.4, ease: "backOut" as const },
+  },
 };
 
 export const RPSGame: React.FC = () => {
@@ -66,288 +126,273 @@ export const RPSGame: React.FC = () => {
     playerLossStreak: 0,
   });
 
-  // Score Modal State
-  const [scoreModalOpen, setScoreModalOpen] = useState(false);
+  const [showScoreModal, setShowScoreModal] = useState(false);
 
-  useEffect(() => {
-    // ...confetti styles, localStorage 등 생략 (동일)
-  }, []);
+  // 게임 플레이 핸들러
+  const handlePlayerChoice = useCallback((choice: Choice) => {
+    if (gameState.isPlaying) return;
+    
+    setGameState(prev => ({
+      ...prev,
+      playerChoice: choice,
+      aiChoice: null,
+      result: null,
+      isPlaying: true,
+      showResultScreen: false,
+      cjaiMessage: "AI가 선택을 고민하고 있어요... 🤔",
+    }));
 
-  const handlePlayerChoice = useCallback((choice: Choice): void => {
-    setGameState(prev => {
-      if (prev.isPlaying) return prev;
-      return {
-        ...prev,
-        playerChoice: choice,
-        aiChoice: null,
-        result: null,
-        isPlaying: true,
-        showResultScreen: false,
-      };
-    });
+    // AI 선택 및 결과 계산
     setTimeout(() => {
-      const currentAiChoice = getAIChoice();
-      const currentResult = getGameResult(choice, currentAiChoice);
+      const aiChoice = getAIChoice();
+      const result = getGameResult(choice, aiChoice);
+      
       setGameState(prev => {
-        if (!prev.isPlaying || prev.playerChoice !== choice) return prev;
-        const newScore: GameScore = { ...prev.score };
-        if (currentResult === 'win') newScore.player++;
-        else if (currentResult === 'lose') newScore.ai++;
-        else newScore.draws++;
+        const newScore = { ...prev.score };
+        let newWinStreak = prev.playerWinStreak;
+        let newLossStreak = prev.playerLossStreak;
+
+        if (result === 'win') {
+          newScore.player++;
+          newWinStreak++;
+          newLossStreak = 0;
+        } else if (result === 'lose') {
+          newScore.ai++;
+          newLossStreak++;
+          newWinStreak = 0;
+        } else {
+          newScore.draws++;
+          newWinStreak = 0;
+          newLossStreak = 0;
+        }
+
+        const newMessage = generateCJMessage(result, 
+          result === 'win' ? newWinStreak : newLossStreak);
+
         return {
           ...prev,
-          aiChoice: currentAiChoice,
-          result: currentResult,
+          aiChoice,
+          result,
           isPlaying: false,
           score: newScore,
           showResultScreen: true,
+          cjaiMessage: newMessage,
+          playerWinStreak: newWinStreak,
+          playerLossStreak: newLossStreak,
         };
       });
     }, AI_THINKING_TIME);
+  }, [gameState.isPlaying]);
+
+  // 다시 플레이 핸들러
+  const handlePlayAgain = useCallback(() => {
+    setGameState(prev => ({
+      ...prev,
+      playerChoice: null,
+      aiChoice: null,
+      result: null,
+      isPlaying: false,
+      showResultScreen: false,
+      cjaiMessage: "다시 한 번 도전해보세요! 🎯",
+    }));
   }, []);
 
-  // Scoreboard Modal open/close
-  const openScoreModal = () => setScoreModalOpen(true);
-  const closeScoreModal = () => setScoreModalOpen(false);
+  // 점수 리셋 핸들러
+  const handleResetScore = useCallback(() => {
+    setGameState(prev => ({
+      ...prev,
+      playerChoice: null,
+      aiChoice: null,
+      result: null,
+      isPlaying: false,
+      score: { player: 0, ai: 0, draws: 0 },
+      showResultScreen: false,
+      cjaiMessage: "새로운 시작이에요! 화이팅! 🚀",
+      playerWinStreak: 0,
+      playerLossStreak: 0,
+    }));
+    setShowScoreModal(false);
+  }, []);
+
+  // 총 게임 수 계산
+  const totalGames = gameState.score.player + gameState.score.ai + gameState.score.draws;
 
   return (
-    <>
-      <div className="rps-root">
-        <link rel="stylesheet" href="./rps-theme.css" />
-        <motion.div
-          className="absolute inset-0 -z-10"
-          style={{ background: 'linear-gradient(135deg, #135B79 0%, #0a2233 100%)' }}
-          variants={backgroundVariants}
-          animate={gameState.isPlaying ? "playing" : "idle"}
-          transition={{
-            duration: 2,
-            ease: "easeInOut" as const
-          }}
-        />
-
-        <div className="rps-content">
-          <div className="w-full max-w-md flex flex-col items-center">
-            {/* Header - 타이틀 */}
-            <motion.header
-              initial={{ opacity: 0, y: -30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" as const }}
-              className="rps-header"
-            >
-              <motion.h1
-                className="rps-title"
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.6, ease: "backOut" as const }}
-                style={{
-                  textShadow: '0 2px 8px #0a2233, 0 1px 0 #fff, 0 0 16px #38bdf8, 0 0 2px #135B79, 0 4px 12px #135B79, 0 0 0 #fff',
-                  color: '#fff',
-                  fontSize: '2.1rem',
-                  fontWeight: 900,
-                  letterSpacing: '0.01em',
-                  lineHeight: 1.1
-                }}
-              >
-                가위바위보
-              </motion.h1>
-            </motion.header>
-
-            {/* Game Area - 플레이어 게임 섹션 */}
-            <div className="w-full flex flex-col items-center" style={{ gap: 16 }}>
-              {/* Player Section */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <button
-                  className="rps-btn"
-                  style={{
-                    border: '1px solid var(--color-info)',
-                    borderRadius: 8,
-                    background: 'rgba(19,91,121,0.08)',
-                    padding: '2px 10px',
-                    fontWeight: 700,
-                    fontSize: '13px',
-                    cursor: 'pointer'
-                  }}
-                  onClick={openScoreModal}
-                  aria-label="플레이어 점수판 열기"
-                >
-                  🎮 <span style={{
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: '15px',
-                    textShadow: '0 1px 2px #222, 0 0 4px #38bdf8'
-                  }}>플레이어</span>
-                </button>
-                <button
-                  className="rps-btn"
-                  style={{
-                    border: '1px solid var(--color-info)',
-                    borderRadius: 8,
-                    background: 'rgba(19,91,121,0.08)',
-                    padding: '2px 10px',
-                    fontWeight: 700,
-                    fontSize: '13px',
-                    cursor: 'pointer'
-                  }}
-                  onClick={openScoreModal}
-                  aria-label="AI 점수판 열기"
-                >
-                  🤖 <span style={{
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: '15px',
-                    textShadow: '0 1px 2px #222, 0 0 4px #38bdf8'
-                  }}>AI 상대방</span>
-                </button>
-              </div>
-              <section className="rps-player" style={{ width: '100%' }}>
-                <ChoiceButtons
-                  onChoice={handlePlayerChoice}
-                  selectedChoice={gameState.playerChoice}
-                  disabled={gameState.isPlaying}
-                />
-              </section>
-              {/* AI Opponent Section */}
-              <section className="rps-ai" role="region" aria-labelledby="ai-section-heading">
-                <OpponentDisplay
-                  choice={gameState.aiChoice}
-                  isThinking={gameState.isPlaying && !gameState.aiChoice}
-                />
-              </section>
+    <div className="game-container">
+      <motion.div
+        className="game-main"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* 게임 헤더 */}
+        <motion.header
+          className="game-header"
+          variants={headerVariants}
+        >
+          <h1 className="text-xl font-bold text-white">
+            🎮 가위바위보
+          </h1>
+          {/* 점수판 */}
+          <motion.div
+            className="score-display flex justify-center gap-4 mt-2"
+            variants={scoreVariants}
+          >
+            <div className="score-item">
+              <div className="score-label">플레이어</div>
+              <div className="score-value player-score">{gameState.score.player}</div>
             </div>
+            <div className="score-item">
+              <div className="score-label">무승부</div>
+              <div className="score-value draw-score">{gameState.score.draws}</div>
+            </div>
+            <div className="score-item">
+              <div className="score-label">AI</div>
+              <div className="score-value ai-score">{gameState.score.ai}</div>
+            </div>
+          </motion.div>
+        </motion.header>
 
-            {/* 점수판 버튼 */}
-            <button
-              className="rps-btn"
-              style={{
-                margin: '10px 0 0 0',
-                padding: '4px 12px',
-                border: '1px solid var(--color-info)',
-                borderRadius: 8,
-                background: 'rgba(19,91,121,0.13)',
-                fontWeight: 700,
-                fontSize: '13px',
-                cursor: 'pointer'
-              }}
-              onClick={openScoreModal}
+        {/* AI 선택 영역 */}
+        <div className="opponent-display">
+          <h2 className="text-lg font-semibold text-white mb-2">AI의 선택</h2>
+          <OpponentDisplay
+            choice={gameState.aiChoice}
+            isThinking={gameState.isPlaying}
+          />
+        </div>
+
+        {/* VS 표시 */}
+        <div className="text-center my-2">
+          <motion.div
+            className="text-2xl font-bold text-white"
+            animate={{
+              scale: gameState.isPlaying ? [1, 1.1, 1] : 1,
+              rotate: gameState.isPlaying ? [0, 180, 360] : 0,
+            }}
+            transition={{
+              duration: 1,
+              repeat: gameState.isPlaying ? Infinity : 0,
+              ease: "easeInOut",
+            }}
+          >
+            VS
+          </motion.div>
+        </div>
+
+        {/* 플레이어 선택 영역 */}
+        <div className="text-center">
+          <h2 className="text-lg font-semibold text-white mb-4">당신의 선택</h2>
+          <ChoiceButtons
+            onChoice={handlePlayerChoice}
+            selectedChoice={gameState.playerChoice}
+            disabled={gameState.isPlaying}
+          />
+        </div>
+
+        {/* CJ AI 메시지 */}
+        <motion.div
+          className="text-center mt-4 px-4"
+          key={gameState.cjaiMessage}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="cj-avatar">🤖</div>
+          <div className="cj-text">
+            <strong>CJ AI:</strong> {gameState.cjaiMessage}
+          </div>
+        </motion.div>
+
+        {/* 게임 컨트롤 */}
+        <div className="rps-controls">
+          <button
+            className="rps-button secondary"
+            onClick={() => setShowScoreModal(true)}
+            disabled={gameState.isPlaying}
+          >
+            📊 상세 통계
+          </button>
+          <button
+            className="rps-button danger"
+            onClick={handleResetScore}
+            disabled={gameState.isPlaying}
+          >
+            🔄 게임 리셋
+          </button>
+        </div>
+
+        {/* 결과 화면 */}
+        <AnimatePresence mode="wait">
+          {gameState.showResultScreen && gameState.result && (
+            <ResultScreen
+              result={gameState.result}
+              playerChoice={gameState.playerChoice!}
+              aiChoice={gameState.aiChoice!}
+              onPlayAgain={handlePlayAgain}
+              onResetScore={handleResetScore}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* 점수 상세 모달 */}
+        <AnimatePresence>
+          {showScoreModal && (
+            <motion.div
+              className="rps-modal-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowScoreModal(false)}
             >
-              점수판 보기
-            </button>
-
-            {/* 점수판 모달 */}
-            <AnimatePresence>
-              {scoreModalOpen && (
-                <motion.div
-                  className="rps-modal"
-                  initial={{ opacity: 0, scale: 0.95, y: 40 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: 40 }}
-                  transition={{ duration: 0.22, type: "spring", bounce: 0.22 }}
-                  style={{
-                    minWidth: 240,
-                    minHeight: 90,
-                    padding: '32px 20px 20px 20px',
-                    marginTop: 32,
-                    background: 'linear-gradient(135deg, rgba(15,23,42,0.93) 0%, rgba(30,41,59,0.89) 100%)',
-                    border: '1.5px solid #38bdf8',
-                    borderRadius: 18,
-                    boxShadow: '0 8px 32px 0 rgba(30,41,59,0.28), 0 2px 8px 0 rgba(30,58,138,0.18), 0 1.5px 0 #fff',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 28
-                  }}
-                >
-                  <div style={{ fontWeight: 900, fontSize: 20, marginBottom: 12, color: '#fff', letterSpacing: '0.01em' }}>점수판</div>
-                  <div style={{ display: 'flex', gap: 36, marginBottom: 12 }}>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ color: '#1db67d', fontWeight: 900, fontSize: 22 }}>{gameState.score.player}</div>
-                      <div style={{ fontSize: 15, color: '#1db67d', fontWeight: 700 }}>승리</div>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ color: '#1e3a8a', fontWeight: 900, fontSize: 22 }}>{gameState.score.draws}</div>
-                      <div style={{ fontSize: 15, color: '#1e3a8a', fontWeight: 700 }}>무승부</div>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ color: '#e23c3c', fontWeight: 900, fontSize: 22 }}>{gameState.score.ai}</div>
-                      <div style={{ fontSize: 15, color: '#e23c3c', fontWeight: 700 }}>패배</div>
+              <motion.div
+                className="rps-modal-content"
+                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: 50 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 className="modal-title">게임 통계</h3>
+                <div className="stats-grid">
+                  <div className="stat-item">
+                    <div className="stat-label">총 게임 수</div>
+                    <div className="stat-value">{totalGames}</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className="stat-label">승률</div>
+                    <div className="stat-value">
+                      {totalGames > 0 ? Math.round((gameState.score.player / totalGames) * 100) : 0}%
                     </div>
                   </div>
+                  <div className="stat-item">
+                    <div className="stat-label">현재 연승</div>
+                    <div className="stat-value">{gameState.playerWinStreak}</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className="stat-label">현재 연패</div>
+                    <div className="stat-value">{gameState.playerLossStreak}</div>
+                  </div>
+                </div>
+                <div className="modal-actions">
                   <button
-                    className="rps-btn"
-                    style={{
-                      marginTop: 12,
-                      padding: '6px 20px',
-                      border: '1px solid #38bdf8',
-                      borderRadius: 8,
-                      background: 'rgba(30,41,59,0.85)',
-                      fontWeight: 700,
-                      fontSize: '15px',
-                      color: '#fff',
-                      boxShadow: '0 1px 4px #222, 0 1px 2px #222',
-                      cursor: 'pointer'
-                    }}
-                    onClick={closeScoreModal}
+                    className="rps-button secondary"
+                    onClick={() => setShowScoreModal(false)}
                   >
                     닫기
                   </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* CJ AI Chat Area */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
-              className="text-center my-4 bg-card/30 backdrop-blur-sm border border-border/10 rounded-xl min-h-[50px] flex items-center justify-center px-4 py-3 w-full"
-              role="log"
-              aria-live="polite"
-            >
-              <p className="text-muted-foreground text-sm">
-                <span className="font-semibold text-accent">CJ AI:</span>
-                <motion.span
-                  key={gameState.cjaiMessage}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, ease: "easeOut" as const }}
-                  className="ml-1.5 inline-block"
-                >
-                  {gameState.cjaiMessage}
-                </motion.span>
-              </p>
+                  <button
+                    className="rps-button danger"
+                    onClick={handleResetScore}
+                  >
+                    통계 초기화
+                  </button>
+                </div>
+              </motion.div>
             </motion.div>
-
-            {/* Result Screen */}
-            <AnimatePresence>
-              {gameState.showResultScreen && gameState.result && gameState.playerChoice && gameState.aiChoice && (
-                <ResultScreen
-                  result={gameState.result}
-                  playerChoice={gameState.playerChoice}
-                  aiChoice={gameState.aiChoice}
-                  onPlayAgain={() => setGameState(prev => ({
-                    ...prev,
-                    playerChoice: null,
-                    aiChoice: null,
-                    result: null,
-                    isPlaying: false,
-                    showResultScreen: false,
-                  }))}
-                  onResetScore={() => setGameState(prev => ({
-                    ...prev,
-                    playerChoice: null,
-                    aiChoice: null,
-                    result: null,
-                    isPlaying: false,
-                    score: { player: 0, ai: 0, draws: 0 },
-                    showResultScreen: false,
-                  }))}
-                />
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
-    </>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
   );
 };
 

@@ -2,7 +2,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import type { Choice, GameResult } from './RPSGame';
+
+export type Choice = 'rock' | 'paper' | 'scissors';
+export type GameResult = 'win' | 'lose' | 'draw' | null;
 
 interface ResultScreenProps {
   result: GameResult;
@@ -55,37 +57,37 @@ type ParticleType = 'confetti' | 'sad';
 
 function getParticles(result: GameResult): { type: ParticleType, color: string, left: number, delay: number }[] {
   if (result === 'win') {
-    // 팡파레: 위에서 아래로, 좌우로 흩어지는 confetti
+    // 팡파레: 위에서 아래로, 좌우로 흩어지는 confetti - 파티클 수 감소
     const colors = [
       '#fbbf24', '#f87171', '#34d399', '#60a5fa', '#f472b6', '#facc15', '#38bdf8', '#a78bfa'
     ];
-    return Array.from({ length: 32 }, (_, i) => ({
+    return Array.from({ length: 20 }, (_, i) => ({ // 32개에서 20개로 감소
       type: 'confetti',
       color: colors[i % colors.length],
       left: Math.random() * 100,
-      delay: Math.random() * 0.18 // 더 빠른 애니메이션
+      delay: Math.random() * 0.12 // 더 빠른 애니메이션
     }));
   } else if (result === 'draw') {
-    // 무승부: 중립적 confetti, 위에서 아래로
+    // 무승부: 중립적 confetti, 위에서 아래로 - 파티클 수 감소
     const colors = [
       '#64748b', '#a3a3a3', '#fbbf24', '#60a5fa'
     ];
-    return Array.from({ length: 18 }, (_, i) => ({
+    return Array.from({ length: 12 }, (_, i) => ({ // 18개에서 12개로 감소
       type: 'confetti',
       color: colors[i % colors.length],
       left: Math.random() * 100,
-      delay: Math.random() * 0.3
+      delay: Math.random() * 0.2
     }));
   } else if (result === 'lose') {
-    // 패배: 아래로 떨어지는 슬픈 파티클
+    // 패배: 아래로 떨어지는 슬픈 파티클 - 파티클 수 감소
     const colors = [
       '#64748b', '#334155', '#94a3b8', '#60a5fa'
     ];
-    return Array.from({ length: 18 }, (_, i) => ({
+    return Array.from({ length: 12 }, (_, i) => ({ // 18개에서 12개로 감소
       type: 'sad',
       color: colors[i % colors.length],
       left: 20 + Math.random() * 60,
-      delay: Math.random() * 0.3
+      delay: Math.random() * 0.2
     }));
   }
   return [];

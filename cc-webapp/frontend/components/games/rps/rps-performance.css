@@ -1,0 +1,66 @@
+/* RPS Game Performance Optimizations */
+
+/* GPU 가속 클래스 - 이미 global.css에 있음 */
+.gpu-accelerated {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+}
+
+/* 애니메이션 최적화 */
+.rps-optimized {
+  contain: layout style paint;
+  isolation: isolate;
+}
+
+/* 모바일 성능 최적화 */
+@media (max-width: 768px) {
+  .rps-mobile-optimized {
+    will-change: auto; /* 모바일에서는 will-change 사용 최소화 */
+  }
+  
+  /* 모바일에서 복잡한 그림자 효과 축소 */
+  .rps-modal {
+    box-shadow: 0 4px 16px 0 rgba(30,41,59,0.2), 0 1px 4px 0 rgba(30,58,138,0.15) !important;
+  }
+  
+  /* 모바일에서 파티클 효과 최소화 */
+  .rps-particle-mobile {
+    display: none;
+  }
+}
+
+/* 애니메이션 성능 향상 */
+.rps-choice-button {
+  contain: strict;
+  transform-style: preserve-3d;
+}
+
+/* 메모리 사용량 최적화 */
+.rps-result-particles {
+  pointer-events: none;
+  contain: size layout style paint;
+}
+
+/* 접근성 설정 고려 */
+@media (prefers-reduced-motion: reduce) {
+  .rps-root * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 고대비 모드 지원 */
+@media (prefers-contrast: high) {
+  .rps-btn {
+    border-width: 2px !important;
+  }
+  
+  .rps-title {
+    text-shadow: none !important;
+    font-weight: 900 !important;
+  }
+}

@@ -69,6 +69,8 @@ export default function GamePopupLayout({
           background: var(--color-primary-dark-navy);
           color: var(--color-text-primary);
           overflow: hidden;
+          padding: 0;
+          margin: 0;
         }
         
         .game-popup-content {
@@ -76,6 +78,8 @@ export default function GamePopupLayout({
           overflow: hidden;
           display: flex;
           flex-direction: column;
+          padding: 0;
+          margin: 0;
         }
       `}</style>
 

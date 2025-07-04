@@ -2,8 +2,8 @@
 
 import { Suspense } from 'react';
 import GamePopupLayout from '../../../../components/GamePopupLayout';
-import RPSGame from '../../../../components/games/rps/RPSGame';
-import '../../../../styles/rps-popup.css';
+import RPSGame from '../../../../components/games/rps/RPSGame-Popup';
+import '../../../../styles/rps-popup-optimized.css';
 
 // 팝업 창용 로딩 스켈레톤
 function PopupLoadingSkeleton() {
@@ -20,8 +20,8 @@ function PopupLoadingSkeleton() {
 // 팝업 창용 RPS 게임 래퍼
 function RPSGamePopupWrapper() {
   return (
-    <div className="w-full h-full overflow-y-auto rps-popup-compact">
-      <div className="w-full max-w-full mx-auto h-full game-container">
+    <div className="w-full h-full rps-popup-optimized overflow-hidden">
+      <div className="w-full h-full">
         <RPSGame />
       </div>
     </div>

@@ -34,17 +34,17 @@ const NEON_COLORS = [
 ];
 
 const createParticle = (): Particle => {
-  const type = Math.random() < 0.3 ? 'glow' : (Math.random() < 0.6 ? 'sparkle' : 'trail');
-  const size = type === 'glow' ? Math.random() * 10 + 8 : (type === 'sparkle' ? Math.random() * 4 + 2 : Math.random() * 3 + 1);
+  const type = Math.random() < 0.4 ? 'glow' : (Math.random() < 0.7 ? 'sparkle' : 'trail');
+  const size = type === 'glow' ? Math.random() * 6 + 4 : (type === 'sparkle' ? Math.random() * 3 + 1.5 : Math.random() * 2 + 1); // 파티클 크기 축소
 
   return {
     id: generateId(),
-    x: Math.random() * 100, // percentage
-    y: Math.random() * 100, // percentage
+    x: Math.random() * 100,
+    y: Math.random() * 100,
     size,
     color: NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)],
-    duration: Math.random() * 2.5 + 2.5, // 2.5s to 5s
-    delay: Math.random() * 1.5,
+    duration: Math.random() * 1.5 + 1.5, // 2.5s에서 1.5-3s로 단축
+    delay: Math.random() * 0.8, // 딜레이 단축
     type,
   };
 };
@@ -53,52 +53,62 @@ const particleVariants = {
   initial: (particle: Particle) => ({
     opacity: 0,
     scale: 0.5,
-    x: 0, // Relative to its percentage position
-    y: 0, // Relative to its percentage position
+    x: 0,
+    y: 0,
   }),
   animate: (particle: Particle) => ({
-    opacity: [0, 0.8, 0.8, 0],
-    scale: particle.type === 'glow' ? [0.5, 1, 1.2, 0.8] : [0.5, 1.1, 1, 0.7],
-    y: particle.type === 'trail' ? [0, -80, -160] : [0, -Math.random() * 60 - 40], // Trails move further
-    x: [0, Math.random() * 60 - 30, Math.random() * 40 - 20],
-    rotate: particle.type === 'sparkle' ? [0, Math.random() * 360] : 0,
+    opacity: [0, 0.7, 0.7, 0], // 투명도 약간 감소
+    scale: particle.type === 'glow' ? [0.5, 1, 1.1, 0.8] : [0.5, 1, 1, 0.7], // 스케일 변화 최소화
+    y: particle.type === 'trail' ? [0, -60, -120] : [0, -Math.random() * 40 - 20], // 움직임 범위 축소
+    x: [0, Math.random() * 30 - 15, Math.random() * 20 - 10], // 가로 움직임 축소
+    rotate: particle.type === 'sparkle' ? [0, Math.random() * 180] : 0, // 회전 범위 축소
     transition: {
-      duration: particle.duration,
-      delay: particle.delay,
+      duration: particle.duration * 0.8, // 애니메이션 지속시간 단축
+      delay: particle.delay * 0.5, // 딜레이 단축
       ease: "easeOut" as const,
-      repeat: Infinity, // Particles will loop their animation
-      repeatDelay: Math.random() * 2 + 1, // Staggered restart
+      repeat: 2, // 무한 반복 대신 2번만 반복
+      repeatDelay: Math.random() * 1.5 + 0.5, // 반복 딜레이 단축
     }
   }),
   exit: {
     opacity: 0,
     scale: 0.2,
-    transition: { duration: 0.4, ease: "easeOut" as const }
+    transition: { duration: 0.2, ease: "easeOut" as const } // 종료 애니메이션 단축
   }
 };
 
 
 export const ParticleSystem: React.FC<ParticleSystemProps> = ({ isActive, intensity = 1 }) => {
   const [particles, setParticles] = useState<Particle[]>([]);
-  const particleCount = useMemo(() => Math.floor((window.innerWidth < 768 ? 8 : 15) * intensity), [intensity]);
+  
+  // 성능 최적화: 모바일에서는 파티클 수를 더 줄임
+  const particleCount = useMemo(() => {
+    const baseCount = window.innerWidth < 768 ? 4 : 8; // 모바일 4개, 데스크톱 8개로 감소
+    return Math.floor(baseCount * intensity);
+  }, [intensity]);
 
   useEffect(() => {
     if (isActive) {
-      // Initial burst
+      // Initial burst - 더 적은 파티클로 시작
       setParticles(Array.from({ length: particleCount }, createParticle));
 
-      // Continuously add a few particles to maintain effect, remove old ones
+      // 파티클 생성 주기를 늘려서 성능 향상
       const intervalId = setInterval(() => {
-        setParticles(prev => [
-          ...prev.slice(Math.max(0, prev.length - particleCount + Math.floor(3 * intensity))), // Keep most, remove a few oldest
-          ...Array.from({ length: Math.floor(3 * intensity) }, createParticle) // Add a few new ones
-        ].slice(-particleCount * 2)); // Cap total particles to avoid performance issues
-      }, 1200 / intensity); // Faster for higher intensity
+        setParticles(prev => {
+          const newParticleCount = Math.floor(2 * intensity); // 한 번에 생성하는 파티클 수 감소
+          const maxParticles = particleCount * 1.5; // 최대 파티클 수 제한
+          
+          return [
+            ...prev.slice(Math.max(0, prev.length - maxParticles + newParticleCount)),
+            ...Array.from({ length: newParticleCount }, createParticle)
+          ].slice(-maxParticles);
+        });
+      }, 1800 / intensity); // 생성 주기 증가 (1.8초)
 
       return () => clearInterval(intervalId);
     } else {
-      // When not active, gradually remove particles
-      const timeoutId = setTimeout(() => setParticles([]), 800); // Allow existing to fade
+      // 비활성화 시 즉시 파티클 제거
+      const timeoutId = setTimeout(() => setParticles([]), 400);
       return () => clearTimeout(timeoutId);
     }
   }, [isActive, particleCount, intensity]);
@@ -123,28 +133,30 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({ isActive, intens
   };
 
   return (
-    <div className="fixed inset-0 pointer-events-none -z-[5]"> {/* Ensure it's behind game content but above main bg */}
-      <AnimatePresence>
+    <div className="fixed inset-0 pointer-events-none -z-[5] gpu-accelerated">
+      <AnimatePresence mode="popLayout">
         {particles.map((p) => (
           <motion.div
             key={p.id}
-            className="absolute rounded-full"
+            className="absolute rounded-full gpu-accelerated"
             style={{
               left: `${p.x}%`,
               top: `${p.y}%`,
               width: p.size,
               height: p.size,
               backgroundColor: p.color,
+              willChange: 'transform, opacity', // GPU 가속 힌트
+              transform: 'translateZ(0)', // GPU 레이어 강제 생성
               boxShadow: p.type === 'glow'
-                ? `0 0 ${p.size * 1.5}px ${p.color}, 0 0 ${p.size * 3}px ${p.color.replace(/[\d\.]+\)$/, '0.4)')}` // Softer glow
-                : (p.type === 'sparkle' ? `0 0 ${p.size * 0.8}px ${p.color}` : 'none'),
-              filter: p.type === 'glow' ? 'blur(1px)' : (p.type === 'sparkle' ? 'blur(0.5px)' : 'none'),
+                ? `0 0 ${p.size}px ${p.color}, 0 0 ${p.size * 2}px ${p.color.replace(/[\d\.]+\)$/, '0.3)')}` // 그림자 효과 축소
+                : (p.type === 'sparkle' ? `0 0 ${p.size * 0.5}px ${p.color}` : 'none'),
+              filter: p.type === 'glow' ? 'blur(0.5px)' : 'none', // 블러 효과 축소
             }}
             variants={particleVariants}
             initial="initial"
             animate="animate"
             exit="exit"
-            custom={p} // Pass particle data to variants if needed for dynamic transitions
+            custom={p}
           />
         ))}
       </AnimatePresence>
