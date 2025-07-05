@@ -131,6 +131,22 @@
   --input-background: var(--color-primary-charcoal);
   --switch-background: var(--color-neutral-medium);
   --ring: var(--color-purple-secondary); /* 포커스 링 색상 */
+
+  /* Roulette Game Specific Colors - 룰렛 게임에 최적화된 색상 */
+  --primary-dark: #0f172a;
+  --primary-medium: #1e293b;
+  --accent-purple: #a78bfa;
+  --accent-purple-2: #8b5cf6;
+  --accent-purple-3: #7c3aed;
+  --accent-purple-4: #6d28d9;
+  --neutral-light: #475569;
+  --neutral-medium: #64748b;
+  --neutral-dark: #1e293b;
+  --semantic-success: #10b981;
+  --semantic-error: #ef4444;
+  --semantic-info: #3b82f6;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
 }
 
 /* 그라데이션 팔레트 */
