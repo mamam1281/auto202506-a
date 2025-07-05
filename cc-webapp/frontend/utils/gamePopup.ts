@@ -43,6 +43,14 @@ export const GAME_POPUP_CONFIGS: Record<string, GamePopupConfig> = {
     resizable: false,
     scrollbars: false,
   },
+  roulette: {
+    width: 450,
+    height: 700,
+    title: '룰렛 게임',
+    url: '/games/roulette/popup',
+    resizable: false,
+    scrollbars: false,
+  },
   'slot-simple': {
     width: 400,
     height: 650,
