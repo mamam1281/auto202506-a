@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { GachaResult, SAMPLE_ITEMS, GachaItem } from './types';
 import { GachaModal } from './GachaModal';
+import './gacha-premium-theme.css';
 
 export function GachaContainer() {
   const [tickets, setTickets] = useState(5);
@@ -54,56 +55,22 @@ export function GachaContainer() {
   };
 
   return (
-    <div 
-      className="h-screen flex flex-col items-center p-4"
-      style={{
-        background: 'linear-gradient(135deg, #0f766e 0%, #065f46 100%)',
-        maxHeight: '750px',
-        maxWidth: '400px',
-        margin: '0 auto',
-        gap: '15px',
-      }}
-    >
+    <div className="gacha-container">
       {/* Ticket Display */}
-      <div 
-        className="px-2 py-2 rounded-xl flex items-center gap-1 justify-center"
-        style={{
-          background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255, 255, 255, 0.3)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <span className="text-2xl drop-shadow-lg">🎫</span>
-        <span className="text-white font-bold drop-shadow-md" style={{fontSize: '18px'}}>{tickets}</span>
+      <div className="gacha-tickets">
+        <div className="flex items-center gap-2 justify-center">
+          <span className="text-3xl drop-shadow-lg">🎫</span>
+          <span className="text-white font-bold text-xl drop-shadow-md">{tickets}</span>
+        </div>
       </div>
 
       {/* Gacha Box */}
-      <div 
-        className="w-full flex flex-col items-center justify-center px-4 py-4 rounded-3xl text-center"
-        style={{
-          background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          border: '2px solid rgba(255, 255, 255, 0.3)',
-          boxShadow: '0 16px 48px rgba(0, 0, 0, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.1)',
-          transform: isPlaying ? 'scale(1.02)' : 'scale(1)',
-          transition: 'transform 0.3s ease-out',
-          maxWidth: '310px',
-          height: '250px',
-        }}
-      >
-        <div 
-          className={`text-8xl mb-3 transition-all duration-500 ${isPlaying ? 'animate-bounce scale-110' : ''}`}
-          style={{
-            filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))',
-          }}
-        >
+      <div className={`gacha-box ${isPlaying ? 'playing' : ''}`}>
+        <div className={`gacha-icon ${isPlaying ? 'playing' : ''}`}>
           📦
         </div>
-        <h2 className="text-white text-xl font-bold mb-1 drop-shadow-lg">가챠 상자</h2>
-        <p className="text-white/80 text-xs drop-shadow-md">신비로운 아이템을 획득하세요!</p>
+        <h2 className="gacha-title">가챠 상자</h2>
+        <p className="gacha-description">신비로운 아이템을 획득하세요!</p>
       </div>
 
       {/* Buttons */}
@@ -111,21 +78,11 @@ export function GachaContainer() {
         <button
           onClick={handlePull}
           disabled={tickets <= 0 || isPlaying}
-          className="w-full h-8 rounded-lg font-bold text-white text-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100"
-          style={{
-            background: tickets > 0 && !isPlaying 
-              ? 'linear-gradient(145deg, #10b981 0%, #059669 50%, #047857 100%)'
-              : 'linear-gradient(145deg, #6b7280 0%, #4b5563 100%)',
-            boxShadow: tickets > 0 && !isPlaying 
-              ? '0 6px 20px rgba(16, 185, 129, 0.3), 0 2px 8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.1)'
-              : '0 3px 12px rgba(107, 114, 128, 0.25), inset 0 1px 0 rgba(255,255,255,0.1)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            borderTop: '1px solid rgba(255,255,255,0.3)',
-          }}
+          className={`gacha-button gacha-pull-button ${tickets <= 0 || isPlaying ? 'disabled' : ''}`}
         >
           {isPlaying ? (
             <div className="flex items-center justify-center gap-2">
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="gacha-loading"></div>
               뽑는 중...
             </div>
           ) : (
@@ -138,17 +95,10 @@ export function GachaContainer() {
 
         <button
           onClick={handleRecharge}
-          className="h-8 rounded-lg font-semibold text-white text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] mx-auto px-4"
-          style={{
-            background: 'linear-gradient(145deg,rgb(58, 50, 34) 0%,rgb(156, 88, 11) 50%, #b45309 100%)',
-            boxShadow: '0 4px 15px rgba(245, 158, 11, 0.3), 0 1px 6px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.1)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            borderTop: '1px solid rgba(255,255,255,0.3)',
-            width: 'fit-content',
-          }}
+          className="gacha-button gacha-recharge-button mx-auto"
         >
-          <div className="flex items-center justify-center gap-1">
-            <span className="text-sm">⚡</span>
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-lg">⚡</span>
             티켓 충전
           </div>
         </button>

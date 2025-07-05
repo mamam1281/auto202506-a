@@ -1,10 +1,16 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export type Choice = 'rock' | 'paper' | 'scissors';
 export type GameResult = 'win' | 'lose' | 'draw' | null;
+
+export interface GameScore {
+  player: number;
+  ai: number;
+  draws: number;
+}
 
 interface ResultScreenProps {
   result: GameResult;
@@ -12,6 +18,10 @@ interface ResultScreenProps {
   aiChoice: Choice;
   onPlayAgain: () => void;
   onResetScore: () => void;
+  cjaiMessage: string;
+  score: GameScore;
+  playerWinStreak: number;
+  playerLossStreak: number;
 }
 
 const choiceEmojis: Record<Choice, string> = {
@@ -21,29 +31,29 @@ const choiceEmojis: Record<Choice, string> = {
 };
 
 const choiceLabels: Record<Choice, string> = {
-  rock: '바위',
-  paper: '보',
-  scissors: '가위'
+  rock: '🪨 바위',
+  paper: '📄 보자기',
+  scissors: '✂️ 가위'
 };
 
 const resultConfig = {
   win: {
-    title: '🎉 승리!',
-    message: '축하합니다! 당신이 이겼습니다!',
+    title: '🎉 대승리!',
+    message: '🎊 오빠 축하행! 완벽하게 승리하셨어요! 🎊',
     color: '#10b981',
     gradient: 'linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(16,185,129,0.1) 100%)',
     borderColor: 'rgba(16, 185, 129, 0.3)'
   },
   lose: {
-    title: '😔 패배',
-    message: '아쉽습니다. 다시 도전해보세요!',
+    title: '😔 아쉬운 패배',
+    message: '💪 아쉽당.. 다시 도전!',
     color: '#ef4444',
     gradient: 'linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.1) 100%)',
     borderColor: 'rgba(239, 68, 68, 0.3)'
   },
   draw: {
-    title: '🤝 무승부',
-    message: '비겼습니다! 한 번 더 시도해보세요!',
+    title: '🤝 박빙 무승부',
+    message: '⚡ 실력이 막상막하네요! 한 번 더 대결해요! ⚡',
     color: '#3b82f6',
     gradient: 'linear-gradient(135deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.1) 100%)',
     borderColor: 'rgba(59, 130, 246, 0.3)'
@@ -55,7 +65,11 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   playerChoice,
   aiChoice,
   onPlayAgain,
-  onResetScore
+  onResetScore,
+  cjaiMessage,
+  score,
+  playerWinStreak,
+  playerLossStreak
 }) => {
   if (!result) return null;
 
@@ -154,7 +168,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         {/* Header */}
         <div className="text-center p-6 pb-4">
           <motion.h2
-            className="text-4xl sm:text-5xl font-bold mb-3"
+            className="text-5xl sm:text-6xl font-bold mb-3"
             style={{ color: config.color }}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -163,7 +177,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             {config.title}
           </motion.h2>
           <motion.p
-            className="text-slate-300 text-lg sm:text-xl font-medium"
+            className="text-slate-300 text-2xl sm:text-3xl font-bold px-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.4 }}
@@ -181,16 +195,16 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             animate="visible"
             custom={0}
           >
-            <div className="text-4xl sm:text-5xl mb-2 p-3 rounded-xl bg-white/10 border border-white/20">
+            <div className="text-5xl sm:text-6xl mb-2 p-3 rounded-xl bg-white/10 border border-white/20">
               {choiceEmojis[playerChoice]}
             </div>
-            <p className="text-sm sm:text-base text-slate-400 font-medium">
+            <p className="text-lg sm:text-xl text-slate-300 font-bold">
               당신: {choiceLabels[playerChoice]}
             </p>
           </motion.div>
 
           <motion.div
-            className="text-3xl sm:text-4xl font-bold px-3"
+            className="text-4xl sm:text-5xl font-bold px-3"
             style={{ color: config.color }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -206,10 +220,10 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             animate="visible"
             custom={1}
           >
-            <div className="text-4xl sm:text-5xl mb-2 p-3 rounded-xl bg-white/10 border border-white/20">
+            <div className="text-5xl sm:text-6xl mb-2 p-3 rounded-xl bg-white/10 border border-white/20">
               {choiceEmojis[aiChoice]}
             </div>
-            <p className="text-sm sm:text-base text-slate-400 font-medium">
+            <p className="text-lg sm:text-xl text-slate-300 font-bold">
               AI: {choiceLabels[aiChoice]}
             </p>
           </motion.div>
@@ -218,7 +232,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         {/* Action Buttons */}
         <div className="flex gap-3 p-6 pt-2">
           <motion.button
-            className="flex-1 py-3 px-4 rounded-xl font-semibold text-white transition-all duration-200"
+            className="flex-1 py-3 px-4 rounded-xl font-bold text-white transition-all duration-200 text-lg sm:text-xl"
             style={{
               backgroundColor: config.color,
               boxShadow: `0 4px 15px ${config.color}40`
@@ -233,7 +247,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             </span>
           </motion.button>
           <motion.button
-            className="py-3 px-4 rounded-xl font-semibold text-slate-300 bg-slate-700/80 hover:bg-slate-600/80 border border-slate-600 transition-all duration-200"
+            className="py-3 px-4 rounded-xl font-bold text-slate-300 bg-slate-700/80 hover:bg-slate-600/80 border border-slate-600 transition-all duration-200 text-lg sm:text-xl"
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"

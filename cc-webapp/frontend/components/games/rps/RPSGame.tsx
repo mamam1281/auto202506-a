@@ -2,14 +2,15 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChoiceButtons } from './ChoiceButtons-Popup';
+import { ChoiceButtons } from './ChoiceButtons';
 import { OpponentDisplay } from './OpponentDisplay-new';
 import { ResultScreen } from './ResultScreen-new';
+import './rps-new-theme.css';
 
 export type Choice = 'rock' | 'paper' | 'scissors';
 export type GameResult = 'win' | 'lose' | 'draw' | null;
 
-interface GameScore {
+export interface GameScore {
   player: number;
   ai: number;
   draws: number;
@@ -27,93 +28,7 @@ interface GameState {
   playerLossStreak: number;
 }
 
-const CHOICES: Choice[] = ['rock', 'paper', 'scissors'];
-const AI_THINKING_TIME = 1200; // 적절한 AI 생각 시간
-
-const getGameResult = (playerChoice: Choice, aiChoice: Choice): GameResult => {
-  if (playerChoice === aiChoice) return 'draw';
-  const winConditions: Record<Choice, Choice> = {
-    rock: 'scissors',
-    paper: 'rock',
-    scissors: 'paper',
-  };
-  return winConditions[playerChoice] === aiChoice ? 'win' : 'lose';
-};
-
-const getAIChoice = (): Choice => {
-  return CHOICES[Math.floor(Math.random() * CHOICES.length)];
-};
-
-// CJ AI 메시지 생성 함수
-const generateCJMessage = (result: GameResult, streak: number): string => {
-  const messages = {
-    win: [
-      "대단해요! 🎉 계속 이런 식으로 해보세요!",
-      "훌륭한 선택이었어요! 🌟 다음 라운드도 기대돼요!",
-      "완벽한 전략이네요! 💫 계속 승리하세요!",
-    ],
-    lose: [
-      "아쉽네요! 😅 다음엔 더 좋은 결과가 있을 거예요!",
-      "괜찮아요! 🤗 경험이 쌓이면 더 잘하게 될 거예요!",
-      "포기하지 마세요! 💪 다시 한 번 도전해보세요!",
-    ],
-    draw: [
-      "우연의 일치네요! 🤝 서로 비슷한 생각을 했군요!",
-      "무승부도 나쁘지 않아요! 🎯 다시 도전해보세요!",
-      "똑같은 선택이라니! 🤔 다음엔 어떻게 될까요?",
-    ],
-  };
-
-  const streakMessages: Record<string, string[]> = {
-    win: streak >= 3 ? [`대단한 연승이에요! 🔥 ${streak}연승 달성!`] : [],
-    lose: streak >= 3 ? [`${streak}연패... 😔 하지만 곧 운이 돌아올 거예요!`] : [],
-    draw: []
-  };
-
-  if (result && streakMessages[result] && streakMessages[result].length > 0) {
-    return streakMessages[result][0];
-  }
-
-  if (result && messages[result] && messages[result].length > 0) {
-    return messages[result][Math.floor(Math.random() * messages[result].length)];
-  }
-
-  return "게임을 시작해 보세요! 행운을 빌어요! 🚀";
-};
-
-// 애니메이션 variants
-const containerVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut" as const,
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const headerVariants = {
-  hidden: { opacity: 0, y: -20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" as const },
-  },
-};
-
-const scoreVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.4, ease: "backOut" as const },
-  },
-};
-
-export const RPSGame: React.FC = () => {
+const RPSGame: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>({
     playerChoice: null,
     aiChoice: null,
@@ -127,6 +42,25 @@ export const RPSGame: React.FC = () => {
   });
 
   const [showScoreModal, setShowScoreModal] = useState(false);
+
+  // AI 선택 로직
+  const getAIChoice = useCallback((): Choice => {
+    const choices: Choice[] = ['rock', 'paper', 'scissors'];
+    return choices[Math.floor(Math.random() * choices.length)];
+  }, []);
+
+  // 게임 결과 판정
+  const getGameResult = useCallback((playerChoice: Choice, aiChoice: Choice): GameResult => {
+    if (playerChoice === aiChoice) return 'draw';
+    if (
+      (playerChoice === 'rock' && aiChoice === 'scissors') ||
+      (playerChoice === 'paper' && aiChoice === 'rock') ||
+      (playerChoice === 'scissors' && aiChoice === 'paper')
+    ) {
+      return 'win';
+    }
+    return 'lose';
+  }, []);
 
   // 게임 플레이 핸들러
   const handlePlayerChoice = useCallback((choice: Choice) => {
@@ -149,25 +83,23 @@ export const RPSGame: React.FC = () => {
       
       setGameState(prev => {
         const newScore = { ...prev.score };
-        let newWinStreak = prev.playerWinStreak;
-        let newLossStreak = prev.playerLossStreak;
-
+        const newWinStreak = result === 'win' ? prev.playerWinStreak + 1 : 0;
+        const newLossStreak = result === 'lose' ? prev.playerLossStreak + 1 : 0;
+        
         if (result === 'win') {
           newScore.player++;
-          newWinStreak++;
-          newLossStreak = 0;
         } else if (result === 'lose') {
           newScore.ai++;
-          newLossStreak++;
-          newWinStreak = 0;
         } else {
           newScore.draws++;
-          newWinStreak = 0;
-          newLossStreak = 0;
         }
 
-        const newMessage = generateCJMessage(result, 
-          result === 'win' ? newWinStreak : newLossStreak);
+        let message = "좋은 게임이었어요! 🎮";
+        if (result === 'win') {
+          message = newWinStreak >= 3 ? "🔥 연승 중이에요! 대단해요!" : "🎉 승리했어요! 축하해요!";
+        } else if (result === 'lose') {
+          message = newLossStreak >= 3 ? "😅 다음엔 더 잘할 수 있어요!" : "😔 아쉽네요... 다시 도전해 보세요!";
+        }
 
         return {
           ...prev,
@@ -176,15 +108,15 @@ export const RPSGame: React.FC = () => {
           isPlaying: false,
           score: newScore,
           showResultScreen: true,
-          cjaiMessage: newMessage,
+          cjaiMessage: message,
           playerWinStreak: newWinStreak,
           playerLossStreak: newLossStreak,
         };
       });
-    }, AI_THINKING_TIME);
-  }, [gameState.isPlaying]);
+    }, 1000);
+  }, [gameState.isPlaying, getAIChoice, getGameResult]);
 
-  // 다시 플레이 핸들러
+  // 게임 재시작 핸들러
   const handlePlayAgain = useCallback(() => {
     setGameState(prev => ({
       ...prev,
@@ -193,7 +125,7 @@ export const RPSGame: React.FC = () => {
       result: null,
       isPlaying: false,
       showResultScreen: false,
-      cjaiMessage: "다시 한 번 도전해보세요! 🎯",
+      cjaiMessage: "다시 한번 도전해 보세요! 🎯",
     }));
   }, []);
 
@@ -221,51 +153,48 @@ export const RPSGame: React.FC = () => {
     <div className="game-container">
       <motion.div
         className="game-main"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
       >
         {/* 게임 헤더 */}
         <motion.header
           className="game-header"
-          variants={headerVariants}
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <h1 className="text-xl font-bold text-white">
+          <h1 className="text-lg font-bold text-white">
             🎮 가위바위보
           </h1>
-          {/* 점수판 */}
+          {/* 토큰 디스플레이 */}
           <motion.div
-            className="score-display flex justify-center gap-4 mt-2"
-            variants={scoreVariants}
+            className="token-display"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
           >
-            <div className="score-item">
-              <div className="score-label">플레이어</div>
-              <div className="score-value player-score">{gameState.score.player}</div>
-            </div>
-            <div className="score-item">
-              <div className="score-label">무승부</div>
-              <div className="score-value draw-score">{gameState.score.draws}</div>
-            </div>
-            <div className="score-item">
-              <div className="score-label">AI</div>
-              <div className="score-value ai-score">{gameState.score.ai}</div>
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-yellow-400">🪙</span>
+              <span className="text-white font-bold">1,250</span>
             </div>
           </motion.div>
         </motion.header>
 
-        {/* AI 선택 영역 */}
-        <div className="opponent-display">
-          <h2 className="text-lg font-semibold text-white mb-2">AI의 선택</h2>
-          <OpponentDisplay
-            choice={gameState.aiChoice}
-            isThinking={gameState.isPlaying}
+        {/* 플레이어 선택 영역 */}
+        <div className="player-choice">
+          <h2>내 선택</h2>
+          <ChoiceButtons
+            onChoice={handlePlayerChoice}
+            selectedChoice={gameState.playerChoice}
+            disabled={gameState.isPlaying}
           />
         </div>
 
         {/* VS 표시 */}
-        <div className="text-center my-2">
+        <div className="my-2">
           <motion.div
-            className="text-2xl font-bold text-white"
+            className="text-xl"
             animate={{
               scale: gameState.isPlaying ? [1, 1.1, 1] : 1,
               rotate: gameState.isPlaying ? [0, 180, 360] : 0,
@@ -280,46 +209,46 @@ export const RPSGame: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* 플레이어 선택 영역 */}
-        <div className="text-center">
-          <h2 className="text-lg font-semibold text-white mb-4">당신의 선택</h2>
-          <ChoiceButtons
-            onChoice={handlePlayerChoice}
-            selectedChoice={gameState.playerChoice}
-            disabled={gameState.isPlaying}
+        {/* AI 선택 영역 */}
+        <div className="opponent-display">
+          <h2>🤖 AI의 선택</h2>
+          <OpponentDisplay
+            choice={gameState.aiChoice}
+            isThinking={gameState.isPlaying}
           />
         </div>
 
         {/* CJ AI 메시지 */}
         <motion.div
-          className="text-center mt-4 px-4"
+          className="text-center"
           key={gameState.cjaiMessage}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5 }}
         >
-          <div className="cj-avatar">🤖</div>
-          <div className="cj-text">
+          <p className="text-xs text-white opacity-90">
             <strong>CJ AI:</strong> {gameState.cjaiMessage}
-          </div>
+          </p>
         </motion.div>
 
         {/* 게임 컨트롤 */}
-        <div className="rps-controls">
-          <button
-            className="rps-button secondary"
-            onClick={() => setShowScoreModal(true)}
-            disabled={gameState.isPlaying}
-          >
-            📊 상세 통계
-          </button>
-          <button
-            className="rps-button danger"
-            onClick={handleResetScore}
-            disabled={gameState.isPlaying}
-          >
-            🔄 게임 리셋
-          </button>
+        <div className="text-center">
+          <div className="space-x-3">
+            <button
+              className="btn-primary"
+              onClick={() => setShowScoreModal(true)}
+              disabled={gameState.isPlaying}
+            >
+              📊 상세 통계
+            </button>
+            <button
+              className="btn-primary"
+              onClick={handleResetScore}
+              disabled={gameState.isPlaying}
+            >
+              🔄 게임 리셋
+            </button>
+          </div>
         </div>
 
         {/* 결과 화면 */}
@@ -331,6 +260,10 @@ export const RPSGame: React.FC = () => {
               aiChoice={gameState.aiChoice!}
               onPlayAgain={handlePlayAgain}
               onResetScore={handleResetScore}
+              cjaiMessage={gameState.cjaiMessage}
+              score={gameState.score}
+              playerWinStreak={gameState.playerWinStreak}
+              playerLossStreak={gameState.playerLossStreak}
             />
           )}
         </AnimatePresence>
@@ -339,49 +272,49 @@ export const RPSGame: React.FC = () => {
         <AnimatePresence>
           {showScoreModal && (
             <motion.div
-              className="rps-modal-overlay"
+              className="result-screen"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowScoreModal(false)}
             >
               <motion.div
-                className="rps-modal-content"
+                className="result-content"
                 initial={{ opacity: 0, scale: 0.8, y: 50 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.8, y: 50 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <h3 className="modal-title">게임 통계</h3>
-                <div className="stats-grid">
-                  <div className="stat-item">
-                    <div className="stat-label">총 게임 수</div>
-                    <div className="stat-value">{totalGames}</div>
+                <h3 className="result-title">게임 통계</h3>
+                <div className="grid grid-cols-2 gap-4 my-4">
+                  <div className="text-center">
+                    <div className="text-sm text-white opacity-80">총 게임 수</div>
+                    <div className="text-xl font-bold text-white">{totalGames}</div>
                   </div>
-                  <div className="stat-item">
-                    <div className="stat-label">승률</div>
-                    <div className="stat-value">
+                  <div className="text-center">
+                    <div className="text-sm text-white opacity-80">승률</div>
+                    <div className="text-xl font-bold text-white">
                       {totalGames > 0 ? Math.round((gameState.score.player / totalGames) * 100) : 0}%
                     </div>
                   </div>
-                  <div className="stat-item">
-                    <div className="stat-label">현재 연승</div>
-                    <div className="stat-value">{gameState.playerWinStreak}</div>
+                  <div className="text-center">
+                    <div className="text-sm text-white opacity-80">현재 연승</div>
+                    <div className="text-xl font-bold text-white">{gameState.playerWinStreak}</div>
                   </div>
-                  <div className="stat-item">
-                    <div className="stat-label">현재 연패</div>
-                    <div className="stat-value">{gameState.playerLossStreak}</div>
+                  <div className="text-center">
+                    <div className="text-sm text-white opacity-80">현재 연패</div>
+                    <div className="text-xl font-bold text-white">{gameState.playerLossStreak}</div>
                   </div>
                 </div>
-                <div className="modal-actions">
+                <div className="flex gap-4 justify-center mt-6">
                   <button
-                    className="rps-button secondary"
+                    className="btn-primary"
                     onClick={() => setShowScoreModal(false)}
                   >
                     닫기
                   </button>
                   <button
-                    className="rps-button danger"
+                    className="btn-primary"
                     onClick={handleResetScore}
                   >
                     통계 초기화

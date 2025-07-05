@@ -528,7 +528,13 @@ const DashboardNew: React.FC = () => {
                     className="w-full mt-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all group-hover:scale-105"
                     onClick={() => {
                       console.log('게임 클릭:', game.id);
-                      router.push(`/${game.id}`);
+                      if (game.id === 'rps') {
+                        router.push('/games/rps');
+                      } else if (game.id === 'gacha') {
+                        router.push('/gacha');
+                      } else {
+                        router.push(`/games/${game.id}`);
+                      }
                     }}
                   >
                     플레이하기

@@ -110,7 +110,7 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
             exit="exit"
           >
             <motion.div
-              className="text-3xl sm:text-4xl"
+              className="text-5xl sm:text-6xl"
               variants={thinkingVariants}
               animate="thinking"
             >
@@ -123,7 +123,7 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <p className="text-xs text-slate-300 font-medium">
+              <p className="text-sm text-slate-300 font-medium">
                 {thinkingMessages[currentThinkingMessageIndex]}
               </p>
             </motion.div>
@@ -138,7 +138,7 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
             exit="exit"
           >
             <motion.div
-              className="text-4xl sm:text-5xl p-2 rounded-xl border-2 bg-white/5 backdrop-blur-sm"
+              className="text-6xl sm:text-7xl p-2 rounded-xl border-2 bg-white/5 backdrop-blur-sm"
               variants={revealVariants}
               initial="hidden"
               animate="visible"
@@ -150,7 +150,7 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
               {choiceConfig[choice].emoji}
             </motion.div>
             <motion.p
-              className="text-sm font-semibold text-white"
+              className="text-lg font-semibold text-white"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.3 }}
@@ -167,12 +167,9 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
             animate="visible"
             exit="exit"
           >
-            <div className="text-3xl sm:text-4xl opacity-30">
-              ❓
+            <div className="text-4xl sm:text-5xl">
+              🤖
             </div>
-            <p className="text-xs text-slate-400 font-medium">
-              AI가 대기 중입니다
-            </p>
           </motion.div>
         )}
       </AnimatePresence>

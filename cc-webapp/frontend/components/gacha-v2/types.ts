@@ -18,7 +18,7 @@ export const TIER_COLORS = {
   common: {
     name: '일반',
     color: '#9CA3AF',
-    bg: 'rgba(156, 163, 175, 0.15)',
+    bg: 'rgba(120, 139, 172, 0.15)',
     border: '#9CA3AF',
     glow: 'rgba(156, 163, 175, 0.4)'
   },
@@ -41,7 +41,7 @@ export const TIER_COLORS = {
     color: '#F59E0B',
     bg: 'rgba(245, 158, 11, 0.15)',
     border: '#F59E0B',
-    glow: 'rgba(245, 158, 11, 0.4)'
+    glow: 'rgba(243, 218, 174, 0.4)'
   }
 };
 
