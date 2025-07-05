@@ -74,7 +74,7 @@ export function GachaContainer() {
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-col gap-3 w-full">
+      <div className="flex flex-col gap-2 w-full max-w-xs mx-auto ">
         <button
           onClick={handlePull}
           disabled={tickets <= 0 || isPlaying}

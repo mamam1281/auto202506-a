@@ -39,7 +39,7 @@ export default function CasinoDashboard() {
       rating: 4.7,
       players: '18K명',
       imagePlaceholder: '🎰',
-      onClick: () => router.push('/roulette')
+      onClick: () => router.push('/games/roulette')
     },
     {
       id: 'rps-battle',
