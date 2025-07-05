@@ -73,13 +73,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-4);
+  padding: var(--spacing-1);
+}
+
+/* 팝업에서는 패딩 제거 */
+.rps-popup-optimized .rps-content {
+  padding: 0;
 }
 
 /* Game Container */
 .rps-game-container {
   height: 100vh;
-  max-height: 750px;
+  max-height: 700px;
   overflow: hidden;
   background: var(--casino-gradient-main);
   padding: var(--spacing-1);
@@ -117,13 +122,13 @@
   font-size: 1.6rem;
   font-weight: 800;
   color: var(--color-text-primary);
-  margin-bottom: 10px; /* 타이틀과 점수판 사이 간격 10픽셀로 고정 */
+  margin-bottom: 10px !important; /* 타이틀과 점수판 사이 간격 10픽셀로 고정, 무조건 적용 */
   text-shadow: 0 0 15px rgba(156, 163, 175, 0.6);
   letter-spacing: -0.02em;
 }
 
 .rps-popup-optimized .rps-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin-bottom: 10px; /* 팝업에서도 동일하게 10픽셀 간격 유지 */
 }
 

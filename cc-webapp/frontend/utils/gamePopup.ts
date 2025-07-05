@@ -29,7 +29,7 @@ export const GAME_POPUP_CONFIGS: Record<string, GamePopupConfig> = {
   },
   rps: {
     width: 420,
-    height: 900,
+    height: 800,
     title: 'RPS Battle',
     url: '/games/rps/popup',
     resizable: false,

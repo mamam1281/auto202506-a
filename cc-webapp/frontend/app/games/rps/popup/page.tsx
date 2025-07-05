@@ -23,7 +23,7 @@ function RPSGamePopupWrapper() {
       <div className="w-full" style={{
         maxWidth: '380px',
         margin: '0 auto',
-        padding: '0.5rem',
+        padding: '0',
       }}>
         <RPSGame />
       </div>
@@ -35,7 +35,9 @@ function RPSGamePopupWrapper() {
 export default function RPSPopupPage() {
   return (
     <div className="w-full h-screen flex items-center justify-center" style={{
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%)',
+      background: 'var(--casino-gradient-main)',
+      padding: 0,
+      overflow: 'hidden'
     }}>
       <Suspense fallback={<PopupLoadingSkeleton />}>
         <RPSGamePopupWrapper />
