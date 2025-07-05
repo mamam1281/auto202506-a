@@ -39,8 +39,8 @@
 /* Gacha Container - 슬롯 머신 스타일 */
 .gacha-container {
   height: 100vh;
-  max-height: 850px;
-  max-width: 400px;
+  max-height: 700px;
+  width: 100%;
   margin: 0 auto;
   padding: var(--spacing-4);
   display: flex;

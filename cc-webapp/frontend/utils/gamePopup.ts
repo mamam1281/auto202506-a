@@ -28,37 +28,30 @@ export const GAME_POPUP_CONFIGS: Record<string, GamePopupConfig> = {
     scrollbars: false,
   },
   rps: {
-    width: 400,
-    height: 750,
+    width: 420,
+    height: 680,
     title: 'RPS Battle',
     url: '/games/rps/popup',
     resizable: false,
     scrollbars: false,
   },
   gacha: {
-    width: 400,
-    height: 750,
+    width: 420,
+    height: 650,
     title: 'Lucky Gacha',
-    url: '/gacha/popup',
+    url: '/games/gacha/popup',
     resizable: false,
     scrollbars: false,
   },
   roulette: {
-    width: 450,
-    height: 700,
+    width: 420,
+    height: 900,
     title: '룰렛 게임',
     url: '/games/roulette/popup',
     resizable: false,
     scrollbars: false,
   },
-  'slot-simple': {
-    width: 400,
-    height: 650,
-    title: '슬롯 머신',
-    url: '/slot/popup',
-    resizable: false,
-    scrollbars: false,
-  },
+
 };
 
 /**

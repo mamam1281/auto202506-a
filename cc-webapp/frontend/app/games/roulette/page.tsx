@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { openGamePopup } from '../../../utils/gamePopup';
 
-export default function RoulettePage() {
+function RouletteMainContent() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleOpenPopup = () => {
@@ -11,7 +12,6 @@ export default function RoulettePage() {
     if (popup) {
       setIsPopupOpen(true);
       
-      // 팝업이 닫힐 때 상태 업데이트
       const checkPopupClosed = setInterval(() => {
         if (popup.closed) {
           clearInterval(checkPopupClosed);
@@ -22,30 +22,47 @@ export default function RoulettePage() {
   };
 
   return (
-    <div className="min-h-screen vh-optimized bg-gradient-to-br from-[var(--color-primary-dark-navy)] to-[var(--color-primary-charcoal)] flex flex-col items-center justify-center p-4">
-      <div className="glass-card p-6 max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold text-[var(--color-text-primary)] mb-6">룰렛 게임</h1>
-        
-        <p className="text-[var(--color-text-secondary)] mb-8">
-          행운의 룰렛 게임을 팝업 창에서 즐기세요!
-        </p>
-        
-        <button
-          onClick={handleOpenPopup}
-          disabled={isPopupOpen}
-          className={`btn-primary-glow w-full py-3 rounded-lg text-lg font-medium transition-all ${
-            isPopupOpen ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
-          }`}
+    <div className="w-full bg-gradient-to-br from-[var(--color-primary-dark-navy)] via-[var(--color-primary-charcoal)] 
+    to-[var(--color-primary-dark-navy)] min-h-screen flex flex-col items-center">
+      <motion.header
+        className="z-20 py-3 sm:py-4 px-4 sm:px-6 w-full bg-gradient-to-br from-[var(--color-primary-dark-navy)]/80 via-[var(--color-primary-charcoal)]/80 to-[var(--color-primary-dark-navy)]/80 backdrop-blur-md border-b border-[var(--border)]/20"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <div className="max-w-6xl mx-auto flex flex-col items-center justify-center gap-2">
+          <motion.h1
+            className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-[var(--color-accent-red)] 
+            via-[var(--color-accent-amber)] to-[var(--color-accent-red)] bg-clip-text text-transparent text-center tracking-wide"
+            whileHover={{ scale: 1.02 }}
+          >
+            룰렛 게임
+          </motion.h1>
+        </div>
+      </motion.header>
+
+      <div className="flex-1 w-full flex flex-col items-center justify-center p-4">
+        <motion.div
+          className="glass-card p-6 max-w-md w-full text-center"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
         >
-          {isPopupOpen ? '게임 진행 중...' : '룰렛 게임 시작'}
-        </button>
-        
-        {isPopupOpen && (
-          <p className="mt-4 text-sm text-[var(--color-text-tertiary)]">
-            팝업 창에서 게임이 실행 중입니다
-          </p>
-        )}
+          <button
+            onClick={handleOpenPopup}
+            disabled={isPopupOpen}
+            className={`btn-primary-glow w-full py-4 rounded-lg text-xl font-medium transition-all ${
+              isPopupOpen ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
+            }`}
+          >
+            {isPopupOpen ? '게임 진행 중...' : '룰렛 게임 시작'}
+          </button>
+        </motion.div>
       </div>
     </div>
   );
+}
+
+export default function RoulettePage() {
+  return <RouletteMainContent />;
 }
