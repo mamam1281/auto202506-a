@@ -2,33 +2,51 @@
 
 /* CSS Variables */
 :root {
-  /* Neon Purple System */
-  --neon-purple-1: #8b5cf6;
-  --neon-purple-2: #7c3aed;
-  --neon-purple-3: #6d28d9;
-  --neon-purple-4: #5b21b6;
-  
-  /* Dark Theme Colors */
-  --color-slate-900: #0f172a;
-  --color-slate-800: #1e293b;
-  --color-slate-700: #334155;
+  /* Gradient & Shadow Variables */
+  --casino-gradient-main: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1f3a63 100%);
+  --casino-gradient-choice: linear-gradient(135deg, rgba(156,163,175,0.2) 0%, rgba(156,163,175,0.1) 100%);
+  --casino-gradient-choice-hover: linear-gradient(135deg, rgba(156,163,175,0.3) 0%, rgba(156,163,175,0.2) 100%);
+  --casino-gradient-popup: linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.9) 100%);
+  --casino-gradient-popup-btn: linear-gradient(135deg, rgba(156,163,175,0.25) 0%, rgba(156,163,175,0.15) 100%);
+  --casino-gradient-popup-btn-hover: linear-gradient(135deg, rgba(156,163,175,0.4) 0%, rgba(156,163,175,0.25) 100%);
+  --casino-shadow-main: 0 6px 20px rgba(0,0,0,0.3);
+  --casino-shadow-btn: 0 4px 15px rgba(30,41,59,0.4);
+  --casino-shadow-btn-danger: 0 4px 15px rgba(127,29,29,0.3);
+  --casino-shadow-popup: 0 20px 40px rgba(0,0,0,0.4);
+  --casino-shadow-choice: 0 4px 15px rgba(0,0,0,0.25);
+  --casino-shadow-choice-hover: 0 6px 20px rgba(156,163,175,0.4);
+  --casino-shadow-popup-btn: 0 6px 20px rgba(0,0,0,0.4);
+  --casino-shadow-popup-btn-hover: 0 8px 25px rgba(156,163,175,0.4);
+  --casino-border-choice: 2px solid rgba(156,163,175,0.5);
+  --casino-border-choice-hover: 2px solid rgba(139,92,246,0.8);
+  --casino-border-popup-btn: 3px solid rgba(255,255,255,0.4);
+  --casino-border-popup-btn-hover: 3px solid rgba(139,92,246,0.8);
+  --casino-bg: #1a1625;
+  --casino-card-bg: #2d2438;
+  --casino-primary: #8b5cf6;
+  --casino-secondary: #a855f7;
+  --casino-success: #10b981;
+  --casino-warning: #f59e0b;
+  --casino-danger: #ef4444;
+  --casino-text: #ffffff;
+  --casino-text-muted: #d1d5db;
+  --casino-border: #4c1d95;
+
+  /* RPS 호환용 변수 매핑 */
+  --color-primary-dark-navy: var(--casino-bg);
+  --color-primary-charcoal: var(--casino-card-bg);
+  --color-text-primary: var(--casino-text);
+  --color-text-secondary: var(--casino-text-muted);
+  --color-success: var(--casino-success);
+  --color-warning: var(--casino-warning);
+  --color-error: var(--casino-danger);
+  --color-info: var(--casino-secondary);
+  --color-slate-900: #111111;
+  --color-slate-800: #1f1f1f;
+  --color-slate-700: #374151;
   --color-slate-600: #475569;
-  --color-slate-400: #94a3b8;
-  
-  /* Primary Colors */
-  --color-primary-dark-navy: #1a1a1a;
-  --color-primary-charcoal: #2d2d2d;
-  
-  /* Text Colors */
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #D1D5DB;
-  
-  /* Game Colors */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
-  
+  --color-slate-400: #d1d5db;
+
   /* Spacing (8px Grid) */
   --spacing-1: 8px;
   --spacing-2: 16px;
@@ -41,7 +59,7 @@
 /* Root Container */
 .rps-root {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 30%, #16213e 70%, #0f172a 100%);
+  background: var(--casino-bg);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   position: relative;
   overflow-x: hidden;
@@ -63,7 +81,7 @@
   height: 100vh;
   max-height: 750px;
   overflow: hidden;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background: var(--casino-gradient-main);
   padding: var(--spacing-1);
   display: flex;
   align-items: center;
@@ -80,7 +98,13 @@
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  padding: var(--spacing-1);
+  padding: 0.25rem;
+}
+
+/* 팝업 최적화 클래스 */
+.rps-popup-optimized .rps-game-content {
+  padding: 0.25rem;
+  max-width: 380px;
 }
 
 /* Header Styles */
@@ -90,12 +114,17 @@
 }
 
 .rps-title {
-  font-size: 2.2rem;
+  font-size: 1.6rem;
   font-weight: 800;
   color: var(--color-text-primary);
-  margin-bottom: var(--spacing-1);
-  text-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+  margin-bottom: 10px; /* 타이틀과 점수판 사이 간격 10픽셀로 고정 */
+  text-shadow: 0 0 15px rgba(156, 163, 175, 0.6);
   letter-spacing: -0.02em;
+}
+
+.rps-popup-optimized .rps-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px; /* 팝업에서도 동일하게 10픽셀 간격 유지 */
 }
 
 .rps-subtitle {
@@ -108,12 +137,17 @@
 .rps-scoreboard {
   display: flex;
   justify-content: space-between;
-  margin-bottom: var(--spacing-3);
-  padding: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-2);
   background: rgba(15, 23, 42, 0.8);
   border-radius: 16px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.rps-popup-optimized .rps-scoreboard {
+  margin-bottom: var(--spacing-1);
+  padding: 0.5rem var(--spacing-1);
 }
 
 .score-item {
@@ -122,16 +156,26 @@
 }
 
 .score-label {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-1);
+  margin-bottom: 4px;
   font-weight: 600;
 }
 
 .score-value {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 800;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+}
+
+.rps-popup-optimized .score-label {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.rps-popup-optimized .score-value {
+  font-size: 1.5rem;
+  margin-bottom: 0;
 }
 
 .player-score {
@@ -150,13 +194,25 @@
 .rps-game-area {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-2);
+  gap: var(--spacing-1);
+  margin-bottom: var(--spacing-1);
 }
 
 .rps-player-section,
 .rps-ai-section {
   text-align: center;
+}
+
+/* AI 섹션 스타일 강화 */
+.rps-ai-section .ai-emoji {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--casino-gradient-popup-btn);
+  border: 2px solid rgba(139, 92, 246, 0.5);
+  box-shadow: var(--casino-shadow-btn);
+  display: inline-block;
+  margin: 4px auto;
+  font-size: 2rem;
 }
 
 .section-title {
@@ -171,18 +227,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: var(--spacing-2) 0;
+  margin: var(--spacing-1) 0;
 }
 
 .vs-text {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 800;
-  color: var(--color-text-primary);
-  background: linear-gradient(45deg, var(--neon-purple-1), var(--neon-purple-3));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 8px rgba(139, 92, 246, 0.4);
+  color: var(--casino-text);
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--casino-gradient-popup-btn);
+  border: 2px solid rgba(139, 92, 246, 0.5);
+  box-shadow: var(--casino-shadow-btn);
 }
 
 /* CJ AI Message */
@@ -362,8 +419,8 @@
   width: 100px;
   height: 100px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-  border: 2px solid rgba(139, 92, 246, 0.5);
+  background: var(--casino-gradient-choice);
+  border: var(--casino-border-choice);
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -372,14 +429,14 @@
   justify-content: center;
   gap: var(--spacing-1);
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--casino-shadow-choice);
 }
 
 .choice-button:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.2) 100%);
-  border-color: rgba(139, 92, 246, 0.8);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+  background: var(--casino-gradient-choice-hover);
+  border: var(--casino-border-choice-hover);
+  box-shadow: var(--casino-shadow-choice-hover);
 }
 
 .choice-button:active {
@@ -412,10 +469,7 @@
   overflow: hidden !important;
   padding: 0 !important;
   margin: 0 !important;
-  background: linear-gradient(135deg, 
-    rgba(30, 58, 138, 0.95) 0%,
-    rgba(59, 130, 246, 0.9) 100%
-  ) !important;
+  background: var(--casino-gradient-popup) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;

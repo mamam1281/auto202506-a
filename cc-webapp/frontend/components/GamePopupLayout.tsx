@@ -74,7 +74,7 @@ export default function GamePopupLayout({
         }
         
         .game-popup-content {
-          flex: 1;
+          flex: 1; /* 전체 공간 사용 */
           overflow: hidden;
           display: flex;
           flex-direction: column;

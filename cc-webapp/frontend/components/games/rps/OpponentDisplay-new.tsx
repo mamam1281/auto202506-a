@@ -10,9 +10,9 @@ interface OpponentDisplayProps {
 }
 
 const choiceConfig = {
-  rock: { emoji: '🪨', label: '바위', color: '#6b7280' },
-  paper: { emoji: '📄', label: '보', color: '#8b5cf6' },
-  scissors: { emoji: '✂️', label: '가위', color: '#3b82f6' }
+  rock: { emoji: '🪨', label: '바위', color: 'var(--casino-border)' },
+  paper: { emoji: '📄', label: '보', color: 'var(--casino-primary)' },
+  scissors: { emoji: '✂️', label: '가위', color: 'var(--casino-secondary)' }
 };
 
 const thinkingEmojis = ['🤔', '💭', '🎯', '💡', '⚙️'];

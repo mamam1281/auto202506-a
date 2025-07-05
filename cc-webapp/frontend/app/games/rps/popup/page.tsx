@@ -19,8 +19,12 @@ function PopupLoadingSkeleton() {
 // 팝업 전용 RPS 게임 래퍼
 function RPSGamePopupWrapper() {
   return (
-    <div className="w-full h-full rps-popup-optimized overflow-hidden">
-      <div className="w-full h-full">
+    <div className="w-full h-full rps-popup-optimized overflow-hidden flex items-center justify-center">
+      <div className="w-full" style={{
+        maxWidth: '380px',
+        margin: '0 auto',
+        padding: '0.5rem',
+      }}>
         <RPSGame />
       </div>
     </div>
@@ -30,7 +34,9 @@ function RPSGamePopupWrapper() {
 // 팝업 전용 RPS 페이지
 export default function RPSPopupPage() {
   return (
-    <div className="w-full h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="w-full h-screen flex items-center justify-center" style={{
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%)',
+    }}>
       <Suspense fallback={<PopupLoadingSkeleton />}>
         <RPSGamePopupWrapper />
       </Suspense>

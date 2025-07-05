@@ -8,7 +8,7 @@ import '../../../components/games/rps/rps-new-theme.css';
 // 로딩 스켈레톤
 function LoadingSkeleton({ isPopup }: { isPopup: boolean }) {
   return (
-    <div className={`w-full h-full flex items-center justify-center ${isPopup ? 'bg-slate-900' : ''}`}>
+    <div className={`w-full min-h-full flex items-center justify-center ${isPopup ? 'bg-slate-900' : ''}`}>
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-3"></div>
         <p className="text-gray-300 text-sm">RPS 게임 로딩 중...</p>
@@ -34,7 +34,7 @@ function RPSPageContent() {
   const isPopup = searchParams?.get('popup') === 'true' || false;
 
   return (
-    <div className={`${isPopup ? 'w-full h-screen' : 'min-h-screen'} bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900`}>
+    <div className={`${isPopup ? 'w-full min-h-scree' : 'min-h-screen'} bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900`}>
       <Suspense fallback={<LoadingSkeleton isPopup={isPopup} />}>
         <RPSGameWrapper isPopup={isPopup} />
       </Suspense>

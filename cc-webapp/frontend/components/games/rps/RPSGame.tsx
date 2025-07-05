@@ -39,8 +39,6 @@ const RPSGame: React.FC = () => {
     playerLossStreak: 0,
   });
 
-  const [showScoreModal, setShowScoreModal] = useState(false);
-
   // AI 선택 로직
   const getAIChoice = useCallback((): Choice => {
     const choices: Choice[] = ['rock', 'paper', 'scissors'];
@@ -141,155 +139,91 @@ const RPSGame: React.FC = () => {
       playerWinStreak: 0,
       playerLossStreak: 0,
     }));
-    setShowScoreModal(false);
   }, []);
 
   // 총 게임 수 계산
   const totalGames = gameState.score.player + gameState.score.ai + gameState.score.draws;
 
   return (
-    <div className="game-container min-h-screen flex flex-col">
-      <motion.div
-        className="game-main flex-1 flex flex-col space-y-2 p-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        {/* 게임 헤더 */}
-        <motion.header
-          className="game-header"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <h1 className="text-lg font-bold text-white">
-            🎮 가위바위보
-          </h1>
-          {/* 토큰 디스플레이 */}
-          <motion.div
-            className="token-display"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.3 }}
-          >
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-yellow-400">🪙</span>
-              <span className="text-white font-bold">1,250</span>
-            </div>
-          </motion.div>
-        </motion.header>
-
-        {/* 플레이어 선택 영역 */}
-        <div className="player-choice py-1">
-          <h2>내 선택</h2>
-          <ChoiceButtons
-            onChoice={handlePlayerChoice}
-            selectedChoice={gameState.playerChoice}
-            disabled={gameState.isPlaying}
-          />
-        </div>
-
-        {/* VS 표시 */}
-        <div className="my-2 text-center">
-          <motion.div
-            className="text-4xl font-bold text-white"
-            animate={{
-              scale: gameState.isPlaying ? [1, 1.1, 1] : 1,
-              rotate: gameState.isPlaying ? [0, 180, 360] : 0,
-            }}
-            transition={{
-              duration: 1,
-              repeat: gameState.isPlaying ? Infinity : 0,
-              ease: "easeInOut",
-            }}
-          >
-            VS
-          </motion.div>
-        </div>
-
-        {/* AI 선택 영역 */}
-        <div className="opponent-display flex flex-col items-center justify-center py-1">
-          <div className="text-center text-5xl mb-1">🤖</div>
-        </div>
-
-        {/* 게임 컨트롤 */}
-        <div className="text-center py-2">
-          <button
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-1 px-3 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 border border-purple-400 hover:border-purple-300 text-sm"
-            onClick={() => setShowScoreModal(true)}
-            disabled={gameState.isPlaying}
-          >
-            📊 상세통계
-          </button>
-        </div>
-
-        {/* 결과 화면 */}
-        <AnimatePresence mode="wait">
-          {gameState.showResultScreen && gameState.result && (
-            <ResultScreen
-              result={gameState.result}
-              playerChoice={gameState.playerChoice!}
-              aiChoice={gameState.aiChoice!}
-              onPlayAgain={handlePlayAgain}
-              cjaiMessage={gameState.cjaiMessage}
-              score={gameState.score}
-              playerWinStreak={gameState.playerWinStreak}
-              playerLossStreak={gameState.playerLossStreak}
-            />
-          )}
-        </AnimatePresence>
-
-        {/* 점수 상세 모달 */}
-        <AnimatePresence>
-          {showScoreModal && (
-            <motion.div
-              className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowScoreModal(false)}
-            >
-              <motion.div
-                className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 border border-gray-600"
-                initial={{ opacity: 0, scale: 0.8, y: 50 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: 50 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h3 className="text-2xl font-bold text-white mb-6 text-center">📊 게임통계</h3>
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                  <div className="text-center bg-gray-700 rounded-lg p-4">
-                    <div className="text-sm text-gray-300">총 게임 수</div>
-                    <div className="text-3xl font-bold text-white">{totalGames}</div>
-                  </div>
-                  <div className="text-center bg-gray-700 rounded-lg p-4">
-                    <div className="text-sm text-gray-300">승률</div>
-                    <div className="text-3xl font-bold text-green-400">
-                      {totalGames > 0 ? Math.round((gameState.score.player / totalGames) * 100) : 0}%
-                    </div>
-                  </div>
-                  <div className="text-center bg-gray-700 rounded-lg p-4">
-                    <div className="text-sm text-gray-300">현재 연승</div>
-                    <div className="text-3xl font-bold text-yellow-400">{gameState.playerWinStreak}</div>
-                  </div>
-                  <div className="text-center bg-gray-700 rounded-lg p-4">
-                    <div className="text-sm text-gray-300">현재 연패</div>
-                    <div className="text-3xl font-bold text-red-400">{gameState.playerLossStreak}</div>
-                  </div>
+    <div className="rps-root">
+      <div className="rps-content">
+        <div className="rps-game-container">
+          <div className="rps-game-content">
+            {/* 게임 헤더 */}
+            <header className="rps-header">
+              <h1 className="rps-title">🎮 가위바위보</h1>
+              <div className="rps-scoreboard">
+                <div className="score-item">
+                  <div className="score-label">플레이어</div>
+                  <div className="score-value player-score">{gameState.score.player}</div>
                 </div>
-                <div className="flex justify-center">
-                  <button
-                    className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
-                    onClick={() => setShowScoreModal(false)}
-                  >
-                    닫기
-                  </button>
+                <div className="score-item">
+                  <div className="score-label">AI</div>
+                  <div className="score-value ai-score">{gameState.score.ai}</div>
                 </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+                <div className="score-item">
+                  <div className="score-label">무승부</div>
+                  <div className="score-value draw-score">{gameState.score.draws}</div>
+                </div>
+              </div>
+            </header>
+
+            {/* 플레이어 선택 영역 */}
+            <section className="rps-game-area">
+              <div className="rps-player-section">
+                <div className="section-title">내 선택</div>
+                <ChoiceButtons
+                  onChoice={handlePlayerChoice}
+                  selectedChoice={gameState.playerChoice}
+                  disabled={gameState.isPlaying}
+                />
+              </div>
+
+              {/* VS 표시 */}
+              <div className="rps-vs-display">
+                <motion.div
+                  className="vs-text"
+                  animate={{
+                    scale: gameState.isPlaying ? [1, 1.1, 1] : 1,
+                    rotate: gameState.isPlaying ? [0, 180, 360] : 0,
+                  }}
+                >
+                  VS
+                </motion.div>
+              </div>
+
+              {/* AI 선택 영역 */}
+              <div className="rps-ai-section">
+                <div className="section-title">AI</div>
+                <div className="ai-emoji">🤖</div>
+              </div>
+
+              {/* 게임 컨트롤 영역 */}
+              <div className="rps-controls">
+                {/* 컨트롤 버튼이 필요하면 이곳에 추가 */}
+              </div>
+            </section>
+
+            {/* 결과 화면 */}
+            <AnimatePresence mode="wait">
+              {gameState.showResultScreen && gameState.result && (
+                <ResultScreen
+                  result={gameState.result}
+                  playerChoice={gameState.playerChoice!}
+                  aiChoice={gameState.aiChoice!}
+                  onPlayAgain={handlePlayAgain}
+                  cjaiMessage={gameState.cjaiMessage}
+                  score={gameState.score}
+                  playerWinStreak={gameState.playerWinStreak}
+                  playerLossStreak={gameState.playerLossStreak}
+                />
+              )}
+            </AnimatePresence>
+
+            {/* 점수 상세 모달 제거 */}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

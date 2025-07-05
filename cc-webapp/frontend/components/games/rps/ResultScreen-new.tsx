@@ -39,22 +39,23 @@ const resultConfig = {
   win: {
     title: '🎉 승리!',
     message: '🎊 완벽한 승리! 🎊',
-    color: '#10b981',
-    gradient: 'linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(16,185,129,0.1) 100%)',
-    borderColor: 'rgba(16, 185, 129, 0.3)'
+    color: 'var(--casino-success)',
+    gradient: 'var(--casino-gradient-choice)',
+    borderColor: 'var(--casino-success)'
   },
   lose: {
     title: '😔 패배',
     message: '💪 다시 도전!',
-    color: '#ef4444',
-    gradient: 'linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.1) 100%)',
-    borderColor: 'rgba(239, 68, 68, 0.3)'
+    color: 'var(--casino-danger)',
+    gradient: 'var(--casino-gradient-choice-hover)',
+    borderColor: 'var(--casino-danger)'
   },
   draw: {
     title: '🤝 박빙 무승부',
     message: '⚡ 실력이 대단한데! 한 번 더! ⚡',
-    color: '#3b82f6',    gradient: 'linear-gradient(135deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.1) 100%)',
-    borderColor: 'rgba(59, 130, 246, 0.3)'
+    color: 'var(--casino-secondary)',
+    gradient: 'var(--casino-gradient-popup-btn)',
+    borderColor: 'var(--casino-secondary)'
   }
 };
 
@@ -144,18 +145,22 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
 
   return (
     <motion.div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-2"
+      className="fixed inset-0 flex items-center justify-center z-50 p-2"
+      style={{
+        background: 'var(--casino-overlay-bg, rgba(0,0,0,0.6))',
+        backdropFilter: 'blur(6px)'
+      }}
       variants={overlayVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
       <motion.div
-        className="bg-slate-800/95 backdrop-blur-md rounded-xl border shadow-xl max-w-sm w-full mx-2 min-h-[350px]"
+        className="rounded-xl border shadow-xl max-w-sm w-full mx-2 min-h-[350px]"
         style={{
-          background: config.gradient,
+          background: 'var(--casino-modal-bg, var(--casino-gradient-popup-bg, #18181b))',
           borderColor: config.borderColor,
-          boxShadow: `0 20px 40px -12px rgba(0, 0, 0, 0.4), 0 0 20px ${config.color}20`
+          boxShadow: `0 20px 40px -12px var(--casino-shadow-modal, rgba(0,0,0,0.4)), 0 0 20px ${config.color}20`
         }}
         variants={modalVariants}
         initial="hidden"
@@ -230,10 +235,11 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         {/* Action Buttons */}
         <div className="flex gap-3 p-4 pt-3">
           <motion.button
-            className="flex-1 py-4 px-4 rounded-lg font-bold text-white transition-all duration-200 text-2xl"
+            className="flex-1 py-4 px-4 rounded-lg font-bold transition-all duration-200 text-2xl"
             style={{
-              backgroundColor: config.color,
-              boxShadow: `0 4px 15px ${config.color}40`
+              color: 'var(--casino-btn-text, #fff)',
+              background: 'var(--casino-btn-bg, ' + config.color + ')',
+              boxShadow: '0 4px 15px var(--casino-btn-shadow, ' + config.color + '40)'
             }}
             variants={buttonVariants}
             whileHover="hover"
