@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChoiceButtons } from './ChoiceButtons';
+import { ChoiceButtons } from './ChoiceButtons-Popup';
+import { OpponentDisplay } from './OpponentDisplay-new';
 import { ResultScreen } from './ResultScreen-new';
 
 export type Choice = 'rock' | 'paper' | 'scissors';
@@ -148,9 +149,9 @@ const RPSGame: React.FC = () => {
   const totalGames = gameState.score.player + gameState.score.ai + gameState.score.draws;
 
   return (
-    <div className="game-container min-h-screen flex flex-col">
+    <div className="game-container">
       <motion.div
-        className="game-main flex-1 flex flex-col space-y-2 p-2"
+        className="game-main"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -180,7 +181,7 @@ const RPSGame: React.FC = () => {
         </motion.header>
 
         {/* 플레이어 선택 영역 */}
-        <div className="player-choice py-1">
+        <div className="player-choice">
           <h2>내 선택</h2>
           <ChoiceButtons
             onChoice={handlePlayerChoice}
@@ -190,7 +191,7 @@ const RPSGame: React.FC = () => {
         </div>
 
         {/* VS 표시 */}
-        <div className="my-2 text-center">
+        <div className="my-2">
           <motion.div
             className="text-4xl font-bold text-white"
             animate={{
@@ -208,14 +209,18 @@ const RPSGame: React.FC = () => {
         </div>
 
         {/* AI 선택 영역 */}
-        <div className="opponent-display flex flex-col items-center justify-center py-1">
-          <div className="text-center text-5xl mb-1">🤖</div>
+        <div className="opponent-display flex flex-col items-center justify-center">
+          <div className="text-center text-9xl mb-4"></div>
+          <OpponentDisplay
+            choice={gameState.aiChoice}
+            isThinking={gameState.isPlaying}
+          />
         </div>
 
         {/* 게임 컨트롤 */}
-        <div className="text-center py-2">
+        <div className="text-center mb-4">
           <button
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-1 px-3 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 border border-purple-400 hover:border-purple-300 text-sm"
+            className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200 border-2 border-slate-500 hover:border-slate-400"
             onClick={() => setShowScoreModal(true)}
             disabled={gameState.isPlaying}
           >
@@ -256,7 +261,7 @@ const RPSGame: React.FC = () => {
                 exit={{ opacity: 0, scale: 0.8, y: 50 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <h3 className="text-2xl font-bold text-white mb-6 text-center">📊 게임통계</h3>
+                <h3 className="text-2xl font-bold text-white mb-6 text-center">📊 게임 통계</h3>
                 <div className="grid grid-cols-2 gap-6 mb-6">
                   <div className="text-center bg-gray-700 rounded-lg p-4">
                     <div className="text-sm text-gray-300">총 게임 수</div>

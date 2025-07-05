@@ -17,7 +17,6 @@ interface ResultScreenProps {
   playerChoice: Choice;
   aiChoice: Choice;
   onPlayAgain: () => void;
-  onResetScore: () => void;
   cjaiMessage: string;
   score: GameScore;
   playerWinStreak: number;
@@ -38,24 +37,23 @@ const choiceLabels: Record<Choice, string> = {
 
 const resultConfig = {
   win: {
-    title: '🎉 대승리!',
-    message: '🎊 오빠 축하행! 완벽하게 승리하셨어요! 🎊',
+    title: '🎉 승리!',
+    message: '🎊 완벽한 승리! 🎊',
     color: '#10b981',
     gradient: 'linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(16,185,129,0.1) 100%)',
     borderColor: 'rgba(16, 185, 129, 0.3)'
   },
   lose: {
-    title: '😔 아쉬운 패배',
-    message: '💪 아쉽당.. 다시 도전!',
+    title: '😔 패배',
+    message: '💪 다시 도전!',
     color: '#ef4444',
     gradient: 'linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.1) 100%)',
     borderColor: 'rgba(239, 68, 68, 0.3)'
   },
   draw: {
     title: '🤝 박빙 무승부',
-    message: '⚡ 실력이 막상막하네요! 한 번 더 대결해요! ⚡',
-    color: '#3b82f6',
-    gradient: 'linear-gradient(135deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.1) 100%)',
+    message: '⚡ 실력이 대단한데! 한 번 더! ⚡',
+    color: '#3b82f6',    gradient: 'linear-gradient(135deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.1) 100%)',
     borderColor: 'rgba(59, 130, 246, 0.3)'
   }
 };
@@ -65,7 +63,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   playerChoice,
   aiChoice,
   onPlayAgain,
-  onResetScore,
   cjaiMessage,
   score,
   playerWinStreak,
@@ -147,18 +144,18 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
 
   return (
     <motion.div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-2"
       variants={overlayVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
       <motion.div
-        className="bg-slate-800/95 backdrop-blur-md rounded-2xl border shadow-2xl max-w-md w-full mx-4"
+        className="bg-slate-800/95 backdrop-blur-md rounded-xl border shadow-xl max-w-sm w-full mx-2 min-h-[350px]"
         style={{
           background: config.gradient,
           borderColor: config.borderColor,
-          boxShadow: `0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px ${config.color}20`
+          boxShadow: `0 20px 40px -12px rgba(0, 0, 0, 0.4), 0 0 20px ${config.color}20`
         }}
         variants={modalVariants}
         initial="hidden"
@@ -166,9 +163,9 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         exit="exit"
       >
         {/* Header */}
-        <div className="text-center p-6 pb-4">
+        <div className="text-center p-1 pb-1">
           <motion.h2
-            className="text-5xl sm:text-6xl font-bold mb-3"
+            className="text-4xl sm:text-4xl font-bold mb-6"
             style={{ color: config.color }}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -177,7 +174,8 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             {config.title}
           </motion.h2>
           <motion.p
-            className="text-slate-300 text-2xl sm:text-3xl font-bold px-2"
+            className="text-slate-300 font-semibold px-1 leading-relaxed"
+            style={{ fontSize: '22px' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.4 }}
@@ -187,7 +185,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         </div>
 
         {/* Choices Display */}
-        <div className="flex items-center justify-center gap-6 px-6 py-4">
+        <div className="flex items-center justify-center px-4 py-4">
           <motion.div 
             className="text-center"
             variants={choiceVariants}
@@ -195,16 +193,16 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             animate="visible"
             custom={0}
           >
-            <div className="text-5xl sm:text-6xl mb-2 p-3 rounded-xl bg-white/10 border border-white/20">
+            <div className="text-5xl sm:text-6xl mb-1 p-1 rounded-xl bg-white/10 border border-white/20">
               {choiceEmojis[playerChoice]}
             </div>
-            <p className="text-lg sm:text-xl text-slate-300 font-bold">
-              당신: {choiceLabels[playerChoice]}
+            <p className="text-xl sm:text-xl text-slate-300 font-bold">
+              당신
             </p>
           </motion.div>
 
           <motion.div
-            className="text-4xl sm:text-5xl font-bold px-3"
+            className="text-5xl sm:text-7xl font-bold px-2"
             style={{ color: config.color }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -220,19 +218,19 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             animate="visible"
             custom={1}
           >
-            <div className="text-5xl sm:text-6xl mb-2 p-3 rounded-xl bg-white/10 border border-white/20">
+            <div className="text-5xl sm:text-6xl mb-1 p-1 rounded-xl bg-white/10 border border-white/20">
               {choiceEmojis[aiChoice]}
             </div>
-            <p className="text-lg sm:text-xl text-slate-300 font-bold">
-              AI: {choiceLabels[aiChoice]}
+            <p className="text-xl sm:text-xl text-slate-300 font-bold">
+              AI
             </p>
           </motion.div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 p-6 pt-2">
+        <div className="flex gap-3 p-4 pt-3">
           <motion.button
-            className="flex-1 py-3 px-4 rounded-xl font-bold text-white transition-all duration-200 text-lg sm:text-xl"
+            className="flex-1 py-4 px-4 rounded-lg font-bold text-white transition-all duration-200 text-2xl"
             style={{
               backgroundColor: config.color,
               boxShadow: `0 4px 15px ${config.color}40`
@@ -242,19 +240,9 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             whileTap="tap"
             onClick={onPlayAgain}
           >
-            <span className="block text-center leading-tight">
-              다시<br />플레이
-            </span>
+            🔄다시
           </motion.button>
-          <motion.button
-            className="py-3 px-4 rounded-xl font-bold text-slate-300 bg-slate-700/80 hover:bg-slate-600/80 border border-slate-600 transition-all duration-200 text-lg sm:text-xl"
-            variants={buttonVariants}
-            whileHover="hover"
-            whileTap="tap"
-            onClick={onResetScore}
-          >
-            리셋
-          </motion.button>
+   
         </div>
       </motion.div>
     </motion.div>

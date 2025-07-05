@@ -428,10 +428,10 @@
   height: 100vh !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 4px !important;
+  gap: 2px !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  padding: 4px !important;
+  padding: 8px !important;
 }
 
 .rps-popup-optimized .game-header {

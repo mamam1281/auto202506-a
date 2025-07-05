@@ -47,7 +47,6 @@ export const ChoiceButtons: React.FC<ChoiceButtonsProps> = ({ onChoice, disabled
           disabled={disabled}
         >
           <div className="choice-emoji">{choiceEmojis[choice]}</div>
-          <div className="choice-label">{choiceLabels[choice]}</div>
         </motion.button>
       ))}
     </div>
