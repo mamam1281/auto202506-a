@@ -9,6 +9,7 @@ import GameCard from '../components/GameCard';
 import Button from '../components/Button';
 import QuickStartItem from '../components/QuickStartItem';
 import LoadingSpinner from '../components/LoadingSpinner';
+import SplashScreen from '../components/splash/SplashScreen';
 
 // 게임 팝업 유틸리티
 import { openGamePopup } from '../utils/gamePopup';
@@ -16,12 +17,25 @@ import { openGamePopup } from '../utils/gamePopup';
 export default function CasinoDashboard() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
+  const [hasSeenSplash, setHasSeenSplash] = useState(false);
 
-  // 시뮬레이션: 페이지 로딩
+  // 스플래시 화면을 표시한 적 있는지 체크
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 800);
-    return () => clearTimeout(timer);
+    const splashSeen = localStorage.getItem('splashSeen');
+    if (splashSeen) {
+      setHasSeenSplash(true);
+    } else {
+      // 첫 방문 시에만 스플래시 화면 표시
+      localStorage.setItem('splashSeen', 'true');
+    }
   }, []);
+
+  // 스플래시 완료 후 콜백
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+    setIsLoading(false);
+  };
 
   // 게임 데이터 - 팝업으로 열기
   const featuredGames = [
@@ -84,6 +98,12 @@ export default function CasinoDashboard() {
     }
   ];
 
+  // 스플래시 화면 표시
+  if (showSplash) {
+    return <SplashScreen onComplete={handleSplashComplete} skipAuth={hasSeenSplash} />;
+  }
+  
+  // 일반 로딩 화면
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" 

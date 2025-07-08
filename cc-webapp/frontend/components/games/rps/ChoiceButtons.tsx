@@ -41,9 +41,11 @@ export const ChoiceButtons: React.FC<ChoiceButtonsProps> = ({
       opacity: 1,
       y: 0,
       scale: 1,
+      // 프레이머모션 타입 호환성 문제 수정
       transition: { 
         duration: 0.5,
-        type: "spring",
+        // 문자열 타입 대신 명시적인 enum 값 사용
+        type: "spring" as const, 
         stiffness: 300, 
         damping: 25
       }
@@ -53,13 +55,16 @@ export const ChoiceButtons: React.FC<ChoiceButtonsProps> = ({
       y: -5,
       transition: { 
         duration: 0.2,
-        type: "spring",
+        type: "spring" as const,
         stiffness: 400
       }
     },
     tap: { 
       scale: 0.95,
-      transition: { duration: 0.1 }
+      transition: { 
+        duration: 0.1,
+        type: "tween" as const 
+      }
     },
     selected: {
       scale: [1, 1.15, 1.1],

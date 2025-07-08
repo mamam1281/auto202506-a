@@ -51,7 +51,32 @@ export const GAME_POPUP_CONFIGS: Record<string, GamePopupConfig> = {
     resizable: false,
     scrollbars: false,
   },
-
+  
+  // 로그인/회원가입/프로필 팝업
+  login: {
+    width: 400,
+    height: 750,
+    title: '로그인',
+    url: '/auth/login',
+    resizable: false,
+    scrollbars: true,
+  },
+  register: {
+    width: 400,
+    height: 750,
+    title: '회원가입',
+    url: '/auth/register',
+    resizable: false,
+    scrollbars: true,
+  },
+  profile: {
+    width: 400,
+    height: 750,
+    title: '내 프로필',
+    url: '/profile/view',
+    resizable: false,
+    scrollbars: true,
+  },
 };
 
 /**
@@ -110,9 +135,13 @@ export function openGamePopup(gameId: string): Window | null {
 }
 
 /**
- * 팝업 창인지 확인
+ * 팝업 창인지 확인 (클라이언트 측에서만 실행되어야 함)
  */
 export function isPopupWindow(): boolean {
+  if (typeof window === 'undefined') {
+    return false; // SSR 환경에서는 항상 false 반환
+  }
+  
   try {
     return window.opener !== null && window.opener !== window;
   } catch {

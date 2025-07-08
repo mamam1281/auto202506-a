@@ -6,6 +6,7 @@ import { Epilogue, Exo, IBM_Plex_Sans_KR } from 'next/font/google';
 // 1. 글로벌 CSS 임포트
 import '../styles/global.css'; // 올바른 경로로 수정
 import '../styles/miniapp-override.css'; // 미니앱 전용 스타일
+// auth-nav.css 파일 임시 제거 (청크 로드 오류 해결을 위함)
 
 // 2. 클라이언트 컴포넌트 임포트
 import LayoutWrapper from './LayoutWrapper';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Bell, Settings, UserCircle } from 'lucide-react';
+import { ArrowLeft, Bell, Settings, Home, Menu } from 'lucide-react';
 import Button from './Button';
 import { useRouter, usePathname } from 'next/navigation';
 
@@ -7,25 +7,21 @@ export interface AppHeaderProps {
   appName: string;
   onNotificationsClick?: () => void;
   onSettingsClick?: () => void;
-  onProfileClick?: () => void;
+  onMenuClick?: () => void;
   hasNotifications?: boolean;
-  showTokenBalanceOnMobile?: boolean;
   // New responsive props
   compact?: boolean; // For minimal header layout
   showAppName?: boolean; // Control app name visibility
-  tokenDisplayVariant?: 'full' | 'compact' | 'icon-only'; // Token display modes
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({
   appName,
   onNotificationsClick,
   onSettingsClick,
-  onProfileClick,
+  onMenuClick,
   hasNotifications = false,
-  showTokenBalanceOnMobile = true,
   compact = false,
   showAppName = true,
-  tokenDisplayVariant = 'full',
 }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -68,15 +64,25 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     console.log('Settings clicked');
     onSettingsClick?.();
   };
-
-  const handleProfileClick = () => {
-    console.log('Profile clicked');
-    onProfileClick?.();
+  
+  const handleMenuClick = () => {
+    console.log('Menu clicked');
+    onMenuClick?.();
   };
 
-  // Back Button Component (replaces token display)
+  // Back Button Component
   const BackButton = () => {
-    if (isHomePage) return <div className="w-8 h-8" />; // Spacer for home page
+    if (isHomePage) {
+      return (
+        <button
+          onClick={() => router.push('/')}
+          className="p-2 hover:bg-white/20 active:scale-95 transition-all duration-normal rounded-full text-white"
+          aria-label="홈"
+        >
+          <Home size={compact ? 18 : 20} />
+        </button>
+      );
+    }
     
     return (
       <button
@@ -101,7 +107,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             color: '#ffffff',
             fontFamily: 'system-ui, -apple-system, sans-serif',
             fontWeight: '700',
-            letterSpacing: '0.02em'
+            letterSpacing: '0.03em',
+            textShadow: '0 0 15px rgba(255, 255, 255, 0.2)'
           }}
         >
           {appName}
@@ -116,8 +123,15 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     const iconSize = compact ? 18 : 20;
     const baseButtonClasses = "p-1 hover:bg-white/20 active:scale-95 transition-all duration-normal rounded-full";
     
+    // 로그인/회원가입/프로필 페이지 여부 확인
+    const isAuthPage = pathname?.includes('/auth') || pathname?.includes('/profile/view');
+    
+    if (isAuthPage) {
+      return <div className="px-3" />; // 인증 페이지에서는 빈 공간만 제공
+    }
+    
     return (
-      <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 px-2 sm:px-3">
+      <div className="flex items-center gap-2 flex-shrink-0 px-3">
         <button
           onClick={handleNotificationsClick}
           className={`${baseButtonClasses} ${hasNotifications ? 'text-amber-400' : 'text-white'}`}
@@ -135,11 +149,11 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         </button>
         
         <button
-          onClick={handleProfileClick}
+          onClick={handleMenuClick}
           className={`${baseButtonClasses} text-white`}
-          aria-label="프로필"
+          aria-label="메뉴"
         >
-          <UserCircle size={iconSize} />
+          <Menu size={iconSize} />
         </button>
       </div>
     );
@@ -153,20 +167,21 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: 'rgba(26, 26, 26, 0.95)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        borderBottom: '1px solid #374151',
+        backgroundColor: 'rgba(26, 26, 26, 0.98)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: '1px solid #2d3748',
         width: '100%',
-        height: '64px',
+        height: '60px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 50,
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
       }}
     >
-      <div className="w-full max-w-[420px] flex items-center h-full relative px-4">
-        {/* Left: Back Button (replaces token display) */}
+      <div className="w-full max-w-[420px] flex items-center h-full relative px-3">
+        {/* Left: Back/Home Button */}
         <BackButton />
 
         {/* Center: App Name */}

@@ -14,7 +14,7 @@ export const navItems: NavItemData[] = [
   { id: 'game', label: '게임', icon: Gamepad, path: '/games' },
   { id: 'shop', label: '상점', icon: Store, path: '/shop' },
   { id: 'community', label: '커뮤니티', icon: Users, path: '/community' },
-  { id: 'profile', label: '프로필', icon: User, path: '/profile' },
+  { id: 'profile', label: '프로필', icon: User, path: '/profile/view' },
 ];
 
 export interface BottomNavigationBarProps {
