@@ -36,7 +36,7 @@ const RPSGame: React.FC<RPSGameProps> = ({ isPopup = false }) => {
           />
         ) : (
           <motion.div key="game" className="rps-game-area">
-            <OpponentDisplay choice={gameState.aiChoice} isThinking={gameState.isPlaying} />
+            <OpponentDisplay choice={gameState.aiChoice} isThinking={false} />
             
             <div className="w-full my-4 border-t border-gray-600/50"></div>
 

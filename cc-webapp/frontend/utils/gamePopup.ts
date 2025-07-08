@@ -37,11 +37,11 @@ export const GAME_POPUP_CONFIGS: Record<string, GamePopupConfig> = {
   },
   gacha: {
     width: 420,
-    height: 750,
-    title: 'Lucky Gacha',
+    height: 850, // 높이를 850으로 조정하여 모든 컨텐츠를 표시
+    title: '럭키 가챠',
     url: '/games/gacha/popup',
-    resizable: false,
-    scrollbars: false,
+    resizable: false, 
+    scrollbars: true, // 필요시 스크롤바 허용
   },
   roulette: {
     width: 420,

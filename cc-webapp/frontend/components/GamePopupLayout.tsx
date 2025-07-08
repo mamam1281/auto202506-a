@@ -20,14 +20,32 @@ export default function GamePopupLayout({
       console.warn('GamePopupLayout should only be used in popup windows');
     }
 
+    // 팝업 창 크기 최적화 (420x850)
+    const optimizePopupSize = () => {
+      // 가챠 팝업은 420x850 크기로 최적화
+      const path = window.location.pathname;
+      if (path.includes('/games/gacha/popup')) {
+        try {
+          // 브라우저 창 전체 크기를 조정 (브라우저 UI 영역 포함)
+          const extraHeight = 80; // 브라우저 헤더 높이 고려
+          window.resizeTo(420, 850 + extraHeight);
+          
+          console.log('가챠 팝업 크기 설정 시도: 420x930');
+        } catch (e) {
+          console.warn('팝업 창 크기 변경 권한이 없습니다:', e);
+        }
+      }
+    };
+
     // 팝업 창 크기 보고
     const reportPopupSize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      console.log(`🎰 슬롯 팝업 크기: 가로 ${width}px × 세로 ${height}px`);
+      console.log(`� 게임 팝업 크기: 가로 ${width}px × 세로 ${height}px`);
     };
 
-    // 초기 크기 보고
+    // 초기 크기 최적화 및 보고
+    optimizePopupSize();
     reportPopupSize();
 
     // 리사이즈 시 크기 보고
@@ -68,18 +86,20 @@ export default function GamePopupLayout({
           flex-direction: column;
           background: var(--color-primary-dark-navy);
           color: var(--color-text-primary);
-          overflow: hidden;
+          overflow: auto; /* 필요시 스크롤 허용 */
           padding: 0;
           margin: 0;
+          min-height: 850px; /* 최소 높이를 850px로 설정 */
         }
         
         .game-popup-content {
           flex: 1; /* 전체 공간 사용 */
-          overflow: hidden;
+          overflow: visible; /* 컨텐츠 넘침 허용 */
           display: flex;
           flex-direction: column;
           padding: 0;
           margin: 0;
+          min-height: 100%;
         }
       `}</style>
 

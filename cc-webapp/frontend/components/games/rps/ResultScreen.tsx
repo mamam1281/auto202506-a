@@ -31,25 +31,25 @@ const choiceLabels: Record<Choice, string> = {
 
 const resultConfig = {
   win: {
-    title: '🎉 승리!',
-    message: '🎊 완벽한 승리! 🎊',
-    color: 'var(--casino-success)',
-    gradient: 'var(--casino-gradient-choice)',
-    borderColor: 'var(--casino-success)'
+    title: '✨ 대승리! ✨',
+    message: '� 놀라운 실력이에요! 또 이겨볼까요? �',
+    color: 'var(--casino-win-color, #ffd700)', /* 골드 컬러로 변경 */
+    gradient: 'var(--casino-win-gradient, linear-gradient(135deg, #ffd700, #ffb700))',
+    borderColor: 'var(--casino-win-border, #ffd700)'
   },
   lose: {
-    title: '😔 패배',
-    message: '💪 다시 도전!',
-    color: 'var(--casino-danger)',
-    gradient: 'var(--casino-gradient-choice-hover)',
-    borderColor: 'var(--casino-danger)'
+    title: '� 아쉬워요!',
+    message: '� 단 한번만 더! 이번엔 이길 수 있어요! 🔥',
+    color: 'var(--casino-lose-color, #ff5252)',
+    gradient: 'var(--casino-lose-gradient, linear-gradient(135deg, #ff5252, #ff8a80))',
+    borderColor: 'var(--casino-lose-border, #ff5252)'
   },
   draw: {
-    title: '🤝 박빙 무승부',
-    message: '⚡ 실력이 대단한데! 한 번 더! ⚡',
-    color: 'var(--casino-secondary)',
-    gradient: 'var(--casino-gradient-popup-btn)',
-    borderColor: 'var(--casino-secondary)'
+    title: '✋ 엇비슷한 실력!',
+    message: '⚡ 한 번 더 하면 승부가 날 것 같아요! ⚡',
+    color: 'var(--casino-draw-color, #7c4dff)',
+    gradient: 'var(--casino-draw-gradient, linear-gradient(135deg, #7c4dff, #b388ff))',
+    borderColor: 'var(--casino-draw-border, #7c4dff)'
   }
 };
 
@@ -268,19 +268,19 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 p-4 pt-3">
+        <div className="flex flex-col items-center gap-3 p-4 pt-3">
           <motion.button
-            className={`flex-1 py-4 px-4 rounded-lg font-bold transition-all duration-200 text-2xl result-btn result-btn-${result}`}
+            className={`inline-block py-3 px-6 rounded-lg font-bold transition-all duration-200 text-lg result-btn result-btn-${result}`}
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"
             onClick={onPlayAgain}
           >
-            🔄다시
+            🔄 다시 플레이
           </motion.button>
           <button
             onClick={onReset}
-            className="text-xs text-gray-400 hover:text-white transition-colors duration-200 mt-2 opacity-70 hover:opacity-100"
+            className="text-xs text-gray-400 hover:text-white transition-colors duration-200 mt-3 opacity-70 hover:opacity-100 border border-gray-600 py-1 px-3 rounded-md"
           >
             점수 초기화
           </button>

@@ -18,7 +18,7 @@ function PopupLoadingSkeleton() {
 function GachaGamePopupContent() {
   return (
     <div className="w-full h-full overflow-y-auto bg-gradient-to-br from-[var(--color-primary-dark-navy)] via-[var(--color-primary-charcoal)] to-[var(--color-primary-dark-navy)] p-0">
-      <div className="w-full mx-auto h-full flex flex-col justify-center">
+      <div className="w-full max-w-[420px] mx-auto h-full flex flex-col justify-start items-center">
         <GachaContainer />
       </div>
     </div>
