@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Choice } from '../../../hooks/useRPSGame';
+import type { Choice } from './types';
 
 interface OpponentDisplayProps {
   choice: Choice | null;
@@ -98,26 +98,26 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80px] w-full">
+    <div className="ai-area">
       <AnimatePresence mode="wait">
         {isThinking ? (
           <motion.div
             key="thinking"
-            className="flex flex-col items-center justify-center space-y-2"
+            className="flex flex-col items-center justify-center space-y-4"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
           >
             <motion.div
-              className="text-5xl sm:text-6xl"
+              className="text-7xl"
               variants={thinkingVariants}
               animate="thinking"
             >
               {thinkingEmojis[currentThinkingEmojiIndex]}
             </motion.div>
             <motion.div
-              className="text-center px-2 py-1 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10"
+              className="text-center px-4 py-2 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 max-w-[280px]"
               key={currentThinkingMessageIndex}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -131,45 +131,48 @@ export const OpponentDisplay: React.FC<OpponentDisplayProps> = ({
         ) : choice ? (
           <motion.div
             key="choice"
-            className="flex flex-col items-center justify-center space-y-1"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <motion.div
-              className="text-6xl sm:text-7xl p-2 rounded-xl border-2 bg-white/5 backdrop-blur-sm"
-              variants={revealVariants}
-              initial="hidden"
-              animate="visible"
-              style={{
-                borderColor: choiceConfig[choice].color,
-                boxShadow: `0 0 20px ${choiceConfig[choice].color}40`,
-              }}
-            >
-              {choiceConfig[choice].emoji}
-            </motion.div>
-            <motion.p
-              className="text-lg font-semibold text-white"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.3 }}
-            >
-              {choiceConfig[choice].label}
-            </motion.p>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="waiting"
             className="flex flex-col items-center justify-center space-y-2"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
           >
-            <div className="text-4xl sm:text-5xl">
-              🤖
-            </div>
+            <motion.div
+              className={`opponent-choice-icon rounded-2xl border-2 bg-white/5 backdrop-blur-sm choice-${choice}`}
+              variants={revealVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {choiceConfig[choice].emoji}
+            </motion.div>
+            <motion.p
+              className="text-base text-slate-200 font-medium mt-1"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.3 }}
+            >
+              {choiceConfig[choice].label}
+            </motion.p>
+            <motion.p
+              className="text-xs text-slate-400 bg-black/20 px-3 py-1 rounded-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              AI의 선택
+            </motion.p>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="waiting"
+            className="flex flex-col items-center justify-center space-y-3"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className="text-7xl p-3 rounded-2xl border-2 border-dashed border-white/20 bg-white/5">❔</div>
+            <p className="text-sm text-slate-400 bg-black/20 px-3 py-1 rounded-full">AI가 선택을 준비 중입니다</p>
           </motion.div>
         )}
       </AnimatePresence>

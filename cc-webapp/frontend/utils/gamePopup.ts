@@ -45,7 +45,7 @@ export const GAME_POPUP_CONFIGS: Record<string, GamePopupConfig> = {
   },
   roulette: {
     width: 420,
-    height: 900,
+    height: 950, // 높이를 950으로 늘려 충분한 공간 확보
     title: '룰렛 게임',
     url: '/games/roulette/popup',
     resizable: false,

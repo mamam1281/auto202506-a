@@ -2,25 +2,19 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-export type Choice = 'rock' | 'paper' | 'scissors';
-export type GameResult = 'win' | 'lose' | 'draw' | null;
-
-export interface GameScore {
-  player: number;
-  ai: number;
-  draws: number;
-}
+import { Choice, GameResult, GameScore } from './types';
 
 interface ResultScreenProps {
   result: GameResult;
   playerChoice: Choice | null;
   aiChoice: Choice | null;
   onPlayAgain: () => void;
+  onReset: () => void;
   cjaiMessage: string;
   score: GameScore;
   playerWinStreak: number;
   playerLossStreak: number;
+  isPopup?: boolean;
 }
 
 const choiceEmojis: Record<Choice, string> = {
@@ -64,10 +58,12 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   playerChoice,
   aiChoice,
   onPlayAgain,
+  onReset,
   cjaiMessage,
   score,
   playerWinStreak,
-  playerLossStreak
+  playerLossStreak,
+  isPopup = false,
 }) => {
   if (!result || !playerChoice || !aiChoice) return null;
 
@@ -88,9 +84,9 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   const modalVariants = {
     hidden: { 
       opacity: 0, 
-      scale: 0.8, 
-      y: 50,
-      rotateX: -15
+      scale: isPopup ? 0.9 : 0.8, 
+      y: isPopup ? 20 : 50,
+      rotateX: isPopup ? 0 : -15
     },
     visible: {
       opacity: 1,
@@ -107,12 +103,8 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     exit: {
       opacity: 0,
       scale: 0.8,
-      y: 50,
-      rotateX: 15,
-      transition: {
-        duration: 0.3,
-        ease: "easeIn" as const
-      }
+      y: -50,
+      transition: { duration: 0.2 }
     }
   };
 
@@ -143,25 +135,40 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     }
   };
 
+  const contentVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        type: "spring",
+        damping: 15,
+        stiffness: 200,
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+      }
+    },
+    exit: {
+      opacity: 0,
+      y: -50,
+      transition: { duration: 0.2 }
+    }
+  };
+
+  const containerClass = isPopup 
+    ? "result-modal-popup bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl w-full max-w-sm p-6 border border-gray-700/80"
+    : "result-modal bg-gray-900/60 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-md p-8 border border-gray-700/50";
+
   return (
     <motion.div
-      className="fixed inset-0 flex items-center justify-center z-50 p-2"
-      style={{
-        background: 'var(--casino-overlay-bg, rgba(0,0,0,0.6))',
-        backdropFilter: 'blur(6px)'
-      }}
+      className="fixed inset-0 flex items-center justify-center z-50 p-2 result-overlay"
       variants={overlayVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
       <motion.div
-        className="rounded-xl border shadow-xl max-w-sm w-full mx-2 min-h-[350px]"
-        style={{
-          background: 'var(--casino-modal-bg, var(--casino-gradient-popup-bg, #18181b))',
-          borderColor: config.borderColor,
-          boxShadow: `0 20px 40px -12px var(--casino-shadow-modal, rgba(0,0,0,0.4)), 0 0 20px ${config.color}20`
-        }}
+        className={`rounded-xl border shadow-xl max-w-sm w-full mx-2 min-h-[350px] result-modal-container result-${result}`}
         variants={modalVariants}
         initial="hidden"
         animate="visible"
@@ -170,8 +177,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         {/* Header */}
         <div className="text-center p-1 pb-1">
           <motion.h2
-            className="text-4xl sm:text-4xl font-bold mb-6"
-            style={{ color: config.color }}
+            className={`text-4xl sm:text-4xl font-bold mb-4 result-title-${result}`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.4 }}
@@ -198,7 +204,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             animate="visible"
             custom={0}
           >
-            <div className="text-5xl sm:text-6xl mb-1 p-1 rounded-xl bg-white/10 border border-white/20">
+            <div className="result-choice-icon rounded-xl bg-white/10 border border-white/20">
               {choiceEmojis[playerChoice!]}
             </div>
             <p className="text-xl sm:text-xl text-slate-300 font-bold">
@@ -207,8 +213,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
           </motion.div>
 
           <motion.div
-            className="text-5xl sm:text-7xl font-bold px-2"
-            style={{ color: config.color }}
+            className={`result-vs-text result-vs-${result}`}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4, duration: 0.3, type: "spring" as const }}
@@ -223,7 +228,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             animate="visible"
             custom={1}
           >
-            <div className="text-5xl sm:text-6xl mb-1 p-1 rounded-xl bg-white/10 border border-white/20">
+            <div className="result-choice-icon rounded-xl bg-white/10 border border-white/20">
               {choiceEmojis[aiChoice!]}
             </div>
             <p className="text-xl sm:text-xl text-slate-300 font-bold">
@@ -265,12 +270,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         {/* Action Buttons */}
         <div className="flex gap-3 p-4 pt-3">
           <motion.button
-            className="flex-1 py-4 px-4 rounded-lg font-bold transition-all duration-200 text-2xl"
-            style={{
-              color: 'var(--casino-btn-text, #fff)',
-              background: 'var(--casino-btn-bg, ' + config.color + ')',
-              boxShadow: '0 4px 15px var(--casino-btn-shadow, ' + config.color + '40)'
-            }}
+            className={`flex-1 py-4 px-4 rounded-lg font-bold transition-all duration-200 text-2xl result-btn result-btn-${result}`}
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"
@@ -278,7 +278,12 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
           >
             🔄다시
           </motion.button>
-   
+          <button
+            onClick={onReset}
+            className="text-xs text-gray-400 hover:text-white transition-colors duration-200 mt-2 opacity-70 hover:opacity-100"
+          >
+            점수 초기화
+          </button>
         </div>
       </motion.div>
     </motion.div>
