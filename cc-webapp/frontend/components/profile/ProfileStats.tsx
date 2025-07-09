@@ -1,62 +1,82 @@
 'use client';
 
-import type { User } from './types';
-import { Coins, Trophy, Calendar, Target } from 'lucide-react';
-
-interface ProfileStatsProps {
-  user: User;
-}
+import { Coins, Trophy, Flame, Target } from 'lucide-react';
+import TokenDisplay from './TokenDisplay';
+import StreakIndicator from './StreakIndicator';
+import StatCard from './StatCard';
+import type { ProfileStatsProps } from './types';
 
 export default function ProfileStats({ user }: ProfileStatsProps) {
   const stats = [
     {
-      icon: Coins,
-      label: '토큰',
-      value: (user.tokens || user.cyber_token_balance || 0).toLocaleString(),
-      color: 'text-[var(--game-gold)]'
-    },
-    {
       icon: Trophy,
       label: '승리',
-      value: (user.wins || 0).toString(),
-      color: 'text-[var(--game-success)]'
-    },
-    {
-      icon: Calendar,
-      label: '연속 접속',
-      value: `${user.loginStreak || 0}일`,
-      color: 'text-[var(--color-yellow-400)]'
+      value: user.wins || 0,
+      color: 'text-yellow-400',
+      clickable: true,
+      onClick: () => console.log('View wins history')
     },
     {
       icon: Target,
-      label: '완료한 미션',
-      value: (user.completedMissions || 0).toString(),
-      color: 'text-[var(--color-blue-400)]'
+      label: '완료된 미션',
+      value: user.completedMissions || 0,
+      color: 'text-green-400',
+      clickable: true,
+      onClick: () => console.log('View mission history')
     }
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3">
-      {stats.map((stat, index) => {
-        const IconComponent = stat.icon;
-        return (
-          <div key={index} className="glassmorphism p-4 rounded-xl hover-lift">
-            <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg bg-white/5 ${stat.color}`}>
-                <IconComponent size={20} />
-              </div>
-              <div>
-                <p className="text-[var(--color-text-secondary)] text-xs">
-                  {stat.label}
-                </p>
-                <p className={`font-bold text-lg ${stat.color}`}>
-                  {stat.value}
-                </p>
-              </div>
-            </div>
+    <div className="space-y-4 mb-6">
+      {/* Top Row: Token & Streak */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="profile-glass rounded-xl p-4 flex items-center justify-center">
+          <TokenDisplay 
+            amount={user.cyber_token_balance || 0}
+            size="lg"
+            showIcon={true}
+            showLabel={true}
+            onClick={() => console.log('View token history')}
+          />
+        </div>
+        
+        <div className="profile-glass rounded-xl p-4 flex items-center justify-center">
+          <StreakIndicator 
+            streak={user.loginStreak || 0}
+            size="md"
+            showLabel={true}
+            animated={true}
+          />
+        </div>
+      </div>
+
+      {/* Bottom Row: Stats Grid */}
+      <div className="grid grid-cols-2 gap-4">
+        {stats.map((stat, index) => (
+          <StatCard
+            key={index}
+            icon={stat.icon}
+            label={stat.label}
+            value={stat.value}
+            color={stat.color}
+            size="sm"
+            clickable={stat.clickable}
+            onClick={stat.onClick}
+          />
+        ))}
+      </div>
+
+      {/* Special Achievement Banner */}
+      {(user.loginStreak || 0) >= 7 && (
+        <div className="profile-glass rounded-xl p-3 bg-gradient-to-r from-orange-500/20 to-red-500/20 border-orange-500/30">
+          <div className="flex items-center gap-2 text-orange-400">
+            <Flame size={18} className="animate-pulse" />
+            <span className="text-sm font-semibold">
+              🔥 연속 접속 달성! 특별 보너스 획득 가능!
+            </span>
           </div>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 }

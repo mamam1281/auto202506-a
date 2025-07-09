@@ -1,384 +1,886 @@
-/* 프로필 페이지 기본 스타일 */
+/* ===================================
+   PROFILE PAGE CSS STYLES
+   프로필 페이지 전용 스타일시트
+   ================================= */
+
+/* ===================================
+   CSS VARIABLES - 프로필 페이지 전용
+   ================================= */
+
 :root {
-  --profile-bg: #1a1a1a;
-  --profile-text: #ffffff;
-  --profile-card: #2d2d2d;
+  /* 프로필 카드 색상 */
+  --profile-card-bg: rgba(20, 20, 20, 0.8);
+  --profile-card-border: rgba(255, 255, 255, 0.1);
+  --profile-card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+
+  /* 프로필 그라데이션 */
+  --profile-gradient-primary: linear-gradient(135deg, rgba(91, 48, 246, 0.4) 0%, rgba(128, 84, 242, 0.4) 100%);
+  --profile-gradient-secondary: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 165, 0, 0.3) 100%);
+  --profile-gradient-success: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%);
+  --profile-gradient-warning: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.3) 100%);
+  --profile-gradient-error: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.3) 100%);
+
+  /* 네온 글로우 효과 */
+  --neon-glow-primary: 0 0 30px rgba(91, 48, 246, 0.5);
+  --neon-glow-secondary: 0 0 30px rgba(255, 215, 0, 0.5);
+  --neon-glow-success: 0 0 30px rgba(16, 185, 129, 0.5);
+  --neon-glow-warning: 0 0 30px rgba(245, 158, 11, 0.5);
+  --neon-glow-error: 0 0 30px rgba(239, 68, 68, 0.5);
+
+  /* 프로필 간격 시스템 */
+  --profile-spacing-xs: 0.5rem;   /* 8px */
+  --profile-spacing-sm: 0.75rem;  /* 12px */
+  --profile-spacing-md: 1rem;     /* 16px */
+  --profile-spacing-lg: 1.5rem;   /* 24px */
+  --profile-spacing-xl: 2rem;     /* 32px */
+  --profile-spacing-2xl: 3rem;    /* 48px */
+  --profile-spacing-3xl: 4rem;    /* 64px */
+
+  /* 프로필 보더 반지름 */
+  --profile-radius-sm: 0.5rem;    /* 8px */
+  --profile-radius-md: 0.75rem;   /* 12px */
+  --profile-radius-lg: 1rem;      /* 16px */
+  --profile-radius-xl: 1.5rem;    /* 24px */
+  --profile-radius-2xl: 2rem;     /* 32px */
+  --profile-radius-3xl: 3rem;     /* 48px */
+
+  /* 애니메이션 타이밍 */
+  --profile-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --profile-transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --profile-transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  --profile-transition-game: 1000ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 블러 효과 */
+  --profile-blur-sm: 4px;
+  --profile-blur-md: 8px;
+  --profile-blur-lg: 12px;
+  --profile-blur-xl: 16px;
+  --profile-blur-2xl: 24px;
+  --profile-blur-3xl: 32px;
 }
+
+/* ===================================
+   GLASSMORPHISM EFFECTS
+   글래스모피즘 효과
+   ================================= */
+
+.profile-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(var(--profile-blur-lg));
+  -webkit-backdrop-filter: blur(var(--profile-blur-lg));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--profile-card-shadow);
+}
+
+.profile-glass-strong {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--profile-blur-xl));
+  -webkit-backdrop-filter: blur(var(--profile-blur-xl));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--profile-card-shadow);
+}
+
+.profile-glass-subtle {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(var(--profile-blur-md));
+  -webkit-backdrop-filter: blur(var(--profile-blur-md));
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ===================================
+   PROFILE CARD STYLES
+   프로필 카드 스타일
+   ================================= */
+
+.profile-card {
+  background: var(--profile-gradient-primary);
+  border-radius: var(--profile-radius-3xl);
+  padding: var(--profile-spacing-xl);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--profile-transition-normal);
+}
+
+.profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8rem;
+  height: 8rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-2xl));
+}
+
+.profile-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 6rem;
+  height: 6rem;
+  background: linear-gradient(135deg, rgba(91, 48, 246, 0.2) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-2xl));
+}
+
+.profile-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--neon-glow-primary);
+}
+
+/* ===================================
+   AVATAR STYLES
+   아바타 스타일
+   ================================= */
+
+.profile-avatar {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--profile-gradient-primary);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-lg));
+  opacity: 0.6;
+  z-index: -1;
+}
+
+.profile-avatar-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--profile-gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--profile-card-shadow);
+}
+
+/* ===================================
+   LEVEL BADGE STYLES
+   레벨 배지 스타일
+   ================================= */
+
+.profile-level-badge {
+  background: var(--profile-gradient-secondary);
+  border-radius: var(--profile-radius-xl);
+  padding: var(--profile-spacing-md) var(--profile-spacing-lg);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-level-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-xl));
+}
+
+.profile-level-badge:hover {
+  transform: scale(1.05);
+  box-shadow: var(--neon-glow-secondary);
+}
+
+/* ===================================
+   STATS CARD STYLES
+   통계 카드 스타일
+   ================================= */
+
+.profile-stats-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-radius: var(--profile-radius-xl);
+  padding: var(--profile-spacing-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--profile-transition-normal);
+}
+
+.profile-stats-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-xl));
+}
+
+.profile-stats-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 토큰 카드 */
+.profile-token-card {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+  border-color: rgba(255, 215, 0, 0.2);
+}
+
+.profile-token-card::before {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
+}
+
+.profile-token-card:hover {
+  box-shadow: var(--neon-glow-secondary);
+}
+
+/* ===================================
+   BUTTON STYLES
+   버튼 스타일
+   ================================= */
+
+.profile-button-primary {
+  background: linear-gradient(135deg, #5b30f6 0%, #8054f2 100%);
+  border: none;
+  border-radius: var(--profile-radius-xl);
+  padding: var(--profile-spacing-lg) var(--profile-spacing-xl);
+  color: white;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--profile-transition-normal);
+  cursor: pointer;
+}
+
+.profile-button-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  border-radius: var(--profile-radius-xl);
+  opacity: 0;
+  transition: opacity var(--profile-transition-normal);
+}
+
+.profile-button-primary:hover::before {
+  opacity: 1;
+}
+
+.profile-button-primary:hover {
+  transform: scale(1.02);
+  box-shadow: var(--neon-glow-primary);
+}
+
+.profile-button-secondary {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--profile-radius-xl);
+  padding: var(--profile-spacing-lg) var(--profile-spacing-xl);
+  color: white;
+  font-weight: 600;
+  backdrop-filter: blur(var(--profile-blur-md));
+  transition: all var(--profile-transition-normal);
+  cursor: pointer;
+}
+
+.profile-button-secondary:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.15) 100%);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
+}
+
+/* ===================================
+   PROGRESS BAR STYLES
+   프로그레스 바 스타일
+   ================================= */
+
+.profile-progress-bar {
+  width: 100%;
+  height: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--profile-radius-md);
+  overflow: hidden;
+  position: relative;
+}
+
+.profile-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5b30f6 0%, #8054f2 100%);
+  border-radius: var(--profile-radius-md);
+  transition: width var(--profile-transition-slow);
+  position: relative;
+}
+
+.profile-progress-fill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(91, 48, 246, 0.3) 0%, rgba(128, 84, 242, 0.3) 100%);
+  border-radius: var(--profile-radius-md);
+  filter: blur(var(--profile-blur-sm));
+}
+
+/* ===================================
+   MISSION CARD STYLES
+   미션 카드 스타일
+   ================================= */
+
+.profile-mission-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border-radius: var(--profile-radius-xl);
+  padding: var(--profile-spacing-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--profile-transition-normal);
+  cursor: pointer;
+}
+
+.profile-mission-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6rem;
+  height: 6rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-2xl));
+}
+
+.profile-mission-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 미션 타입별 색상 */
+.profile-mission-card.daily {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.1) 100%);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.profile-mission-card.weekly {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.profile-mission-card.special {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(196, 181, 253, 0.1) 100%);
+  border-color: rgba(168, 85, 247, 0.2);
+}
+
+/* ===================================
+   FLASH OFFER STYLES
+   플래시 오퍼 스타일
+   ================================= */
+
+.profile-flash-offer {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(239, 68, 68, 0.2) 100%);
+  border-radius: var(--profile-radius-3xl);
+  padding: var(--profile-spacing-xl);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-flash-offer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8rem;
+  height: 8rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-3xl));
+}
+
+.profile-flash-offer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 7rem;
+  height: 7rem;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-3xl));
+}
+
+.profile-flash-timer {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(245, 158, 11, 0.3) 100%);
+  border-radius: var(--profile-radius-lg);
+  padding: var(--profile-spacing-md) var(--profile-spacing-lg);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  text-align: center;
+  min-width: 50px;
+  backdrop-filter: blur(var(--profile-blur-sm));
+}
+
+/* ===================================
+   MODAL STYLES
+   모달 스타일
+   ================================= */
+
+.profile-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(var(--profile-blur-sm));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--profile-spacing-xl);
+  z-index: 50;
+}
+
+.profile-modal {
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(30, 30, 30, 0.7) 100%);
+  border-radius: var(--profile-radius-3xl);
+  padding: var(--profile-spacing-xl);
+  border: 1px solid rgba(91, 48, 246, 0.3);
+  backdrop-filter: blur(var(--profile-blur-xl));
+  position: relative;
+  overflow: hidden;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--profile-card-shadow);
+}
+
+.profile-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8rem;
+  height: 8rem;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-3xl));
+}
+
+.profile-modal::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 7rem;
+  height: 7rem;
+  background: linear-gradient(135deg, rgba(91, 48, 246, 0.2) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-3xl));
+}
+
+/* ===================================
+   CHAT BUBBLE STYLES
+   채팅 버블 스타일
+   ================================= */
+
+.profile-chat-bubble {
+  position: fixed;
+  bottom: 6rem;
+  right: 1.5rem;
+  max-width: 300px;
+  z-index: 50;
+}
+
+.profile-chat-bubble-inner {
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(30, 30, 30, 0.7) 100%);
+  border-radius: var(--profile-radius-3xl);
+  padding: var(--profile-spacing-lg);
+  border: 1px solid rgba(91, 48, 246, 0.3);
+  backdrop-filter: blur(var(--profile-blur-xl));
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--profile-card-shadow);
+}
+
+.profile-chat-bubble-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5rem;
+  height: 5rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(var(--profile-blur-2xl));
+}
+
+.profile-chat-bubble-tail {
+  position: absolute;
+  bottom: 0;
+  right: 1.5rem;
+  transform: translateY(100%);
+  width: 1rem;
+  height: 1rem;
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(30, 30, 30, 0.5) 100%);
+  border-right: 1px solid rgba(91, 48, 246, 0.3);
+  border-bottom: 1px solid rgba(91, 48, 246, 0.3);
+  transform: translateY(50%) rotate(45deg);
+}
+
+/* ===================================
+   BADGE STYLES
+   배지 스타일
+   ================================= */
+
+.profile-badge {
+  padding: var(--profile-spacing-xs) var(--profile-spacing-md);
+  border-radius: var(--profile-radius-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid;
+  backdrop-filter: blur(var(--profile-blur-sm));
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.profile-badge.standard {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 197, 253, 0.2) 100%);
+  color: rgb(147, 197, 253);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.profile-badge.premium {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(251, 191, 36, 0.2) 100%);
+  color: rgb(251, 191, 36);
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.profile-badge.vip {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(196, 181, 253, 0.2) 100%);
+  color: rgb(196, 181, 253);
+  border-color: rgba(168, 85, 247, 0.5);
+}
+
+/* ===================================
+   ANIMATIONS
+   애니메이션
+   ================================= */
+
+@keyframes profilePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes profileFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes profileGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(91, 48, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(91, 48, 246, 0.6);
+  }
+}
+
+@keyframes profileSparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(360deg);
+  }
+}
+
+@keyframes profileShimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* 애니메이션 클래스 */
+.profile-pulse {
+  animation: profilePulse 2s ease-in-out infinite;
+}
+
+.profile-float {
+  animation: profileFloat 3s ease-in-out infinite;
+}
+
+.profile-glow {
+  animation: profileGlow 2s ease-in-out infinite;
+}
+
+.profile-sparkle {
+  animation: profileSparkle 2s ease-in-out infinite;
+}
+
+.profile-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background-size: 200px 100%;
+  animation: profileShimmer 2s ease-in-out infinite;
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   반응형 디자인
+   ================================= */
+
+/* 모바일 최적화 (기본) */
+@media (max-width: 400px) {
+  .profile-card {
+    padding: var(--profile-spacing-lg);
+  }
+  
+  .profile-modal {
+    padding: var(--profile-spacing-lg);
+    margin: var(--profile-spacing-md);
+  }
+  
+  .profile-chat-bubble {
+    max-width: 250px;
+    right: 1rem;
+  }
+}
+
+/* 태블릿 */
+@media (min-width: 768px) {
+  .profile-card {
+    padding: var(--profile-spacing-2xl);
+  }
+  
+  .profile-modal {
+    max-width: 500px;
+  }
+  
+  .profile-chat-bubble {
+    max-width: 350px;
+    right: 2rem;
+  }
+}
+
+/* 데스크톱 */
+@media (min-width: 1024px) {
+  .profile-card {
+    padding: var(--profile-spacing-3xl);
+  }
+  
+  .profile-modal {
+    max-width: 600px;
+  }
+  
+  .profile-chat-bubble {
+    max-width: 400px;
+    right: 3rem;
+  }
+}
+
+/* ===================================
+   ACCESSIBILITY
+   접근성
+   ================================= */
+
+/* 모션 감소 설정 */
+@media (prefers-reduced-motion: reduce) {
+  .profile-pulse,
+  .profile-float,
+  .profile-glow,
+  .profile-sparkle,
+  .profile-shimmer {
+    animation: none;
+  }
+  
+  .profile-card,
+  .profile-button-primary,
+  .profile-button-secondary,
+  .profile-mission-card {
+    transition: none;
+  }
+}
+
+/* 고대비 모드 */
+@media (prefers-contrast: high) {
+  .profile-card,
+  .profile-modal,
+  .profile-chat-bubble-inner {
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .profile-glass,
+  .profile-glass-strong,
+  .profile-glass-subtle {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* 포커스 스타일 */
+.profile-button-primary:focus,
+.profile-button-secondary:focus,
+.profile-mission-card:focus {
+  outline: 2px solid rgba(91, 48, 246, 0.8);
+  outline-offset: 2px;
+}
+
+/* ===================================
+   UTILITY CLASSES
+   유틸리티 클래스
+   ================================= */
+
+.profile-text-gradient {
+  background: linear-gradient(135deg, #5b30f6 0%, #8054f2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.profile-text-gold {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.profile-shadow-lg {
+  box-shadow: var(--profile-card-shadow);
+}
+
+.profile-backdrop-blur {
+  backdrop-filter: blur(var(--profile-blur-lg));
+  -webkit-backdrop-filter: blur(var(--profile-blur-lg));
+}
+
+.profile-gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ===================================
+   LAYOUT UTILITIES
+   레이아웃 유틸리티
+   ================================= */
 
 .profile-container {
   max-width: 400px;
   margin: 0 auto;
-  padding: 20px;
-  background-color: var(--profile-bg);
-  color: var(--profile-text);
-  min-height: 100vh;
+  padding: 0 var(--profile-spacing-md);
 }
 
-.profile-header {
-  text-align: center;
-  margin-bottom: 30px;
+.profile-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--profile-spacing-lg);
 }
 
-.profile-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
+.profile-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--profile-spacing-lg);
 }
 
-.profile-content {
-  background-color: var(--profile-card);
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
+.profile-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* 🎨 CSS 디자인 시스템 - 게임 플랫폼 프로필 전용 */
-:root {
-  /* 🎯 네온 퍼플 계열 (Primary Colors) */
-  --neon-purple-1: #7b29cd;  /* 다크 퍼플 */
-  --neon-purple-2: #870dd1;  /* 미디엄 퍼플 */
-  --neon-purple-3: #5b30f6;  /* 브라이트 퍼플 (Primary) */
-  --neon-purple-4: #8054f2;  /* 라이트 퍼플 (Accent) */
-  
-  /* 🎮 게임 테마 색상 */
-  --game-gold: #FFD700;      /* 사이버 토큰, 보상 */
-  --game-success: #10b981;   /* 성공, 승리 */
-  --game-warning: #f59e0b;   /* 경고, 주의 */
-  --game-error: #ef4444;     /* 오류, 실패 */
-  
-  /* 🌈 확장 색상 팔레트 */
-  --color-blue-400: #60a5fa;  /* STANDARD 랭크 */
-  --color-blue-500: #3b82f6;  /* 정보, 알림 */
-  --color-green-400: #4ade80; /* 성공, 완료 */
-  --color-green-500: #22c55e; /* 체크인, 달성 */
-  --color-orange-300: #fdba74; /* Flash Offer 텍스트 */
-  --color-orange-400: #fb923c; /* PREMIUM 랭크 */
-  --color-orange-500: #f97316; /* 긴급, 한정시간 */
-  --color-purple-400: #c084fc; /* VIP 랭크 */
-  --color-purple-500: #a855f7; /* 특별 이벤트 */
-  --color-red-300: #fca5a5;   /* 경고 텍스트 */
-  --color-red-400: #f87171;   /* 오류 상태 */
-  --color-red-500: #ef4444;   /* 실패, 거부 */
-  --color-yellow-400: #facc15; /* 스트릭, 연속 접속 */
-  --color-yellow-500: #eab308; /* 레벨, 경험치 */
-  
-  /* 🎨 배경 및 표면 색상 */
-  --bg-primary: #0a0a0f;     /* 메인 배경 */
-  --bg-secondary: #161621;   /* 카드 배경 */
-  --bg-tertiary: #1e1e2e;    /* 입력 필드, 모달 */
-  --surface-elevated: #242438; /* 호버, 엘리베이티드 */
-  
-  /* 🔤 Exo 폰트 시스템 */
-  --font-family: 'Exo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-size: 14px; /* 기본 크기 */
-  
-  /* 📏 간격 시스템 (8px 기반) */
-  --spacing-1: 8px;   /* 0.5rem */
-  --spacing-2: 16px;  /* 1rem */
-  --spacing-3: 24px;  /* 1.5rem */
-  --spacing-4: 32px;  /* 2rem */
-  --spacing-6: 48px;  /* 3rem */
-  --spacing-8: 64px;  /* 4rem */
-  
-  /* 🎭 보더 및 라운딩 */
-  --radius: 0.75rem;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  
-  /* ✨ 섀도우 시스템 */
-  --shadow-elegant: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-button: 0 4px 16px rgba(91, 48, 246, 0.3);
-  --shadow-button-hover: 0 6px 24px rgba(91, 48, 246, 0.4);
-  
-  /* 🌈 그라데이션 효과 */
-  --gradient-primary: linear-gradient(135deg, var(--neon-purple-3) 0%, var(--neon-purple-1) 100%);
-  --gradient-card: linear-gradient(145deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-  --gradient-flash: linear-gradient(to right, rgba(249, 115, 22, 0.2), rgba(239, 68, 68, 0.2), rgba(249, 115, 22, 0.2));
+.profile-flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* 🔤 타이포그래피 클래스 */
-.game-title {
-  font-family: var(--font-family);
-  font-weight: 700;
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
+.profile-space-y-sm > * + * {
+  margin-top: var(--profile-spacing-sm);
 }
 
-.game-subtitle {
-  font-family: var(--font-family);
-  font-weight: 500;
-  letter-spacing: -0.025em;
+.profile-space-y-md > * + * {
+  margin-top: var(--profile-spacing-md);
 }
 
-.game-body {
-  font-family: var(--font-family);
-  font-weight: 400;
-  letter-spacing: -0.01em;
+.profile-space-y-lg > * + * {
+  margin-top: var(--profile-spacing-lg);
 }
 
-.exo-bold {
-  font-weight: 700;
-  letter-spacing: -0.035em;
+.profile-space-y-xl > * + * {
+  margin-top: var(--profile-spacing-xl);
 }
 
-.exo-medium {
-  font-weight: 500;
-  letter-spacing: -0.025em;
+/* ===================================
+   DARK THEME SPECIFIC
+   다크 테마 전용
+   ================================= */
+
+[data-theme="dark"] {
+  --profile-card-bg: rgba(10, 10, 10, 0.9);
+  --profile-card-border: rgba(255, 255, 255, 0.05);
 }
 
-.exo-regular {
-  font-weight: 400;
-  letter-spacing: -0.01em;
+[data-theme="dark"] .profile-text-primary {
+  color: rgba(255, 255, 255, 0.95);
 }
 
-/* ✨ 섀도우 효과 클래스 */
-.shadow-elegant {
-  box-shadow: var(--shadow-elegant);
+[data-theme="dark"] .profile-text-secondary {
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.shadow-button {
-  box-shadow: var(--shadow-button);
+[data-theme="dark"] .profile-text-muted {
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.shadow-button:hover {
-  box-shadow: var(--shadow-button-hover);
+/* ===================================
+   PERFORMANCE OPTIMIZATIONS
+   성능 최적화
+   ================================= */
+
+.profile-will-change-transform {
+  will-change: transform;
 }
 
-/* 🌈 그라데이션 클래스 */
-.gradient-primary {
-  background: var(--gradient-primary);
+.profile-will-change-opacity {
+  will-change: opacity;
 }
 
-.gradient-card {
-  background: var(--gradient-card);
+.profile-contain-layout {
+  contain: layout;
 }
 
-.bg-gradient-flash {
-  background: var(--gradient-flash);
+.profile-contain-paint {
+  contain: paint;
 }
 
-/* 🎮 버튼 애니메이션 */
-.button-primary {
-  background: var(--neon-purple-3);
-  transition: all 0.2s ease;
-  color: #ffffff !important;
+.profile-hardware-acceleration {
+  transform: translate3d(0, 0, 0);
 }
 
-.button-primary:hover {
-  background: var(--neon-purple-2);
-  transform: translateY(-1px);
-}
-
-/* ⚡ Flash Offer 애니메이션 */
-@keyframes flash-pulse {
-  0%, 100% { opacity: 0.3; scale: 1; }
-  50% { opacity: 0.6; scale: 1.02; }
-}
-
-.flash-offer-bg {
-  animation: flash-pulse 2s infinite ease-in-out;
-}
-
-/* 💎 토큰 관련 스타일 */
-.text-game-gold {
-  color: var(--game-gold) !important;
-}
-
-.bg-game-gold\/10 {
-  background-color: rgba(255, 215, 0, 0.1) !important;
-}
-
-.bg-game-gold\/20 {
-  background-color: rgba(255, 215, 0, 0.2) !important;
-}
-
-.border-game-gold\/20 {
-  border-color: rgba(255, 215, 0, 0.2) !important;
-}
-
-.border-game-gold\/30 {
-  border-color: rgba(255, 215, 0, 0.3) !important;
-}
-
-/* 🎯 랭크 시스템 색상 */
-.rank-standard {
-  --rank-bg: rgba(59, 130, 246, 0.2);
-  --rank-text: #60a5fa;
-  --rank-border: rgba(59, 130, 246, 0.3);
-}
-
-.rank-premium {
-  --rank-bg: rgba(249, 115, 22, 0.2);
-  --rank-text: #fb923c;
-  --rank-border: rgba(249, 115, 22, 0.3);
-}
-
-.rank-vip {
-  --rank-bg: rgba(168, 85, 247, 0.2);
-  --rank-text: #c084fc;
-  --rank-border: rgba(168, 85, 247, 0.3);
-}
-
-/* 🔥 스트릭 및 연속 접속 */
-@keyframes streak-glow {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
-  }
-  50% { 
-    box-shadow: 0 0 30px rgba(250, 204, 21, 0.6);
-  }
-}
-
-.streak-container {
-  animation: streak-glow 3s infinite ease-in-out;
-}
-
-/* 📱 반응형 레이아웃 */
-.popup-mode {
-  max-width: 400px;
-  max-height: 750px;
-  margin: 0 auto;
-  overflow-y: auto;
-}
-
-/* 🎨 그라데이션 테두리 */
-.border-gradient {
-  position: relative;
-  background: var(--bg-secondary);
-}
-
-.border-gradient::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  background: linear-gradient(135deg, var(--neon-purple-3), var(--neon-purple-1));
-  border-radius: inherit;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: xor;
-}
-
-/* 📝 텍스트 유틸리티 */
-.line-clamp-2 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.text-uppercase {
-  text-transform: uppercase;
-}
-
-/* 🎯 호버 효과 */
-.hover\:bg-game-gold\/10:hover {
-  background-color: rgba(255, 215, 0, 0.1) !important;
-}
-
-.hover\:bg-orange-500\/10:hover {
-  background-color: rgba(249, 115, 22, 0.1) !important;
-}
-
-.hover\:bg-primary\/10:hover {
-  background-color: rgba(91, 48, 246, 0.1) !important;
-}
-
-/* 🎨 배경 투명도 시스템 */
-.bg-opacity-10 { background-color: rgba(var(--bg-color), 0.1); }
-.bg-opacity-20 { background-color: rgba(var(--bg-color), 0.2); }
-.bg-opacity-30 { background-color: rgba(var(--bg-color), 0.3); }
-
-/* 🌙 다크 테마 시스템 */
-.dark {
-  --background: var(--bg-primary);
-  --foreground: #ffffff;
-  --card: var(--bg-secondary);
-  --card-foreground: #ffffff;
-  --popover: var(--bg-tertiary);
-  --popover-foreground: #ffffff;
-  --primary: var(--neon-purple-3);
-  --primary-foreground: #ffffff;
-  --secondary: var(--bg-tertiary);
-  --secondary-foreground: #ffffff;
-  --muted: var(--bg-tertiary);
-  --muted-foreground: #b8b8b8;
-  --accent: var(--neon-purple-4);
-  --accent-foreground: #ffffff;
-  --destructive: var(--game-error);
-  --destructive-foreground: #ffffff;
-  --border: #2a2a3a;
-  --input: var(--bg-tertiary);
-  --ring: var(--neon-purple-2);
-}
-
-/* 🎨 다크 테마 텍스트 시스템 */
-.dark * {
-  color: #ffffff !important;
-  font-family: var(--font-family);
-}
-
-.dark .text-muted-foreground {
-  color: #b8b8b8 !important;
-}
-
-.dark .text-primary {
-  color: var(--neon-purple-3) !important;
-}
-
-.dark .text-destructive {
-  color: var(--game-error) !important;
-}
-
-/* 🎮 게임 버튼 스타일 */
-.mode-button {
-  position: relative;
-  background: transparent;
-  border: 1px solid #2a2a3a;
-  color: #b8b8b8 !important;
-  transition: all 0.3s ease;
-}
-
-.mode-button.active {
-  background: var(--neon-purple-3);
-  border-color: var(--neon-purple-3);
-  color: #ffffff !important;
-  box-shadow: 0 4px 16px rgba(91, 48, 246, 0.3);
-}
-
-.mode-button:hover:not(.active) {
-  border-color: #3a3a4a;
-  color: #ffffff !important;
-}
-
-/* 📱 입력 필드 스타일 */
-.dark input {
-  color: #ffffff !important;
-  background-color: var(--bg-tertiary) !important;
-  font-family: var(--font-family);
-}
-
-.dark input::placeholder {
-  color: #888 !important;
-}
-
-.dark textarea {
-  color: #ffffff !important;
-  background-color: var(--bg-tertiary) !important;
-  font-family: var(--font-family);
-}
-
-.dark textarea::placeholder {
-  color: #888 !important;
-}
-
-/* 🎯 체크박스 및 UI 요소 */
-.dark [data-state="checked"] {
-  background-color: var(--neon-purple-3) !important;
-  border-color: var(--neon-purple-3) !important;
-}
-
-.dark [data-state="indeterminate"] {
-  background-color: var(--neon-purple-3) !important;
-}
+/* ===================================
+   END OF PROFILE CSS
+   ================================= */

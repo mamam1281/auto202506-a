@@ -1,7 +1,9 @@
 'use client';
 
 import { Suspense } from 'react';
-import ProfileContainer from '../../components/profile/ProfileContainer';
+// Make sure the path is correct; for example, if the correct path is '../../components/ProfileContainer', update as follows:
+import ProfileContainer from '../../components/ProfileContainer';
+// If the file does not exist, create 'ProfileContainer.tsx' in the appropriate directory.
 import GamePopupLayout from '../../components/GamePopupLayout';
 
 function PopupLoadingSkeleton() {

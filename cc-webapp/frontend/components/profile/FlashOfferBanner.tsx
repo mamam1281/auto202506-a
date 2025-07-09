@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Clock, X, Zap, ExternalLink } from 'lucide-react';
+import { Card } from '../ui/basic/card';
+import { Button } from '../ui/basic/button';
 import type { FlashOffer } from './types';
 
 interface FlashOfferBannerProps {
@@ -25,9 +28,11 @@ export function FlashOfferBanner({ offer, onClose, onClaim, onVisitSite }: Flash
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        setTimeLeft(`${hours}시간 ${minutes}분 ${seconds}초`);
+        
+        setTimeLeft(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
       } else {
         setIsExpired(true);
+        clearInterval(interval);
       }
     }, 1000);
 
@@ -44,107 +49,99 @@ export function FlashOfferBanner({ offer, onClose, onClaim, onVisitSite }: Flash
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -50 }}
-        className="relative w-full p-4 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl border border-orange-500/30"
+        className="relative"
       >
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="text-lg font-bold text-orange-300">{offer.title}</h3>
+        <Card className="p-4 bg-gradient-to-r from-orange-500/20 to-red-500/20 border-orange-500/30 shadow-elegant">
+          {/* Close Button */}
           {onClose && (
-            <button onClick={onClose} className="text-white/60 hover:text-white">
-              ×
-            </button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="absolute top-2 right-2 h-6 w-6 p-0 text-white/70 hover:text-white z-10"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           )}
-        </div>
-        
-        <div className="flex justify-between items-center mb-3">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-white">
-              {offer.salePrice.toLocaleString()}원
-            </span>
-            <span className="text-sm line-through text-white/60">
-              {offer.originalPrice.toLocaleString()}원
-            </span>
-            <span className="px-2 py-1 bg-red-500 text-white text-xs rounded-full">
-              {offer.discountPercent}% 할인
-            </span>
-          </div>
-        </div>
-        
-        <div className="flex justify-between items-center">
-          <span className="text-yellow-400 text-sm font-medium">
-            ⏰ {timeLeft} 남음
-          </span>
-          
-          <div className="flex gap-2">
-            {onClaim && (
-              <button
-                onClick={() => onClaim(offer.id)}
-                className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
+
+          <div className="flex items-center gap-4">
+            {/* Icon */}
+            <div className="flex-shrink-0">
+              <motion.div
+                animate={{ rotate: [0, -10, 10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center"
               >
-                구매하기
-              </button>
-            )}
-            {onVisitSite && (
-              <button
-                onClick={onVisitSite}
-                className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors"
-              >
-                사이트 방문
-              </button>
-            )}
-          </div>
-        </div>
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-    <p className="text-sm text-muted-foreground mb-2">{offer.description}</p>
-               
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground line-through">
-                      {offer.originalPrice}💎
-                    </span>
-                    <span className="text-lg text-orange-300 game-subtitle">
-                      {offer.discountPrice}💎
-                    </span>
-                    <span className="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs border border-green-500/30">
-                      -{offer.discount}%
+                <Zap className="w-6 h-6 text-white" />
+              </motion.div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-white mb-1">
+                {offer.title}
+              </h3>
+              <p className="text-sm text-muted-foreground mb-2">{offer.description}</p>
+              
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                    className="px-2 py-1 bg-red-500/30 rounded-lg"
+                  >
+                    <Clock className="w-4 h-4 text-red-300 inline mr-1" />
+                    <span className="text-sm font-bold text-red-300">{timeLeft}</span>
+                  </motion.div>
+                  
+                  <div className="px-2 py-1 bg-orange-500/30 rounded-lg">
+                    <span className="text-sm font-bold text-orange-300">
+                      {offer.discount}% 보너스
                     </span>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div className="flex flex-col gap-2 ml-4">
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-2">
+              {onClaim && (
                 <Button
-                  onClick={() => onClaim?.(offer.id)}
-                  className="h-10 bg-orange-500 hover:bg-orange-600 text-white border-0 shadow-button"
+                  onClick={() => onClaim(offer.id)}
+                  className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold"
+                  size="sm"
                 >
-                  지금 받기
+                  지금 받기!
                 </Button>
-                
+              )}
+              
+              {onVisitSite && (
                 <Button
                   onClick={onVisitSite}
                   variant="outline"
                   size="sm"
-                  className="text-xs text-orange-300 border-orange-500/30 hover:bg-orange-500/10"
+                  className="text-orange-300 border-orange-500/50 hover:bg-orange-500/10"
                 >
                   <ExternalLink className="w-3 h-3 mr-1" />
-                  본사 사이트
+                  사이트 방문
                 </Button>
-              </div>
+              )}
             </div>
-
-            {/* Urgency text */}
-            <motion.div
-              animate={{ opacity: [0.7, 1, 0.7] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="mt-3 text-xs text-red-300"
-            >
-              ⚠️ 시간이 지나면 사라져요! 놓치지 마세요!
-            </motion.div>
           </div>
+
+          {/* Animated warning */}
+          <motion.div
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="mt-3 text-xs text-red-300"
+          >
+            ⚠️ 시간이 지나면 사라져요! 놓치지 마세요!
+          </motion.div>
         </Card>
       </motion.div>
     </AnimatePresence>
   );
 }
+
+// Default export for convenience
+export default FlashOfferBanner;

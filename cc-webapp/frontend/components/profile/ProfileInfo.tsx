@@ -1,61 +1,53 @@
 'use client';
 
 import { useState } from 'react';
-import type { UserProfile } from './types';
+import ProfileHeader from './ProfileHeader';
+import ProfileStats from './ProfileStats';
+import ProfileActions from './ProfileActions';
+import type { User } from './types';
 
 interface ProfileInfoProps {
-  profile: UserProfile;
+  user?: User;
+  onLogout?: () => void;
 }
 
-export default function ProfileInfo({ profile }: ProfileInfoProps) {
-  // 기본 랭크가 없는 경우 "STANDARD"로 표시
-  const userRank = profile.rank || 'STANDARD';
-  
-  // 랭크에 따른 스타일 클래스
-  const getRankClass = (rank: string) => {
-    switch (rank.toUpperCase()) {
-      case 'VIP':
-        return 'rank-vip';
-      case 'PREMIUM':
-        return 'rank-premium';
-      case 'STANDARD':
-      default:
-        return 'rank-standard';
-    }
+export default function ProfileInfo({ 
+  user,
+  onLogout = () => console.log('Logout clicked')
+}: ProfileInfoProps) {
+  // Mock user data if not provided
+  const defaultUser: User = {
+    id: 1,
+    nickname: 'GameMaster',
+    cyber_token_balance: 1500,
+    rank: 'PREMIUM',
+    level: 15,
+    experience: 750,
+    experienceRequired: 1000,
+    wins: 42,
+    loginStreak: 8,
+    completedMissions: 23,
+    email: 'user@example.com'
   };
 
+  const currentUser = user || defaultUser;
+
   return (
-    <div className="profile-info">
-      <div className="profile-section">
-        <div className="profile-avatar">
-          {profile.nickname.charAt(0).toUpperCase()}
-        </div>
-        
-        <div className="profile-details">
-          <h2 className="profile-nickname">{profile.nickname}</h2>
-          <div className={`profile-rank ${getRankClass(userRank)}`}>
-            {userRank}
-          </div>
-        </div>
-      </div>
-      
-      <div className="profile-stats">
-        <div className="stats-item">
-          <span className="stats-label">사이버 토큰</span>
-          <span className="stats-value token-balance">
-            <span className="token-icon">💰</span>
-            {profile.cyber_token_balance}
-          </span>
-        </div>
-      </div>
-      
-      <div className="profile-actions">
-        <button className="profile-button primary">게임 시작</button>
-        <button className="profile-button secondary">설정</button>
-      </div>
+    <div className="w-full max-w-md mx-auto space-y-6 p-4">
+      {/* Profile Header */}
+      <ProfileHeader user={currentUser} />
+
+      {/* Profile Stats */}
+      <ProfileStats user={currentUser} />
+
+      {/* Profile Actions */}
+      <ProfileActions onLogout={onLogout} />
     </div>
   );
 }
+          </span>
+        </div>
+      </div>
       
       <div className="profile-actions">
         <button className="profile-button primary">게임 시작</button>

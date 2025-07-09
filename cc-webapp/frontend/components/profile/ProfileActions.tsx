@@ -1,43 +1,70 @@
 'use client';
 
-import { Settings, LogOut, Home } from 'lucide-react';
-
-interface ProfileActionsProps {
-  onLogout: () => void;
-}
+import { Play, Settings, LogOut, ExternalLink } from 'lucide-react';
+import ActionButton from './ActionButton';
+import type { ProfileActionsProps } from './types';
 
 export default function ProfileActions({ onLogout }: ProfileActionsProps) {
-  const handleGoHome = () => {
-    if (typeof window !== 'undefined') {
-      window.close(); // 팝업 창 닫기
-    }
+  const handleGameStart = () => {
+    console.log('Starting game...');
+    // Navigate to game selection or main game
+  };
+
+  const handleSettings = () => {
+    console.log('Opening settings...');
+    // Navigate to settings page
+  };
+
+  const handleVisitSite = () => {
+    console.log('Visiting main site...');
+    // Open main company site
+    window.open('https://company-site.com', '_blank');
   };
 
   return (
-    <div className="flex flex-col gap-3 mt-auto">
-      {/* 홈으로 돌아가기 */}
-      <button
-        onClick={handleGoHome}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[var(--color-purple-primary)] hover:bg-[var(--color-purple-secondary)] text-white font-medium transition-all duration-200 hover-lift"
+    <div className="space-y-4">
+      {/* Primary Action */}
+      <ActionButton
+        icon={Play}
+        variant="primary"
+        size="lg"
+        fullWidth={true}
+        onClick={handleGameStart}
       >
-        <Home size={20} />
-        홈으로 돌아가기
-      </button>
-      
-      {/* 설정 */}
-      <button className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl glassmorphism hover:bg-white/5 text-[var(--color-text-primary)] font-medium transition-all duration-200 hover-lift">
-        <Settings size={20} />
-        설정
-      </button>
-      
-      {/* 로그아웃 */}
-      <button
+        게임 시작
+      </ActionButton>
+
+      {/* Secondary Actions */}
+      <div className="grid grid-cols-2 gap-3">
+        <ActionButton
+          icon={Settings}
+          variant="secondary"
+          size="md"
+          onClick={handleSettings}
+        >
+          설정
+        </ActionButton>
+
+        <ActionButton
+          icon={ExternalLink}
+          variant="secondary"
+          size="md"
+          onClick={handleVisitSite}
+        >
+          본사 사이트
+        </ActionButton>
+      </div>
+
+      {/* Logout Button */}
+      <ActionButton
+        icon={LogOut}
+        variant="danger"
+        size="md"
+        fullWidth={true}
         onClick={onLogout}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[var(--color-error)]/10 hover:bg-[var(--color-error)]/20 text-[var(--color-error)] border border-[var(--color-error)]/20 font-medium transition-all duration-200 hover-lift"
       >
-        <LogOut size={20} />
         로그아웃
-      </button>
+      </ActionButton>
     </div>
   );
 }

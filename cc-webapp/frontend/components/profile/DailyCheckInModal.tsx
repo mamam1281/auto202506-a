@@ -1,10 +1,16 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Gift, Sparkles, X, Star, Award, Calendar, 
-  TrendingUp, Clock 
+  Gift, 
+  Sparkles, 
+  X, 
+  Star, 
+  Calendar, 
+  TrendingUp, 
+  Award, 
+  Clock 
 } from 'lucide-react';
 import { Button } from '../ui/basic/button';
 import { Card } from '../ui/basic/card';
@@ -257,26 +263,13 @@ export function DailyCheckInModal({
                           ${isSpecial && !isCompleted ? 'border-game-gold/30 shadow-sm' : ''}
                         `}
                       >
-                        <span className={`text-xs mb-1 ${isSpecial ? 'font-bold text-game-gold' : ''}`}>
-                          Day {day}
-                        </span>
-                        <span className={`game-subtitle ${isSpecial ? 'text-lg' : ''}`}>{reward}💎</span>
+                        <span className="font-bold">{day}일</span>
+                        <span className="text-xs">{reward}💎</span>
                         {isCompleted && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                          >
-                            <span className="text-xs bg-game-success/20 px-1.5 py-0.5 rounded-full">✓</span>
-                          </motion.div>
+                          <span className="text-xs">✓</span>
                         )}
                         {isToday && (
-                          <motion.div
-                            animate={{ opacity: [0.5, 1, 0.5] }}
-                            transition={{ duration: 1, repeat: Infinity }}
-                          >
-                            <span className="text-xs bg-primary/30 px-1.5 py-0.5 rounded-full">!</span>
-                          </motion.div>
+                          <span className="text-xs animate-pulse">▶️</span>
                         )}
                       </motion.div>
                     );
@@ -378,3 +371,6 @@ export function DailyCheckInModal({
     </AnimatePresence>
   );
 }
+
+// Default export for convenience
+export default DailyCheckInModal;
