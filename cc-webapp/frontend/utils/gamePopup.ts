@@ -9,10 +9,10 @@ export interface GamePopupConfig {
   scrollbars?: boolean;
 }
 
-// 기본 게임 창 설정
+// 기본 게임 창 설정 - 400x750으로 고정됨
 export const DEFAULT_GAME_POPUP_CONFIG: Partial<GamePopupConfig> = {
-  width: 480,
-  height: 720,
+  width: 400,
+  height: 750,
   resizable: false,
   scrollbars: false,
 };

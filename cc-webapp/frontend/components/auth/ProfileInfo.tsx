@@ -54,10 +54,7 @@ export default function ProfileInfo({ profile }: ProfileInfoProps) {
           </span>
         </div>
         
-        <div className="stats-item">
-          <span className="stats-label">계정 번호</span>
-          <span className="stats-value">#{profile.id}</span>
-        </div>
+        {/* 계정 번호 삭제, #NaN 표시 제거 */}
       </div>
       
       <div className="profile-actions">
