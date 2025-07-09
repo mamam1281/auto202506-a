@@ -50,22 +50,12 @@ export default function RegisterPage() {
 
   return (
     <div className={`auth-container ${initialized ? (isPopup ? 'popup-mode' : '') : ''} ${initialized ? 'auth-initialized' : 'auth-initializing'}`}>
-      <div className="auth-content">
-        <div className="auth-header">
-          <h1 className="auth-title">회원가입</h1>
-          <p className="auth-subtitle">초대코드와 닉네임을 입력하세요</p>
-        </div>
-        
-        <RegisterForm 
-          onRegister={handleRegister} 
-          isLoading={isLoading} 
-          error={error} 
-        />
-        
-        <div className="auth-footer">
-          <p>이미 계정이 있으신가요? <Link href="/auth/login" className="auth-link">로그인</Link></p>
-        </div>
-      </div>
+      <RegisterForm 
+        onRegister={handleRegister} 
+        isLoading={isLoading} 
+        error={error} 
+        onSwitchToLogin={() => router.push('/auth/login')}
+      />
     </div>
   );
 }
