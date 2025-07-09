@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card } from '../ui/basic/card';
-import { Button } from '../ui/basic/button';
 import { ExternalLink } from 'lucide-react';
 import { Mission } from './types';
 
@@ -15,18 +13,16 @@ interface MissionCardsProps {
 
 export function MissionCards({ missions, onMissionClick, onVisitSite }: MissionCardsProps) {
   return (
-    <Card className="p-6 bg-card border-elegant shadow-elegant">
+    <div className="p-6 bg-card border-elegant shadow-elegant rounded-xl">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg text-white game-subtitle">오늘의 미션</h3>
-        <Button
+        <button
           onClick={onVisitSite}
-          variant="link"
-          size="sm"
-          className="text-primary hover:text-primary/80 text-sm p-0"
+          className="text-primary hover:text-primary/80 text-sm p-0 flex items-center gap-1"
         >
-          <ExternalLink className="w-4 h-4 mr-1" />
+          <ExternalLink className="w-4 h-4" />
           더 많은 미션
-        </Button>
+        </button>
       </div>
       
       <div className="space-y-4">
@@ -38,7 +34,7 @@ export function MissionCards({ missions, onMissionClick, onVisitSite }: MissionC
           />
         ))}
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -99,6 +95,10 @@ function MissionCard({ mission, onClick }: MissionCardProps) {
             ></div>
           </div>
         </div>
+      </div>
+    </motion.div>
+  );
+}
       </div>
     </motion.div>
   );

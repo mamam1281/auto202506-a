@@ -1,11 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Clock, X, ExternalLink } from 'lucide-react';
-import { Button } from '../ui/basic/button';
-import { Card } from '../ui/basic/card';
-import { FlashOffer } from './types';
+import type { FlashOffer } from './types';
 
 interface FlashOfferBannerProps {
   offer: FlashOffer;
@@ -28,11 +25,9 @@ export function FlashOfferBanner({ offer, onClose, onClaim, onVisitSite }: Flash
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        
-        setTimeLeft(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+        setTimeLeft(`${hours}시간 ${minutes}분 ${seconds}초`);
       } else {
         setIsExpired(true);
-        clearInterval(interval);
       }
     }, 1000);
 
@@ -49,56 +44,61 @@ export function FlashOfferBanner({ offer, onClose, onClaim, onVisitSite }: Flash
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -50 }}
-        className="relative"
+        className="relative w-full p-4 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl border border-orange-500/30"
       >
-        <Card className="relative overflow-hidden border-2 border-orange-500/50 bg-gradient-to-r from-orange-500/20 via-red-500/20 to-orange-500/20">
-          {/* Animated background pulse */}
-          <motion.div
-            animate={{ 
-              opacity: [0.3, 0.6, 0.3],
-              scale: [1, 1.02, 1]
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-red-500/10"
-          />
-
-          <div className="relative p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <motion.div
-                  animate={{ rotate: [0, 15, -15, 0] }}
-                  transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                >
-                  <Zap className="w-5 h-5 text-yellow-400" />
-                </motion.div>
-                <span className="text-sm text-orange-300 game-subtitle">⚡ FLASH OFFER</span>
-                <div className="flex items-center gap-1 px-2 py-1 rounded bg-red-500/30 border border-red-500/50">
-                  <Clock className="w-3 h-3 text-red-300" />
-                  <span className="text-xs text-red-300 font-mono">{timeLeft}</span>
-                </div>
-              </div>
-              
-              {onClose && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onClose}
-                  className="h-6 w-6 p-0 text-muted-foreground hover:text-white"
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              )}
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <h3 className="text-lg text-white game-subtitle mb-1">{offer.title}</h3>
-                <p className="text-sm text-muted-foreground mb-2">{offer.description}</p>
-                
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-lg font-bold text-orange-300">{offer.title}</h3>
+          {onClose && (
+            <button onClick={onClose} className="text-white/60 hover:text-white">
+              ×
+            </button>
+          )}
+        </div>
+        
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-bold text-white">
+              {offer.salePrice.toLocaleString()}원
+            </span>
+            <span className="text-sm line-through text-white/60">
+              {offer.originalPrice.toLocaleString()}원
+            </span>
+            <span className="px-2 py-1 bg-red-500 text-white text-xs rounded-full">
+              {offer.discountPercent}% 할인
+            </span>
+          </div>
+        </div>
+        
+        <div className="flex justify-between items-center">
+          <span className="text-yellow-400 text-sm font-medium">
+            ⏰ {timeLeft} 남음
+          </span>
+          
+          <div className="flex gap-2">
+            {onClaim && (
+              <button
+                onClick={() => onClaim(offer.id)}
+                className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
+              >
+                구매하기
+              </button>
+            )}
+            {onVisitSite && (
+              <button
+                onClick={onVisitSite}
+                className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors"
+              >
+                사이트 방문
+              </button>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+    <p className="text-sm text-muted-foreground mb-2">{offer.description}</p>
+               
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-muted-foreground line-through">

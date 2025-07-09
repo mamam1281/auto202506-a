@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Gift, Calendar, Clock, Star, X, Sparkles, Award, TrendingUp } from 'lucide-react';
+import { 
+  Gift, Sparkles, X, Star, Award, Calendar, 
+  TrendingUp, Clock 
+} from 'lucide-react';
 import { Button } from '../ui/basic/button';
 import { Card } from '../ui/basic/card';
 
