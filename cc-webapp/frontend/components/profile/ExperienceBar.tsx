@@ -1,6 +1,7 @@
 'use client';
 
 import { TrendingUp } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ExperienceBarProps {
   current: number;
@@ -8,6 +9,7 @@ interface ExperienceBarProps {
   showValues?: boolean;
   showIcon?: boolean;
   height?: 'sm' | 'md' | 'lg';
+  className?: string;
 }
 
 export default function ExperienceBar({ 
@@ -15,45 +17,43 @@ export default function ExperienceBar({
   required,
   showValues = true,
   showIcon = true,
-  height = 'md'
+  height = 'md',
+  className
 }: ExperienceBarProps) {
   const percentage = Math.min((current / required) * 100, 100);
-
-  const heightClasses = {
+  
+  const heights = {
     sm: 'h-2',
     md: 'h-3',
     lg: 'h-4'
   };
 
   return (
-    <div className="w-full">
-      {(showValues || showIcon) && (
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            {showIcon && (
-              <TrendingUp size={16} className="text-blue-400" />
-            )}
-            <span className="text-sm text-white font-medium">경험치</span>
-          </div>
-          
-          {showValues && (
-            <span className="text-xs text-gray-400">
-              {current.toLocaleString()} / {required.toLocaleString()}
-            </span>
-          )}
+    <div className={cn('space-y-2', className)}>
+      {showValues && (
+        <div className="flex items-center justify-between text-sm">
+          {showIcon && <TrendingUp className="w-4 h-4 text-blue-400" />}
+          <span className="text-muted-foreground">
+            {current.toLocaleString()} / {required.toLocaleString()} XP
+          </span>
+          <span className="text-blue-400 font-semibold">
+            {Math.round(percentage)}%
+          </span>
         </div>
       )}
       
-      <div className={`
-        ${heightClasses[height]}
-        w-full bg-gray-700 rounded-full overflow-hidden
-      `}>
+      <div className={cn(
+        'w-full bg-muted/20 rounded-full overflow-hidden',
+        heights[height]
+      )}>
         <div 
-          className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500 ease-out"
+          className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
           style={{ width: `${percentage}%` }}
         />
       </div>
-      
+    </div>
+  );
+}
       {showValues && (
         <div className="text-center mt-1">
           <span className="text-xs text-blue-400 font-medium">

@@ -1,16 +1,18 @@
 'use client';
 
 import { LucideIcon } from 'lucide-react';
+import { Button } from '@/components/ui/basic/button';
+import { cn } from '@/lib/utils';
 
 interface ActionButtonProps {
-  icon?: LucideIcon;
+  icon: LucideIcon;
   children: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
-  disabled?: boolean;
-  loading?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
+  className?: string;
 }
 
 export default function ActionButton({ 
@@ -19,49 +21,36 @@ export default function ActionButton({
   variant = 'primary',
   size = 'md',
   fullWidth = false,
+  onClick,
   disabled = false,
-  loading = false,
-  onClick 
+  className
 }: ActionButtonProps) {
-  const baseClasses = 'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 hover-lift';
-  
-  const variantClasses = {
-    primary: 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-button',
-    secondary: 'bg-white/10 hover:bg-white/20 text-white border border-white/20',
-    danger: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white'
+  const variants = {
+    primary: 'bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white',
+    secondary: 'bg-muted/20 hover:bg-muted/30 text-white border border-muted/40',
+    danger: 'bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/40'
   };
 
-  const sizeClasses = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-4 py-3 text-base',
-    lg: 'px-6 py-4 text-lg'
-  };
-
-  const iconSizes = {
-    sm: 16,
-    md: 18,
-    lg: 20
+  const sizes = {
+    sm: 'h-8 px-3 text-sm',
+    md: 'h-10 px-4 text-base',
+    lg: 'h-12 px-6 text-lg'
   };
 
   return (
-    <button
-      className={`
-        ${baseClasses}
-        ${variantClasses[variant]}
-        ${sizeClasses[size]}
-        ${fullWidth ? 'w-full' : ''}
-        ${disabled || loading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}
-      `}
+    <Button
       onClick={onClick}
-      disabled={disabled || loading}
-    >
-      {loading ? (
-        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-      ) : (
-        Icon && <Icon size={iconSizes[size]} />
+      disabled={disabled}
+      className={cn(
+        variants[variant],
+        sizes[size],
+        fullWidth && 'w-full',
+        'flex items-center gap-2 font-semibold transition-all duration-200',
+        className
       )}
-      
+    >
+      <Icon className="w-4 h-4" />
       {children}
-    </button>
+    </Button>
   );
 }

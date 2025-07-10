@@ -1,31 +1,30 @@
 'use client';
 
+import { cn } from '@/lib/utils';
+
 interface ProgressCircleProps {
   percentage: number;
   size?: number;
   strokeWidth?: number;
   color?: string;
-  backgroundColor?: string;
   showText?: boolean;
-  text?: string;
+  className?: string;
 }
 
 export default function ProgressCircle({ 
   percentage,
-  size = 80,
-  strokeWidth = 8,
-  color = '#5b30f6',
-  backgroundColor = '#374151',
+  size = 40,
+  strokeWidth = 4,
+  color = '#5B30F6',
   showText = true,
-  text
+  className
 }: ProgressCircleProps) {
   const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const strokeDasharray = circumference;
+  const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="relative inline-flex items-center justify-center">
+    <div className={cn('relative', className)} style={{ width: size, height: size }}>
       <svg
         width={size}
         height={size}
@@ -36,9 +35,10 @@ export default function ProgressCircle({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={backgroundColor}
+          stroke="currentColor"
           strokeWidth={strokeWidth}
-          fill="transparent"
+          fill="none"
+          className="text-muted/20"
         />
         
         {/* Progress circle */}
@@ -48,18 +48,18 @@ export default function ProgressCircle({
           r={radius}
           stroke={color}
           strokeWidth={strokeWidth}
-          fill="transparent"
+          fill="none"
           strokeLinecap="round"
-          strokeDasharray={strokeDasharray}
+          strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
-          className="transition-all duration-500 ease-out"
+          className="transition-all duration-500 ease-in-out"
         />
       </svg>
       
       {showText && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-sm font-bold text-white">
-            {text || `${Math.round(percentage)}%`}
+          <span className="text-xs font-semibold text-white">
+            {Math.round(percentage)}%
           </span>
         </div>
       )}

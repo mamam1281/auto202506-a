@@ -1,6 +1,7 @@
 'use client';
 
 import { Coins } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TokenDisplayProps {
   amount: number;
@@ -8,50 +9,63 @@ interface TokenDisplayProps {
   showIcon?: boolean;
   showLabel?: boolean;
   onClick?: () => void;
+  className?: string;
 }
 
 export default function TokenDisplay({ 
   amount, 
   size = 'md',
   showIcon = true,
-  showLabel = true,
-  onClick 
+  showLabel = false,
+  onClick,
+  className
 }: TokenDisplayProps) {
-  const sizeClasses = {
-    sm: 'text-sm px-2 py-1',
-    md: 'text-base px-3 py-2',
-    lg: 'text-lg px-4 py-3'
+  const sizes = {
+    sm: {
+      container: 'gap-1',
+      icon: 'w-4 h-4',
+      text: 'text-sm',
+      label: 'text-xs'
+    },
+    md: {
+      container: 'gap-2',
+      icon: 'w-5 h-5',
+      text: 'text-base',
+      label: 'text-sm'
+    },
+    lg: {
+      container: 'gap-2',
+      icon: 'w-6 h-6',
+      text: 'text-lg font-bold',
+      label: 'text-base'
+    }
   };
 
-  const iconSizes = {
-    sm: 16,
-    md: 20,
-    lg: 24
-  };
+  const sizeStyles = sizes[size];
 
   return (
     <div 
-      className={`
-        ${sizeClasses[size]}
-        inline-flex items-center gap-2
-        bg-gradient-to-r from-yellow-500/20 to-orange-500/20
-        border border-yellow-500/30
-        rounded-xl
-        text-yellow-400
-        font-bold
-        ${onClick ? 'cursor-pointer hover:bg-yellow-500/10 transition-colors' : ''}
-      `}
+      className={cn(
+        'flex items-center',
+        sizeStyles.container,
+        onClick && 'cursor-pointer hover:opacity-80 transition-opacity',
+        className
+      )}
       onClick={onClick}
     >
       {showIcon && (
-        <Coins size={iconSizes[size]} className="text-yellow-400" />
+        <Coins className={cn(sizeStyles.icon, 'text-yellow-400')} />
       )}
-      
-      {showLabel && (
-        <span className="text-xs text-yellow-300 mr-1">토큰</span>
-      )}
-      
-      <span>{amount.toLocaleString()}</span>
+      <div className="flex flex-col items-center">
+        <span className={cn(sizeStyles.text, 'text-yellow-400 font-semibold')}>
+          {amount.toLocaleString()}💎
+        </span>
+        {showLabel && (
+          <span className={cn(sizeStyles.label, 'text-muted-foreground')}>
+            토큰
+          </span>
+        )}
+      </div>
     </div>
   );
 }

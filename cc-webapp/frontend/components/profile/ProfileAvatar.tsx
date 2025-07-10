@@ -1,42 +1,42 @@
 'use client';
 
-import type { User } from './types';
+import { User } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import type { User as UserType } from './types';
 
 interface ProfileAvatarProps {
-  user: User;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  user: UserType;
+  size?: 'sm' | 'md' | 'lg';
   showOnlineStatus?: boolean;
+  className?: string;
 }
 
-export default function ProfileAvatar({ 
-  user, 
+export default function ProfileAvatar({
+  user,
   size = 'md',
-  showOnlineStatus = false 
+  showOnlineStatus = false,
+  className
 }: ProfileAvatarProps) {
-  const getInitials = (nickname: string) => {
-    return nickname.substring(0, 2).toUpperCase();
-  };
-
-  const sizeClasses = {
-    sm: 'w-8 h-8 text-sm',
-    md: 'w-12 h-12 text-lg',
-    lg: 'w-16 h-16 text-xl',
-    xl: 'w-20 h-20 text-2xl'
+  const sizes = {
+    sm: 'w-8 h-8',
+    md: 'w-12 h-12',
+    lg: 'w-16 h-16'
   };
 
   return (
-    <div className="relative">
-      <div className={`
-        ${sizeClasses[size]}
-        rounded-full 
-        bg-gradient-to-br from-[var(--color-purple-primary)] to-[var(--color-purple-secondary)] 
-        flex items-center justify-center 
-        text-white font-bold
-        border-2 border-white/20
-        shadow-elegant
-      `}>
-        {getInitials(user.nickname)}
+    <div className={cn('relative', className)}>
+      <div className={cn(
+        'rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center',
+        sizes[size]
+      )}>
+        <User className="w-1/2 h-1/2 text-white" />
       </div>
+      {showOnlineStatus && (
+        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background"></div>
+      )}
+    </div>
+  );
+}
       
       {showOnlineStatus && (
         <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>

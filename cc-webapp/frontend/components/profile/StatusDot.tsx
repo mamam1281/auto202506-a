@@ -1,76 +1,40 @@
 'use client';
 
+import { cn } from '@/lib/utils';
+
 interface StatusDotProps {
-  status: 'online' | 'away' | 'busy' | 'offline';
+  status: 'online' | 'offline' | 'away' | 'busy';
   size?: 'sm' | 'md' | 'lg';
   showPulse?: boolean;
-  showLabel?: boolean;
+  className?: string;
 }
 
-export default function StatusDot({ 
-  status, 
+export default function StatusDot({
+  status,
   size = 'md',
-  showPulse = true,
-  showLabel = false 
+  showPulse = false,
+  className
 }: StatusDotProps) {
-  const sizeClasses = {
+  const sizes = {
     sm: 'w-2 h-2',
     md: 'w-3 h-3',
     lg: 'w-4 h-4'
   };
 
-  const statusConfig = {
-    online: {
-      color: 'bg-green-500',
-      label: '온라인',
-      pulse: showPulse
-    },
-    away: {
-      color: 'bg-yellow-500',
-      label: '자리비움',
-      pulse: false
-    },
-    busy: {
-      color: 'bg-red-500', 
-      label: '바쁨',
-      pulse: false
-    },
-    offline: {
-      color: 'bg-gray-500',
-      label: '오프라인',
-      pulse: false
-    }
+  const colors = {
+    online: 'bg-green-500',
+    offline: 'bg-gray-500',
+    away: 'bg-yellow-500',
+    busy: 'bg-red-500'
   };
 
-  const config = statusConfig[status];
-
   return (
-    <div className="flex items-center gap-2">
-      <div className="relative">
-        <div className={`
-          ${sizeClasses[size]}
-          ${config.color}
-          rounded-full
-          border-2 border-white
-        `} />
-        
-        {config.pulse && (
-          <div className={`
-            ${sizeClasses[size]}
-            ${config.color}
-            rounded-full
-            absolute top-0 left-0
-            animate-ping
-            opacity-75
-          `} />
-        )}
-      </div>
-      
-      {showLabel && (
-        <span className="text-sm text-gray-400 font-medium">
-          {config.label}
-        </span>
-      )}
-    </div>
+    <div className={cn(
+      'rounded-full border-2 border-background',
+      sizes[size],
+      colors[status],
+      showPulse && status === 'online' && 'animate-pulse',
+      className
+    )} />
   );
 }

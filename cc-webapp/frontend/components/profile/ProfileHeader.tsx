@@ -7,7 +7,7 @@ import LevelBadge from './LevelBadge';
 import RankBadge from './RankBadge';
 import ExperienceBar from './ExperienceBar';
 import StatusDot from './StatusDot';
-import type { ProfileHeaderProps } from './types';
+import type { ProfileHeaderProps, RANK_COLORS } from './types';
 
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const [showOnlineStatus] = useState(true);
@@ -39,7 +39,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               <h2 className="text-xl font-bold text-white truncate">
                 {user.nickname}
               </h2>
-              <RankBadge rank={user.rank || 'STANDARD'} size="sm" />
+              <RankBadge rank={(user.rank as keyof typeof RANK_COLORS) || 'STANDARD'} size="sm" />
             </div>
             
             <div className="flex items-center gap-3 mb-3">

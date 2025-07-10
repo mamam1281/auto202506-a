@@ -1,67 +1,70 @@
 'use client';
 
 import { LucideIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface StatCardProps {
   icon: LucideIcon;
   label: string;
-  value: string | number;
+  value: number | string;
   color?: string;
   size?: 'sm' | 'md' | 'lg';
   clickable?: boolean;
   onClick?: () => void;
+  className?: string;
 }
 
 export default function StatCard({ 
   icon: Icon, 
   label, 
   value,
-  color = 'text-blue-400',
+  color = 'text-primary',
   size = 'md',
   clickable = false,
-  onClick 
+  onClick,
+  className
 }: StatCardProps) {
-  const sizeClasses = {
-    sm: 'p-3',
-    md: 'p-4', 
-    lg: 'p-6'
+  const sizes = {
+    sm: {
+      container: 'p-3',
+      icon: 'w-4 h-4',
+      value: 'text-lg',
+      label: 'text-xs'
+    },
+    md: {
+      container: 'p-4',
+      icon: 'w-5 h-5',
+      value: 'text-xl',
+      label: 'text-sm'
+    },
+    lg: {
+      container: 'p-6',
+      icon: 'w-6 h-6',
+      value: 'text-2xl',
+      label: 'text-base'
+    }
   };
 
-  const iconSizes = {
-    sm: 16,
-    md: 20,
-    lg: 24
-  };
-
-  const valueClasses = {
-    sm: 'text-lg',
-    md: 'text-xl',
-    lg: 'text-2xl'
-  };
+  const sizeStyles = sizes[size];
 
   return (
-    <div 
-      className={`
-        ${sizeClasses[size]}
-        glassmorphism rounded-xl
-        ${clickable ? 'cursor-pointer hover:bg-white/10 transition-colors' : ''}
-        hover-lift
-      `}
+    <div
+      className={cn(
+        'profile-glass rounded-xl',
+        sizeStyles.container,
+        clickable && 'cursor-pointer hover:scale-105 transition-transform',
+        className
+      )}
       onClick={clickable ? onClick : undefined}
     >
-      <div className="flex items-center gap-3">
-        <div className={`p-2 rounded-lg bg-white/5 ${color}`}>
-          <Icon size={iconSizes[size]} />
-        </div>
-        
-        <div className="flex-1">
-          <p className="text-gray-400 text-xs uppercase tracking-wide font-medium">
-            {label}
-          </p>
-          <p className={`${valueClasses[size]} font-bold ${color} mt-1`}>
-            {typeof value === 'number' ? value.toLocaleString() : value}
-          </p>
-        </div>
+      <div className="flex items-center justify-between mb-2">
+        <Icon className={cn(sizeStyles.icon, color)} />
+      </div>
+      <div className={cn(sizeStyles.value, 'font-bold text-white mb-1')}>
+        {typeof value === 'number' ? value.toLocaleString() : value}
+      </div>
+      <div className={cn(sizeStyles.label, 'text-muted-foreground')}>
+        {label}
       </div>
     </div>
   );
