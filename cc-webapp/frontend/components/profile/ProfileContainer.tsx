@@ -186,36 +186,3 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
     </div>
   );
 }
-      />
-    </div>
-  );
-}
-      {/* Profile Stats */}
-      <ProfileStats user={profileUser} />
-
-      {/* Mission Cards */}
-      <MissionCards missions={missions} />
-
-      {/* Profile Actions */}
-      <ProfileActions onLogout={handleLogout} />
-
-      {/* Daily Check-in Modal */}
-      <DailyCheckInModal
-        isOpen={showDailyCheckIn}
-        onClose={() => setShowDailyCheckIn(false)}
-        onClaim={handleDailyCheckInClaim}
-        currentStreak={profileUser.loginStreak || 0}
-        lastCheckIn={localStorage.getItem('lastCheckIn')}
-        todayReward={50}
-      />
-
-      {/* CJ Chat Bubble */}
-      <CJChatBubble
-        user={profileUser}
-        messages={cjMessages}
-        onActionClick={handleCJActionClick}
-        onVisitSite={handleCJVisitSite}
-      />
-    </div>
-  );
-}

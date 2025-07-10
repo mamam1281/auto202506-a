@@ -20,11 +20,7 @@ export default function ProfileViewPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 프로필 데이터 로딩 시뮬레이션
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 600);
-
+    const timer = setTimeout(() => setIsLoading(false), 600);
     return () => clearTimeout(timer);
   }, []);
 
@@ -62,7 +58,7 @@ export default function ProfileViewPage() {
     </div>
   );
 }
-}
+      </div>
     </div>
   );
 }
