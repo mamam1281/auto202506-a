@@ -54,13 +54,3 @@ export default function ExperienceBar({
     </div>
   );
 }
-      {showValues && (
-        <div className="text-center mt-1">
-          <span className="text-xs text-blue-400 font-medium">
-            {percentage.toFixed(1)}% 완료
-          </span>
-        </div>
-      )}
-    </div>
-  );
-}
