@@ -1,21 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '../auth/AuthContext';
 import ProfileHeader from './ProfileHeader';
 import ProfileStats from './ProfileStats';
 import ProfileActions from './ProfileActions';
 import FlashOfferBanner from './FlashOfferBanner';
-import { DailyCheckInModal } from './DailyCheckInModal';
+import DailyCheckInModal from './DailyCheckInModal';
 import MissionCards from './MissionCards';
-import { CJChatBubble } from './CJChatBubble';
 import type { User, FlashOffer, Mission, CJMessage, ProfileContainerProps } from './types';
 
-export default function ProfileContainer({ className = '' }: ProfileContainerProps) {
-  const { isAuthenticated, logout, userData } = useAuth();
+// CJChatBubble 임시 컴포넌트 (실제 구현 전까지만 사용)
+const CJChatBubble = ({ user, messages, onActionClick, onVisitSite }: any) => (
+  <div className="profile-chat-bubble">
+    <div className="profile-chat-bubble-inner">
+      <div className="text-white">
+        <p>AI 도우미 메시지</p>
+      </div>
+    </div>
+  </div>
+);
 
+export default function ProfileContainer({ className = '' }: ProfileContainerProps) {
   // Mock user data - replace with actual data fetching
-  const [user] = useState<User>(userData || {
+  const [user] = useState<User>({
     id: 1,
     nickname: 'GameMaster',
     cyber_token_balance: 1500,
@@ -80,17 +87,6 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
         action: 'start_game',
         params: { gameType: 'recommended' }
       }
-    },
-    {
-      id: 'msg-002',
-      message: '💰 토큰이 부족해 보이네요. 본사 사이트에서 더 많은 토큰을 획득해보세요!',
-      emotion: 'encouraging',
-      timestamp: new Date().toISOString(),
-      actionSuggestion: {
-        text: '토큰 충전하기',
-        action: 'visit_site',
-        params: { page: 'token_purchase' }
-      }
     }
   ]);
 
@@ -142,37 +138,11 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
 
   const handleCJActionClick = (action: string, params?: any) => {
     console.log('CJ Action clicked:', action, params);
-    
-    switch (action) {
-      case 'start_game':
-        // Navigate to game
-        break;
-      case 'visit_site':
-        window.open('https://company-site.com', '_blank');
-        break;
-      default:
-        console.log('Unknown action:', action);
-    }
   };
 
   const handleCJVisitSite = () => {
     window.open('https://company-site.com', '_blank');
   };
-
-  if (!isAuthenticated || !user) {
-    return (
-      <div className="w-full h-full flex items-center justify-center p-4">
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-[var(--color-text-primary)] mb-2">
-            로그인이 필요합니다
-          </h2>
-          <p className="text-[var(--color-text-secondary)] text-sm">
-            프로필을 보려면 먼저 로그인해주세요.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={`profile-container space-y-6 ${className}`}>
@@ -209,6 +179,39 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
       {/* CJ Chat Bubble */}
       <CJChatBubble
         user={user}
+        messages={cjMessages}
+        onActionClick={handleCJActionClick}
+        onVisitSite={handleCJVisitSite}
+      />
+    </div>
+  );
+}
+      />
+    </div>
+  );
+}
+      {/* Profile Stats */}
+      <ProfileStats user={profileUser} />
+
+      {/* Mission Cards */}
+      <MissionCards missions={missions} />
+
+      {/* Profile Actions */}
+      <ProfileActions onLogout={handleLogout} />
+
+      {/* Daily Check-in Modal */}
+      <DailyCheckInModal
+        isOpen={showDailyCheckIn}
+        onClose={() => setShowDailyCheckIn(false)}
+        onClaim={handleDailyCheckInClaim}
+        currentStreak={profileUser.loginStreak || 0}
+        lastCheckIn={localStorage.getItem('lastCheckIn')}
+        todayReward={50}
+      />
+
+      {/* CJ Chat Bubble */}
+      <CJChatBubble
+        user={profileUser}
         messages={cjMessages}
         onActionClick={handleCJActionClick}
         onVisitSite={handleCJVisitSite}

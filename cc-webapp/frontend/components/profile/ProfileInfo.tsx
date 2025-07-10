@@ -45,14 +45,3 @@ export default function ProfileInfo({
     </div>
   );
 }
-          </span>
-        </div>
-      </div>
-      
-      <div className="profile-actions">
-        <button className="profile-button primary">게임 시작</button>
-        <button className="profile-button secondary">설정</button>
-      </div>
-    </div>
-  );
-}
