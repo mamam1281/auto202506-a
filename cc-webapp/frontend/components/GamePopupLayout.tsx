@@ -1,22 +1,11 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { closePopup } from '../utils/gamePopup';
+import { closePopup, isPopupWindow } from '../utils/gamePopup';
 
 interface GamePopupLayoutProps {
   children: React.ReactNode;
 }
-
-// 팝업 윈도우인지 확인하는 함수
-const isPopupWindow = (): boolean => {
-  if (typeof window === 'undefined') return false;
-  
-  try {
-    return window.opener !== null && window.opener !== window;
-  } catch (error) {
-    return false;
-  }
-};
 
 /**
  * 게임 팝업 창 전용 레이아웃
@@ -31,20 +20,35 @@ export default function GamePopupLayout({
       console.warn('GamePopupLayout should only be used in popup windows');
     }
 
-    // 팝업 창 크기 최적화 (420x850)
+    // 팝업 창 크기 최적화 (게임별 맞춤)
     const optimizePopupSize = () => {
-      // 가챠 팝업은 420x850 크기로 최적화
       const path = window.location.pathname;
-      if (path.includes('/games/gacha/popup')) {
-        try {
-          // 브라우저 창 전체 크기를 조정 (브라우저 UI 영역 포함)
-          const extraHeight = 80; // 브라우저 헤더 높이 고려
+      const extraHeight = 80; // 브라우저 헤더 높이 고려
+      
+      try {
+        if (path.includes('/games/gacha/popup')) {
+          // 가챠 팝업: 420x850
           window.resizeTo(420, 850 + extraHeight);
-          
-          console.log('가챠 팝업 크기 설정 시도: 420x930');
-        } catch (e) {
-          console.warn('팝업 창 크기 변경 권한이 없습니다:', e);
+          console.log('가챠 팝업 크기 설정: 420x930');
+        } else if (path.includes('/games/rps/popup')) {
+          // RPS 팝업: 420x650 (컴팩트)
+          window.resizeTo(420, 650 + extraHeight);
+          console.log('RPS 팝업 크기 설정: 420x730');
+        } else if (path.includes('/games/slots/popup')) {
+          // 슬롯 팝업: 420x850
+          window.resizeTo(420, 850 + extraHeight);
+          console.log('슬롯 팝업 크기 설정: 420x930');
+        } else if (path.includes('/games/roulette/popup')) {
+          // 룰렛 팝업: 420x850
+          window.resizeTo(420, 850 + extraHeight);
+          console.log('룰렛 팝업 크기 설정: 420x930');
+        } else if (path.includes('/profile') && path.includes('popup')) {
+          // 프로필 팝업: 420x850
+          window.resizeTo(420, 850 + extraHeight);
+          console.log('프로필 팝업 크기 설정: 420x930');
         }
+      } catch (e) {
+        console.warn('팝업 창 크기 변경 권한이 없습니다:', e);
       }
     };
 

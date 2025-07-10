@@ -124,7 +124,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     const baseButtonClasses = "p-1 hover:bg-white/20 active:scale-95 transition-all duration-normal rounded-full";
     
     // 로그인/회원가입/프로필 페이지 여부 확인
-    const isAuthPage = pathname?.includes('/auth') || pathname?.includes('/profile/view');
+    const isAuthPage = pathname?.includes('/auth') || pathname?.includes('/profile');
     
     if (isAuthPage) {
       return <div className="px-3" />; // 인증 페이지에서는 빈 공간만 제공

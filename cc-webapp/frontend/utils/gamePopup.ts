@@ -11,33 +11,54 @@ export interface PopupConfig {
   scrollable?: boolean;
 }
 
-// 표준 팝업 크기 설정 (400x750 기본)
+// 표준 팝업 크기 설정 (420x850 기본)
 export const POPUP_CONFIGS = {
   profile: {
-    width: 400,
-    height: 750,
+    width: 420,
+    height: 850,
     title: '프로필',
     resizable: true,
     scrollable: true
   },
   profileEdit: {
-    width: 400,
-    height: 600,
+    width: 420,
+    height: 750,
     title: '프로필 편집',
     resizable: true,
     scrollable: true
   },
   settings: {
-    width: 450,
-    height: 500,
+    width: 420,
+    height: 650,
     title: '설정',
     resizable: false,
     scrollable: true
   },
   gacha: {
-    width: 500,
-    height: 700,
+    width: 420,
+    height: 850,
     title: '가챠',
+    resizable: false,
+    scrollable: false
+  },
+  rps: {
+    width: 420,
+    height: 650,
+    title: '가위바위보',
+    resizable: false,
+    scrollable: false
+  },
+  slots: {
+    width: 420,
+    height: 850,
+    title: '슬롯 게임',
+    resizable: false,
+    scrollable: false
+  },
+  roulette: {
+    width: 420,
+    height: 850,
+    title: '룰렛 게임',
     resizable: false,
     scrollable: false
   }
@@ -227,4 +248,164 @@ if (typeof window !== 'undefined') {
       window.dispatchEvent(event);
     }, 100);
   });
+}
+
+/**
+ * 게임 또는 페이지를 팝업으로 열기
+ * @param type - 열려는 페이지/게임 타입
+ * @param customConfig - 커스텀 팝업 설정 (선택사항)
+ * @returns 열린 팝업 윈도우 객체 또는 null
+ */
+export function openGamePopup(
+  type: string, 
+  customConfig?: Partial<PopupConfig>
+): Window | null {
+  if (typeof window === 'undefined') {
+    console.warn('openGamePopup can only be used in browser environment');
+    return null;
+  }
+
+  // 게임/페이지별 라우트 맵핑
+  const routeMap: Record<string, string> = {
+    'slots': '/games/slots/popup',
+    'gacha': '/games/gacha/popup',
+    'roulette': '/games/roulette/popup',
+    'rps': '/games/rps/popup',
+    'profile': '/profile',
+    'settings': '/settings',
+    'login': '/auth/login',
+    'register': '/auth/register'
+  };
+
+  // 기본 설정 가져오기
+  const defaultConfig = getGameConfig(type);
+  const config = { ...defaultConfig, ...customConfig };
+  
+  // 라우트 결정
+  const route = routeMap[type] || `/games/${type}/popup`;
+  const url = `${window.location.origin}${route}`;
+  
+  // 팝업 크기 자동 조정
+  const { width, height } = calculateAutoFitSize(config);
+  const { x, y } = calculatePopupPosition(width, height);
+  
+  // 팝업 옵션 생성
+  const features = [
+    `width=${width}`,
+    `height=${height}`,
+    `left=${x}`,
+    `top=${y}`,
+    `scrollbars=${config.scrollable ? 'yes' : 'no'}`,
+    `resizable=${config.resizable ? 'yes' : 'no'}`,
+    'menubar=no',
+    'toolbar=no',
+    'location=no',
+    'status=no'
+  ].join(',');
+
+  try {
+    // 팝업 열기
+    const popup = window.open(url, `game_${type}_${Date.now()}`, features);
+    
+    if (!popup) {
+      console.error('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.');
+      // 팝업이 차단된 경우 현재 탭에서 열기
+      window.open(url, '_blank');
+      return null;
+    }
+
+    // 팝업 포커스
+    popup.focus();
+    
+    console.log(`${type} 팝업이 열렸습니다:`, { width, height, url });
+    return popup;
+    
+  } catch (error) {
+    console.error('팝업 열기 실패:', error);
+    return null;
+  }
+}
+
+/**
+ * 게임/페이지 타입별 기본 설정 가져오기
+ */
+function getGameConfig(type: string): PopupConfig {
+  // 미리 정의된 설정이 있으면 사용
+  if (type in POPUP_CONFIGS) {
+    return POPUP_CONFIGS[type as PopupType];
+  }
+  
+  // 게임별 기본 설정
+  const gameConfigs: Record<string, PopupConfig> = {
+    'gacha': {
+      width: 420,
+      height: 850,
+      title: '가챠 게임',
+      resizable: false,
+      scrollable: false
+    },
+    'slots': {
+      width: 420,
+      height: 850,
+      title: '슬롯 게임',
+      resizable: false,
+      scrollable: false
+    },
+    'roulette': {
+      width: 420,
+      height: 850,
+      title: '룰렛 게임',
+      resizable: false,
+      scrollable: false
+    },
+    'rps': {
+      width: 420,
+      height: 650,
+      title: '가위바위보',
+      resizable: false,
+      scrollable: false
+    },
+    'profile': {
+      width: 420,
+      height: 850,
+      title: '프로필',
+      resizable: true,
+      scrollable: true
+    },
+    'login': {
+      width: 400,
+      height: 500,
+      title: '로그인',
+      resizable: false,
+      scrollable: true
+    },
+    'register': {
+      width: 400,
+      height: 600,
+      title: '회원가입',
+      resizable: false,
+      scrollable: true
+    }
+  };
+  
+  return gameConfigs[type] || {
+    width: 420,
+    height: 850,
+    title: type,
+    resizable: true,
+    scrollable: true
+  };
+}
+
+/**
+ * 팝업 윈도우인지 확인하는 함수
+ */
+export function isPopupWindow(): boolean {
+  if (typeof window === 'undefined') return false;
+  
+  try {
+    return window.opener !== null && window.opener !== window;
+  } catch (error) {
+    return false;
+  }
 }

@@ -74,14 +74,36 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
         ))}
       </div>
 
-      {/* Special Achievement Banner */}
+      {/* Special Achievement Banner - Enhanced Layout */}
       {(user.loginStreak || 0) >= 7 && (
-        <div className="profile-glass rounded-xl p-3 bg-gradient-to-r from-orange-500/20 to-red-500/20 border-orange-500/30">
-          <div className="flex items-center gap-2 text-orange-400">
-            <Flame size={18} className="animate-pulse" />
-            <span className="text-sm font-semibold">
-              🔥 연속 접속 달성! 특별 보너스 획득 가능!
-            </span>
+        <div className="profile-glass rounded-2xl p-5 bg-gradient-to-r from-orange-500/25 to-red-500/20 border-2 border-orange-400/40 
+                        shadow-lg shadow-orange-500/20 transform hover:scale-[1.02] transition-all duration-300">
+          <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+            {/* Left: Animated Icon */}
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-500/30 border border-orange-400/50">
+              <Flame size={24} className="text-orange-300 animate-pulse" />
+            </div>
+            
+            {/* Center: Content */}
+            <div className="space-y-1">
+              <div className="text-lg font-bold text-orange-200">
+                🔥 연속 접속 달성!
+              </div>
+              <div className="text-sm text-orange-300/90 leading-relaxed">
+                특별 보너스 획득 가능
+              </div>
+            </div>
+            
+            {/* Right: Action Button */}
+            <div className="flex items-center justify-center">
+              <button className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 
+                               text-white text-sm font-medium rounded-lg
+                               hover:from-orange-400 hover:to-red-400
+                               transform hover:scale-105 transition-all duration-200
+                               shadow-md">
+                수령
+              </button>
+            </div>
           </div>
         </div>
       )}

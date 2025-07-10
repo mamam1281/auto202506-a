@@ -15,7 +15,7 @@ export default function BottomNav() {
     { icon: Gift, label: '보상', path: '/rewards' },
     { icon: ShoppingBag, label: '상점', path: '/shop' },
     { icon: MessageCircle, label: '채팅', path: '/chat' },
-    { icon: User, label: '프로필', path: '/profile/view' },
+    { icon: User, label: '프로필', path: '/profile' },
   ];
   
   const isActive = (path: string) => {
@@ -38,7 +38,7 @@ export default function BottomNav() {
             key={item.path}
             onClick={() => {
               // 프로필 메뉴는 팝업으로 열기
-              if (item.path === '/profile/view') {
+              if (item.path === '/profile') {
                 openGamePopup('profile');
               } else {
                 router.push(item.path);

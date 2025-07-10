@@ -8,6 +8,7 @@ import FlashOfferBanner from './FlashOfferBanner';
 import DailyCheckInModal from './DailyCheckInModal';
 import MissionCards from './MissionCards';
 import type { User, FlashOffer, Mission, CJMessage, ProfileContainerProps } from './types';
+import '../../styles/profile.css';
 
 // CJChatBubble 임시 컴포넌트 (실제 구현 전까지만 사용)
 const CJChatBubble = ({ user, messages, onActionClick, onVisitSite }: any) => (
@@ -99,6 +100,14 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
     const storedLastCheckIn = localStorage.getItem('lastCheckIn');
     setLastCheckIn(storedLastCheckIn);
 
+    // 임시: 항상 모달 표시 (테스트용)
+    const timer = setTimeout(() => {
+      setShowDailyCheckIn(true);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+    
+    /* 원래 로직 (필요시 복원)
     const today = new Date().toDateString();
     
     if (!storedLastCheckIn || storedLastCheckIn !== today) {
@@ -109,6 +118,7 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
       
       return () => clearTimeout(timer);
     }
+    */
   }, []);
 
   const handleLogout = () => {
@@ -148,7 +158,7 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
   };
 
   return (
-    <div className={`profile-container space-y-6 ${className}`}>
+    <div className={`profile-container max-w-md mx-auto p-3 space-y-4 ${className}`}>
       {/* Flash Offer Banner */}
       <FlashOfferBanner
         offer={flashOffer}

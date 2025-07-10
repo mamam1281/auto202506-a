@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/basic/button';
 import { Card } from '../ui/basic/card';
+import { SimpleProgressBar } from '../SimpleProgressBar';
 
 // canvas-confetti가 설치되지 않았으므로 간단한 대체 함수 제공
 const confetti = (options: any) => {
@@ -109,11 +110,11 @@ export function DailyCheckInModal({
           exit={{ scale: 0.8, opacity: 0 }}
           className="w-full max-w-md"
         >
-          <Card className="p-6 bg-card border-elegant shadow-elegant relative overflow-hidden">
+          <Card className="p-6 bg-card border-elegant shadow-elegant relative max-h-[90vh] overflow-y-auto scrollbar-thin">
             {/* Background decoration */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 pointer-events-none" />
             <motion.div 
-              className="absolute top-0 left-0 w-full h-full opacity-20"
+              className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none"
               animate={{ 
                 background: [
                   'radial-gradient(circle at 10% 10%, var(--neon-purple-3) 0%, transparent 50%)',
@@ -145,7 +146,7 @@ export function DailyCheckInModal({
                         <Sparkles className="w-5 h-5 text-game-gold" />
                       </motion.div>
                     </h2>
-                    <p className="text-sm text-muted-foreground">매일 접속하여 보상을 받으세요!</p>
+                    <p className="text-base text-muted-foreground">매일 접속하여 보상을 받으세요!</p>
                   </div>
                 </div>
                 
@@ -159,40 +160,91 @@ export function DailyCheckInModal({
                 </Button>
               </div>
 
-              {/* Current streak display */}
-              <div className="mb-6 p-4 rounded-xl bg-primary/10 border border-primary/20 streak-container">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <Star className="w-5 h-5 text-color-yellow-400" />
-                    </motion.div>
-                    <span className="text-white game-subtitle exo-medium">연속 접속</span>
-                  </div>
-                  <motion.span 
-                    className="text-2xl text-primary game-subtitle exo-bold"
+              {/* Current streak display - Enhanced 3D Layout */}
+              <div className="mb-6 p-4 rounded-2xl bg-gradient-to-br from-primary/25 to-purple-500/20 
+                              border-2 border-primary/50 shadow-2xl shadow-primary/30 backdrop-blur-sm
+                              relative overflow-hidden">
+                
+                {/* 3D Background Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/10 pointer-events-none"></div>
+                <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+                
+                {/* Header Section - Icon + Title */}
+                <div className="flex items-center gap-3 mb-4 relative z-10">
+                  <motion.div
+                    className="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 border-2 border-yellow-400/40
+                               shadow-lg shadow-yellow-400/20"
                     animate={{ scale: [1, 1.05, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    {currentStreak}일
-                  </motion.span>
+                    <Star className="w-5 h-5 text-yellow-400" />
+                  </motion.div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-white leading-tight exo-bold drop-shadow-sm">연속 접속</h3>
+                    <p className="text-base text-white/80 leading-tight">매일 접속으로 보상 획득</p>
+                  </div>
                 </div>
                 
-                <div className="w-full h-3 bg-primary/10 rounded-full overflow-hidden">
-                  <motion.div 
-                    className="h-full bg-gradient-primary rounded-full" 
-                    style={{ width: `${(currentStreak % 7) * (100 / 7)}%` }}
-                    initial={{ x: -50, opacity: 0.5 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                  ></motion.div>
+                {/* Main Stats Row - Streak Number + Progress */}
+                <div className="grid grid-cols-[auto_1fr] gap-4 items-center mb-4 relative z-10">
+                  {/* Left: Large Streak Number */}
+                  <motion.div
+                    className="flex flex-col items-center justify-center px-4 py-3 rounded-xl 
+                               bg-gradient-to-br from-primary via-purple-600 to-primary/80 
+                               border-2 border-primary/60 shadow-xl shadow-primary/40 min-w-[80px] relative
+                               backdrop-blur-sm"
+                    animate={{ scale: [1, 1.02, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/20 rounded-xl"></div>
+                    <span className="text-2xl font-black text-white leading-none exo-bold drop-shadow-md relative z-10">{currentStreak}</span>
+                    <span className="text-sm font-medium text-white/90 leading-none mt-1 relative z-10">일째</span>
+                  </motion.div>
+                  
+                  {/* Right: Progress Section */}
+                  <div className="space-y-2">
+                    {/* Progress Info */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-base font-medium text-white/90 drop-shadow-sm">주간 진행률</span>
+                      <span className="text-base font-bold text-primary drop-shadow-sm">{currentStreak % 7}/7일</span>
+                    </div>
+                    
+                    {/* Progress Bar */}
+                    <div className="space-y-1">
+                      <SimpleProgressBar
+                        progress={(currentStreak % 7) * (100 / 7)}
+                        size="md"
+                        showPercentage={false}
+                        className="w-full"
+                      />
+                      <div className="flex items-center justify-between text-sm text-white/70">
+                        <span>시작</span>
+                        <span>7일 완주</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-xs text-color-yellow-400 mt-2 flex items-center justify-center gap-1">
-                  <Award className="w-3 h-3" />
-                  7일 연속 접속 시 특별 보너스 <span className="text-game-gold exo-bold">+200💎!</span>
-                </p>
+                
+                {/* Bottom Bonus Section - Expanded Layout */}
+                <div className="p-4 rounded-xl bg-gradient-to-r from-yellow-500/25 to-orange-500/20 
+                                border-2 border-yellow-400/50 shadow-xl shadow-yellow-400/20 relative z-10
+                                backdrop-blur-sm">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/10 rounded-xl"></div>
+                  <div className="flex items-center gap-4 relative z-10">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-400/40 
+                                    border border-yellow-400/60 shadow-lg shadow-yellow-400/30">
+                      <Award className="w-4 h-4 text-yellow-400" />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <div className="text-base font-bold text-yellow-300 leading-tight drop-shadow-sm">
+                        7일 달성 보너스
+                      </div>
+                      <div className="text-base font-black text-yellow-400 leading-tight drop-shadow-sm">
+                        +200💎 특별 보상
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Today's reward */}
@@ -222,12 +274,12 @@ export function DailyCheckInModal({
               </div>
 
               {/* Weekly reward calendar */}
-              <div className="mb-6">
-                <h3 className="text-sm text-white mb-3 exo-medium flex items-center gap-1.5">
+              <div className="mb-6 mt-8">
+                <h3 className="text-base text-white mb-4 exo-medium flex items-center" style={{ gap: '12px' }}>
                   <TrendingUp className="w-4 h-4 text-primary" />
-                  주간 보상 캘린더
+                  <span>주간 보상 캘린더</span>
                 </h3>
-                <div className="grid grid-cols-7 gap-2">
+                <div className="grid grid-cols-7 gap-3">
                   {dailyRewards.map((reward, index) => {
                     const day = index + 1;
                     const isCompleted = currentStreak >= day;
@@ -252,25 +304,44 @@ export function DailyCheckInModal({
                         }
                         transition={{ duration: 1.5, repeat: isToday ? Infinity : 0 }}
                         className={`
-                          aspect-square rounded-lg border flex flex-col items-center justify-center text-xs
-                          ${isSpecial ? 'border-width: 2px' : ''}
+                          aspect-square rounded-xl border-2 flex flex-col items-center justify-center
+                          relative overflow-hidden backdrop-blur-sm
+                          ${isSpecial ? 'border-width: 3px' : ''}
                           ${isCompleted 
-                            ? 'bg-game-success/20 border-game-success/50 text-game-success' 
+                            ? 'bg-game-success/25 border-game-success/60 text-game-success' 
                             : isToday 
-                              ? 'bg-primary/20 border-primary/50 text-primary' 
-                              : 'bg-muted/20 border-border text-muted-foreground'
+                              ? 'bg-primary/25 border-primary/60 text-primary' 
+                              : 'bg-muted/15 border-border/40 text-muted-foreground'
                           }
-                          ${isSpecial && !isCompleted ? 'border-game-gold/30 shadow-sm' : ''}
+                          ${isSpecial && !isCompleted ? 'border-game-gold/50 shadow-lg shadow-game-gold/20' : ''}
                         `}
                       >
-                        <span className="font-bold">{day}일</span>
-                        <span className="text-xs">{reward}💎</span>
-                        {isCompleted && (
-                          <span className="text-xs">✓</span>
+                        {/* Background gradient for special day */}
+                        {isSpecial && (
+                          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-transparent to-orange-400/10"></div>
                         )}
-                        {isToday && (
-                          <span className="text-xs animate-pulse">▶️</span>
-                        )}
+                        
+                        {/* Content */}
+                        <div className="relative z-10 flex flex-col items-center justify-center h-full">
+                          <div className="text-base font-bold mb-1">{day}</div>
+                          <div className="text-sm font-medium">{reward}💎</div>
+                          
+                          {/* Status indicators */}
+                          {isCompleted && (
+                            <div className="absolute top-0 right-0 w-5 h-5 bg-green-500 rounded-full 
+                                            flex items-center justify-center text-white text-sm font-bold
+                                            border-2 border-white shadow-lg transform translate-x-1 -translate-y-1">
+                              ✓
+                            </div>
+                          )}
+                          {isToday && (
+                            <div className="absolute top-0 right-0 w-5 h-5 bg-blue-500 rounded-full 
+                                            flex items-center justify-center animate-pulse
+                                            border-2 border-white shadow-lg transform translate-x-1 -translate-y-1">
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                          )}
+                        </div>
                       </motion.div>
                     );
                   })}
@@ -280,53 +351,42 @@ export function DailyCheckInModal({
               {/* Action buttons */}
               <div className="space-y-3">
                 {canClaim ? (
-                  <motion.div
-                    animate={{ 
-                      scale: [1, 1.03, 1],
-                      boxShadow: [
-                        '0 4px 16px rgba(91, 48, 246, 0.3)', 
-                        '0 6px 24px rgba(91, 48, 246, 0.5)', 
-                        '0 4px 16px rgba(91, 48, 246, 0.3)'
-                      ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
+                  <div>
                     <Button
                       onClick={() => {
                         triggerConfetti();
                         onClaim(currentStreak + 1);
                       }}
-                      className="w-full h-14 gradient-primary button-primary shadow-button text-white exo-bold text-lg"
+                      className="w-full h-14 bg-primary hover:bg-primary/90 
+                                 text-white font-semibold text-lg rounded-lg
+                                 transition-colors duration-200
+                                 shadow-md hover:shadow-lg
+                                 flex items-center justify-center gap-3"
                     >
-                      <motion.div 
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="mr-2"
-                      >
-                        <Gift className="w-6 h-6" />
-                      </motion.div>
-                      {todayReward}💎 받기!
-                      <motion.div 
-                        animate={{ x: [0, 3, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className="ml-2"
-                      >
-                        <Sparkles className="w-5 h-5 text-yellow-300" />
-                      </motion.div>
+                      <Gift className="w-5 h-5" />
+                      {todayReward}💎 받기
+                      <Sparkles className="w-4 h-4" />
                     </Button>
-                  </motion.div>
+                  </div>
                 ) : (
-                  <div className="text-center p-5 rounded-xl bg-muted/20 border border-border">
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                      className="mx-auto mb-2"
-                    >
-                      <Clock className="w-8 h-8 text-muted-foreground" />
-                    </motion.div>
-                    <p className="text-sm text-muted-foreground mb-2">오늘은 이미 받았어요!</p>
-                    <p className="text-xs text-muted-foreground bg-muted/30 py-1 px-2 rounded-lg inline-block">
-                      다음 보상까지: <span className="text-white">{timeUntilReset}</span>
+                  <div className="text-center p-6 rounded-xl bg-gradient-to-br from-slate-800/40 to-slate-900/60 
+                                  border-2 border-slate-700/50 shadow-xl shadow-slate-900/30 
+                                  backdrop-blur-sm relative overflow-hidden">
+                    {/* 세련된 배경 효과 */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/10 pointer-events-none"></div>
+                    <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+                    
+                    {/* 시계 아이콘 - motion 애니메이션 완전 제거 */}
+                    <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-slate-700/60 border-2 border-slate-600/50 
+                                    flex items-center justify-center shadow-lg shadow-slate-900/40 relative z-10">
+                      <Clock className="w-6 h-6 text-slate-400" />
+                    </div>
+                    
+                    {/* 안내 텍스트 크기 1단계 업 */}
+                    <p className="text-base font-semibold text-slate-300 mb-3 relative z-10">오늘은 이미 받았어요!</p>
+                    <p className="text-sm text-slate-400 bg-slate-700/40 py-2 px-3 rounded-lg inline-block 
+                                  border border-slate-600/30 shadow-sm relative z-10">
+                      다음 보상까지: <span className="text-white font-medium">{timeUntilReset}</span>
                     </p>
                   </div>
                 )}
@@ -352,15 +412,11 @@ export function DailyCheckInModal({
                   y: [0, -2, 0]
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="text-center mt-4 p-2 rounded-lg bg-game-warning/10"
+                className="text-center mt-4 p-3 rounded-lg bg-gradient-to-r from-amber-900/30 to-red-900/20 
+                           border border-amber-700/40 shadow-lg shadow-amber-900/20 backdrop-blur-sm"
               >
-                <div className="text-xs text-game-warning font-medium flex items-center justify-center gap-1">
-                  <motion.span
-                    animate={{ rotate: [0, 10, 0, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    ⚠️
-                  </motion.span>
+                <div className="text-base text-amber-300 font-medium flex items-center justify-center gap-2">
+                  <span>⚠️</span>
                   하루라도 놓치면 연속 기록이 초기화돼요!
                 </div>
               </motion.div>

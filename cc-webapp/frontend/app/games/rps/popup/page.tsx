@@ -1,14 +1,17 @@
 'use client';
 
 import React from 'react';
+import GamePopupLayout from '../../../../components/GamePopupLayout';
 import RPSGame from '../../../../components/games/rps/RPSGame';
 
 export default function RPSPopupPage() {
   return (
-    <div className="w-full min-h-fit max-h-screen flex items-center justify-center bg-transparent p-0">
-      <div className="w-full max-w-[400px] h-auto flex items-center justify-center">
-        <RPSGame isPopup={true} />
+    <GamePopupLayout>
+      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--color-primary-dark-navy)] to-black">
+        <div className="w-full max-w-[400px] h-auto flex items-center justify-center">
+          <RPSGame isPopup={true} />
+        </div>
       </div>
-    </div>
+    </GamePopupLayout>
   );
 }

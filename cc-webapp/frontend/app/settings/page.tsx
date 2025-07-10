@@ -16,7 +16,7 @@ export default function SettingsPage() {
           className="w-full"
         >
           <div className="flex items-center gap-2 mb-6">
-            <Link href="/profile/view">
+            <Link href="/profile">
               <Button variant="ghost" size="sm" className="p-0 h-8 w-8">
                 <ArrowLeft className="h-4 w-4" />
               </Button>

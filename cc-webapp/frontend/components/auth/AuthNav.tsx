@@ -56,7 +56,7 @@ export default function AuthNav({ isPopup = false }: AuthNavProps) {
   const openAuthPopup = (type: 'login' | 'register' | 'profile') => {
     if (isPopup) {
       // 이미 팝업 내부에서는 현재 창에서 이동
-      router.push(`/auth/${type === 'profile' ? '../profile/view' : type}`);
+      router.push(`/auth/${type === 'profile' ? '../profile' : type}`);
     } else {
       // 메인 창에서는 새 팝업으로 열기
       openGamePopup(type);
