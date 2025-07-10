@@ -1,11 +1,22 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { closeGamePopup, isPopupWindow } from '../utils/gamePopup';
+import { closePopup } from '../utils/gamePopup';
 
 interface GamePopupLayoutProps {
   children: React.ReactNode;
 }
+
+// 팝업 윈도우인지 확인하는 함수
+const isPopupWindow = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  
+  try {
+    return window.opener !== null && window.opener !== window;
+  } catch (error) {
+    return false;
+  }
+};
 
 /**
  * 게임 팝업 창 전용 레이아웃
@@ -54,7 +65,7 @@ export default function GamePopupLayout({
     // ESC 키로 창 닫기
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        closeGamePopup();
+        closePopup();
       }
     };
 

@@ -24,26 +24,34 @@ export default function MissionCards({
       case 'DAILY':
         return {
           bg: 'from-blue-500/20 to-blue-600/20',
-          border: 'border-blue-500/30',
-          text: 'text-blue-400'
+          border: 'border-blue-500/30 border-l-4 border-l-blue-500',
+          text: 'text-blue-400',
+          icon: '📅',
+          glow: 'shadow-blue-500/20'
         };
       case 'WEEKLY':
         return {
           bg: 'from-orange-500/20 to-orange-600/20',
-          border: 'border-orange-500/30',
-          text: 'text-orange-400'
+          border: 'border-orange-500/30 border-l-4 border-l-orange-500',
+          text: 'text-orange-400',
+          icon: '📊',
+          glow: 'shadow-orange-500/20'
         };
       case 'SPECIAL':
         return {
           bg: 'from-purple-500/20 to-purple-600/20',
-          border: 'border-purple-500/30',
-          text: 'text-purple-400'
+          border: 'border-purple-500/30 border-l-4 border-l-purple-500',
+          text: 'text-purple-400',
+          icon: '⭐',
+          glow: 'shadow-purple-500/20'
         };
       default:
         return {
           bg: 'from-gray-500/20 to-gray-600/20',
-          border: 'border-gray-500/30',
-          text: 'text-gray-400'
+          border: 'border-gray-500/30 border-l-4 border-l-gray-500',
+          text: 'text-gray-400',
+          icon: '🎯',
+          glow: 'shadow-gray-500/20'
         };
     }
   };
@@ -94,12 +102,20 @@ export default function MissionCards({
             >
               <Card 
                 className={`
-                  p-4 bg-gradient-to-r ${colors.bg} ${colors.border} border
-                  cursor-pointer transition-all duration-300
-                  ${isCompleted ? 'opacity-75' : 'hover:shadow-lg'}
+                  p-4 bg-gradient-to-r ${colors.bg} ${colors.border} border-2
+                  cursor-pointer transition-all duration-300 relative overflow-hidden
+                  ${isCompleted ? 'opacity-75' : `hover:shadow-2xl ${colors.glow} hover:border-opacity-60`}
                 `}
                 onClick={() => onMissionClick?.(mission)}
               >
+                {/* Category Badge */}
+                <div className="absolute top-3 right-3 flex items-center gap-2">
+                  <span className="text-xl drop-shadow-lg">{colors.icon}</span>
+                  <span className={`text-xs px-3 py-1.5 rounded-full bg-white/20 ${colors.text} font-bold border border-white/30 shadow-md backdrop-blur-sm`}>
+                    {getMissionTypeLabel(mission.type)}
+                  </span>
+                </div>
+
                 <div className="flex items-center gap-4">
                   {/* Mission Icon & Progress */}
                   <div className="relative">
@@ -127,41 +143,49 @@ export default function MissionCards({
                   </div>
 
                   {/* Mission Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`text-xs px-2 py-1 rounded-full bg-white/10 ${colors.text} font-semibold`}>
-                        {getMissionTypeLabel(mission.type)}
-                      </span>
-                      
-                      {mission.type === 'DAILY' && (
-                        <div className="flex items-center gap-1 text-xs text-gray-400">
-                          <Clock className="w-3 h-3" />
-                          <span>오늘</span>
-                        </div>
-                      )}
-                    </div>
-                    
+                  <div className="flex-1 min-w-0 pr-16">
                     <h4 className="font-semibold text-white text-sm mb-1 truncate">
                       {mission.title}
                     </h4>
                     
-                    <p className="text-xs text-gray-300 mb-2 line-clamp-2">
+                    <p className="text-xs text-gray-300 mb-3 line-clamp-2">
                       {mission.description}
                     </p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-400">진행률:</span>
-                        <span className={`text-xs font-semibold ${colors.text}`}>
-                          {mission.progress}/{mission.target}
-                        </span>
+
+                    {/* Enhanced Progress Display */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-400 font-medium">진행률:</span>
+                          <span className={`font-bold ${colors.text} bg-white/10 px-2 py-1 rounded-full`}>
+                            {mission.progress}/{mission.target}
+                          </span>
+                          <span className={`font-bold ${colors.text} bg-gradient-to-r from-white/20 to-white/10 px-2 py-1 rounded-full border border-white/20`}>
+                            {Math.round(progressPercentage)}%
+                          </span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1 bg-yellow-400/20 px-2 py-1 rounded-full border border-yellow-400/30">
+                          <span className="text-yellow-400 text-lg">💎</span>
+                          <span className="text-sm font-bold text-yellow-300">
+                            {mission.reward}
+                          </span>
+                        </div>
                       </div>
                       
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs text-yellow-400">보상:</span>
-                        <span className="text-sm font-bold text-yellow-400">
-                          {mission.reward}💎
-                        </span>
+                      {/* Enhanced Progress Bar */}
+                      <div className="w-full h-4 bg-black/30 rounded-full overflow-hidden border border-white/10 shadow-inner">
+                        <motion.div
+                          className={`h-full bg-gradient-to-r ${colors.bg.replace('/20', '/90')} rounded-full relative overflow-hidden shadow-lg`}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progressPercentage}%` }}
+                          transition={{ duration: 1, delay: index * 0.1 }}
+                        >
+                          {/* Progress bar shimmer effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+                          {/* Progress bar glow effect */}
+                          <div className={`absolute inset-0 bg-gradient-to-r ${colors.bg.replace('/20', '/70')} shadow-lg ${colors.glow.replace('shadow-', 'shadow-inner-')}`} />
+                        </motion.div>
                       </div>
                     </div>
                   </div>
@@ -183,20 +207,6 @@ export default function MissionCards({
                     )}
                   </div>
                 </div>
-
-                {/* Progress Bar */}
-                {!isCompleted && (
-                  <div className="mt-3">
-                    <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                      <motion.div
-                        className={`h-full bg-gradient-to-r ${colors.bg.replace('/20', '/60')} rounded-full`}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${progressPercentage}%` }}
-                        transition={{ duration: 1, delay: index * 0.1 }}
-                      />
-                    </div>
-                  </div>
-                )}
               </Card>
             </motion.div>
           );

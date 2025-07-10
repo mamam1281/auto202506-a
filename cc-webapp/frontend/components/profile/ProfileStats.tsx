@@ -30,14 +30,22 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
     <div className="space-y-4 mb-6">
       {/* Top Row: Token & Streak */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="profile-glass rounded-xl p-4 flex items-center justify-center">
-          <TokenDisplay 
-            amount={user.cyber_token_balance || 0}
-            size="lg"
-            showIcon={true}
-            showLabel={true}
-            onClick={() => console.log('View token history')}
-          />
+        {/* Token Card - Enhanced Visual Hierarchy */}
+        <div className="profile-glass rounded-xl p-4 flex items-center justify-center relative overflow-hidden
+                        transform hover:scale-105 transition-all duration-300
+                        shadow-2xl shadow-yellow-500/30 border-2 border-yellow-500/40 bg-gradient-to-br from-yellow-400/15 to-orange-400/10">
+          {/* Gold accent glow */}
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 via-transparent to-orange-400/15 pointer-events-none" />
+          <div className="absolute top-2 right-2 w-6 h-6 bg-gradient-to-br from-yellow-400/60 to-orange-400/60 rounded-full blur-md animate-pulse" />
+          <div className="relative z-10">
+            <TokenDisplay 
+              amount={user.cyber_token_balance || 0}
+              size="lg"
+              showIcon={true}
+              showLabel={true}
+              onClick={() => console.log('View token history')}
+            />
+          </div>
         </div>
         
         <div className="profile-glass rounded-xl p-4 flex items-center justify-center">

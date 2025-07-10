@@ -20,22 +20,25 @@ export default function StreakIndicator({
 }: StreakIndicatorProps) {
   const sizes = {
     sm: {
-      container: 'gap-1',
+      container: 'gap-1.5',
       icon: 'w-4 h-4',
-      text: 'text-sm',
-      label: 'text-xs'
+      text: 'text-sm font-bold',
+      label: 'text-xs font-medium',
+      emoji: 'text-sm'
     },
     md: {
       container: 'gap-2',
       icon: 'w-5 h-5',
-      text: 'text-base',
-      label: 'text-sm'
+      text: 'text-lg font-bold',
+      label: 'text-sm font-medium',
+      emoji: 'text-lg'
     },
     lg: {
-      container: 'gap-2',
+      container: 'gap-2.5',
       icon: 'w-6 h-6',
-      text: 'text-lg font-bold',
-      label: 'text-base'
+      text: 'text-xl font-bold',
+      label: 'text-base font-medium',
+      emoji: 'text-xl'
     }
   };
 
@@ -43,19 +46,16 @@ export default function StreakIndicator({
 
   return (
     <div className={cn('flex items-center', sizeStyles.container, className)}>
-      <Flame 
-        className={cn(
-          sizeStyles.icon,
-          'text-orange-400',
-          animated && 'animate-pulse'
-        )} 
-      />
-      <div className="flex flex-col items-center">
-        <span className={cn(sizeStyles.text, 'text-orange-400 font-semibold')}>
+      {/* 일관된 이모티콘 크기 */}
+      <span className={cn(sizeStyles.emoji)}>🔥</span>
+      
+      <div className="flex flex-col items-start">
+        {/* 계층화된 텍스트 */}
+        <span className={cn(sizeStyles.text, 'text-orange-400 leading-tight')}>
           {streak}일
         </span>
         {showLabel && (
-          <span className={cn(sizeStyles.label, 'text-muted-foreground')}>
+          <span className={cn(sizeStyles.label, 'text-gray-400 leading-tight')}>
             연속 접속
           </span>
         )}

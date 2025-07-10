@@ -1,345 +1,259 @@
-/* ===================================
-   PROFILE PAGE CSS STYLES
-   프로필 페이지 전용 스타일시트
-   ================================= */
+/*!
+ * Profile Page Styles
+ * 프로필 페이지 전용 스타일시트
+ * Version: 2.0.0
+ * 
+ * Table of Contents:
+ * 1. CSS Variables & Design Tokens
+ * 2. Base Components
+ * 3. Layout Components
+ * 4. Interactive Components
+ * 5. Animations & Effects
+ * 6. Responsive Design
+ * 7. Accessibility
+ * 8. Utility Classes
+ */
 
 /* ===================================
-   CSS VARIABLES - 프로필 페이지 전용
+   1. CSS VARIABLES & DESIGN TOKENS
    ================================= */
 
 :root {
-  /* 프로필 카드 색상 */
-  --profile-card-bg: rgba(20, 20, 20, 0.8);
-  --profile-card-border: rgba(255, 255, 255, 0.1);
+  /* Color Palette */
+  --profile-color-primary: #5b30f6;
+  --profile-color-secondary: #8054f2;
+  --profile-color-accent: #ffd700;
+  --profile-color-success: #10b981;
+  --profile-color-warning: #f59e0b;
+  --profile-color-error: #ef4444;
+  
+  /* Surface Colors */
+  --profile-surface-base: rgba(20, 20, 20, 0.8);
+  --profile-surface-elevated: rgba(30, 30, 30, 0.9);
+  --profile-surface-overlay: rgba(255, 255, 255, 0.05);
+  
+  /* Border Colors */
+  --profile-border-subtle: rgba(255, 255, 255, 0.05);
+  --profile-border-default: rgba(255, 255, 255, 0.1);
+  --profile-border-strong: rgba(255, 255, 255, 0.2);
+  
+  /* Text Colors */
+  --profile-text-primary: rgba(255, 255, 255, 0.95);
+  --profile-text-secondary: rgba(255, 255, 255, 0.7);
+  --profile-text-muted: rgba(255, 255, 255, 0.5);
+  
+  /* Spacing Scale */
+  --profile-space-xs: 0.5rem;    /* 8px */
+  --profile-space-sm: 0.75rem;   /* 12px */
+  --profile-space-md: 1rem;      /* 16px */
+  --profile-space-lg: 1.5rem;    /* 24px */
+  --profile-space-xl: 2rem;      /* 32px */
+  --profile-space-2xl: 3rem;     /* 48px */
+  --profile-space-3xl: 4rem;     /* 64px */
+  
+  /* Border Radius Scale */
+  --profile-radius-sm: 0.5rem;
+  --profile-radius-md: 0.75rem;
+  --profile-radius-lg: 1rem;
+  --profile-radius-xl: 1.5rem;
+  --profile-radius-2xl: 2rem;
+  --profile-radius-3xl: 3rem;
+  
+  /* Shadow System */
+  --profile-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --profile-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --profile-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --profile-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.4);
   --profile-card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-
-  /* 프로필 그라데이션 */
-  --profile-gradient-primary: linear-gradient(135deg, rgba(91, 48, 246, 0.4) 0%, rgba(128, 84, 242, 0.4) 100%);
-  --profile-gradient-secondary: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 165, 0, 0.3) 100%);
-  --profile-gradient-success: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%);
-  --profile-gradient-warning: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.3) 100%);
-  --profile-gradient-error: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.3) 100%);
-
-  /* 네온 글로우 효과 */
-  --neon-glow-primary: 0 0 30px rgba(91, 48, 246, 0.5);
-  --neon-glow-secondary: 0 0 30px rgba(255, 215, 0, 0.5);
-  --neon-glow-success: 0 0 30px rgba(16, 185, 129, 0.5);
-  --neon-glow-warning: 0 0 30px rgba(245, 158, 11, 0.5);
-  --neon-glow-error: 0 0 30px rgba(239, 68, 68, 0.5);
-
-  /* 프로필 간격 시스템 */
-  --profile-spacing-xs: 0.5rem;   /* 8px */
-  --profile-spacing-sm: 0.75rem;  /* 12px */
-  --profile-spacing-md: 1rem;     /* 16px */
-  --profile-spacing-lg: 1.5rem;   /* 24px */
-  --profile-spacing-xl: 2rem;     /* 32px */
-  --profile-spacing-2xl: 3rem;    /* 48px */
-  --profile-spacing-3xl: 4rem;    /* 64px */
-
-  /* 프로필 보더 반지름 */
-  --profile-radius-sm: 0.5rem;    /* 8px */
-  --profile-radius-md: 0.75rem;   /* 12px */
-  --profile-radius-lg: 1rem;      /* 16px */
-  --profile-radius-xl: 1.5rem;    /* 24px */
-  --profile-radius-2xl: 2rem;     /* 32px */
-  --profile-radius-3xl: 3rem;     /* 48px */
-
-  /* 애니메이션 타이밍 */
-  --profile-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --profile-transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --profile-transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
-  --profile-transition-game: 1000ms cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* 블러 효과 */
+  
+  /* Blur Effects */
   --profile-blur-sm: 4px;
   --profile-blur-md: 8px;
   --profile-blur-lg: 12px;
   --profile-blur-xl: 16px;
   --profile-blur-2xl: 24px;
   --profile-blur-3xl: 32px;
+  
+  /* Animation Timing */
+  --profile-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --profile-transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --profile-transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Gradients */
+  --profile-gradient-primary: linear-gradient(135deg, var(--profile-color-primary) 0%, var(--profile-color-secondary) 100%);
+  --profile-gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+  --profile-gradient-surface: linear-gradient(135deg, var(--profile-surface-overlay) 0%, transparent 100%);
 }
 
 /* ===================================
-   GLASSMORPHISM EFFECTS
-   글래스모피즘 효과
+   2. BASE COMPONENTS
    ================================= */
 
+/* Missing Utility Classes */
+.gradient-primary { background: var(--profile-gradient-primary); }
+.gradient-secondary { background: var(--profile-gradient-gold); }
+.text-game-gold { 
+  color: var(--profile-color-accent);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+.border-primary\/30 { border-color: rgba(91, 48, 246, 0.3); }
+.text-xl { 
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.game-title {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-semibold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.shadow-elegant {
+  box-shadow: 0 10px 25px -3px rgba(91, 48, 246, 0.3), 
+              0 4px 6px -2px rgba(91, 48, 246, 0.1);
+}
+
+/* Glass Morphism Base */
 .profile-glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--profile-surface-overlay);
   backdrop-filter: blur(var(--profile-blur-lg));
-  -webkit-backdrop-filter: blur(var(--profile-blur-lg));
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: var(--profile-card-shadow);
-}
-
-.profile-glass-strong {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(var(--profile-blur-xl));
-  -webkit-backdrop-filter: blur(var(--profile-blur-xl));
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: var(--profile-card-shadow);
-}
-
-.profile-glass-subtle {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(var(--profile-blur-md));
-  -webkit-backdrop-filter: blur(var(--profile-blur-md));
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--profile-border-default);
 }
 
 /* ===================================
-   PROFILE CARD STYLES
-   프로필 카드 스타일
+   3. LAYOUT COMPONENTS
    ================================= */
 
+.profile-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0 var(--profile-space-md);
+}
+
+.profile-grid {
+  display: grid;
+  gap: var(--profile-space-lg);
+}
+
+.profile-grid--2col { grid-template-columns: 1fr 1fr; }
+.profile-grid--3col { grid-template-columns: repeat(3, 1fr); }
+
+.profile-flex {
+  display: flex;
+  gap: var(--profile-space-md);
+}
+
+.profile-flex--between { justify-content: space-between; }
+.profile-flex--center { justify-content: center; }
+.profile-flex--column { flex-direction: column; }
+
+/* ===================================
+   4. INTERACTIVE COMPONENTS
+   ================================= */
+
+/* Card Components */
 .profile-card {
-  background: var(--profile-gradient-primary);
-  border-radius: var(--profile-radius-3xl);
-  padding: var(--profile-spacing-xl);
+  background: var(--profile-surface-overlay);
+  backdrop-filter: blur(var(--profile-blur-lg));
+  border: 1px solid var(--profile-border-default);
+  border-radius: var(--profile-radius-2xl);
+  padding: var(--profile-space-xl);
   position: relative;
   overflow: hidden;
   transition: all var(--profile-transition-normal);
-}
-
-.profile-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 8rem;
-  height: 8rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(var(--profile-blur-2xl));
-}
-
-.profile-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 6rem;
-  height: 6rem;
-  background: linear-gradient(135deg, rgba(91, 48, 246, 0.2) 0%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(var(--profile-blur-2xl));
 }
 
 .profile-card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--neon-glow-primary);
+  box-shadow: var(--profile-shadow-xl);
 }
 
-/* ===================================
-   AVATAR STYLES
-   아바타 스타일
-   ================================= */
-
-.profile-avatar {
-  position: relative;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.profile-avatar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--profile-gradient-primary);
-  border-radius: 50%;
-  filter: blur(var(--profile-blur-lg));
-  opacity: 0.6;
-  z-index: -1;
-}
-
-.profile-avatar-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: var(--profile-gradient-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: var(--profile-card-shadow);
-}
-
-/* ===================================
-   LEVEL BADGE STYLES
-   레벨 배지 스타일
-   ================================= */
-
-.profile-level-badge {
-  background: var(--profile-gradient-secondary);
-  border-radius: var(--profile-radius-xl);
-  padding: var(--profile-spacing-md) var(--profile-spacing-lg);
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.profile-level-badge::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 4rem;
-  height: 4rem;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(var(--profile-blur-xl));
-}
-
-.profile-level-badge:hover {
-  transform: scale(1.05);
-  box-shadow: var(--neon-glow-secondary);
-}
-
-/* ===================================
-   STATS CARD STYLES
-   통계 카드 스타일
-   ================================= */
-
-.profile-stats-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border-radius: var(--profile-radius-xl);
-  padding: var(--profile-spacing-lg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-  transition: all var(--profile-transition-normal);
-}
-
-.profile-stats-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 4rem;
-  height: 4rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(var(--profile-blur-xl));
-}
-
-.profile-stats-card:hover {
-  transform: translateY(-2px) scale(1.02);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* 토큰 카드 */
-.profile-token-card {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
-  border-color: rgba(255, 215, 0, 0.2);
-}
-
-.profile-token-card::before {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
-}
-
-.profile-token-card:hover {
-  box-shadow: var(--neon-glow-secondary);
-}
-
-/* ===================================
-   BUTTON STYLES
-   버튼 스타일
-   ================================= */
-
-.profile-button-primary {
-  background: linear-gradient(135deg, #5b30f6 0%, #8054f2 100%);
+/* Button Components */
+.profile-btn {
   border: none;
-  border-radius: var(--profile-radius-xl);
-  padding: var(--profile-spacing-lg) var(--profile-spacing-xl);
-  color: white;
+  border-radius: var(--profile-radius-lg);
+  padding: var(--profile-space-lg) var(--profile-space-xl);
   font-weight: 600;
+  cursor: pointer;
+  transition: all var(--profile-transition-normal);
   position: relative;
   overflow: hidden;
-  transition: all var(--profile-transition-normal);
-  cursor: pointer;
 }
 
-.profile-button-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
-  border-radius: var(--profile-radius-xl);
-  opacity: 0;
-  transition: opacity var(--profile-transition-normal);
-}
-
-.profile-button-primary:hover::before {
-  opacity: 1;
-}
-
-.profile-button-primary:hover {
-  transform: scale(1.02);
-  box-shadow: var(--neon-glow-primary);
-}
-
-.profile-button-secondary {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--profile-radius-xl);
-  padding: var(--profile-spacing-lg) var(--profile-spacing-xl);
+.profile-btn--primary {
+  background: var(--profile-gradient-primary);
   color: white;
-  font-weight: 600;
-  backdrop-filter: blur(var(--profile-blur-md));
-  transition: all var(--profile-transition-normal);
-  cursor: pointer;
 }
 
-.profile-button-secondary:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.15) 100%);
-  border-color: rgba(255, 255, 255, 0.3);
+.profile-btn--secondary {
+  background: var(--profile-surface-overlay);
+  backdrop-filter: blur(var(--profile-blur-lg));
+  border: 1px solid var(--profile-border-default);
+  color: var(--profile-text-primary);
+}
+
+.profile-btn:hover {
   transform: scale(1.02);
 }
 
-/* ===================================
-   PROGRESS BAR STYLES
-   프로그레스 바 스타일
-   ================================= */
+/* Badge Components */
+.profile-badge {
+  padding: var(--profile-space-xs) var(--profile-space-md);
+  border-radius: var(--profile-radius-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid;
+  backdrop-filter: blur(var(--profile-blur-sm));
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
 
-.profile-progress-bar {
+.profile-badge--primary {
+  background: linear-gradient(135deg, rgba(91, 48, 246, 0.2) 0%, rgba(147, 197, 253, 0.2) 100%);
+  color: rgb(147, 197, 253);
+  border-color: rgba(91, 48, 246, 0.5);
+}
+
+.profile-badge--gold {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.2) 100%);
+  color: rgb(255, 215, 0);
+  border-color: rgba(255, 215, 0, 0.5);
+}
+
+/* Progress Components */
+.profile-progress {
   width: 100%;
   height: 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--profile-border-default);
   border-radius: var(--profile-radius-md);
   overflow: hidden;
-  position: relative;
 }
 
-.profile-progress-fill {
+.profile-progress__fill {
   height: 100%;
-  background: linear-gradient(90deg, #5b30f6 0%, #8054f2 100%);
+  background: var(--profile-gradient-primary);
   border-radius: var(--profile-radius-md);
   transition: width var(--profile-transition-slow);
+}
+
+/* Modal Components */
+.profile-modal {
+  background: var(--profile-surface-overlay);
+  backdrop-filter: blur(var(--profile-blur-lg));
+  border: 1px solid var(--profile-border-default);
+  border-radius: var(--profile-radius-2xl);
+  padding: var(--profile-space-xl);
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--profile-shadow-xl);
   position: relative;
+  overflow: hidden;
 }
 
-.profile-progress-fill::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(91, 48, 246, 0.3) 0%, rgba(128, 84, 242, 0.3) 100%);
-  border-radius: var(--profile-radius-md);
-  filter: blur(var(--profile-blur-sm));
-}
-
-/* ===================================
-   MISSION CARD STYLES
-   미션 카드 스타일
-   ================================= */
-
+/* Mission Card Components */
 .profile-mission-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
   border-radius: var(--profile-radius-xl);
-  padding: var(--profile-spacing-lg);
+  padding: var(--profile-space-lg);
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
@@ -364,7 +278,6 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* 미션 타입별 색상 */
 .profile-mission-card.daily {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.1) 100%);
   border-color: rgba(59, 130, 246, 0.2);
@@ -380,15 +293,11 @@
   border-color: rgba(168, 85, 247, 0.2);
 }
 
-/* ===================================
-   FLASH OFFER STYLES
-   플래시 오퍼 스타일
-   ================================= */
-
+/* Flash Offer Components */
 .profile-flash-offer {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(239, 68, 68, 0.2) 100%);
   border-radius: var(--profile-radius-3xl);
-  padding: var(--profile-spacing-xl);
+  padding: var(--profile-space-xl);
   border: 1px solid rgba(245, 158, 11, 0.4);
   position: relative;
   overflow: hidden;
@@ -421,72 +330,14 @@
 .profile-flash-timer {
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(245, 158, 11, 0.3) 100%);
   border-radius: var(--profile-radius-lg);
-  padding: var(--profile-spacing-md) var(--profile-spacing-lg);
+  padding: var(--profile-space-md) var(--profile-space-lg);
   border: 1px solid rgba(239, 68, 68, 0.4);
   text-align: center;
   min-width: 50px;
   backdrop-filter: blur(var(--profile-blur-sm));
 }
 
-/* ===================================
-   MODAL STYLES
-   모달 스타일
-   ================================= */
-
-.profile-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(var(--profile-blur-sm));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--profile-spacing-xl);
-  z-index: 50;
-}
-
-.profile-modal {
-  background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(30, 30, 30, 0.7) 100%);
-  border-radius: var(--profile-radius-3xl);
-  padding: var(--profile-spacing-xl);
-  border: 1px solid rgba(91, 48, 246, 0.3);
-  backdrop-filter: blur(var(--profile-blur-xl));
-  position: relative;
-  overflow: hidden;
-  max-width: 400px;
-  width: 100%;
-  box-shadow: var(--profile-card-shadow);
-}
-
-.profile-modal::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 8rem;
-  height: 8rem;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(var(--profile-blur-3xl));
-}
-
-.profile-modal::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 7rem;
-  height: 7rem;
-  background: linear-gradient(135deg, rgba(91, 48, 246, 0.2) 0%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(var(--profile-blur-3xl));
-}
-
-/* ===================================
-   CHAT BUBBLE STYLES
-   채팅 버블 스타일
-   ================================= */
-
+/* Chat Bubble Components */
 .profile-chat-bubble {
   position: fixed;
   bottom: 6rem;
@@ -498,7 +349,7 @@
 .profile-chat-bubble-inner {
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(30, 30, 30, 0.7) 100%);
   border-radius: var(--profile-radius-3xl);
-  padding: var(--profile-spacing-lg);
+  padding: var(--profile-space-lg);
   border: 1px solid rgba(91, 48, 246, 0.3);
   backdrop-filter: blur(var(--profile-blur-xl));
   position: relative;
@@ -522,7 +373,6 @@
   position: absolute;
   bottom: 0;
   right: 1.5rem;
-  transform: translateY(100%);
   width: 1rem;
   height: 1rem;
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(30, 30, 30, 0.5) 100%);
@@ -532,169 +382,58 @@
 }
 
 /* ===================================
-   BADGE STYLES
-   배지 스타일
+   5. ANIMATIONS & EFFECTS
    ================================= */
 
-.profile-badge {
-  padding: var(--profile-spacing-xs) var(--profile-spacing-md);
-  border-radius: var(--profile-radius-md);
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: 1px solid;
-  backdrop-filter: blur(var(--profile-blur-sm));
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+@keyframes profile-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
 }
 
-.profile-badge.standard {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 197, 253, 0.2) 100%);
-  color: rgb(147, 197, 253);
-  border-color: rgba(59, 130, 246, 0.5);
+@keyframes profile-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
-.profile-badge.premium {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(251, 191, 36, 0.2) 100%);
-  color: rgb(251, 191, 36);
-  border-color: rgba(245, 158, 11, 0.5);
+@keyframes profile-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(91, 48, 246, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(91, 48, 246, 0.6); }
 }
 
-.profile-badge.vip {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(196, 181, 253, 0.2) 100%);
-  color: rgb(196, 181, 253);
-  border-color: rgba(168, 85, 247, 0.5);
-}
+.profile-animate--pulse { animation: profile-pulse 2s ease-in-out infinite; }
+.profile-animate--float { animation: profile-float 3s ease-in-out infinite; }
+.profile-animate--glow { animation: profile-glow 2s ease-in-out infinite; }
 
 /* ===================================
-   ANIMATIONS
-   애니메이션
+   6. RESPONSIVE DESIGN
    ================================= */
 
-@keyframes profilePulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-}
-
-@keyframes profileFloat {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes profileGlow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(91, 48, 246, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(91, 48, 246, 0.6);
-  }
-}
-
-@keyframes profileSparkle {
-  0% {
-    opacity: 0;
-    transform: scale(0) rotate(0deg);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1) rotate(180deg);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0) rotate(360deg);
-  }
-}
-
-@keyframes profileShimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-/* 애니메이션 클래스 */
-.profile-pulse {
-  animation: profilePulse 2s ease-in-out infinite;
-}
-
-.profile-float {
-  animation: profileFloat 3s ease-in-out infinite;
-}
-
-.profile-glow {
-  animation: profileGlow 2s ease-in-out infinite;
-}
-
-.profile-sparkle {
-  animation: profileSparkle 2s ease-in-out infinite;
-}
-
-.profile-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  background-size: 200px 100%;
-  animation: profileShimmer 2s ease-in-out infinite;
-}
-
-/* ===================================
-   RESPONSIVE DESIGN
-   반응형 디자인
-   ================================= */
-
-/* 모바일 최적화 (기본) */
+/* Mobile Optimization */
 @media (max-width: 400px) {
-  .profile-card {
-    padding: var(--profile-spacing-lg);
+  .profile-card { padding: var(--profile-space-lg); }
+  .profile-modal { 
+    padding: var(--profile-space-lg); 
+    margin: var(--profile-space-md); 
   }
-  
-  .profile-modal {
-    padding: var(--profile-spacing-lg);
-    margin: var(--profile-spacing-md);
-  }
-  
   .profile-chat-bubble {
     max-width: 250px;
     right: 1rem;
   }
 }
 
-/* 태블릿 */
+/* Tablet */
 @media (min-width: 768px) {
-  .profile-card {
-    padding: var(--profile-spacing-2xl);
-  }
-  
-  .profile-modal {
-    max-width: 500px;
-  }
-  
+  .profile-card { padding: var(--profile-space-2xl); }
+  .profile-modal { max-width: 500px; }
   .profile-chat-bubble {
     max-width: 350px;
     right: 2rem;
   }
 }
 
-/* 데스크톱 */
+/* Desktop */
 @media (min-width: 1024px) {
-  .profile-card {
-    padding: var(--profile-spacing-3xl);
-  }
-  
-  .profile-modal {
-    max-width: 600px;
-  }
-  
+  .profile-modal { max-width: 600px; }
   .profile-chat-bubble {
     max-width: 400px;
     right: 3rem;
@@ -702,81 +441,85 @@
 }
 
 /* ===================================
-   ACCESSIBILITY
-   접근성
+   7. ACCESSIBILITY
    ================================= */
 
-/* 모션 감소 설정 */
+/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .profile-pulse,
-  .profile-float,
-  .profile-glow,
-  .profile-sparkle,
-  .profile-shimmer {
-    animation: none;
-  }
+  .profile-animate--pulse,
+  .profile-animate--float,
+  .profile-animate--glow { animation: none; }
   
   .profile-card,
-  .profile-button-primary,
-  .profile-button-secondary,
-  .profile-mission-card {
-    transition: none;
-  }
+  .profile-btn { transition: none; }
 }
 
-/* 고대비 모드 */
+/* High Contrast */
 @media (prefers-contrast: high) {
   .profile-card,
-  .profile-modal,
-  .profile-chat-bubble-inner {
+  .profile-modal { 
     border-width: 2px;
-    border-color: rgba(255, 255, 255, 0.5);
-  }
-  
-  .profile-glass,
-  .profile-glass-strong,
-  .profile-glass-subtle {
-    background: rgba(0, 0, 0, 0.8);
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: var(--profile-border-strong);
   }
 }
 
-/* 포커스 스타일 */
-.profile-button-primary:focus,
-.profile-button-secondary:focus,
-.profile-mission-card:focus {
-  outline: 2px solid rgba(91, 48, 246, 0.8);
+/* Focus Styles */
+.profile-btn:focus,
+.profile-card:focus {
+  outline: 2px solid var(--profile-color-primary);
   outline-offset: 2px;
 }
 
 /* ===================================
-   UTILITY CLASSES
-   유틸리티 클래스
+   8. UTILITY CLASSES
    ================================= */
 
-.profile-text-gradient {
-  background: linear-gradient(135deg, #5b30f6 0%, #8054f2 100%);
+/* Spacing Utilities */
+.profile-m-xs { margin: var(--profile-space-xs); }
+.profile-m-sm { margin: var(--profile-space-sm); }
+.profile-m-md { margin: var(--profile-space-md); }
+.profile-m-lg { margin: var(--profile-space-lg); }
+.profile-m-xl { margin: var(--profile-space-xl); }
+
+.profile-p-xs { padding: var(--profile-space-xs); }
+.profile-p-sm { padding: var(--profile-space-sm); }
+.profile-p-md { padding: var(--profile-space-md); }
+.profile-p-lg { padding: var(--profile-space-lg); }
+.profile-p-xl { padding: var(--profile-space-xl); }
+
+/* Text Utilities */
+.profile-text--primary { color: var(--profile-text-primary); }
+.profile-text--secondary { color: var(--profile-text-secondary); }
+.profile-text--muted { color: var(--profile-text-muted); }
+
+.profile-text--gradient {
+  background: var(--profile-gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.profile-text-gold {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+.profile-text--gold {
+  background: var(--profile-gradient-gold);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.profile-shadow-lg {
-  box-shadow: var(--profile-card-shadow);
-}
+/* Shadow Utilities */
+.profile-shadow--sm { box-shadow: var(--profile-shadow-sm); }
+.profile-shadow--md { box-shadow: var(--profile-shadow-md); }
+.profile-shadow--lg { box-shadow: var(--profile-shadow-lg); }
+.profile-shadow--xl { box-shadow: var(--profile-shadow-xl); }
 
-.profile-backdrop-blur {
-  backdrop-filter: blur(var(--profile-blur-lg));
-  -webkit-backdrop-filter: blur(var(--profile-blur-lg));
-}
+/* Border Radius Utilities */
+.profile-rounded--sm { border-radius: var(--profile-radius-sm); }
+.profile-rounded--md { border-radius: var(--profile-radius-md); }
+.profile-rounded--lg { border-radius: var(--profile-radius-lg); }
+.profile-rounded--xl { border-radius: var(--profile-radius-xl); }
+.profile-rounded--2xl { border-radius: var(--profile-radius-2xl); }
 
+/* Performance Utilities */
 .profile-gpu-accelerated {
   transform: translateZ(0);
   will-change: transform;
@@ -784,103 +527,5 @@
 }
 
 /* ===================================
-   LAYOUT UTILITIES
-   레이아웃 유틸리티
-   ================================= */
-
-.profile-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 0 var(--profile-spacing-md);
-}
-
-.profile-grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--profile-spacing-lg);
-}
-
-.profile-grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--profile-spacing-lg);
-}
-
-.profile-flex-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.profile-flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.profile-space-y-sm > * + * {
-  margin-top: var(--profile-spacing-sm);
-}
-
-.profile-space-y-md > * + * {
-  margin-top: var(--profile-spacing-md);
-}
-
-.profile-space-y-lg > * + * {
-  margin-top: var(--profile-spacing-lg);
-}
-
-.profile-space-y-xl > * + * {
-  margin-top: var(--profile-spacing-xl);
-}
-
-/* ===================================
-   DARK THEME SPECIFIC
-   다크 테마 전용
-   ================================= */
-
-[data-theme="dark"] {
-  --profile-card-bg: rgba(10, 10, 10, 0.9);
-  --profile-card-border: rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="dark"] .profile-text-primary {
-  color: rgba(255, 255, 255, 0.95);
-}
-
-[data-theme="dark"] .profile-text-secondary {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-[data-theme="dark"] .profile-text-muted {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* ===================================
-   PERFORMANCE OPTIMIZATIONS
-   성능 최적화
-   ================================= */
-
-.profile-will-change-transform {
-  will-change: transform;
-}
-
-.profile-will-change-opacity {
-  will-change: opacity;
-}
-
-.profile-contain-layout {
-  contain: layout;
-}
-
-.profile-contain-paint {
-  contain: paint;
-}
-
-.profile-hardware-acceleration {
-  transform: translate3d(0, 0, 0);
-}
-
-/* ===================================
-   END OF PROFILE CSS
+   END OF PROFILE STYLES
    ================================= */

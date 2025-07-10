@@ -92,13 +92,16 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
 
   // Modal states
   const [showDailyCheckIn, setShowDailyCheckIn] = useState(false);
+  const [lastCheckIn, setLastCheckIn] = useState<string | null>(null);
 
   // Check if user should see daily check-in modal
   useEffect(() => {
-    const lastCheckIn = localStorage.getItem('lastCheckIn');
+    const storedLastCheckIn = localStorage.getItem('lastCheckIn');
+    setLastCheckIn(storedLastCheckIn);
+
     const today = new Date().toDateString();
     
-    if (!lastCheckIn || lastCheckIn !== today) {
+    if (!storedLastCheckIn || storedLastCheckIn !== today) {
       // Show modal after a short delay for better UX
       const timer = setTimeout(() => {
         setShowDailyCheckIn(true);
@@ -172,7 +175,7 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
         onClose={() => setShowDailyCheckIn(false)}
         onClaim={handleDailyCheckInClaim}
         currentStreak={user.loginStreak || 0}
-        lastCheckIn={localStorage.getItem('lastCheckIn')}
+        lastCheckIn={lastCheckIn}
         todayReward={50}
       />
 
