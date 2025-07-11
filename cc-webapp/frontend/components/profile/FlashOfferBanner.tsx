@@ -11,9 +11,10 @@ interface FlashOfferBannerProps {
   offer: FlashOffer;
   onClose?: () => void;
   onVisitSite?: () => void;
+  onClaim?: (offerId: string) => void;
 }
 
-export default function FlashOfferBanner({ offer, onClose, onVisitSite }: FlashOfferBannerProps) {
+export default function FlashOfferBanner({ offer, onClose, onVisitSite, onClaim }: FlashOfferBannerProps) {
   const [timeLeft, setTimeLeft] = useState<string>('');
   const [isExpired, setIsExpired] = useState(false);
 

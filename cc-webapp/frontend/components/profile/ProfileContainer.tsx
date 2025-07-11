@@ -124,7 +124,6 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
             <FlashOfferBanner 
               offer={flashOffer}
               onClose={() => setShowFlashOffer(false)}
-              onClaim={(offerId) => console.log('Flash offer claimed:', offerId)}
               onVisitSite={handleVisitSite}
             />
           </section>
