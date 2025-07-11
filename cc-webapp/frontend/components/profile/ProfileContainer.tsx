@@ -98,7 +98,7 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
 
   const handleLogout = () => {
     console.log('Logging out...');
-    // Handle logout logic
+    // Handle logout logic - 제거됨
   };
 
   const handleMissionClick = (mission: Mission) => {
@@ -113,8 +113,8 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
 
   return (
     <div className={`profile-container min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 ${className}`}>
-      {/* 420px 너비 최적화 컨테이너 - 데일리 모달 스타일 통일 */}
-      <div className="w-full max-w-[420px] min-h-screen mx-auto px-6 pt-6 pb-8 
+      {/* 420px 너비 최적화 컨테이너 - 좌우 패딩 16px로 최대 콘텐츠 공간 확보 */}
+      <div className="w-full max-w-[420px] min-h-screen mx-auto px-4 pt-6 pb-8 
                       overflow-y-auto overscroll-y-contain
                       scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
         
@@ -144,7 +144,8 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
 
           {/* 데일리 체크인 버튼 - 데일리 모달과 동일한 스타일 */}
           <section>
-            <div className="rounded-xl p-6 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
+            <div className="rounded-xl py-6 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20"
+                 style={{ paddingLeft: '16px', paddingRight: '16px' }}>
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 pointer-events-none" />
               <div className="relative z-10 text-center space-y-4">
                 <h3 className="text-lg font-bold text-white">일일 보상</h3>
@@ -177,7 +178,7 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
           <section>
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-white px-2">빠른 액션</h3>
-              <ProfileActions onLogout={handleLogout} />
+              <ProfileActions />
             </div>
           </section>
         </main>

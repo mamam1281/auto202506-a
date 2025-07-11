@@ -16,7 +16,8 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
   const handleClaimReward = () => console.log('연속 출석 보상 받기');
 
   return (
-    <div className="rounded-xl p-6 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
+    <div className="rounded-xl py-6 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20"
+         style={{ paddingLeft: '16px', paddingRight: '16px' }}>
       {/* 데일리 모달과 동일한 배경 효과 */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 pointer-events-none" />
       

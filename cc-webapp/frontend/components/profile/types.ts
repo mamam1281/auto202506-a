@@ -104,7 +104,7 @@ export interface ProfileStatsProps {
 }
 
 export interface ProfileActionsProps {
-  onLogout: () => void;
+  onLogout?: () => void;
 }
 
 export interface ProfileContainerProps {

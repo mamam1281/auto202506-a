@@ -1,6 +1,6 @@
 'use client';
 
-import { Play, Settings, LogOut, ExternalLink } from 'lucide-react';
+import { Play, Settings, ExternalLink } from 'lucide-react';
 import { Button } from '../ui/basic/button';
 import type { ProfileActionsProps } from './types';
 
@@ -26,8 +26,9 @@ export default function ProfileActions({ onLogout }: ProfileActionsProps) {
       {/* 420px 너비 최적화 - 데일리 모달 스타일 통일 */}
       
       {/* Primary Action - Game Start */}
-      <div className="rounded-xl p-6 relative overflow-hidden bg-gradient-to-br from-green-500/20 to-emerald-500/20 
-                      backdrop-blur-sm border border-green-500/30 shadow-lg">
+      <div className="rounded-xl py-6 relative overflow-hidden bg-gradient-to-br from-green-500/20 to-emerald-500/20 
+                      backdrop-blur-sm border border-green-500/30 shadow-lg"
+           style={{ paddingLeft: '16px', paddingRight: '16px' }}>
         <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-emerald-500/10 pointer-events-none" />
         
         <div className="relative z-10 text-center space-y-4">
@@ -100,23 +101,7 @@ export default function ProfileActions({ onLogout }: ProfileActionsProps) {
         </div>
       </div>
 
-      {/* Logout Button */}
-      <div className="rounded-xl p-4 relative overflow-hidden bg-gradient-to-br from-red-500/20 to-red-600/20 
-                      backdrop-blur-sm border border-red-500/30">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-red-600/10 pointer-events-none" />
-        
-        <div className="relative z-10 text-center">
-          <Button
-            onClick={onLogout}
-            variant="outline"
-            className="w-full h-12 border-red-400/30 text-red-400 hover:bg-red-400/10 
-                       rounded-lg flex items-center justify-center gap-2"
-          >
-            <LogOut className="w-4 h-4" />
-            로그아웃
-          </Button>
-        </div>
-      </div>
+      {/* Logout Button 제거됨 */}
     </div>
   );
 }

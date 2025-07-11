@@ -6,6 +6,7 @@ import { Target, Clock, CheckCircle, ExternalLink } from 'lucide-react';
 import { Card } from '../ui/basic/card';
 import { Button } from '../ui/basic/button';
 import ProgressCircle from './ProgressCircle';
+import { SimpleProgressBar } from '../SimpleProgressBar';
 import type { Mission } from './types';
 
 interface MissionCardsProps {
@@ -23,35 +24,35 @@ export default function MissionCards({
     switch (type) {
       case 'DAILY':
         return {
-          bg: 'from-blue-500/20 to-blue-600/20',
-          border: 'border-blue-500/30 border-l-4 border-l-blue-500',
-          text: 'text-blue-400',
+          bg: 'from-slate-600/20 to-slate-700/20',
+          border: 'border-slate-500/30 border-l-4 border-l-slate-500',
+          text: 'text-slate-300',
           icon: '📅',
-          glow: 'shadow-blue-500/20'
+          glow: 'shadow-slate-500/20'
         };
       case 'WEEKLY':
         return {
-          bg: 'from-orange-500/20 to-orange-600/20',
-          border: 'border-orange-500/30 border-l-4 border-l-orange-500',
-          text: 'text-orange-400',
+          bg: 'from-slate-500/20 to-slate-600/20',
+          border: 'border-slate-400/30 border-l-4 border-l-slate-400',
+          text: 'text-slate-200',
           icon: '📊',
-          glow: 'shadow-orange-500/20'
+          glow: 'shadow-slate-400/20'
         };
       case 'SPECIAL':
         return {
-          bg: 'from-purple-500/20 to-purple-600/20',
-          border: 'border-purple-500/30 border-l-4 border-l-purple-500',
-          text: 'text-purple-400',
+          bg: 'from-slate-700/20 to-slate-800/20',
+          border: 'border-slate-600/30 border-l-4 border-l-slate-600',
+          text: 'text-slate-100',
           icon: '⭐',
-          glow: 'shadow-purple-500/20'
+          glow: 'shadow-slate-600/20'
         };
       default:
         return {
-          bg: 'from-gray-500/20 to-gray-600/20',
-          border: 'border-gray-500/30 border-l-4 border-l-gray-500',
-          text: 'text-gray-400',
+          bg: 'from-slate-600/20 to-slate-700/20',
+          border: 'border-slate-500/30 border-l-4 border-l-slate-500',
+          text: 'text-slate-300',
           icon: '🎯',
-          glow: 'shadow-gray-500/20'
+          glow: 'shadow-slate-500/20'
         };
     }
   };
@@ -83,30 +84,31 @@ export default function MissionCards({
               whileHover={{ scale: 1.02 }}
               className="w-full"
             >
-              {/* 데일리 모달과 동일한 카드 스타일 */}
+              {/* 데일리 모달과 동일한 카드 스타일 - 고정 높이 적용 */}
               <div 
                 className={`
-                  rounded-xl p-6 relative overflow-hidden bg-gradient-to-br ${colors.bg} 
+                  rounded-xl py-6 min-h-[200px] relative overflow-hidden bg-gradient-to-br ${colors.bg} 
                   backdrop-blur-sm border ${colors.border.split(' ')[0]}/30 shadow-lg
-                  cursor-pointer transition-all duration-300
+                  cursor-pointer transition-all duration-300 flex flex-col
                   ${isCompleted ? 'opacity-75' : `hover:shadow-xl ${colors.glow}`}
                 `}
+                style={{ paddingLeft: '16px', paddingRight: '16px' }}
                 onClick={() => onMissionClick?.(mission)}
               >
                 {/* Background decoration */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/5 pointer-events-none" />
 
-                <div className="relative z-10 space-y-4">
-                  {/* Header with Mission Type Badge */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                <div className="relative z-10 space-y-4 flex-1 flex flex-col">
+                  {/* Header with Mission Type Badge - 아이콘 정렬 개선 */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3">
                       <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${colors.bg.replace('/20', '/40')} 
-                                     border ${colors.border.split(' ')[0]}/50 flex items-center justify-center shadow-lg`}>
+                                     border ${colors.border.split(' ')[0]}/50 flex items-center justify-center shadow-lg flex-shrink-0`}>
                         <span className="text-lg">{colors.icon}</span>
                       </div>
                       
-                      <div className="flex-1">
-                        <h4 className="text-base font-bold text-white leading-tight">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-base font-bold text-white leading-tight mb-1">
                           {mission.title}
                         </h4>
                         <p className="text-sm text-white/80 leading-tight">
@@ -116,7 +118,7 @@ export default function MissionCards({
                     </div>
 
                     {/* Status Indicator */}
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 ml-2">
                       {isCompleted ? (
                         <motion.div
                           initial={{ scale: 0 }}
@@ -138,8 +140,8 @@ export default function MissionCards({
                     </div>
                   </div>
 
-                  {/* Progress Section */}
-                  <div className="space-y-3">
+                  {/* Progress Section - 하단 고정 */}
+                  <div className="mt-auto space-y-3">
                     {/* Progress Info */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -161,16 +163,12 @@ export default function MissionCards({
                     
                     {/* Progress Bar */}
                     <div className="space-y-1">
-                      <div className="w-full h-3 bg-black/30 rounded-full overflow-hidden 
-                                     border border-white/10 shadow-inner">
-                        <motion.div
-                          className={`h-full bg-gradient-to-r ${colors.bg.replace('/20', '/80')} 
-                                     rounded-full shadow-lg`}
-                          initial={{ width: 0 }}
-                          animate={{ width: `${progressPercentage}%` }}
-                          transition={{ duration: 1, delay: index * 0.1 }}
-                        />
-                      </div>
+                      <SimpleProgressBar 
+                        progress={progressPercentage}
+                        size="md"
+                        showPercentage={false}
+                        className="w-full [&>div]:bg-slate-700 [&>div>div]:bg-gradient-to-r [&>div>div]:from-slate-400 [&>div>div]:to-slate-200"
+                      />
                       
                       <div className="flex items-center justify-between text-xs text-white/60">
                         <span>0%</span>
@@ -184,7 +182,7 @@ export default function MissionCards({
 
                   {/* Time Left */}
                   {mission.timeLeft && (
-                    <div className="flex items-center gap-2 text-xs text-white/60">
+                    <div className="flex items-center gap-2 text-xs text-white/60 mt-2">
                       <Clock className="w-4 h-4" />
                       <span>{mission.timeLeft}</span>
                     </div>
