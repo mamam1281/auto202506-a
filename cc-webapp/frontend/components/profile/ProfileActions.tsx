@@ -1,7 +1,6 @@
 'use client';
 
 import { Settings, ExternalLink } from 'lucide-react';
-import { Button } from '../ui/basic/button';
 import type { ProfileActionsProps } from './types';
 
 export default function ProfileActions({ onLogout }: ProfileActionsProps) {
@@ -18,54 +17,43 @@ export default function ProfileActions({ onLogout }: ProfileActionsProps) {
 
   return (
     <div className="space-y-4">
-      {/* 420px 너비 최적화 - 데일리 모달 스타일 통일 */}
-      
-      {/* Secondary Actions Grid */}
-      <div className="grid grid-cols-2 gap-3">
-        {/* Settings */}
-        <div className="rounded-xl p-4 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-blue-500/5 pointer-events-none" />
-          
-          <div className="relative z-10 text-center space-y-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-blue-600/30 rounded-xl 
-                           flex items-center justify-center mx-auto border border-blue-500/50">
-              <Settings className="w-5 h-5 text-blue-400" />
-            </div>
-            
-            <Button
-              onClick={handleSettings}
-              variant="outline"
-              className="w-full h-10 border-blue-400/30 text-blue-400 hover:bg-blue-400/10 
-                         rounded-lg text-sm"
-            >
-              설정
-            </Button>
+      {/* 본사 사이트 바로가기 - 개선된 단일 버튼 */}
+      <div className="rounded-xl p-6 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
+        
+        <div className="relative z-10 text-center space-y-4">
+          <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-full 
+                         flex items-center justify-center mx-auto shadow-lg border-2 border-emerald-400/30">
+            <ExternalLink className="w-8 h-8 text-white" />
           </div>
-        </div>
-
-        {/* External Site */}
-        <div className="rounded-xl p-4 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-purple-500/5 pointer-events-none" />
           
-          <div className="relative z-10 text-center space-y-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500/30 to-purple-600/30 rounded-xl 
-                           flex items-center justify-center mx-auto border border-purple-500/50">
-              <ExternalLink className="w-5 h-5 text-purple-400" />
-            </div>
-            
-            <Button
-              onClick={handleVisitSite}
-              variant="outline"
-              className="w-full h-10 border-purple-400/30 text-purple-400 hover:bg-purple-400/10 
-                         rounded-lg text-sm"
-            >
-              본사 사이트
-            </Button>
+          <div className="space-y-2">
+            <h3 className="text-lg font-bold text-white">공식 사이트</h3>
+            <p className="text-sm text-gray-300">카지노클럽 본사 사이트로 이동</p>
           </div>
+          
+          <button
+            onClick={handleVisitSite}
+            className="w-full h-12 rounded-lg text-white font-bold transform hover:scale-105 active:scale-95 transition-all duration-200
+                       shadow-lg hover:shadow-xl"
+            style={{ 
+              background: 'linear-gradient(to right, #059669, #0d9488)',
+              border: '2px solid rgba(52, 211, 153, 0.3)',
+              borderRadius: '0.5rem'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(to right, #10b981, #14b8a6)';
+              e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(to right, #059669, #0d9488)';
+              e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.3)';
+            }}
+          >
+            본사 사이트 바로가기
+          </button>
         </div>
       </div>
-
-      {/* Logout Button 제거됨 */}
     </div>
   );
 }

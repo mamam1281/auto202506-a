@@ -110,16 +110,16 @@ export function DailyCheckInModal({
           exit={{ scale: 0.8, opacity: 0 }}
           className="w-full max-w-md"
         >
-          <Card className="p-6 bg-card border-elegant shadow-elegant relative max-h-[90vh] overflow-y-auto scrollbar-thin">
-            {/* Background decoration */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 pointer-events-none" />
+          <Card className="p-6 bg-gray-800/95 border border-gray-600/50 shadow-lg relative max-h-[90vh] overflow-y-auto scrollbar-thin">
+            {/* Background decoration - 스크린샷과 동일한 어두운 배경 */}
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
             <motion.div 
-              className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none"
+              className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
               animate={{ 
                 background: [
-                  'radial-gradient(circle at 10% 10%, var(--neon-purple-3) 0%, transparent 50%)',
-                  'radial-gradient(circle at 90% 20%, var(--neon-purple-1) 0%, transparent 50%)',
-                  'radial-gradient(circle at 30% 80%, var(--neon-purple-4) 0%, transparent 50%)'
+                  'radial-gradient(circle at 10% 10%, rgb(75 85 99) 0%, transparent 50%)',
+                  'radial-gradient(circle at 90% 20%, rgb(55 65 81) 0%, transparent 50%)',
+                  'radial-gradient(circle at 30% 80%, rgb(107 114 128) 0%, transparent 50%)'
                 ]
               }}
               transition={{ duration: 8, repeat: Infinity, repeatType: 'reverse' }}
@@ -146,7 +146,7 @@ export function DailyCheckInModal({
                         <Sparkles className="w-5 h-5 text-game-gold" />
                       </motion.div>
                     </h2>
-                    <p className="text-base text-muted-foreground">매일 접속하여 보상을 받으세요!</p>
+                    <p className="text-base text-muted-foreground whitespace-nowrap" style={{ padding: '12px' }}>매일 접속하여 보상을 받으세요!</p>
                   </div>
                 </div>
                 
@@ -165,40 +165,35 @@ export function DailyCheckInModal({
                               border-2 border-primary/50 shadow-2xl shadow-primary/30 backdrop-blur-sm
                               relative overflow-hidden">
                 
-                {/* 3D Background Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/10 pointer-events-none"></div>
-                <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
-                
                 {/* Header Section - Icon + Title */}
-                <div className="flex items-center gap-3 mb-4 relative z-10">
+                <div className="flex items-center gap-3 mb-4">
                   <motion.div
-                    className="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 border-2 border-yellow-400/40
-                               shadow-lg shadow-yellow-400/20"
+                    className="flex items-center justify-center w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] rounded-full bg-yellow-400/20 border-2 border-yellow-400/40
+                               shadow-lg shadow-yellow-400/20 flex-shrink-0 aspect-square"
                     animate={{ scale: [1, 1.05, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   >
                     <Star className="w-5 h-5 text-yellow-400" />
                   </motion.div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <h3 className="text-lg font-bold text-white leading-tight exo-bold drop-shadow-sm">연속 접속</h3>
-                    <p className="text-base text-white/80 leading-tight">매일 접속으로 보상 획득</p>
+                    <p className="text-base text-white/80 leading-tight whitespace-nowrap">매일 접속으로 보상 획득</p>
                   </div>
                 </div>
                 
                 {/* Main Stats Row - Streak Number + Progress */}
-                <div className="grid grid-cols-[auto_1fr] gap-4 items-center mb-4 relative z-10">
+                <div className="grid grid-cols-[auto_1fr] gap-3 items-center mb-4">
                   {/* Left: Large Streak Number */}
                   <motion.div
                     className="flex flex-col items-center justify-center px-4 py-3 rounded-xl 
                                bg-gradient-to-br from-primary via-purple-600 to-primary/80 
-                               border-2 border-primary/60 shadow-xl shadow-primary/40 min-w-[80px] relative
+                               border-2 border-primary/60 shadow-xl shadow-primary/40 min-w-[80px]
                                backdrop-blur-sm"
                     animate={{ scale: [1, 1.02, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/20 rounded-xl"></div>
-                    <span className="text-2xl font-black text-white leading-none exo-bold drop-shadow-md relative z-10">{currentStreak}</span>
-                    <span className="text-sm font-medium text-white/90 leading-none mt-1 relative z-10">일째</span>
+                    <span className="text-2xl font-black text-white leading-none exo-bold drop-shadow-md">{currentStreak}</span>
+                    <span className="text-sm font-medium text-white/90 leading-none mt-1">일째</span>
                   </motion.div>
                   
                   {/* Right: Progress Section */}
@@ -225,21 +220,20 @@ export function DailyCheckInModal({
                   </div>
                 </div>
                 
-                {/* Bottom Bonus Section - Expanded Layout */}
-                <div className="p-4 rounded-xl bg-gradient-to-r from-yellow-500/25 to-orange-500/20 
-                                border-2 border-yellow-400/50 shadow-xl shadow-yellow-400/20 relative z-10
+                {/* Bottom Bonus Section - Simplified Layout */}
+                <div className="p-3 rounded-xl bg-gradient-to-r from-yellow-500/25 to-orange-500/20 
+                                border-2 border-yellow-400/50 shadow-xl shadow-yellow-400/20 relative
                                 backdrop-blur-sm">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/10 rounded-xl"></div>
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-400/40 
-                                    border border-yellow-400/60 shadow-lg shadow-yellow-400/30">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 min-w-[2rem] min-h-[2rem] rounded-full bg-yellow-400/40 
+                                    border border-yellow-400/60 shadow-lg shadow-yellow-400/30 flex-shrink-0 aspect-square">
                       <Award className="w-4 h-4 text-yellow-400" />
                     </div>
-                    <div className="flex-1 space-y-1">
-                      <div className="text-base font-bold text-yellow-300 leading-tight drop-shadow-sm">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-base font-bold text-yellow-300 leading-tight drop-shadow-sm whitespace-nowrap">
                         7일 달성 보너스
                       </div>
-                      <div className="text-base font-black text-yellow-400 leading-tight drop-shadow-sm">
+                      <div className="text-base font-black text-yellow-400 leading-tight drop-shadow-sm whitespace-nowrap">
                         +200💎 특별 보상
                       </div>
                     </div>
@@ -275,7 +269,7 @@ export function DailyCheckInModal({
 
               {/* Weekly reward calendar */}
               <div className="mb-6 mt-8">
-                <h3 className="text-base text-white mb-4 exo-medium flex items-center" style={{ gap: '12px' }}>
+                <h3 className="text-base text-white mb-4 exo-medium flex items-center gap-3">
                   <TrendingUp className="w-4 h-4 text-primary" />
                   <span>주간 보상 캘린더</span>
                 </h3>
@@ -328,17 +322,17 @@ export function DailyCheckInModal({
                           
                           {/* Status indicators */}
                           {isCompleted && (
-                            <div className="absolute top-0 right-0 w-5 h-5 bg-green-500 rounded-full 
+                            <div className="absolute top-0 right-0 w-5 h-5 min-w-[1.25rem] min-h-[1.25rem] bg-green-500 rounded-full 
                                             flex items-center justify-center text-white text-sm font-bold
-                                            border-2 border-white shadow-lg transform translate-x-1 -translate-y-1">
+                                            border-2 border-white shadow-lg transform translate-x-1 -translate-y-1 flex-shrink-0 aspect-square">
                               ✓
                             </div>
                           )}
                           {isToday && (
-                            <div className="absolute top-0 right-0 w-5 h-5 bg-blue-500 rounded-full 
+                            <div className="absolute top-0 right-0 w-5 h-5 min-w-[1.25rem] min-h-[1.25rem] bg-blue-500 rounded-full 
                                             flex items-center justify-center animate-pulse
-                                            border-2 border-white shadow-lg transform translate-x-1 -translate-y-1">
-                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                                            border-2 border-white shadow-lg transform translate-x-1 -translate-y-1 flex-shrink-0 aspect-square">
+                              <div className="w-2 h-2 min-w-[0.5rem] min-h-[0.5rem] bg-white rounded-full flex-shrink-0 aspect-square"></div>
                             </div>
                           )}
                         </div>
@@ -372,20 +366,17 @@ export function DailyCheckInModal({
                   <div className="text-center p-6 rounded-xl bg-gradient-to-br from-slate-800/40 to-slate-900/60 
                                   border-2 border-slate-700/50 shadow-xl shadow-slate-900/30 
                                   backdrop-blur-sm relative overflow-hidden">
-                    {/* 세련된 배경 효과 */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/10 pointer-events-none"></div>
-                    <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
                     
                     {/* 시계 아이콘 - motion 애니메이션 완전 제거 */}
-                    <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-slate-700/60 border-2 border-slate-600/50 
-                                    flex items-center justify-center shadow-lg shadow-slate-900/40 relative z-10">
-                      <Clock className="w-6 h-6 text-slate-400" />
+                    <div className="mx-auto mb-4 w-12 h-12 min-w-[3rem] min-h-[3rem] rounded-full bg-gray-700/60 border-2 border-gray-600/50 
+                                    flex items-center justify-center shadow-lg shadow-gray-900/40 flex-shrink-0 aspect-square">
+                      <Clock className="w-6 h-6 text-gray-400" />
                     </div>
                     
                     {/* 안내 텍스트 크기 1단계 업 */}
-                    <p className="text-base font-semibold text-slate-300 mb-3 relative z-10">오늘은 이미 받았어요!</p>
-                    <p className="text-sm text-slate-400 bg-slate-700/40 py-2 px-3 rounded-lg inline-block 
-                                  border border-slate-600/30 shadow-sm relative z-10">
+                    <p className="text-base font-semibold text-gray-300 mb-3">오늘은 이미 받았어요!</p>
+                    <p className="text-sm text-gray-400 bg-gray-700/40 py-2 px-3 rounded-lg inline-block 
+                                  border border-gray-600/30 shadow-sm">
                       다음 보상까지: <span className="text-white font-medium">{timeUntilReset}</span>
                     </p>
                   </div>
@@ -417,7 +408,7 @@ export function DailyCheckInModal({
               >
                 <div className="text-base text-amber-300 font-medium flex items-center justify-center gap-2">
                   <span>⚠️</span>
-                  하루라도 놓치면 연속 기록이 초기화돼요!
+                  <span>하루라도 놓치면 연속 기록이 초기화돼요!</span>
                 </div>
               </motion.div>
             </div>

@@ -12,11 +12,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const [showOnlineStatus] = useState(true);
 
   return (
-    <div className="rounded-xl py-4 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20"
+    <div className="rounded-xl py-4 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg"
          style={{ paddingLeft: '16px', paddingRight: '16px' }}>
-      {/* Background decoration - 데일리 모달과 동일한 배경 */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 pointer-events-none" />
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full filter blur-3xl" />
+      {/* Background decoration - 스크린샷과 동일한 어두운 배경 */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-gray-600/20 to-transparent rounded-full filter blur-3xl" />
       
       <div className="relative z-10">
         {/* 실용적인 카드형 레이아웃 - 모든 정보를 한번에 표시 */}

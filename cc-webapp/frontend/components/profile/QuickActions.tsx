@@ -50,10 +50,10 @@ export default function QuickActions({
       <div className="grid grid-cols-2 gap-4">
         <button 
           onClick={onViewHistory}
-          className="flex items-center justify-center gap-2 h-12 bg-slate-700/50 
-                     text-gray-300 font-medium rounded-lg hover:bg-slate-600/50 hover:text-white
+          className="flex items-center justify-center gap-2 h-12 bg-gray-700/50 
+                     text-gray-300 font-medium rounded-lg hover:bg-gray-600/50 hover:text-white
                      transform hover:scale-105 active:scale-95 transition-all duration-200
-                     border border-slate-600/30 text-base"
+                     border border-gray-600/30 text-base"
         >
           <Trophy size={18} />
           <span>전적 보기</span>
@@ -61,10 +61,10 @@ export default function QuickActions({
         
         <button 
           onClick={onSettings}
-          className="flex items-center justify-center gap-2 h-12 bg-slate-700/50 
-                     text-gray-300 font-medium rounded-lg hover:bg-slate-600/50 hover:text-white
+          className="flex items-center justify-center gap-2 h-12 bg-gray-700/50 
+                     text-gray-300 font-medium rounded-lg hover:bg-gray-600/50 hover:text-white
                      transform hover:scale-105 active:scale-95 transition-all duration-200
-                     border border-slate-600/30 text-base"
+                     border border-gray-600/30 text-base"
         >
           <Settings size={18} />
           <span>설정</span>

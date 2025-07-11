@@ -112,7 +112,7 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
   };
 
   return (
-    <div className={`profile-container min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 ${className}`}>
+    <div className={`profile-container min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 ${className}`}>
       {/* 420px 너비 최적화 컨테이너 - 좌우 패딩 16px로 최대 콘텐츠 공간 확보 */}
       <div className="w-full max-w-[420px] min-h-screen mx-auto px-4 pt-6 pb-8 
                       overflow-y-auto overscroll-y-contain
@@ -142,21 +142,51 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
             <ProfileStats user={user} />
           </section>
 
-          {/* 데일리 체크인 버튼 - 데일리 모달과 동일한 스타일 */}
+          {/* 데일리 체크인 - 실용앱 수준 개선 */}
           <section>
-            <div className="rounded-xl py-6 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20"
+            <div className="rounded-xl py-6 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg"
                  style={{ paddingLeft: '16px', paddingRight: '16px' }}>
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 pointer-events-none" />
-              <div className="relative z-10 text-center space-y-4">
-                <h3 className="text-lg font-bold text-white">일일 보상</h3>
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
+              <div className="relative z-10 space-y-4">
+                {/* 헤더 섹션 */}
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 min-w-[4rem] min-h-[4rem] rounded-full flex items-center justify-center mx-auto shadow-lg flex-shrink-0 aspect-square"
+                       style={{ 
+                         background: 'linear-gradient(to right, #374151, #4b5563)',
+                         border: '2px solid rgba(156, 163, 175, 0.3)'
+                       }}>
+                    <span className="text-3xl">🎁</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-white">일일 보상</h3>
+                  <p className="text-sm text-gray-300 whitespace-nowrap">매일 접속하고 특별한 보상을 받아보세요!</p>
+                </div>
+                
+                {/* 체크인 버튼 */}
                 <button 
                   onClick={() => setShowDailyCheckIn(true)}
-                  className="w-full h-14 bg-gradient-to-r from-purple-600 to-pink-600 
-                             text-white font-bold rounded-lg hover:from-purple-500 hover:to-pink-500
-                             transform hover:scale-105 active:scale-95 transition-all duration-200
-                             shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-base"
+                  className="w-full h-16 rounded-xl text-white font-bold transform hover:scale-[1.02] active:scale-[0.98] 
+                             transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 
+                             text-lg relative overflow-hidden"
+                  style={{ 
+                    background: 'linear-gradient(to right, #4b5563, #6b7280)',
+                    border: '2px solid rgba(156, 163, 175, 0.4)',
+                    borderRadius: '0.75rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(to right, #6b7280, #9ca3af)';
+                    e.currentTarget.style.borderColor = 'rgba(156, 163, 175, 0.6)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(to right, #4b5563, #6b7280)';
+                    e.currentTarget.style.borderColor = 'rgba(156, 163, 175, 0.4)';
+                  }}
                 >
-                  🎁 데일리 체크인
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="w-8 h-8 min-w-[2rem] min-h-[2rem] bg-white/20 rounded-full flex items-center justify-center border border-white/30 flex-shrink-0 aspect-square">
+                      <span className="text-white font-bold text-base">✓</span>
+                    </div>
+                    <span className="whitespace-nowrap">데일리 체크인</span>
+                  </div>
                 </button>
               </div>
             </div>

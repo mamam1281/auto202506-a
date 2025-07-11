@@ -24,35 +24,35 @@ export default function MissionCards({
     switch (type) {
       case 'DAILY':
         return {
-          bg: 'from-slate-600/20 to-slate-700/20',
-          border: 'border-slate-500/30 border-l-4 border-l-slate-500',
-          text: 'text-slate-300',
+          bg: 'from-gray-800/95 to-gray-900/95',
+          border: 'border-gray-600/40',
+          text: 'text-gray-200',
           icon: '📅',
-          glow: 'shadow-slate-500/20'
+          glow: 'shadow-gray-600/20'
         };
       case 'WEEKLY':
         return {
-          bg: 'from-slate-500/20 to-slate-600/20',
-          border: 'border-slate-400/30 border-l-4 border-l-slate-400',
-          text: 'text-slate-200',
+          bg: 'from-gray-800/95 to-gray-900/95',
+          border: 'border-gray-600/40',
+          text: 'text-gray-200',
           icon: '📊',
-          glow: 'shadow-slate-400/20'
+          glow: 'shadow-gray-600/20'
         };
       case 'SPECIAL':
         return {
-          bg: 'from-slate-700/20 to-slate-800/20',
-          border: 'border-slate-600/30 border-l-4 border-l-slate-600',
-          text: 'text-slate-100',
+          bg: 'from-gray-800/95 to-gray-900/95',
+          border: 'border-yellow-500/40',
+          text: 'text-yellow-200',
           icon: '⭐',
-          glow: 'shadow-slate-600/20'
+          glow: 'shadow-yellow-500/20'
         };
       default:
         return {
-          bg: 'from-slate-600/20 to-slate-700/20',
-          border: 'border-slate-500/30 border-l-4 border-l-slate-500',
-          text: 'text-slate-300',
+          bg: 'from-gray-800/95 to-gray-900/95',
+          border: 'border-gray-600/40',
+          text: 'text-gray-200',
           icon: '🎯',
-          glow: 'shadow-slate-500/20'
+          glow: 'shadow-gray-600/20'
         };
     }
   };
@@ -87,31 +87,33 @@ export default function MissionCards({
               {/* 데일리 모달과 동일한 카드 스타일 - 고정 높이 적용 */}
               <div 
                 className={`
-                  rounded-xl py-6 min-h-[200px] relative overflow-hidden bg-gradient-to-br ${colors.bg} 
-                  backdrop-blur-sm border ${colors.border.split(' ')[0]}/30 shadow-lg
+                  rounded-xl min-h-[250px] relative overflow-hidden bg-gray-800/95 
+                  backdrop-blur-sm border border-gray-600/50 shadow-lg
                   cursor-pointer transition-all duration-300 flex flex-col
-                  ${isCompleted ? 'opacity-75' : `hover:shadow-xl ${colors.glow}`}
+                  ${isCompleted ? 'opacity-75' : 'hover:shadow-xl hover:shadow-gray-600/20'}
                 `}
-                style={{ paddingLeft: '16px', paddingRight: '16px' }}
+                style={{ padding: '14px' }}
                 onClick={() => onMissionClick?.(mission)}
               >
                 {/* Background decoration */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/5 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
 
-                <div className="relative z-10 space-y-4 flex-1 flex flex-col">
+                <div className="relative z-10 space-y-2 flex-1 flex flex-col">
                   {/* Header with Mission Type Badge - 아이콘 정렬 개선 */}
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between mt-4">
                     <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${colors.bg.replace('/20', '/40')} 
-                                     border ${colors.border.split(' ')[0]}/50 flex items-center justify-center shadow-lg flex-shrink-0`}>
-                        <span className="text-lg">{colors.icon}</span>
+                      <div className="w-9 h-9 rounded-xl bg-gray-700/60 
+                                     border border-gray-600/50 flex items-center justify-center shadow-lg flex-shrink-0">
+                        <span className="text-base">{colors.icon}</span>
                       </div>
                       
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-base font-bold text-white leading-tight mb-1">
+                        <h4 className="font-bold text-white leading-tight mb-1 whitespace-nowrap overflow-hidden text-ellipsis" 
+                            style={{ fontSize: '16px' }}>
                           {mission.title}
                         </h4>
-                        <p className="text-sm text-white/80 leading-tight">
+                        <p className="text-white/90 leading-tight font-medium whitespace-nowrap overflow-hidden text-ellipsis" 
+                           style={{ fontSize: '12px' }}>
                           {mission.description}
                         </p>
                       </div>
@@ -129,33 +131,28 @@ export default function MissionCards({
                         >
                           <CheckCircle className="w-5 h-5 text-green-400" />
                         </motion.div>
-                      ) : (
-                        <div className={`px-3 py-1 rounded-lg ${colors.bg.replace('/20', '/30')} 
-                                       border ${colors.border.split(' ')[0]}/50`}>
-                          <span className={`text-xs font-bold ${colors.text}`}>
-                            {getMissionTypeLabel(mission.type)}
-                          </span>
-                        </div>
-                      )}
+                      ) : null}
                     </div>
-                  </div>
-
-                  {/* Progress Section - 하단 고정 */}
-                  <div className="mt-auto space-y-3">
+                  </div>                    {/* Progress Section - 하단 고정 */}
+                  <div className="mt-auto space-y-2">
                     {/* Progress Info */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-white/70">진행률:</span>
-                        <span className={`text-sm font-bold ${colors.text} px-2 py-1 rounded-lg 
-                                        bg-white/10 border border-white/20`}>
+                        <span className={`font-bold ${colors.text} px-3 py-2 rounded-lg 
+                                        bg-gradient-to-br from-white/20 to-white/5 border-2 border-white/30 
+                                        shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                                        whitespace-nowrap transform hover:scale-105 transition-all duration-200`} 
+                              style={{ fontSize: '12px' }}>
                           {mission.progress}/{mission.target}
                         </span>
                       </div>
                       
-                      <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-yellow-400/20 
-                                     border border-yellow-400/30">
-                        <span className="text-yellow-400">💎</span>
-                        <span className="text-sm font-bold text-yellow-300">
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-500/30 to-orange-500/20 
+                                     border-2 border-yellow-400/40 
+                                     shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_3px_6px_rgba(0,0,0,0.4)] 
+                                     transform hover:scale-105 transition-all duration-200">
+                        <span className="text-lg">💎</span>
+                        <span className="font-bold text-yellow-200 whitespace-nowrap drop-shadow-lg" style={{ fontSize: '12px' }}>
                           +{mission.reward.amount}
                         </span>
                       </div>
@@ -167,10 +164,10 @@ export default function MissionCards({
                         progress={progressPercentage}
                         size="md"
                         showPercentage={false}
-                        className="w-full [&>div]:bg-slate-700 [&>div>div]:bg-gradient-to-r [&>div>div]:from-slate-400 [&>div>div]:to-slate-200"
+                        className="w-full [&>div]:bg-gray-700 [&>div>div]:bg-gradient-to-r [&>div>div]:from-gray-400 [&>div>div]:to-gray-200"
                       />
                       
-                      <div className="flex items-center justify-between text-xs text-white/60">
+                      <div className="flex items-center justify-between text-white/60" style={{ fontSize: '11px' }}>
                         <span>0%</span>
                         <span className={`font-bold ${colors.text}`}>
                           {Math.round(progressPercentage)}%
@@ -182,8 +179,8 @@ export default function MissionCards({
 
                   {/* Time Left */}
                   {mission.timeLeft && (
-                    <div className="flex items-center gap-2 text-xs text-white/60 mt-2">
-                      <Clock className="w-4 h-4" />
+                    <div className="flex items-center gap-2 text-white/60 whitespace-nowrap" style={{ fontSize: '11px' }}>
+                      <Clock className="w-3 h-3" />
                       <span>{mission.timeLeft}</span>
                     </div>
                   )}
@@ -199,7 +196,7 @@ export default function MissionCards({
         <Button
           onClick={onVisitSite}
           variant="outline"
-          className="w-full h-12 border-white/20 text-white hover:bg-white/10 
+          className="w-full h-12 border-gray-600/50 text-white hover:bg-gray-700/80 
                      flex items-center justify-center gap-2 rounded-lg"
         >
           <ExternalLink className="w-4 h-4" />

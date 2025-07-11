@@ -51,11 +51,11 @@ export default function FlashOfferBanner({ offer, onClose, onVisitSite }: FlashO
         className="relative w-full"
       >
         {/* 420px 너비 최적화, 데일리 모달 스타일 통일 - 좌우 패딩 16px로 조밀하게 */}
-        <div className="rounded-xl py-5 relative overflow-hidden bg-gradient-to-br from-slate-600/20 to-slate-700/20 
-                        backdrop-blur-sm border border-slate-500/30 shadow-lg"
+        <div className="rounded-xl py-5 relative overflow-hidden bg-gradient-to-br from-gray-800/95 to-gray-900/95 
+                        backdrop-blur-sm border border-gray-600/40 shadow-xl"
              style={{ paddingLeft: '16px', paddingRight: '16px' }}>
           {/* Background decoration */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-500/10 via-transparent to-slate-700/10 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-700/20 via-transparent to-gray-800/20 pointer-events-none" />
           
           {/* Close Button - 겹침 방지를 위한 별도 위치 */}
           {onClose && (
@@ -76,17 +76,17 @@ export default function FlashOfferBanner({ offer, onClose, onVisitSite }: FlashO
               <motion.div
                 animate={{ rotate: [0, -10, 10, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="w-11 h-11 bg-gradient-to-br from-slate-500 to-slate-600 rounded-xl 
-                           flex items-center justify-center shadow-lg flex-shrink-0"
+                className="w-11 h-11 bg-gradient-to-br from-yellow-500/40 to-yellow-600/30 rounded-xl 
+                           flex items-center justify-center shadow-lg flex-shrink-0 border border-yellow-400/50"
               >
-                <Zap className="w-5 h-5 text-white" />
+                <Zap className="w-5 h-5 text-yellow-300" />
               </motion.div>
               
               <div className="flex-1 min-w-0">
                 <h3 className="text-lg font-bold text-white leading-tight mb-1 whitespace-nowrap overflow-hidden text-ellipsis">
                   {offer.title}
                 </h3>
-                <p className="text-base text-white/80 leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                <p className="text-base text-white/80 leading-tight whitespace-nowrap overflow-hidden text-ellipsis" style={{ padding: '12px' }}>
                   {offer.description}
                 </p>
               </div>
@@ -95,27 +95,27 @@ export default function FlashOfferBanner({ offer, onClose, onVisitSite }: FlashO
             {/* Price and Timer Info - 간격 조정 */}
             <div className="grid grid-cols-2 gap-4">
               {/* Timer - 수직 배열 */}
-              <div className="p-3 rounded-lg bg-slate-700/30 border border-slate-600/50 flex flex-col items-center text-center space-y-2">
+              <div className="p-3 rounded-lg bg-gradient-to-br from-green-600/20 to-green-700/15 border border-green-500/40 flex flex-col items-center text-center space-y-2">
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
-                  className="w-8 h-8 bg-slate-600/50 rounded-full flex items-center justify-center"
+                  className="w-8 h-8 bg-green-500/50 rounded-full flex items-center justify-center border border-green-400/60"
                 >
-                  <Clock className="w-4 h-4 text-slate-300" />
+                  <Clock className="w-4 h-4 text-green-200" />
                 </motion.div>
-                <span className="text-base font-bold text-slate-300">{timeLeft}</span>
-                <p className="text-sm text-slate-400">남은 시간</p>
+                <span className="text-base font-bold text-green-200">{timeLeft}</span>
+                <p className="text-sm text-green-300">남은 시간</p>
               </div>
               
               {/* Discount */}
-              <div className="p-3 rounded-lg bg-slate-600/30 border border-slate-500/50 flex flex-col items-center text-center space-y-2">
-                <div className="w-8 h-8 bg-slate-500/50 rounded-full flex items-center justify-center">
-                  <span className="text-lg">%</span>
+              <div className="p-3 rounded-lg bg-gradient-to-br from-orange-600/20 to-orange-700/15 border border-orange-500/40 flex flex-col items-center text-center space-y-2">
+                <div className="w-8 h-8 bg-orange-500/50 rounded-full flex items-center justify-center border border-orange-400/60">
+                  <span className="text-lg text-orange-200">%</span>
                 </div>
-                <div className="text-base font-bold text-slate-200">
+                <div className="text-base font-bold text-orange-200">
                   {offer.discount}% 할인
                 </div>
-                <p className="text-sm text-slate-300">{offer.highlight || '특별 혜택'}</p>
+                <p className="text-sm text-orange-300">{offer.highlight || '특별 혜택'}</p>
               </div>
             </div>
 
