@@ -10,11 +10,10 @@ import type { FlashOffer } from './types';
 interface FlashOfferBannerProps {
   offer: FlashOffer;
   onClose?: () => void;
-  onClaim?: (offerId: string) => void;
   onVisitSite?: () => void;
 }
 
-export default function FlashOfferBanner({ offer, onClose, onClaim, onVisitSite }: FlashOfferBannerProps) {
+export default function FlashOfferBanner({ offer, onClose, onVisitSite }: FlashOfferBannerProps) {
   const [timeLeft, setTimeLeft] = useState<string>('');
   const [isExpired, setIsExpired] = useState(false);
 
@@ -161,39 +160,6 @@ export default function FlashOfferBanner({ offer, onClose, onClaim, onVisitSite 
               </div>
             </div>
 
-            {/* Visit Site Button - 모피즘 효과 적용 */}
-            {onVisitSite && (
-              <Button
-                onClick={onVisitSite}
-                className="w-full h-14 relative overflow-hidden
-                           bg-gradient-to-br from-slate-800/80 via-slate-700/60 to-slate-600/80
-                           border-2 border-slate-400/30 text-white hover:text-slate-100
-                           flex items-center justify-center gap-3 rounded-xl
-                           shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),0_4px_12px_rgba(0,0,0,0.4)]
-                           hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15),0_6px_16px_rgba(0,0,0,0.5)]
-                           transform hover:scale-[1.02] active:scale-[0.98]
-                           transition-all duration-300 ease-out
-                           before:content-[''] before:absolute before:inset-0 
-                           before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-black/10
-                           before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300"
-              >
-                <div className="relative z-10 flex items-center gap-3">
-                  <motion.div
-                    whileHover={{ rotate: 15 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ExternalLink className="w-5 h-5" />
-                  </motion.div>
-                  <span className="text-base font-bold tracking-wide">
-                    본사 사이트에서 더 많은 혜택 보기
-                  </span>
-                </div>
-                
-                {/* 모피즘 하이라이트 효과 */}
-                <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                <div className="absolute inset-y-0 left-0 w-[1px] bg-gradient-to-b from-white/20 via-transparent to-transparent" />
-              </Button>
-            )}
           </div>
         </div>
       </motion.div>

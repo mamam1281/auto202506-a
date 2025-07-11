@@ -26,51 +26,81 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
         <div className="grid grid-cols-2 gap-6" role="region" aria-label="계정 통계">
           {/* 토큰 (가장 중요) */}
           <div className="bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-400/30 
-                          rounded-xl p-5 text-center focus-within:ring-2 focus-within:ring-amber-400/50"
+                          rounded-xl text-center focus-within:ring-2 focus-within:ring-amber-400/50
+                          shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_16px_rgba(0,0,0,0.4)]
+                          transform hover:scale-[1.02] transition-all duration-300 ease-out
+                          before:content-[''] before:absolute before:inset-0 before:rounded-xl
+                          before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-black/5
+                          before:pointer-events-none relative overflow-hidden"
+               style={{ padding: '12px' }}
                tabIndex={0}
                role="button"
                aria-label={`보유 토큰 ${(user.cyber_token_balance || 0).toLocaleString()}개`}>
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Coins className="w-6 h-6 text-amber-400" />
-              <span className="text-base text-amber-300">보유 토큰</span>
-            </div>
-            <div className="text-3xl font-bold text-amber-400">
-              {(user.cyber_token_balance || 0).toLocaleString()}
+            <div className="flex items-center justify-center gap-2 relative z-10">
+              <Coins className="w-5 h-5 text-amber-400 drop-shadow-sm" />
+              <span className="text-amber-300 whitespace-nowrap drop-shadow-sm" style={{ fontSize: '13px' }}>보유 토큰</span>
+              <div className="text-amber-400 font-bold whitespace-nowrap drop-shadow-sm" style={{ fontSize: '16px' }}>
+                {(user.cyber_token_balance || 0).toLocaleString()}
+              </div>
             </div>
           </div>
           
           {/* 연속 출석 */}
           <div className="bg-gradient-to-br from-orange-500/20 to-red-500/10 border border-orange-400/30 
-                          rounded-xl p-5 text-center focus-within:ring-2 focus-within:ring-orange-400/50"
+                          rounded-xl text-center focus-within:ring-2 focus-within:ring-orange-400/50
+                          shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_16px_rgba(0,0,0,0.4)]
+                          transform hover:scale-[1.02] transition-all duration-300 ease-out
+                          before:content-[''] before:absolute before:inset-0 before:rounded-xl
+                          before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-black/5
+                          before:pointer-events-none relative overflow-hidden"
+               style={{ padding: '12px' }}
                tabIndex={0}
                role="button"
                aria-label={`연속 출석 ${user.loginStreak || 0}일째`}>
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Flame className="w-6 h-6 text-orange-400" />
-              <span className="text-base text-orange-300">연속 출석</span>
-            </div>
-            <div className="text-3xl font-bold text-orange-400">
-              {user.loginStreak || 0}일
+            <div className="flex items-center justify-center gap-2 relative z-10">
+              <Flame className="w-5 h-5 text-orange-400 drop-shadow-sm" />
+              <span className="text-orange-300 whitespace-nowrap drop-shadow-sm" style={{ fontSize: '13px' }}>연속 출석</span>
+              <div className="text-orange-400 font-bold whitespace-nowrap drop-shadow-sm" style={{ fontSize: '16px' }}>
+                {user.loginStreak || 0}일
+              </div>
             </div>
           </div>
           
           {/* 승리/미션 통계 */}
           <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/10 border border-green-400/30 
-                          rounded-xl p-4 text-center focus-within:ring-2 focus-within:ring-green-400/50"
+                          rounded-xl text-center focus-within:ring-2 focus-within:ring-green-400/50
+                          shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_16px_rgba(0,0,0,0.4)]
+                          transform hover:scale-[1.02] transition-all duration-300 ease-out
+                          before:content-[''] before:absolute before:inset-0 before:rounded-xl
+                          before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-black/5
+                          before:pointer-events-none relative overflow-hidden"
+               style={{ padding: '12px' }}
                tabIndex={0}
                role="button"
                aria-label={`총 ${user.wins || 0}승 달성`}>
-            <div className="text-2xl font-bold text-green-400">{user.wins || 0}</div>
-            <div className="text-sm text-green-300">승리</div>
+            <div className="flex items-center justify-center gap-2 relative z-10">
+              <Trophy className="w-5 h-5 text-green-400 drop-shadow-sm" />
+              <span className="text-green-300 whitespace-nowrap drop-shadow-sm" style={{ fontSize: '13px' }}>승리</span>
+              <div className="text-green-400 font-bold whitespace-nowrap drop-shadow-sm" style={{ fontSize: '16px' }}>{user.wins || 0}</div>
+            </div>
           </div>
           
           <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 border border-blue-400/30 
-                          rounded-xl p-4 text-center focus-within:ring-2 focus-within:ring-blue-400/50"
+                          rounded-xl text-center focus-within:ring-2 focus-within:ring-blue-400/50
+                          shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_16px_rgba(0,0,0,0.4)]
+                          transform hover:scale-[1.02] transition-all duration-300 ease-out
+                          before:content-[''] before:absolute before:inset-0 before:rounded-xl
+                          before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-black/5
+                          before:pointer-events-none relative overflow-hidden"
+               style={{ padding: '12px' }}
                tabIndex={0}
                role="button"
                aria-label={`${user.completedMissions || 0}개 미션 완료`}>
-            <div className="text-2xl font-bold text-blue-400">{user.completedMissions || 0}</div>
-            <div className="text-sm text-blue-300">미션완료</div>
+            <div className="flex items-center justify-center gap-2 relative z-10">
+              <Gift className="w-5 h-5 text-blue-400 drop-shadow-sm" />
+              <span className="text-blue-300 whitespace-nowrap drop-shadow-sm" style={{ fontSize: '13px' }}>미션완료</span>
+              <div className="text-blue-400 font-bold whitespace-nowrap drop-shadow-sm" style={{ fontSize: '16px' }}>{user.completedMissions || 0}</div>
+            </div>
           </div>
         </div>
 
