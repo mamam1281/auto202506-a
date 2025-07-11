@@ -3,26 +3,14 @@
 import { useState, useEffect } from 'react';
 import ProfileHeader from './ProfileHeader';
 import ProfileStats from './ProfileStats';
-import ProfileActions from './ProfileActions';
-import FlashOfferBanner from './FlashOfferBanner';
 import DailyCheckInModal from './DailyCheckInModal';
+import FlashOfferBanner from './FlashOfferBanner';
 import MissionCards from './MissionCards';
-import type { User, FlashOffer, Mission, CJMessage, ProfileContainerProps } from './types';
-import '../../styles/profile.css';
-
-// CJChatBubble 임시 컴포넌트 (실제 구현 전까지만 사용)
-const CJChatBubble = ({ user, messages, onActionClick, onVisitSite }: any) => (
-  <div className="profile-chat-bubble">
-    <div className="profile-chat-bubble-inner">
-      <div className="text-white">
-        <p>AI 도우미 메시지</p>
-      </div>
-    </div>
-  </div>
-);
+import ProfileActions from './ProfileActions';
+import type { User, ProfileContainerProps, FlashOffer, Mission } from './types';
 
 export default function ProfileContainer({ className = '' }: ProfileContainerProps) {
-  // Mock user data - replace with actual data fetching
+  // Mock user data
   const [user] = useState<User>({
     id: 1,
     nickname: 'GameMaster',
@@ -40,146 +28,165 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
   // Mock flash offer data
   const [flashOffer] = useState<FlashOffer>({
     id: 'flash-001',
-    title: '💎 토큰 2배 충전!',
-    description: '지금 충전하면 보너스 토큰 100% 추가 지급!',
-    originalPrice: 10000,
-    discountPrice: 10000,
-    discount: 100,
-    endTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(), // 2 hours from now
+    title: '💎 특별 토큰 패키지',
+    description: '500% 보너스 + 무료 스핀',
+    discount: 75,
+    originalPrice: 19.99,
+    salePrice: 4.99,
+    endTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(), // 2시간 후 만료
     isActive: true,
-    type: 'TOKEN_BONUS'
+    highlight: '최대 할인'
   });
 
   // Mock missions data
   const [missions] = useState<Mission[]>([
     {
-      id: 'daily-001',
-      title: '첫 게임 플레이',
-      description: '오늘 첫 게임을 플레이하세요',
-      reward: 50,
+      id: 'daily-1',
+      title: '슬롯 게임 5회 플레이',
+      description: '어떤 슬롯 게임이든 5회 플레이하세요',
       type: 'DAILY',
-      progress: 0,
-      target: 1,
-      completed: false,
-      icon: '🎮'
+      progress: 3,
+      target: 5,
+      reward: { type: 'TOKEN', amount: 100 },
+      isCompleted: false,
+      timeLeft: '8시간 후 초기화'
     },
     {
-      id: 'weekly-001',
-      title: '주간 승리 달성',
-      description: '이번 주에 5번 승리하세요',
-      reward: 200,
+      id: 'weekly-1',
+      title: '주간 승리 목표',
+      description: '이번 주에 10번 승리하세요',
       type: 'WEEKLY',
-      progress: 2,
-      target: 5,
-      completed: false,
-      icon: '🏆'
-    }
-  ]);
-
-  // Mock CJ messages
-  const [cjMessages] = useState<CJMessage[]>([
+      progress: 7,
+      target: 10,
+      reward: { type: 'TOKEN', amount: 500 },
+      isCompleted: false,
+      timeLeft: '3일 남음'
+    },
     {
-      id: 'msg-001',
-      message: '🎉 연속 접속 8일 달성! 대단해요! 오늘도 게임을 즐겨보세요!',
-      emotion: 'congratulatory',
-      timestamp: new Date().toISOString(),
-      actionSuggestion: {
-        text: '게임 시작하기',
-        action: 'start_game',
-        params: { gameType: 'recommended' }
-      }
+      id: 'special-1',
+      title: '럭키 잭팟 이벤트',
+      description: '잭팟 게임에서 큰 상금을 획득하세요',
+      type: 'SPECIAL',
+      progress: 0,
+      target: 1,
+      reward: { type: 'SPECIAL', amount: 1000 },
+      isCompleted: false,
+      timeLeft: '이벤트 종료까지 5일'
     }
   ]);
 
   // Modal states
   const [showDailyCheckIn, setShowDailyCheckIn] = useState(false);
+  const [showFlashOffer, setShowFlashOffer] = useState(true);
   const [lastCheckIn, setLastCheckIn] = useState<string | null>(null);
 
   // Check if user should see daily check-in modal
   useEffect(() => {
     const storedLastCheckIn = localStorage.getItem('lastCheckIn');
-    setLastCheckIn(storedLastCheckIn);
-
-    // 임시: 항상 모달 표시 (테스트용)
-    const timer = setTimeout(() => {
-      setShowDailyCheckIn(true);
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-    
-    /* 원래 로직 (필요시 복원)
-    const today = new Date().toDateString();
-    
-    if (!storedLastCheckIn || storedLastCheckIn !== today) {
-      // Show modal after a short delay for better UX
-      const timer = setTimeout(() => {
-        setShowDailyCheckIn(true);
-      }, 1000);
-      
-      return () => clearTimeout(timer);
+    if (storedLastCheckIn) {
+      setLastCheckIn(storedLastCheckIn);
     }
-    */
   }, []);
+
+  const handleDailyCheckInClaim = (day: number) => {
+    const today = new Date().toISOString();
+    localStorage.setItem('lastCheckIn', today);
+    setLastCheckIn(today);
+    setShowDailyCheckIn(false);
+    console.log(`Day ${day} claimed!`);
+  };
 
   const handleLogout = () => {
     console.log('Logging out...');
-    // Implement logout logic
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    window.location.reload();
+    // Handle logout logic
   };
 
-  const handleFlashOfferClose = () => {
-    console.log('Flash offer closed');
+  const handleMissionClick = (mission: Mission) => {
+    console.log('Mission clicked:', mission.title);
+    // Handle mission interaction
   };
 
-  const handleFlashOfferClaim = (offerId: string) => {
-    console.log('Flash offer claimed:', offerId);
-  };
-
-  const handleFlashOfferVisitSite = () => {
-    console.log('Visiting site from flash offer');
-    window.open('https://company-site.com/flash-offer', '_blank');
-  };
-
-  const handleDailyCheckInClaim = (day: number) => {
-    console.log('Daily check-in claimed for day:', day);
-    const today = new Date().toDateString();
-    localStorage.setItem('lastCheckIn', today);
-    setShowDailyCheckIn(false);
-  };
-
-  const handleCJActionClick = (action: string, params?: any) => {
-    console.log('CJ Action clicked:', action, params);
-  };
-
-  const handleCJVisitSite = () => {
-    window.open('https://company-site.com', '_blank');
+  const handleVisitSite = () => {
+    console.log('Visiting main site...');
+    window.open('https://casinoclub.com', '_blank');
   };
 
   return (
-    <div className={`profile-container max-w-md mx-auto p-3 space-y-4 ${className}`}>
-      {/* Flash Offer Banner */}
-      <FlashOfferBanner
-        offer={flashOffer}
-        onClose={handleFlashOfferClose}
-        onClaim={handleFlashOfferClaim}
-        onVisitSite={handleFlashOfferVisitSite}
-      />
+    <div className={`profile-container min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 ${className}`}>
+      {/* 420px 너비 최적화 컨테이너 - 데일리 모달 스타일 통일 */}
+      <div className="w-full max-w-[420px] min-h-screen mx-auto px-6 pt-6 pb-8 
+                      overflow-y-auto overscroll-y-contain
+                      scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+        
+        {/* Flash Offer Banner - 최우선 노출 */}
+        {showFlashOffer && (
+          <section className="mb-6">
+            <FlashOfferBanner 
+              offer={flashOffer}
+              onClose={() => setShowFlashOffer(false)}
+              onClaim={(offerId) => console.log('Flash offer claimed:', offerId)}
+              onVisitSite={handleVisitSite}
+            />
+          </section>
+        )}
 
-      {/* Profile Header */}
-      <ProfileHeader user={user} />
+        {/* 메인 컨텐츠 - 데일리 모달과 동일한 간격 (space-y-6) */}
+        <main className="space-y-6">
+          {/* 프로필 헤더 */}
+          <section>
+            <ProfileHeader user={user} />
+          </section>
 
-      {/* Profile Stats */}
-      <ProfileStats user={user} />
+          {/* 프로필 통계 및 빠른 액션 */}
+          <section>
+            <ProfileStats user={user} />
+          </section>
 
-      {/* Mission Cards */}
-      <MissionCards missions={missions} />
+          {/* 데일리 체크인 버튼 - 데일리 모달과 동일한 스타일 */}
+          <section>
+            <div className="rounded-xl p-6 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 pointer-events-none" />
+              <div className="relative z-10 text-center space-y-4">
+                <h3 className="text-lg font-bold text-white">일일 보상</h3>
+                <button 
+                  onClick={() => setShowDailyCheckIn(true)}
+                  className="w-full h-14 bg-gradient-to-r from-purple-600 to-pink-600 
+                             text-white font-bold rounded-lg hover:from-purple-500 hover:to-pink-500
+                             transform hover:scale-105 active:scale-95 transition-all duration-200
+                             shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-base"
+                >
+                  🎁 데일리 체크인
+                </button>
+              </div>
+            </div>
+          </section>
 
-      {/* Profile Actions */}
-      <ProfileActions onLogout={handleLogout} />
+          {/* 미션 카드 섹션 */}
+          <section>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white px-2">오늘의 미션</h3>
+              <MissionCards 
+                missions={missions}
+                onMissionClick={handleMissionClick}
+                onVisitSite={handleVisitSite}
+              />
+            </div>
+          </section>
 
-      {/* Daily Check-in Modal */}
+          {/* 프로필 액션 버튼들 */}
+          <section>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white px-2">빠른 액션</h3>
+              <ProfileActions onLogout={handleLogout} />
+            </div>
+          </section>
+        </main>
+
+        {/* 하단 여백 - 스크롤 공간 확보 */}
+        <div className="h-8" />
+      </div>
+
+      {/* 데일리 체크인 모달 */}
       <DailyCheckInModal
         isOpen={showDailyCheckIn}
         onClose={() => setShowDailyCheckIn(false)}
@@ -187,14 +194,6 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
         currentStreak={user.loginStreak || 0}
         lastCheckIn={lastCheckIn}
         todayReward={50}
-      />
-
-      {/* CJ Chat Bubble */}
-      <CJChatBubble
-        user={user}
-        messages={cjMessages}
-        onActionClick={handleCJActionClick}
-        onVisitSite={handleCJVisitSite}
       />
     </div>
   );

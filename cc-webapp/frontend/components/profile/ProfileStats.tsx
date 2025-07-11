@@ -1,112 +1,169 @@
 'use client';
 
-import { Coins, Trophy, Flame, Target } from 'lucide-react';
-import TokenDisplay from './TokenDisplay';
-import StreakIndicator from './StreakIndicator';
-import StatCard from './StatCard';
+import { Coins, Flame, Trophy, Settings, Gift } from 'lucide-react';
 import type { ProfileStatsProps } from './types';
 
+/**
+ * 400px * 750px에 최적화된 통합 프로필 통계
+ * 한국 사용자 경험에 맞춘 단일 컴포넌트
+ */
 export default function ProfileStats({ user }: ProfileStatsProps) {
-  const stats = [
-    {
-      icon: Trophy,
-      label: '승리',
-      value: user.wins || 0,
-      color: 'text-yellow-400',
-      clickable: true,
-      onClick: () => console.log('View wins history')
-    },
-    {
-      icon: Target,
-      label: '완료된 미션',
-      value: user.completedMissions || 0,
-      color: 'text-green-400',
-      clickable: true,
-      onClick: () => console.log('View mission history')
-    }
-  ];
+  // 액션 핸들러들
+  const handleChargeTokens = () => console.log('토큰 충전');
+  const handleViewRewards = () => console.log('보상 페이지');
+  const handleViewHistory = () => console.log('전적 보기');
+  const handleSettings = () => console.log('설정');
+  const handleClaimReward = () => console.log('연속 출석 보상 받기');
 
   return (
-    <div className="space-y-4 mb-6">
-      {/* Top Row: Token & Streak */}
-      <div className="grid grid-cols-2 gap-4">
-        {/* Token Card - Enhanced Visual Hierarchy */}
-        <div className="profile-glass rounded-xl p-4 flex items-center justify-center relative overflow-hidden
-                        transform hover:scale-105 transition-all duration-300
-                        shadow-2xl shadow-yellow-500/30 border-2 border-yellow-500/40 bg-gradient-to-br from-yellow-400/15 to-orange-400/10">
-          {/* Gold accent glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 via-transparent to-orange-400/15 pointer-events-none" />
-          <div className="absolute top-2 right-2 w-6 h-6 bg-gradient-to-br from-yellow-400/60 to-orange-400/60 rounded-full blur-md animate-pulse" />
-          <div className="relative z-10">
-            <TokenDisplay 
-              amount={user.cyber_token_balance || 0}
-              size="lg"
-              showIcon={true}
-              showLabel={true}
-              onClick={() => console.log('View token history')}
-            />
-          </div>
-        </div>
-        
-        <div className="profile-glass rounded-xl p-4 flex items-center justify-center">
-          <StreakIndicator 
-            streak={user.loginStreak || 0}
-            size="md"
-            showLabel={true}
-            animated={true}
-          />
-        </div>
-      </div>
-
-      {/* Bottom Row: Stats Grid */}
-      <div className="grid grid-cols-2 gap-4">
-        {stats.map((stat, index) => (
-          <StatCard
-            key={index}
-            icon={stat.icon}
-            label={stat.label}
-            value={stat.value}
-            color={stat.color}
-            size="sm"
-            clickable={stat.clickable}
-            onClick={stat.onClick}
-          />
-        ))}
-      </div>
-
-      {/* Special Achievement Banner - Enhanced Layout */}
-      {(user.loginStreak || 0) >= 7 && (
-        <div className="profile-glass rounded-2xl p-5 bg-gradient-to-r from-orange-500/25 to-red-500/20 border-2 border-orange-400/40 
-                        shadow-lg shadow-orange-500/20 transform hover:scale-[1.02] transition-all duration-300">
-          <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
-            {/* Left: Animated Icon */}
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-500/30 border border-orange-400/50">
-              <Flame size={24} className="text-orange-300 animate-pulse" />
+    <div className="rounded-xl p-6 relative overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
+      {/* 데일리 모달과 동일한 배경 효과 */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 pointer-events-none" />
+      
+      <div className="relative z-10 space-y-8">
+        {/* 핵심 통계 표시 - 데일리 모달과 동일한 간격 */}
+        <div className="grid grid-cols-2 gap-6" role="region" aria-label="계정 통계">
+          {/* 토큰 (가장 중요) */}
+          <div className="bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-400/30 
+                          rounded-xl p-5 text-center focus-within:ring-2 focus-within:ring-amber-400/50"
+               tabIndex={0}
+               role="button"
+               aria-label={`보유 토큰 ${(user.cyber_token_balance || 0).toLocaleString()}개`}>
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <Coins className="w-6 h-6 text-amber-400" />
+              <span className="text-base text-amber-300">보유 토큰</span>
             </div>
-            
-            {/* Center: Content */}
-            <div className="space-y-1">
-              <div className="text-lg font-bold text-orange-200">
-                🔥 연속 접속 달성!
-              </div>
-              <div className="text-sm text-orange-300/90 leading-relaxed">
-                특별 보너스 획득 가능
-              </div>
-            </div>
-            
-            {/* Right: Action Button */}
-            <div className="flex items-center justify-center">
-              <button className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 
-                               text-white text-sm font-medium rounded-lg
-                               hover:from-orange-400 hover:to-red-400
-                               transform hover:scale-105 transition-all duration-200
-                               shadow-md">
-                수령
-              </button>
+            <div className="text-3xl font-bold text-amber-400">
+              {(user.cyber_token_balance || 0).toLocaleString()}
             </div>
           </div>
+          
+          {/* 연속 출석 */}
+          <div className="bg-gradient-to-br from-orange-500/20 to-red-500/10 border border-orange-400/30 
+                          rounded-xl p-5 text-center focus-within:ring-2 focus-within:ring-orange-400/50"
+               tabIndex={0}
+               role="button"
+               aria-label={`연속 출석 ${user.loginStreak || 0}일째`}>
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <Flame className="w-6 h-6 text-orange-400" />
+              <span className="text-base text-orange-300">연속 출석</span>
+            </div>
+            <div className="text-3xl font-bold text-orange-400">
+              {user.loginStreak || 0}일
+            </div>
+          </div>
+          
+          {/* 승리/미션 통계 */}
+          <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/10 border border-green-400/30 
+                          rounded-xl p-4 text-center focus-within:ring-2 focus-within:ring-green-400/50"
+               tabIndex={0}
+               role="button"
+               aria-label={`총 ${user.wins || 0}승 달성`}>
+            <div className="text-2xl font-bold text-green-400">{user.wins || 0}</div>
+            <div className="text-sm text-green-300">승리</div>
+          </div>
+          
+          <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 border border-blue-400/30 
+                          rounded-xl p-4 text-center focus-within:ring-2 focus-within:ring-blue-400/50"
+               tabIndex={0}
+               role="button"
+               aria-label={`${user.completedMissions || 0}개 미션 완료`}>
+            <div className="text-2xl font-bold text-blue-400">{user.completedMissions || 0}</div>
+            <div className="text-sm text-blue-300">미션완료</div>
+          </div>
         </div>
-      )}
+
+        {/* 연속 출석 보상 - 데일리 모달과 동일한 패딩 */}
+        {(user.loginStreak || 0) >= 7 && (
+          <div className="bg-gradient-to-r from-purple-600/30 to-pink-600/20 border-2 border-purple-400/40 
+                          rounded-xl p-6 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+            <div className="relative z-10">
+              {(user.loginStreak || 0) % 7 === 0 ? (
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <span className="text-lg font-bold text-green-300">
+                      {user.loginStreak}일 연속 출석 달성! 🎉
+                    </span>
+                  </div>
+                  <button 
+                    onClick={handleClaimReward}
+                    className="w-full h-14 bg-gradient-to-r from-green-600 to-emerald-600 
+                               text-white font-bold rounded-lg hover:from-green-500 hover:to-emerald-500
+                               transform hover:scale-105 active:scale-95 transition-all duration-200
+                               shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  >
+                    <Gift className="w-5 h-5" />
+                    특별 보상 받기
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <div className="text-base font-medium text-purple-300 mb-2">
+                    연속 출석 {user.loginStreak}일째
+                  </div>
+                  <div className="text-sm text-purple-200">
+                    {7 - ((user.loginStreak || 0) % 7)}일 더 출석하면 특별 보상!
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 빠른 액션 버튼들 - 데일리 모달과 동일한 간격 */}
+        <div className="space-y-6">
+          {/* Primary Actions */}
+          <div className="grid grid-cols-2 gap-4">
+            <button 
+              onClick={handleChargeTokens}
+              className="flex items-center justify-center gap-3 h-14 bg-gradient-to-r from-blue-600 to-purple-600 
+                         text-white font-bold rounded-lg hover:from-blue-500 hover:to-purple-500
+                         transform hover:scale-105 active:scale-95 transition-all duration-200
+                         shadow-lg hover:shadow-xl text-base"
+            >
+              <Coins size={20} />
+              <span>토큰 충전</span>
+            </button>
+            
+            <button 
+              onClick={handleViewRewards}
+              className="flex items-center justify-center gap-3 h-14 bg-gradient-to-r from-amber-600 to-orange-600 
+                         text-white font-bold rounded-lg hover:from-amber-500 hover:to-orange-500
+                         transform hover:scale-105 active:scale-95 transition-all duration-200
+                         shadow-lg hover:shadow-xl text-base"
+            >
+              <Gift size={20} />
+              <span>보상 받기</span>
+            </button>
+          </div>
+          
+          {/* Secondary Actions */}
+          <div className="grid grid-cols-2 gap-4">
+            <button 
+              onClick={handleViewHistory}
+              className="flex items-center justify-center gap-2 h-12 bg-slate-700/50 
+                         text-gray-300 font-medium rounded-lg hover:bg-slate-600/50 hover:text-white
+                         transform hover:scale-105 active:scale-95 transition-all duration-200
+                         border border-slate-600/30 text-base"
+            >
+              <Trophy size={18} />
+              <span>전적 보기</span>
+            </button>
+            
+            <button 
+              onClick={handleSettings}
+              className="flex items-center justify-center gap-2 h-12 bg-slate-700/50 
+                         text-gray-300 font-medium rounded-lg hover:bg-slate-600/50 hover:text-white
+                         transform hover:scale-105 active:scale-95 transition-all duration-200
+                         border border-slate-600/30 text-base"
+            >
+              <Settings size={18} />
+              <span>설정</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

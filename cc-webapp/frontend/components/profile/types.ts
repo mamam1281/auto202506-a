@@ -26,23 +26,23 @@ export interface FlashOffer {
   title: string;
   description: string;
   originalPrice: number;
-  discountPrice: number;
+  salePrice: number;
   discount: number;
   endTime: string;
   isActive: boolean;
-  type: 'TOKEN_BONUS' | 'STAGE_DISCOUNT' | 'SPECIAL_UNLOCK';
+  highlight?: string;
 }
 
 export interface Mission {
   id: string;
   title: string;
   description: string;
-  reward: number;
+  reward: { type: string; amount: number };
   type: 'DAILY' | 'WEEKLY' | 'SPECIAL';
   progress: number;
   target: number;
-  completed: boolean;
-  icon: string;
+  isCompleted: boolean;
+  timeLeft?: string;
 }
 
 export interface CJMessage {
