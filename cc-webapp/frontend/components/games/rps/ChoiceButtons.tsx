@@ -31,46 +31,50 @@ export const ChoiceButtons: React.FC<ChoiceButtonsProps> = ({
   const buttonVariants = {
     initial: (index: number) => ({
       opacity: 0,
-      y: 20,
+      y: 30,
       scale: 0.8,
       transition: { 
-        delay: index * 0.1,
+        delay: index * 0.15,
       }
     }),
     animate: {
       opacity: 1,
       y: 0,
       scale: 1,
-      // 프레이머모션 타입 호환성 문제 수정
       transition: { 
-        duration: 0.5,
-        // 문자열 타입 대신 명시적인 enum 값 사용
+        duration: 0.6,
         type: "spring" as const, 
-        stiffness: 300, 
-        damping: 25
+        stiffness: 280, 
+        damping: 20
       }
     },
     hover: {
       scale: 1.08,
-      y: -5,
+      y: -6,
       transition: { 
-        duration: 0.2,
+        duration: 0.3,
         type: "spring" as const,
-        stiffness: 400
+        stiffness: 400,
+        damping: 15
       }
     },
     tap: { 
       scale: 0.95,
+      y: 2,
       transition: { 
-        duration: 0.1,
+        duration: 0.15,
         type: "tween" as const 
       }
     },
     selected: {
       scale: [1, 1.15, 1.1],
-      boxShadow: ["0px 0px 0px rgba(255,199,0,0)", "0px 0px 30px rgba(255,199,0,0.8)", "0px 0px 20px rgba(255,199,0,0.6)"],
+      boxShadow: [
+        "0px 0px 0px rgba(255,199,0,0)", 
+        "0px 0px 35px rgba(255,199,0,0.9)", 
+        "0px 0px 25px rgba(255,199,0,0.7)"
+      ],
       transition: {
-        duration: 0.5,
+        duration: 0.6,
         repeat: Infinity,
         repeatType: "reverse" as const
       }

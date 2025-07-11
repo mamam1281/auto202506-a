@@ -109,10 +109,11 @@
 .choice-buttons-container {
   display: flex;
   justify-content: center;
-  gap: 20px; /* 간격 증가 */
-  margin-top: 10px; /* 상단 여백 증가 */
-  margin-bottom: 5px; /* 하단 여백 증가 */
-  padding: 5px 0; /* 상하 패딩 추가 */
+  gap: 15px; /* 간격 최적화 */
+  margin-top: 15px; /* 상단 여백 증가 */
+  margin-bottom: 10px; /* 하단 여백 증가 */
+  padding: 10px 5px; /* 상하 패딩 증가 */
+  flex-wrap: wrap; /* 작은 화면에서 줄바꿈 허용 */
 }
 
 /* 스코어보드 */
@@ -228,18 +229,20 @@
   background: var(--choice-btn-bg);
   border: 2px solid transparent;
   border-radius: 50%;
-  width: 100px;  /* 버튼 크기 증가 (+15px) */
-  height: 100px;  /* 버튼 크기 증가 (+15px) */
+  width: 110px;  /* 버튼 크기 더 증가 */
+  height: 110px;  /* 버튼 크기 더 증가 */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: all 0.2s ease; /* 모든 효과와 일관된 전환 효과 */
+  transition: all 0.3s ease; /* 부드러운 전환 효과 */
   box-shadow: var(--choice-btn-shadow);
   position: relative;
   overflow: hidden;
-  margin-bottom: 5px; /* 마진 감소 */
+  margin-bottom: 5px;
+  min-width: 110px; /* 최소 크기 보장 */
+  min-height: 110px;
 }
 
 /* 일반 모드용 선택 버튼 */
@@ -247,17 +250,19 @@
   background: var(--choice-btn-bg);
   border: 2px solid transparent;
   border-radius: 16px;
-  width: 135px; /* 버튼 크기 증가 (+15px) */
-  height: 135px; /* 버튼 크기 증가 (+15px) */
+  width: 145px; /* 버튼 크기 더 증가 */
+  height: 145px; /* 버튼 크기 더 증가 */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: all 0.2s ease; /* 모든 효과와 일관된 전환 효과 */
+  transition: all 0.3s ease; /* 부드러운 전환 효과 */
   box-shadow: var(--choice-btn-shadow);
   position: relative;
   overflow: hidden;
+  min-width: 145px; /* 최소 크기 보장 */
+  min-height: 145px;
 }
 
 .choice-button-popup::before,
@@ -266,7 +271,7 @@
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     background: linear-gradient(145deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
-    transition: opacity 0.2s ease; /* 모든 효과와 일관된 전환 효과 */
+    transition: opacity 0.3s ease; /* 부드러운 전환 효과 */
     opacity: 0;
 }
 
@@ -277,10 +282,10 @@
 
 .choice-button-popup:hover,
 .choice-button-normal:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 8px 18px rgba(90, 103, 216, 0.4);
+  transform: translateY(-4px) scale(1.06); /* 더 부드러운 호버 효과 */
+  box-shadow: 0 10px 25px rgba(90, 103, 216, 0.5);
   background: var(--choice-btn-hover-bg);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .choice-button-popup.selected,
@@ -301,33 +306,45 @@
 }
 
 .choice-button-popup .icon {
-  font-size: 52px; /* 아이콘 크기 증가 */
+  font-size: 56px; /* 아이콘 크기 증가 */
   line-height: 1;
-  text-shadow: 0 3px 6px rgba(0,0,0,0.3);
-  margin-bottom: 5px;
+  text-shadow: 0 3px 8px rgba(0,0,0,0.4);
+  margin-bottom: 6px;
+  transition: transform 0.3s ease; /* 아이콘 애니메이션 */
 }
 
 .choice-button-normal .icon {
-  font-size: 56px; /* 아이콘 크기 증가 */
+  font-size: 60px; /* 아이콘 크기 증가 */
   line-height: 1;
-  text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  text-shadow: 0 3px 8px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease; /* 아이콘 애니메이션 */
+}
+
+/* 호버 시 아이콘 회전 효과 */
+.choice-button-popup:hover .icon,
+.choice-button-normal:hover .icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .choice-button-popup .text {
-  font-size: 16px;
+  font-size: 14px; /* 텍스트 크기 약간 감소 */
   font-weight: 700;
-  margin-top: 6px;
+  margin-top: 4px;
   color: white;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.3);
   border-radius: 12px;
-  padding: 3px 8px;
+  padding: 4px 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  letter-spacing: 0.5px; /* 글자 간격 */
 }
 
 .choice-button-normal .text {
-  font-size: 16px;
+  font-size: 18px; /* 텍스트 크기 증가 */
   font-weight: 700;
   margin-top: 8px;
   color: white;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  letter-spacing: 0.5px; /* 글자 간격 */
 }
 
 /* 상대방 표시 - ai-area와 통합됨 */
@@ -602,17 +619,27 @@
   }
   
   .choice-button-popup {
-    width: 95px; /* 모바일에서 버튼 크기 증가 (+15px) */
-    height: 95px; /* 모바일에서 버튼 크기 증가 (+15px) */
-    transition: all 0.2s ease; /* 모든 효과와 일관된 전환 효과 */
+    width: 105px; /* 모바일에서 버튼 크기 더 증가 */
+    height: 105px; /* 모바일에서 버튼 크기 더 증가 */
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    min-width: 105px; /* 최소 크기 보장 */
+    min-height: 105px;
   }
   
   .choice-button-popup .icon {
-    font-size: 38px; /* 아이콘 크기 증가 */
+    font-size: 46px; /* 아이콘 크기 증가 */
   }
   
   .choice-button-popup .text {
-    font-size: 12px;
+    font-size: 13px; /* 텍스트 크기 증가 */
+    padding: 3px 8px;
+  }
+  
+  /* 선택 버튼 컨테이너 모바일 최적화 */
+  .choice-buttons-container {
+    gap: 12px; /* 모바일에서 간격 조정 */
+    padding: 8px 5px;
+    margin-top: 12px;
   }
   
   .score-board {

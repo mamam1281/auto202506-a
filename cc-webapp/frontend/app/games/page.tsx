@@ -3,6 +3,7 @@
 import './games.css';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   Star, 
   Zap, 
@@ -33,215 +34,6 @@ interface GameCardProps {
   isHot?: boolean;
 }
 
-// Individual Game Components
-function SlotsGame({ onBack }: { onBack: () => void }) {
-  return (
-    <div className="w-full max-w-[420px] mx-auto min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.15)_0%,transparent_60%)]"></div>
-      
-      <div className="relative z-10 p-6">
-        <motion.button
-          onClick={onBack}
-          className="flex items-center gap-2 mb-6 px-4 py-3 rounded-xl bg-slate-800/80 backdrop-blur-xl border border-slate-600/50 text-white hover:bg-slate-700/80 hover:border-slate-500/60 transition-all duration-300 shadow-lg"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>뒤로 가기</span>
-        </motion.button>
-
-        <div className="text-center mb-8">
-          <motion.h1 
-            className="text-3xl font-black text-white mb-2"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ textShadow: '0 4px 20px rgba(0,0,0,0.6)' }}
-          >
-            🎰 코스믹 포츈
-          </motion.h1>
-          <p className="text-slate-200">프리미엄 우주 슬롯 머신</p>
-        </div>
-
-        <div className="bg-slate-800/70 backdrop-blur-xl rounded-2xl p-6 border border-slate-600/40 shadow-2xl">
-          <div className="text-center">
-            <Sparkles className="w-12 h-12 mx-auto mb-4 text-purple-400 drop-shadow-lg" />
-            <h3 className="text-xl font-bold mb-2 text-white">곧 출시 예정!</h3>
-            <p className="text-slate-100 mb-4">
-              우주에서 가장 스릴 넘치는 슬롯 머신이 곧 여러분을 찾아갑니다.
-            </p>
-            <div className="flex justify-center gap-4 text-sm">
-              <div className="flex items-center gap-1">
-                <Coins className="w-4 h-4 text-yellow-400" />
-                <span className="text-slate-100">최소 베팅: 10💎</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Trophy className="w-4 h-4 text-yellow-400" />
-                <span className="text-slate-100">최대 당첨: 100,000💎</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function RouletteGame({ onBack }: { onBack: () => void }) {
-  return (
-    <div className="w-full max-w-[420px] mx-auto min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15)_0%,transparent_60%)]"></div>
-      
-      <div className="relative z-10 p-6">
-        <motion.button
-          onClick={onBack}
-          className="flex items-center gap-2 mb-6 px-4 py-3 rounded-xl bg-slate-800/80 backdrop-blur-xl border border-slate-600/50 text-white hover:bg-slate-700/80 hover:border-slate-500/60 transition-all duration-300 shadow-lg"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>뒤로 가기</span>
-        </motion.button>
-
-        <div className="text-center mb-8">
-          <motion.h1 
-            className="text-3xl font-black text-white mb-2"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ textShadow: '0 4px 20px rgba(0,0,0,0.6)' }}
-          >
-            🎯 갤럭시 룰렛
-          </motion.h1>
-          <p className="text-slate-200">프리미엄 우주 룰렛</p>
-        </div>
-
-        <div className="bg-slate-800/70 backdrop-blur-xl rounded-2xl p-6 border border-slate-600/40 shadow-2xl">
-          <div className="text-center">
-            <Target className="w-12 h-12 mx-auto mb-4 text-blue-400 drop-shadow-lg" />
-            <h3 className="text-xl font-bold mb-2 text-white">곧 출시 예정!</h3>
-            <p className="text-slate-100 mb-4">
-              은하계를 돌아다니며 운명의 숫자를 맞춰보세요.
-            </p>
-            <div className="flex justify-center gap-4 text-sm">
-              <div className="flex items-center gap-1">
-                <Coins className="w-4 h-4 text-yellow-400" />
-                <span className="text-slate-100">최소 베팅: 50💎</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Trophy className="w-4 h-4 text-yellow-400" />
-                <span className="text-slate-100">최대 당첨: 350,000💎</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function RPSGame({ onBack }: { onBack: () => void }) {
-  return (
-    <div className="w-full max-w-[420px] mx-auto min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.15)_0%,transparent_60%)]"></div>
-      
-      <div className="relative z-10 p-6">
-        <motion.button
-          onClick={onBack}
-          className="flex items-center gap-2 mb-6 px-4 py-3 rounded-xl bg-slate-800/80 backdrop-blur-xl border border-slate-600/50 text-white hover:bg-slate-700/80 hover:border-slate-500/60 transition-all duration-300 shadow-lg"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>뒤로 가기</span>
-        </motion.button>
-
-        <div className="text-center mb-8">
-          <motion.h1 
-            className="text-3xl font-black text-white mb-2"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ textShadow: '0 4px 20px rgba(0,0,0,0.6)' }}
-          >
-            ✊ 코스믹 배틀
-          </motion.h1>
-          <p className="text-slate-200">프리미엄 우주 가위바위보</p>
-        </div>
-
-        <div className="bg-slate-800/70 backdrop-blur-xl rounded-2xl p-6 border border-slate-600/40 shadow-2xl">
-          <div className="text-center">
-            <Dice1 className="w-12 h-12 mx-auto mb-4 text-emerald-400 drop-shadow-lg" />
-            <h3 className="text-xl font-bold mb-2 text-white">곧 출시 예정!</h3>
-            <p className="text-slate-100 mb-4">
-              가위바위보의 우주 버전! 운과 전략이 만나는 짜릿한 대결.
-            </p>
-            <div className="flex justify-center gap-4 text-sm">
-              <div className="flex items-center gap-1">
-                <Coins className="w-4 h-4 text-yellow-400" />
-                <span className="text-slate-100">최소 베팅: 20💎</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Trophy className="w-4 h-4 text-yellow-400" />
-                <span className="text-slate-100">최대 당첨: 80,000💎</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function GachaGame({ onBack }: { onBack: () => void }) {
-  return (
-    <div className="w-full max-w-[420px] mx-auto min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(251,146,60,0.15)_0%,transparent_60%)]"></div>
-      
-      <div className="relative z-10 p-6">
-        <motion.button
-          onClick={onBack}
-          className="flex items-center gap-2 mb-6 px-4 py-3 rounded-xl bg-slate-800/80 backdrop-blur-xl border border-slate-600/50 text-white hover:bg-slate-700/80 hover:border-slate-500/60 transition-all duration-300 shadow-lg"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>뒤로 가기</span>
-        </motion.button>
-
-        <div className="text-center mb-8">
-          <motion.h1 
-            className="text-3xl font-black text-white mb-2"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ textShadow: '0 4px 20px rgba(0,0,0,0.6)' }}
-          >
-            ⭐ 스텔라 가챠
-          </motion.h1>
-          <p className="text-slate-200">프리미엄 우주 아이템 가챠</p>
-        </div>
-
-        <div className="bg-slate-800/70 backdrop-blur-xl rounded-2xl p-6 border border-slate-600/40 shadow-2xl">
-          <div className="text-center">
-            <Star className="w-12 h-12 mx-auto mb-4 text-orange-400 drop-shadow-lg" />
-            <h3 className="text-xl font-bold mb-2 text-white">곧 출시 예정!</h3>
-            <p className="text-slate-100 mb-4">
-              신비로운 우주 아이템을 발견하세요! 레어부터 레전더리까지.
-            </p>
-            <div className="flex justify-center gap-4 text-sm">
-              <div className="flex items-center gap-1">
-                <Coins className="w-4 h-4 text-yellow-400" />
-                <span className="text-slate-100">최소 베팅: 100💎</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Trophy className="w-4 h-4 text-yellow-400" />
-                <span className="text-slate-100">최대 당첨: 1,000,000💎</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function GameCard({ 
   title, 
   description, 
@@ -252,11 +44,29 @@ function GameCard({
   minBet, 
   maxWin, 
   isNew, 
-  isHot,
-  onPlay
-}: GameCardProps & { onPlay: (gameType: GameType) => void }) {
+  isHot
+}: GameCardProps) {
+  const router = useRouter();
+
   const handleClick = () => {
-    onPlay(gameType);
+    // 실제 게임 페이지로 라우팅
+    switch (gameType) {
+      case 'slots':
+        router.push('/games/slots/popup');
+        break;
+      case 'roulette':
+        router.push('/games/roulette/popup');
+        break;
+      case 'rps':
+        // RPS 게임은 별도 컴포넌트 경로로
+        router.push('/games/rps');
+        break;
+      case 'gacha':
+        router.push('/games/gacha');
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -276,36 +86,6 @@ function GameCard({
         
         {/* 내부 글로우 효과 강화 */}
         <div className="absolute inset-[1px] rounded-2xl border border-slate-400/30 pointer-events-none"></div>
-        
-        {/* 배지들 */}
-        <div className="absolute top-2 right-2 flex flex-col gap-1.5 z-20">
-          {isNew && (
-            <motion.div 
-              className="px-2.5 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 
-                        text-black text-[9px] font-bold uppercase tracking-wide
-                        shadow-lg shadow-yellow-400/30 backdrop-blur-sm
-                        border border-yellow-300/50"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            >
-              NEW
-            </motion.div>
-          )}
-          {isHot && (
-            <motion.div 
-              className="px-2.5 py-1 rounded-full bg-gradient-to-r from-red-500 to-red-600 
-                        text-white text-[9px] font-bold uppercase tracking-wide
-                        shadow-lg shadow-red-500/30 backdrop-blur-sm
-                        border border-red-400/50"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-            >
-              HOT
-            </motion.div>
-          )}
-        </div>
 
         {/* 메인 콘텐츠 */}
         <div className="flex-1 flex flex-col px-1 py-3">
@@ -333,7 +113,7 @@ function GameCard({
 
           {/* 설명 */}
           <div className="text-center mb-4 flex-1">
-            <p className="text-xs text-slate-300 leading-relaxed px-1">
+            <p className="text-sm text-slate-300 leading-relaxed px-1">
               {description.substring(0, 20)}...
             </p>
           </div>
@@ -348,7 +128,7 @@ function GameCard({
               {[...Array(3)].map((_, i) => (
                 <Star 
                   key={i} 
-                  className={`w-4 h-4 ${
+                  className={`w-2 h-2 ${
                     i < (difficulty === 'Easy' ? 1 : difficulty === 'Medium' ? 2 : 3)
                       ? 'text-yellow-400 fill-yellow-400'
                       : 'text-slate-500'
@@ -380,7 +160,7 @@ function GameCard({
   );
 }
 
-function HomePage({ onGameSelect }: { onGameSelect: (gameType: GameType) => void }) {
+function HomePage() {
   const games: GameCardProps[] = [
     {
       title: "코스믹 포츈",
@@ -519,13 +299,13 @@ function HomePage({ onGameSelect }: { onGameSelect: (gameType: GameType) => void
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <div className="flex items-center gap-1.5 px-2 py-2 rounded-lg 
+            <div className="flex items-center gap-0.5 px-2 py-2 rounded-lg 
                             bg-slate-800/70 backdrop-blur-sm
                             border border-slate-600/40">
               <TrendingUp className="w-3 h-3 text-emerald-400" />
               <span className="text-white font-medium text-sm">높은 당첨률</span>
             </div>
-            <div className="flex items-center gap-1.5 px-2 py-2 rounded-lg 
+            <div className="flex items-center gap-0.5 px-2 py-2 rounded-lg 
                             bg-slate-800/70 backdrop-blur-sm
                             border border-slate-600/40">
               <Zap className="w-3 h-3 text-yellow-400" />
@@ -556,7 +336,7 @@ function HomePage({ onGameSelect }: { onGameSelect: (gameType: GameType) => void
                   visible: { opacity: 1, y: 0 }
                 }}
               >
-                <GameCard {...game} onPlay={onGameSelect} />
+                <GameCard {...game} />
               </motion.div>
             ))}
           </motion.div>
@@ -582,39 +362,9 @@ function HomePage({ onGameSelect }: { onGameSelect: (gameType: GameType) => void
 }
 
 export default function App() {
-  const [currentGame, setCurrentGame] = useState<GameType>('home');
-
   useEffect(() => {
-    const gameNames = {
-      home: '🎰 COSMIC CASINO - 프리미엄 우주 카지노',
-      slots: '🎰 코스믹 포츈 - 우주 슬롯 머신',
-      roulette: '🎯 갤럭시 룰렛 - 우주 룰렛',
-      rps: '✊ 코스믹 배틀 - 우주 가위바위보',
-      gacha: '⭐ 스텔라 가챠 - 우주 아이템 가챠'
-    };
-    
-    document.title = gameNames[currentGame];
-  }, [currentGame]);
+    document.title = '🎰 COSMIC CASINO - 프리미엄 우주 카지노';
+  }, []);
 
-  const handleGameSelect = (gameType: GameType) => {
-    setCurrentGame(gameType);
-  };
-
-  const handleBackToHome = () => {
-    setCurrentGame('home');
-  };
-
-  // Render current game
-  switch (currentGame) {
-    case 'slots':
-      return <SlotsGame onBack={handleBackToHome} />;
-    case 'roulette':
-      return <RouletteGame onBack={handleBackToHome} />;
-    case 'rps':
-      return <RPSGame onBack={handleBackToHome} />;
-    case 'gacha':
-      return <GachaGame onBack={handleBackToHome} />;
-    default:
-      return <HomePage onGameSelect={handleGameSelect} />;
-  }
+  return <HomePage />;
 }
