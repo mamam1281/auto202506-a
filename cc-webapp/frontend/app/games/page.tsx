@@ -62,7 +62,7 @@ function GameCard({
         router.push('/games/rps');
         break;
       case 'gacha':
-        router.push('/games/gacha');
+        router.push('/games/gacha/popup');
         break;
       default:
         break;
