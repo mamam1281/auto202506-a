@@ -124,57 +124,57 @@
   opacity: 0.8;
 }
 
-/* Gacha Box - 400x650 팝업에 최적화 */
+/* Gacha Box - 다른 게임 컴포넌트와 동일한 크기로 통일 */
 .gacha-box {
   position: relative;
   width: 100%;
-  max-width: 320px; /* 적절한 너비로 복원 */
-  height: 220px; /* 적절한 높이로 복원 */
-  padding: 20px 16px; /* 적절한 패딩으로 복원 */
-  border-radius: 18px; /* 모서리 라운드 복원 */
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
-  backdrop-filter: blur(25px);
-  border: 2px solid rgba(26, 138, 50, 0.5);
+  max-width: 320px;
+  height: 200px; /* 다른 게임카드와 동일한 높이로 통일 */
+  padding: 16px; /* 패딩 조정 */
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 100%);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 
-    0 16px 30px rgba(0, 0, 0, 0.4), /* 그림자 복원 */
-    0 0 20px rgba(8, 88, 8, 0.3),
-    inset 0 2px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    0 8px 32px rgba(31, 38, 135, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   transition: all 0.3s ease;
-  margin: 0 auto; /* 중앙 정렬 */
+  margin: 0 auto;
 }
 
 .gacha-box:hover {
   transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(36, 251, 125, 0.3),
-    inset 0 2px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
-  cursor: pointer; /* 클릭 가능함을 표시 */
-  border-color: rgba(36, 251, 125, 0.6); /* 호버 시 테두리 강조 */
+    0 12px 40px rgba(31, 38, 135, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Gacha Box 애니메이션 */
 .gacha-box.playing {
   transform: scale(1.02);
-  border-color: rgba(28, 128, 53, 0.8);
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
   box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.5),
-    0 0 50px rgba(128, 110, 66, 0.267),
-    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+    0 16px 50px rgba(31, 38, 135, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Gacha Icon */
 .gacha-icon {
-  font-size: 4rem; /* 적절한 크기로 복원 */
-  margin-bottom: 12px; /* 적절한 마진으로 복원 */
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  font-size: 3rem; /* 다른 게임카드 아이콘과 동일한 크기 */
+  margin-bottom: 8px; /* 마진 조정 */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   transition: all 0.5s ease;
 }
 
@@ -190,21 +190,22 @@
 
 /* Gacha Title */
 .gacha-title {
-  font-size: 1.25rem; /* 적절한 폰트 크기로 복원 */
-  font-weight: 800;
-  color: var(--color-text-primary);
-  margin-bottom: 10px; /* 적절한 마진으로 복원 */
-  text-shadow: 0 0 15px rgba(36, 251, 108, 0.5);
+  font-size: 1.1rem; /* 다른 게임카드 타이틀과 동일한 크기 */
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 8px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   letter-spacing: -0.02em;
 }
 
 /* Gacha Description */
 .gacha-description {
-  font-size: 0.9rem; /* 적절한 폰트 크기로 복원 */
-  color: var(--color-text-secondary);
+  font-size: 0.875rem; /* 다른 게임카드와 동일한 크기 */
+  color: rgba(229, 231, 235, 0.8);
   opacity: 0.9;
-  margin-bottom: 8px; /* 적절한 마진으로 복원 */
-  line-height: 1.4; /* 줄 간격 복원 */
+  margin-bottom: 6px;
+  line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 /* 가챠 타이틀 */

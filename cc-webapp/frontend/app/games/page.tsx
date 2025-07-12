@@ -79,24 +79,36 @@ function GameCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      {/* 새로운 카드 디자인 */}
-      <div className="relative h-[320px] bg-slate-800/95 backdrop-blur-xl rounded-2xl border border-slate-600/40 overflow-hidden
-                      shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:shadow-[0_16px_56px_rgba(0,0,0,0.5)] 
-                      transition-all duration-300 flex flex-col">
+      {/* 프리미엄 카드 디자인 */}
+      <div className="relative h-[320px] backdrop-blur-xl rounded-2xl overflow-hidden
+                      transition-all duration-500 flex flex-col group"
+           style={{
+             background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
+             border: '1px solid rgba(255,255,255,0.12)',
+             boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
+           }}>
         
-        {/* 내부 글로우 효과 강화 */}
-        <div className="absolute inset-[1px] rounded-2xl border border-slate-400/30 pointer-events-none"></div>
+        {/* 고급 글로우 효과 */}
+        <div className="absolute inset-[1px] rounded-2xl pointer-events-none"
+             style={{
+               background: 'linear-gradient(145deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
+               border: '1px solid rgba(255,255,255,0.08)'
+             }}></div>
 
         {/* 메인 콘텐츠 */}
         <div className="flex-1 flex flex-col px-1 py-3">
           {/* 아이콘 영역 */}
           <div className="flex justify-center mb-4 mt-2">
             <motion.div 
-              className="w-20 h-20 rounded-2xl bg-slate-700/70 backdrop-blur-sm border border-slate-600/50
-                        flex items-center justify-center
-                        group-hover:bg-slate-600/70 transition-all duration-300 shadow-lg"
+              className="w-20 h-20 rounded-2xl flex items-center justify-center
+                        group-hover:scale-105 transition-all duration-500"
+              style={{
+                background: 'linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)'
+              }}
               whileHover={{ rotate: 5 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.3 }}
             >
               <div className="text-2xl">
                 {icon}
@@ -106,14 +118,24 @@ function GameCard({
 
           {/* 제목 */}
           <div className="text-center mb-3">
-            <h3 className="text-base font-bold text-white leading-tight">
+            <h3 className="text-base font-semibold text-white leading-tight tracking-wide"
+                style={{ 
+                  fontFamily: "'Inter', sans-serif",
+                  letterSpacing: '0.02em'
+                }}>
               {title}
             </h3>
           </div>
 
           {/* 설명 */}
           <div className="text-center mb-4 flex-1">
-            <p className="text-sm text-slate-300 leading-relaxed px-1">
+            <p className="text-sm leading-relaxed px-1"
+               style={{ 
+                 fontFamily: "'Inter', sans-serif",
+                 color: 'rgba(255, 255, 255, 0.7)',
+                 letterSpacing: '0.01em',
+                 fontWeight: '400'
+               }}>
               {description.substring(0, 20)}...
             </p>
           </div>
@@ -271,45 +293,64 @@ function HomePage() {
           transition={{ duration: 1, ease: "easeOut" }}
         >
           <motion.h1
-            className="gradient-text text-4xl font-black mb-3 text-white leading-none"
+            className="text-6xl font-light tracking-wide mb-4 leading-tight"
             style={{
-              textShadow: '0 4px 20px rgba(0,0,0,0.6), 0 8px 40px rgba(0,0,0,0.4)'
+              fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+              textShadow: '0 8px 32px rgba(0,0,0,0.4), 0 4px 16px rgba(168,85,247,0.2)'
             }}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
+            whileHover={{ scale: 1.01 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            🎰 COSMIC CASINO
+            <span style={{ fontSize: '0.9em', marginRight: '0.3em' }}>🎰</span>
+            <span className="cosmic-gradient-text font-extralight tracking-wider">
+              COSMIC CASINO
+            </span>
           </motion.h1>
           <motion.p
-            className="text-base text-slate-200 font-medium mb-6"
+            className="text-lg text-neutral-300 font-normal mb-8 tracking-wide"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              color: 'rgba(255, 255, 255, 0.75)',
+              textShadow: '0 2px 12px rgba(0,0,0,0.3)',
+              letterSpacing: '0.025em'
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            style={{
-              textShadow: '0 2px 8px rgba(0,0,0,0.5)'
-            }}
+            transition={{ delay: 0.6 }}
           >
-            프리미엄 우주 카지노 익스피리언스
+            Premium Cosmic Gaming Experience
           </motion.p>
           
-          {/* 개선된 통계 */}
+          {/* 프리미엄 통계 */}
           <motion.div
-            className="flex items-center justify-center gap-2 text-sm"
+            className="flex items-center justify-center gap-4 text-sm"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
+            transition={{ delay: 0.8 }}
           >
-            <div className="flex items-center gap-0.5 px-2 py-2 rounded-lg 
-                            bg-slate-800/70 backdrop-blur-sm
-                            border border-slate-600/40">
-              <TrendingUp className="w-3 h-3 text-emerald-400" />
-              <span className="text-white font-medium text-sm">높은 당첨률</span>
+            <div className="flex items-center gap-2 px-4 py-3 rounded-xl 
+                            bg-white/5 backdrop-blur-md
+                            border border-white/10 hover:border-white/20
+                            transition-all duration-300">
+              <TrendingUp className="w-4 h-4 text-emerald-300" />
+              <span style={{ 
+                fontFamily: "'Inter', sans-serif",
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontWeight: '500',
+                letterSpacing: '0.02em'
+              }}>99.2% RTP</span>
             </div>
-            <div className="flex items-center gap-0.5 px-2 py-2 rounded-lg 
-                            bg-slate-800/70 backdrop-blur-sm
-                            border border-slate-600/40">
-              <Zap className="w-3 h-3 text-yellow-400" />
-              <span className="text-white font-medium text-sm">즉시 지급</span>
+            <div className="flex items-center gap-2 px-4 py-3 rounded-xl 
+                            bg-white/5 backdrop-blur-md
+                            border border-white/10 hover:border-white/20
+                            transition-all duration-300">
+              <Zap className="w-4 h-4 text-amber-300" />
+              <span style={{ 
+                fontFamily: "'Inter', sans-serif",
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontWeight: '500',
+                letterSpacing: '0.02em'
+              }}>Instant Payout</span>
             </div>
           </motion.div>
         </motion.header>
@@ -342,18 +383,22 @@ function HomePage() {
           </motion.div>
         </main>
 
-        {/* 개선된 푸터 */}
+        {/* 프리미엄 푸터 */}
         <motion.footer
-          className="py-4 text-center border-t border-slate-600/50 backdrop-blur-md"
+          className="py-6 text-center border-t border-white/10 backdrop-blur-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
         >
-          <p className="text-slate-300 text-sm"
-             style={{
-               textShadow: '0 1px 4px rgba(0,0,0,0.5)'
+          <p style={{
+               fontFamily: "'Inter', sans-serif",
+               color: 'rgba(255, 255, 255, 0.6)',
+               fontSize: '0.875rem',
+               fontWeight: '400',
+               letterSpacing: '0.025em',
+               textShadow: '0 2px 8px rgba(0,0,0,0.3)'
              }}>
-            책임감 있는 게임 플레이를 권장합니다 ⭐
+            Responsible Gaming • Licensed & Secure ⭐
           </p>
         </motion.footer>
       </div>
@@ -364,6 +409,31 @@ function HomePage() {
 export default function App() {
   useEffect(() => {
     document.title = '🎰 COSMIC CASINO - 프리미엄 우주 카지노';
+    
+    // 프리미엄 그라디언트 텍스트 스타일을 동적으로 추가
+    const style = document.createElement('style');
+    style.textContent = `
+      .cosmic-gradient-text {
+        background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 25%, #a5b4fc 50%, #8b5cf6 75%, #7c3aed 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        color: transparent !important;
+        display: inline-block !important;
+        background-size: 200% 200% !important;
+        animation: premium-gradient 4s ease-in-out infinite !important;
+      }
+      
+      @keyframes premium-gradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
   }, []);
 
   return <HomePage />;

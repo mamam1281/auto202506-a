@@ -300,11 +300,17 @@ input {
 }
 
 /* 그라디언트 텍스트 - 우주 테마 */
+h1.gradient-text,
 .gradient-text {
-  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 50%, #10b981 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 50%, #10b981 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  /* Tailwind와의 충돌 방지 */
+  color: transparent !important;
+  /* 추가 안정성을 위한 속성 */
+  background-size: 100% !important;
+  background-attachment: initial !important;
 }
 
 /* 네온 효과 - 다크 테마 */

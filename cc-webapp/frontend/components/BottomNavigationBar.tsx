@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Gamepad, Store, Users, User } from 'lucide-react';
+import { Home, Gamepad, Store, Wallet, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export interface NavItemData {
@@ -13,7 +13,7 @@ export const navItems: NavItemData[] = [
   { id: 'home', label: '홈', icon: Home, path: '/' },
   { id: 'game', label: '게임', icon: Gamepad, path: '/games' },
   { id: 'shop', label: '상점', icon: Store, path: '/shop' },
-  { id: 'community', label: '커뮤니티', icon: Users, path: '/community' },
+  { id: 'wallet', label: '월렛', icon: Wallet, path: '/wallet' },
   { id: 'profile', label: '프로필', icon: User, path: '/profile' },
 ];
 
@@ -41,10 +41,10 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
         right: '0 !important' as any,
         width: '100vw !important' as any,
         height: '80px !important' as any,
-        backgroundColor: 'rgba(26, 26, 26, 0.95) !important' as any,
+        background: 'linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 25%, rgba(26, 26, 46, 0.95) 50%, rgba(22, 33, 62, 0.95) 75%, rgba(26, 26, 46, 0.95) 100%) !important' as any,
         backdropFilter: 'blur(10px) !important' as any,
         WebkitBackdropFilter: 'blur(10px) !important' as any,
-        borderTop: '1px solid #374151 !important' as any,
+        borderTop: '1px solid rgba(139, 92, 246, 0.2) !important' as any,
         zIndex: '999 !important' as any,
         display: 'flex !important' as any,
         justifyContent: 'center !important' as any,
@@ -77,14 +77,14 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
               console.log('BottomNav onClick triggered:', item.id, item.path);
               onTabClick(item.id, item.path);
             }}            className={`
-              flex flex-col items-center justify-center gap-0.5 rounded-xl min-w-14 transition-all duration-200
+              flex flex-col items-center justify-center gap-0.5 rounded-xl min-w-14 transition-all duration-300 relative
               ${isActive
-                ? 'bg-purple-400/20 shadow-lg' 
-                : 'hover:bg-white/10'
+                ? 'bg-gradient-to-br from-purple-500/20 to-indigo-600/20 shadow-md shadow-purple-500/10 border border-purple-400/25' 
+                : 'hover:bg-gradient-to-br hover:from-white/5 hover:to-purple-500/5 hover:border hover:border-purple-500/15'
               }
             `}
             style={{
-              color: isActive ? '#5B30F6' : '#ffffff',
+              color: isActive ? '#ffffff' : '#e5e7eb',
               padding: '8px 16px',
               margin: 0,
               boxSizing: 'border-box',
@@ -92,21 +92,32 @@ const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-current={isActive ? 'page' : undefined}
             aria-label={`${item.label} 탭`}
             whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.02, y: -1 }}
             transition={{ 
               type: "spring", 
-              stiffness: 400, 
-              damping: 17,
+              stiffness: 300, 
+              damping: 25,
               duration: 0.2
             }}
-          >            <IconComponent 
+          >
+            {/* 활성 상태일 때 글로우 효과 */}
+            {isActive && (
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-indigo-500/20 rounded-xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              />
+            )}
+            <IconComponent 
               size={iconSize} 
-              className={`mb-0.5 transition-colors duration-200 ${
-                isActive ? 'text-purple-400' : 'text-white'
+              className={`mb-0.5 transition-all duration-300 relative z-10 ${
+                isActive ? 'text-purple-300 drop-shadow-sm' : 'text-gray-300 group-hover:text-purple-200'
               }`} 
-            />            <span className={`text-[10px] font-normal transition-colors duration-200 ${
-              isActive ? 'text-purple-300' : 'text-white'
+            />            <span className={`font-medium transition-all duration-300 relative z-10 ${
+              isActive ? 'text-purple-200' : 'text-gray-300 group-hover:text-white'
             }`}
+            style={{ fontSize: '10px' }}
             >
               {item.label}
             </span>

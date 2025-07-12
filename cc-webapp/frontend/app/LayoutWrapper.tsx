@@ -21,7 +21,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
     if (pathname === '/') return 'home';
     if (pathname === '/games') return 'game';
     if (pathname === '/shop') return 'shop';
-    if (pathname === '/community') return 'community';
+    if (pathname === '/wallet') return 'wallet';
     if (pathname === '/profile') return 'profile';
     if (pathname === '/dashboard-new') return 'home';
     return 'home';

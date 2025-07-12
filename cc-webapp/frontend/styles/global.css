@@ -1486,3 +1486,13 @@ button {
 .animation-delay-4000 {
   animation-delay: 4s;
 }
+
+/* 그라디언트 텍스트 - 글로벌 적용 */
+.gradient-text,
+h1.gradient-text {
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 50%, #10b981 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
