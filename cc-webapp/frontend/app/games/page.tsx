@@ -293,26 +293,34 @@ function HomePage() {
           transition={{ duration: 1, ease: "easeOut" }}
         >
           <motion.h1
-            className="text-6xl font-light tracking-wide mb-4 leading-tight"
+            className="text-6xl font-black tracking-tight mb-4 leading-tight"
             style={{
               fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
-              textShadow: '0 8px 32px rgba(0,0,0,0.4), 0 4px 16px rgba(168,85,247,0.2)'
+              textShadow: '0 12px 40px rgba(0,0,0,0.6), 0 6px 20px rgba(168,85,247,0.4), 0 4px 12px rgba(255,255,255,0.1)'
             }}
-            whileHover={{ scale: 1.01 }}
+            whileHover={{ scale: 1.02, y: -2 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            <span style={{ fontSize: '0.9em', marginRight: '0.3em' }}>🎰</span>
-            <span className="cosmic-gradient-text font-extralight tracking-wider">
+            <span className="cosmic-gradient-text font-black tracking-tight"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 20%, #e2e8f0 40%, #cbd5e1 60%, #94a3b8 80%, #64748b 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    color: 'transparent',
+                    textShadow: 'none'
+                  }}>
               COSMIC CASINO
             </span>
           </motion.h1>
           <motion.p
-            className="text-lg text-neutral-300 font-normal mb-8 tracking-wide"
+            className="text-lg font-semibold mb-8 tracking-wide"
             style={{
               fontFamily: "'Inter', sans-serif",
-              color: 'rgba(255, 255, 255, 0.75)',
-              textShadow: '0 2px 12px rgba(0,0,0,0.3)',
-              letterSpacing: '0.025em'
+              color: 'rgba(255, 255, 255, 0.85)',
+              textShadow: '0 4px 16px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3)',
+              letterSpacing: '0.03em',
+              fontWeight: '600'
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -414,19 +422,27 @@ export default function App() {
     const style = document.createElement('style');
     style.textContent = `
       .cosmic-gradient-text {
-        background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 25%, #a5b4fc 50%, #8b5cf6 75%, #7c3aed 100%) !important;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 20%, #e2e8f0 40%, #cbd5e1 60%, #94a3b8 80%, #64748b 100%) !important;
         -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent !important;
         background-clip: text !important;
         color: transparent !important;
         display: inline-block !important;
         background-size: 200% 200% !important;
-        animation: premium-gradient 4s ease-in-out infinite !important;
+        animation: premium-gradient 3s ease-in-out infinite !important;
+        font-weight: 900 !important;
+        letter-spacing: -0.02em !important;
       }
       
       @keyframes premium-gradient {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
+        0%, 100% { 
+          background-position: 0% 50%; 
+          filter: drop-shadow(0 4px 12px rgba(255,255,255,0.2));
+        }
+        50% { 
+          background-position: 100% 50%; 
+          filter: drop-shadow(0 6px 16px rgba(255,255,255,0.3));
+        }
       }
     `;
     document.head.appendChild(style);

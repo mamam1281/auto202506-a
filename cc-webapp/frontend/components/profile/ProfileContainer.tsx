@@ -113,8 +113,8 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
 
   return (
     <div className={`profile-container min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 ${className}`}>
-      {/* 420px 너비 최적화 컨테이너 - 좌우 패딩 16px로 최대 콘텐츠 공간 확보 */}
-      <div className="w-full max-w-[420px] min-h-screen mx-auto px-4 pt-6 pb-8 
+      {/* 프리미엄 레이아웃 - 다른 페이지와 동일한 max-w-md 사용 */}
+      <div className="w-full max-w-md min-h-screen mx-auto px-4 pt-6 pb-8 
                       overflow-y-auto overscroll-y-contain
                       scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
         

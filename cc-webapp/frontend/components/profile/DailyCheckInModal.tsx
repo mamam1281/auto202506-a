@@ -102,15 +102,19 @@ export function DailyCheckInModal({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 p-4 overflow-y-auto"
+        style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: '2rem', paddingBottom: '2rem' }}
       >
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
-          className="w-full max-w-md"
+          className="w-full max-w-lg mx-auto my-8" /* 여백 추가 및 auto로 중앙 정렬 */
         >
-          <Card className="p-6 bg-gray-800/95 border border-gray-600/50 shadow-lg relative max-h-[90vh] overflow-y-auto scrollbar-thin">
+          <Card 
+            className="profile-modal w-full bg-gray-800/95 border border-gray-600/50 shadow-lg relative"
+            style={{ padding: '2rem', maxWidth: '100%' }} /* 패딩과 너비 조정 */
+          >
             {/* Background decoration - 스크린샷과 동일한 어두운 배경 */}
             <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
             <motion.div 
@@ -125,7 +129,7 @@ export function DailyCheckInModal({
               transition={{ duration: 8, repeat: Infinity, repeatType: 'reverse' }}
             />
             
-            <div className="relative" ref={confettiRef}>
+            <div className="relative profile-modal-content" ref={confettiRef}>
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center border border-primary/30 shadow-elegant">
@@ -182,12 +186,12 @@ export function DailyCheckInModal({
                 </div>
                 
                 {/* Main Stats Row - Streak Number + Progress */}
-                <div className="grid grid-cols-[auto_1fr] gap-3 items-center mb-4">
+                <div className="grid grid-cols-[auto_1fr] gap-6 items-center mb-6">
                   {/* Left: Large Streak Number */}
                   <motion.div
-                    className="flex flex-col items-center justify-center px-4 py-3 rounded-xl 
+                    className="flex flex-col items-center justify-center px-6 py-4 rounded-xl 
                                bg-gradient-to-br from-primary via-purple-600 to-primary/80 
-                               border-2 border-primary/60 shadow-xl shadow-primary/40 min-w-[80px]
+                               border-2 border-primary/60 shadow-xl shadow-primary/40 min-w-[100px]
                                backdrop-blur-sm"
                     animate={{ scale: [1, 1.02, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -221,13 +225,13 @@ export function DailyCheckInModal({
                 </div>
                 
                 {/* Bottom Bonus Section - Simplified Layout */}
-                <div className="p-3 rounded-xl bg-gradient-to-r from-yellow-500/25 to-orange-500/20 
+                <div className="p-4 rounded-xl bg-gradient-to-r from-yellow-500/25 to-orange-500/20 
                                 border-2 border-yellow-400/50 shadow-xl shadow-yellow-400/20 relative
                                 backdrop-blur-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 min-w-[2rem] min-h-[2rem] rounded-full bg-yellow-400/40 
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-center w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] rounded-full bg-yellow-400/40 
                                     border border-yellow-400/60 shadow-lg shadow-yellow-400/30 flex-shrink-0 aspect-square">
-                      <Award className="w-4 h-4 text-yellow-400" />
+                      <Award className="w-5 h-5 text-yellow-400" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-base font-bold text-yellow-300 leading-tight drop-shadow-sm whitespace-nowrap">
@@ -273,7 +277,7 @@ export function DailyCheckInModal({
                   <TrendingUp className="w-4 h-4 text-primary" />
                   <span>주간 보상 캘린더</span>
                 </h3>
-                <div className="grid grid-cols-7 gap-3">
+                <div className="grid grid-cols-7 gap-4">
                   {dailyRewards.map((reward, index) => {
                     const day = index + 1;
                     const isCompleted = currentStreak >= day;
@@ -317,7 +321,7 @@ export function DailyCheckInModal({
                         
                         {/* Content */}
                         <div className="relative z-10 flex flex-col items-center justify-center h-full">
-                          <div className="text-base font-bold mb-1">{day}</div>
+                          <div className="text-lg font-bold mb-1">{day}</div>
                           <div className="text-sm font-medium">{reward}💎</div>
                           
                           {/* Status indicators */}

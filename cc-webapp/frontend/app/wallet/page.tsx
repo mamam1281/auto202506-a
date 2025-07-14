@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Coins, 
+  Coins,
   Gift, 
   History, 
-  TrendingUp, 
+  TrendingUp,
   TrendingDown,
   Calendar,
   Award,
@@ -21,7 +21,7 @@ import { Button } from '../../components/ui/basic/button';
 import { SimpleProgressBar } from '../../components/SimpleProgressBar';
 
 export default function WalletPage() {
-  const [selectedTab, setSelectedTab] = useState<'balance' | 'history' | 'bonus'>('balance');
+  const [selectedTab, setSelectedTab] = useState<'history' | 'bonus'>('history');
 
   // 가상 데이터
   const walletData = {
@@ -70,36 +70,14 @@ export default function WalletPage() {
         
         {/* 프리미엄 헤더 */}
         <motion.div 
-          className="text-center py-6"
+          className="text-center py-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 style={{ 
-            fontSize: '32px',
-            fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
-            fontWeight: '300',
-            letterSpacing: '0.02em',
-            lineHeight: '1.1',
-            background: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 25%, #a5b4fc 50%, #8b5cf6 75%, #7c3aed 100%)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            color: 'transparent',
-            marginBottom: '8px',
-            textShadow: '0 8px 32px rgba(139, 92, 246, 0.3)'
-          }}>
+          <h1 className="text-white mb-0 tracking-tight" style={{ fontSize: '24px', fontWeight: '900' }}>
             💎 Cosmic Wallet
           </h1>
-          <p style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: '16px',
-            color: 'rgba(255, 255, 255, 0.8)',
-            fontWeight: '400',
-            letterSpacing: '0.025em'
-          }}>
-            Your Digital Fortune
-          </p>
         </motion.div>
 
         {/* 프리미엄 잔액 대시보드 */}
@@ -110,99 +88,127 @@ export default function WalletPage() {
           whileHover={{ y: -4, scale: 1.02 }}
           className="group"
         >
-          <div className="relative backdrop-blur-xl rounded-2xl overflow-hidden
+          <div className="relative rounded-2xl overflow-hidden
                          transition-all duration-500 flex flex-col group"
                style={{
-                 background: 'linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%)',
-                 border: '1px solid rgba(255,255,255,0.15)',
-                 boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
+                 background: 'linear-gradient(145deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 50%, rgba(139,92,246,0.05) 100%)',
+                 border: '2px solid rgba(255,255,255,0.25)',
+                 boxShadow: '0 16px 40px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.15), 0 0 20px rgba(139,92,246,0.1)'
                }}>
             
             {/* 고급 글로우 효과 */}
-            <div className="absolute inset-[1px] rounded-2xl pointer-events-none"
+            <div className="absolute inset-[2px] rounded-2xl pointer-events-none"
                  style={{
-                   background: 'linear-gradient(145deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
-                   border: '1px solid rgba(255,255,255,0.08)'
+                   background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, transparent 50%, rgba(139,92,246,0.03) 100%)',
+                   border: '1px solid rgba(255,255,255,0.12)'
                  }}></div>
 
             <div className="p-6 relative z-10">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center"
                      style={{
-                       background: 'linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
-                       border: '1px solid rgba(255,255,255,0.2)',
-                       boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
+                       background: 'linear-gradient(145deg, rgba(255,215,0,0.25) 0%, rgba(255,193,7,0.15) 100%)',
+                       border: '2px solid rgba(255,215,0,0.4)',
+                       boxShadow: '0 6px 20px rgba(255,215,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3)'
                      }}>
-                  <Coins size={24} className="text-yellow-300" />
+                  <Coins size={24} className="text-yellow-200" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }} />
                 </div>
                 <div>
                   <h2 style={{ 
                     fontSize: '18px',
                     fontFamily: "'Inter', sans-serif",
-                    color: 'rgba(255, 255, 255, 0.95)',
-                    fontWeight: '600',
-                    letterSpacing: '0.02em'
+                    color: 'rgba(255, 255, 255, 0.98)',
+                    fontWeight: '700',
+                    letterSpacing: '0.02em',
+                    textShadow: '0 2px 4px rgba(0,0,0,0.3)'
                   }}>Total Balance</h2>
                 </div>
               </div>
               
               <div className="mb-6">
-                <TokenDisplay 
-                  amount={walletData.totalBalance} 
-                  variant="premium" 
-                  size="lg"
-                  className="w-full"
-                />
+                <div className="relative inline-flex items-center justify-center px-6 py-4 rounded-3xl gap-4 transition-all duration-300 ease-out hover:scale-105 hover:brightness-110 w-full"
+                     style={{
+                       background: 'linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.08) 100%)',
+                       border: '3px solid rgba(255,255,255,0.4)',
+                       boxShadow: '0 12px 32px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.3), 0 0 30px rgba(255,255,255,0.1)'
+                     }}>
+                  <div className="relative flex items-baseline gap-1">
+                    <span style={{
+                      fontSize: '32px',
+                      fontWeight: '900',
+                      color: '#ffffff',
+                      fontFamily: "'Inter', sans-serif",
+                      textShadow: '0 4px 8px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3)',
+                      letterSpacing: '-0.02em'
+                    }}>
+                      {walletData.totalBalance.toLocaleString()}
+                    </span>
+                    <span style={{
+                      fontSize: '20px',
+                      fontWeight: '700',
+                      color: 'rgba(255,255,255,0.9)',
+                      fontFamily: "'Inter', sans-serif",
+                      textShadow: '0 2px 4px rgba(0,0,0,0.4)',
+                      marginLeft: '8px'
+                    }}>
+                      CC
+                    </span>
+                  </div>
+                </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <motion.div 
                   className="backdrop-blur-md rounded-xl p-4 transition-all duration-300 group cursor-pointer"
                   style={{
-                    background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%)',
-                    border: '1px solid rgba(16, 185, 129, 0.3)',
-                    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.1)'
+                    background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.12) 50%, rgba(5, 150, 105, 0.08) 100%)',
+                    border: '2px solid rgba(16, 185, 129, 0.4)',
+                    boxShadow: '0 8px 24px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255,255,255,0.1)'
                   }}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <div style={{
                     fontSize: '14px',
-                    color: 'rgba(16, 185, 129, 0.9)',
-                    fontWeight: '500',
+                    color: 'rgba(34, 197, 94, 0.95)',
+                    fontWeight: '600',
                     marginBottom: '4px',
-                    fontFamily: "'Inter', sans-serif"
+                    fontFamily: "'Inter', sans-serif",
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                   }}>Cash Balance</div>
                   <div style={{
                     fontSize: '16px',
-                    fontWeight: '600',
-                    color: 'rgba(255, 255, 255, 0.95)',
-                    fontFamily: "'Inter', sans-serif"
+                    fontWeight: '700',
+                    color: 'rgba(255, 255, 255, 0.98)',
+                    fontFamily: "'Inter', sans-serif",
+                    textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                   }}>{walletData.cashBalance.toLocaleString()} CC</div>
                 </motion.div>
                 
                 <motion.div 
                   className="backdrop-blur-md rounded-xl p-4 transition-all duration-300 group cursor-pointer"
                   style={{
-                    background: 'linear-gradient(145deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%)',
-                    border: '1px solid rgba(139, 92, 246, 0.3)',
-                    boxShadow: '0 4px 16px rgba(139, 92, 246, 0.1)'
+                    background: 'linear-gradient(145deg, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.12) 50%, rgba(124, 58, 237, 0.08) 100%)',
+                    border: '2px solid rgba(139, 92, 246, 0.4)',
+                    boxShadow: '0 8px 24px rgba(139, 92, 246, 0.2), inset 0 1px 0 rgba(255,255,255,0.1)'
                   }}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <div style={{
                     fontSize: '14px',
-                    color: 'rgba(139, 92, 246, 0.9)',
-                    fontWeight: '500',
+                    color: 'rgba(167, 139, 250, 0.95)',
+                    fontWeight: '600',
                     marginBottom: '4px',
-                    fontFamily: "'Inter', sans-serif"
+                    fontFamily: "'Inter', sans-serif",
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                   }}>Bonus Balance</div>
                   <div style={{
                     fontSize: '16px',
-                    fontWeight: '600',
-                    color: 'rgba(255, 255, 255, 0.95)',
-                    fontFamily: "'Inter', sans-serif"
+                    fontWeight: '700',
+                    color: 'rgba(255, 255, 255, 0.98)',
+                    fontFamily: "'Inter', sans-serif",
+                    textShadow: '0 1px 3px rgba(0,0,0,0.4)'
                   }}>{walletData.bonusBalance.toLocaleString()} CC</div>
                 </motion.div>
               </div>
@@ -214,15 +220,15 @@ export default function WalletPage() {
         <motion.div 
           className="flex backdrop-blur-xl rounded-2xl p-2"
           style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
+            border: '2px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)'
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           {[
-            { key: 'balance', label: 'Balance', icon: Coins },
             { key: 'history', label: 'History', icon: History },
             { key: 'bonus', label: 'Rewards', icon: Gift }
           ].map(({ key, label, icon: Icon }) => (
@@ -232,82 +238,36 @@ export default function WalletPage() {
               className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all duration-300 min-h-[48px] relative group"
               style={{
                 background: selectedTab === key 
-                  ? 'linear-gradient(145deg, rgba(139, 92, 246, 0.2) 0%, rgba(79, 70, 229, 0.15) 100%)'
-                  : 'transparent',
+                  ? 'linear-gradient(145deg, rgba(139, 92, 246, 0.35) 0%, rgba(79, 70, 229, 0.25) 50%, rgba(67, 56, 202, 0.15) 100%)'
+                  : 'linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)',
                 border: selectedTab === key 
-                  ? '1px solid rgba(139, 92, 246, 0.4)'
-                  : '1px solid transparent',
+                  ? '2px solid rgba(139, 92, 246, 0.6)'
+                  : '1px solid rgba(255, 255, 255, 0.15)',
                 boxShadow: selectedTab === key 
-                  ? '0 4px 16px rgba(139, 92, 246, 0.2)'
-                  : 'none',
+                  ? '0 8px 24px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255,255,255,0.2)'
+                  : '0 2px 8px rgba(0,0,0,0.1)',
                 color: selectedTab === key 
-                  ? 'rgba(255, 255, 255, 0.95)'
-                  : 'rgba(255, 255, 255, 0.7)'
+                  ? 'rgba(255, 255, 255, 0.98)'
+                  : 'rgba(255, 255, 255, 0.75)'
               }}
             >
               <Icon size={16} style={{
-                filter: selectedTab === key ? 'drop-shadow(0 2px 4px rgba(139, 92, 246, 0.3))' : 'none'
+                filter: selectedTab === key 
+                  ? 'drop-shadow(0 2px 4px rgba(139, 92, 246, 0.4)) brightness(1.1)' 
+                  : 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
               }} />
               <span style={{
                 fontSize: '14px',
-                fontWeight: selectedTab === key ? '600' : '500',
+                fontWeight: selectedTab === key ? '700' : '600',
                 fontFamily: "'Inter', sans-serif",
-                letterSpacing: '0.02em'
+                letterSpacing: '0.02em',
+                textShadow: selectedTab === key 
+                  ? '0 1px 2px rgba(0,0,0,0.3)' 
+                  : '0 1px 1px rgba(0,0,0,0.2)'
               }}>{label}</span>
             </button>
           ))}
         </motion.div>
-
-        {/* 탭 컨텐츠 */}
-        {selectedTab === 'balance' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-4"
-          >
-            {/* 빠른 액션 */}
-            <div className="grid grid-cols-2 gap-4">
-              <motion.button 
-                className="backdrop-blur-xl rounded-xl p-4 text-center transition-all duration-300"
-                style={{
-                  background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)',
-                  border: '1px solid rgba(16, 185, 129, 0.2)',
-                  boxShadow: '0 4px 16px rgba(16, 185, 129, 0.1)'
-                }}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <TrendingUp size={24} className="text-emerald-400 mx-auto mb-2" />
-                <div style={{
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontFamily: "'Inter', sans-serif"
-                }}>Deposit</div>
-              </motion.button>
-              
-              <motion.button 
-                className="backdrop-blur-xl rounded-xl p-4 text-center transition-all duration-300"
-                style={{
-                  background: 'linear-gradient(145deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%)',
-                  border: '1px solid rgba(239, 68, 68, 0.2)',
-                  boxShadow: '0 4px 16px rgba(239, 68, 68, 0.1)'
-                }}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <TrendingDown size={24} className="text-red-400 mx-auto mb-2" />
-                <div style={{
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontFamily: "'Inter', sans-serif"
-                }}>Withdraw</div>
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
 
         {/* 프리미엄 거래 내역 */}
         {selectedTab === 'history' && (
@@ -483,22 +443,11 @@ export default function WalletPage() {
                       }}>{bonus.progress}%</span>
                     </div>
                     
-                    <div className="w-full rounded-full h-2 overflow-hidden"
-                         style={{
-                           background: 'rgba(255,255,255,0.1)',
-                           border: '1px solid rgba(255,255,255,0.05)'
-                         }}>
-                      <motion.div
-                        className="h-full rounded-full"
-                        style={{
-                          background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.8) 0%, rgba(52, 211, 153, 0.9) 100%)',
-                          boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
-                        }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${bonus.progress}%` }}
-                        transition={{ duration: 1, delay: index * 0.2 }}
-                      />
-                    </div>
+                    <SimpleProgressBar 
+                      progress={bonus.progress}
+                      size="md"
+                      className="w-full"
+                    />
                     
                     <div className="flex items-center justify-between text-sm">
                       <span style={{
