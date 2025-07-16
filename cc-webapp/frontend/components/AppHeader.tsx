@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Bell, Settings, Home, Menu } from 'lucide-react';
 import Button from './Button';
 import { useRouter, usePathname } from 'next/navigation';
+import MenuModal from './ui/navigation/MenuModal';
 
 export interface AppHeaderProps {
   appName: string;
@@ -26,6 +27,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   const router = useRouter();
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Handle responsive behavior
   useEffect(() => {
@@ -57,16 +59,19 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 
   const handleNotificationsClick = () => {
     console.log('Notifications clicked');
+    router.push('/notifications');
     onNotificationsClick?.();
   };
 
   const handleSettingsClick = () => {
     console.log('Settings clicked');
+    router.push('/settings');
     onSettingsClick?.();
   };
   
   const handleMenuClick = () => {
     console.log('Menu clicked');
+    setIsMenuOpen(true);
     onMenuClick?.();
   };
 
@@ -160,37 +165,45 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   };
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 w-full h-16 border-b border-gray-700 flex justify-center z-50"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: 'rgba(26, 26, 26, 0.98)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: '1px solid #2d3748',
-        width: '100%',
-        height: '60px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 50,
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
-      }}
-    >
-      <div className="w-full max-w-[420px] flex items-center h-full relative px-3">
-        {/* Left: Back/Home Button */}
-        <BackButton />
+    <>
+      <header
+        className="fixed top-0 left-0 right-0 w-full h-16 border-b border-gray-700 flex justify-center z-50"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: 'rgba(26, 26, 26, 0.98)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderBottom: '1px solid #2d3748',
+          width: '100%',
+          height: '60px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 50,
+          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
+        }}
+      >
+        <div className="w-full max-w-[420px] flex items-center h-full relative px-3">
+          {/* Left: Back/Home Button */}
+          <BackButton />
 
-        {/* Center: App Name */}
-        <AppName />
+          {/* Center: App Name */}
+          <AppName />
 
-        {/* Right: Action Icons */}
-        <ActionButtons />
-      </div>
-    </header>
+          {/* Right: Action Icons */}
+          <ActionButtons />
+        </div>
+      </header>
+
+      {/* 메뉴 모달 */}
+      <MenuModal 
+        isOpen={isMenuOpen} 
+        onClose={() => setIsMenuOpen(false)} 
+      />
+    </>
   );
 };
 
