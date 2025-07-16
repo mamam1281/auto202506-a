@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { 
@@ -18,6 +18,7 @@ import {
   LogOut,
   ChevronRight
 } from 'lucide-react';
+import LogoutConfirmModal from '../feedback/LogoutConfirmModal';
 
 interface MenuModalProps {
   isOpen: boolean;
@@ -26,9 +27,20 @@ interface MenuModalProps {
 
 const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleNavigation = (path: string) => {
     router.push(path);
+    onClose();
+  };
+
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    // 실제 로그아웃 로직
+    router.push('/auth');
     onClose();
   };
 
@@ -48,7 +60,7 @@ const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose }) => {
   const quickActions = [
     { icon: Gift, label: '일일 보너스', action: () => console.log('Daily bonus') },
     { icon: Trophy, label: '업적', action: () => console.log('Achievements') },
-    { icon: LogOut, label: '로그아웃', action: () => console.log('Logout'), danger: true }
+    { icon: LogOut, label: '로그아웃', action: handleLogout, danger: true }
   ];
 
   return (
@@ -179,6 +191,13 @@ const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
           </motion.div>
+
+          {/* 로그아웃 확인 모달 */}
+          <LogoutConfirmModal
+            isOpen={showLogoutModal}
+            onClose={() => setShowLogoutModal(false)}
+            onConfirm={confirmLogout}
+          />
         </>
       )}
     </AnimatePresence>
