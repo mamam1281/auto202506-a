@@ -20,10 +20,10 @@
   color: #e2e8f0;
   font-family: var(--font-family-main);
   width: 100%;
-  max-width: 380px; /* 너비 최적화 */
-  height: 100vh; /* 전체 높이 사용 */
-  min-height: fit-content; /* 컨텐츠에 맞춰 높이 조정 */
-  max-height: 100vh;
+  max-width: 420px; /* 420px로 수정 */
+  height: 800px; /* 800px로 수정 */
+  min-height: 800px; /* 최소 높이도 800px */
+  max-height: 800px; /* 최대 높이도 800px */
   padding: 6px; /* 패딩 추가 감소 */
   margin: 0;
   box-sizing: border-box;

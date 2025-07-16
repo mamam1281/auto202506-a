@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Crown, Star, TrendingUp } from 'lucide-react';
-import Avatar from '../Avatar';
+import Avatar from '../ui/basic/Avatar';
 import RankBadge from './RankBadge';
 import SimpleProgressBar from '../SimpleProgressBar';
 import StatusDot from './StatusDot';
@@ -12,17 +12,22 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const [showOnlineStatus] = useState(true);
 
   return (
-    <div className="rounded-xl py-4 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg"
-         style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+    <div className="rounded-xl py-6 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg w-full"
+         style={{ 
+           paddingLeft: '32px', 
+           paddingRight: '32px',
+           maxWidth: '100% !important',
+           width: '100% !important'
+         }}>
       {/* Background decoration - 스크린샷과 동일한 어두운 배경 */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
       <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-gray-600/20 to-transparent rounded-full filter blur-3xl" />
       
       <div className="relative z-10">
         {/* 실용적인 카드형 레이아웃 - 모든 정보를 한번에 표시 */}
-        <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+        <div className="grid grid-cols-[auto_1fr_auto] gap-6 items-center">
           {/* 왼쪽: 아바타와 기본 정보 */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-5">
             <div className="relative">
               <Avatar 
                 src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nickname}`}

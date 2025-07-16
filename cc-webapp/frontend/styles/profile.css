@@ -123,9 +123,83 @@
    ================================= */
 
 .profile-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 0 var(--profile-space-md);
+  max-width: none !important; /* 제한 완전 제거 */
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 24px !important;
+}
+
+/* 모든 하위 요소도 강제 적용 */
+.profile-container > * {
+  max-width: 100% !important;
+}
+
+.profile-container .w-full {
+  max-width: 100% !important;
+}
+
+.profile-container .max-w-md,
+.profile-container .max-w-lg,
+.profile-container .max-w-xl,
+.profile-container .max-w-2xl {
+  max-width: 100% !important;
+}
+
+/* 강력한 너비 오버라이드 - 모든 프로필 컴포넌트에 적용 */
+.profile-container *,
+.profile-container *:before,
+.profile-container *:after {
+  box-sizing: border-box !important;
+}
+
+/* Tailwind 클래스 강제 오버라이드 */
+.profile-container .max-w-xs { max-width: 100% !important; }
+.profile-container .max-w-sm { max-width: 100% !important; }
+.profile-container .max-w-md { max-width: 100% !important; }
+.profile-container .max-w-lg { max-width: 100% !important; }
+.profile-container .max-w-xl { max-width: 100% !important; }
+.profile-container .max-w-2xl { max-width: 100% !important; }
+.profile-container .max-w-3xl { max-width: 100% !important; }
+.profile-container .max-w-4xl { max-width: 100% !important; }
+.profile-container .max-w-5xl { max-width: 100% !important; }
+.profile-container .max-w-6xl { max-width: 100% !important; }
+.profile-container .max-w-7xl { max-width: 100% !important; }
+
+/* 구체적인 픽셀 값들도 오버라이드 */
+.profile-container [style*="max-width: 384px"] { max-width: 100% !important; }
+.profile-container [style*="max-width: 448px"] { max-width: 100% !important; }
+.profile-container [style*="max-width: 512px"] { max-width: 100% !important; }
+.profile-container [style*="max-width: 576px"] { max-width: 100% !important; }
+.profile-container [style*="max-width: 672px"] { max-width: 100% !important; }
+.profile-container [style*="max-width: 768px"] { max-width: 100% !important; }
+
+/* 프로필 페이지 전용 너비 확장 */
+.profile-page-wide {
+  width: 100vw !important;
+  max-width: 95vw !important;
+  margin: 0 auto !important;
+  padding: 0 16px !important;
+}
+
+.profile-page-wide > * {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* 프로필 페이지 패딩 강제 설정 - 48px 방지 */
+.profile-page-wide,
+.profile-page-wide > *,
+.profile-page-wide .w-full,
+.profile-page-wide .min-h-screen {
+  padding: 16px !important;
+  padding-top: 24px !important; /* 상단 여백은 유지 */
+  padding-bottom: 32px !important; /* 하단 여백은 유지 */
+}
+
+/* 모든 프로필 관련 컴포넌트 패딩 통제 */
+.profile-container *[style*="padding"],
+.profile-page-wide *[style*="padding"] {
+  padding: 16px !important;
 }
 
 .profile-grid {
@@ -155,7 +229,7 @@
   backdrop-filter: blur(var(--profile-blur-lg));
   border: 1px solid var(--profile-border-default);
   border-radius: var(--profile-radius-2xl);
-  padding: var(--profile-space-xl);
+  padding: 16px !important; /* 32px에서 16px로 변경 */
   position: relative;
   overflow: hidden;
   transition: all var(--profile-transition-normal);
@@ -434,7 +508,7 @@
 
 /* Mobile Optimization */
 @media (max-width: 400px) {
-  .profile-card { padding: var(--profile-space-lg); }
+  .profile-card { padding: 16px !important; } /* 24px에서 16px로 변경 */
   .profile-modal { 
     padding: var(--profile-space-lg); 
     margin: var(--profile-space-md); 
@@ -447,8 +521,9 @@
 
 /* Tablet */
 @media (min-width: 768px) {
-  .profile-card { padding: var(--profile-space-2xl); }
+  .profile-card { padding: 16px !important; } /* 48px에서 16px로 변경 */
   .profile-modal { max-width: 600px !important; } /* 태블릿에서 더 넓게 - 강제 적용 */
+  .profile-container { max-width: 600px !important; } /* 프로필 컨테이너도 넓게 */
   .profile-chat-bubble {
     max-width: 350px;
     right: 2rem;
@@ -458,6 +533,7 @@
 /* Desktop */
 @media (min-width: 1024px) {
   .profile-modal { max-width: 700px !important; } /* 데스크톱에서 더 넓게 - 강제 적용 */
+  .profile-container { max-width: 700px !important; } /* 프로필 컨테이너도 넓게 */
   .profile-chat-bubble {
     max-width: 400px;
     right: 3rem;

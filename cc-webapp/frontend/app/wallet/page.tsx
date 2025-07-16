@@ -93,10 +93,10 @@ export default function WalletPage() {
                style={{
                  background: 'linear-gradient(145deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 50%, rgba(139,92,246,0.05) 100%)',
                  border: '2px solid rgba(255,255,255,0.25)',
-                 boxShadow: '0 16px 40px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.15), 0 0 20px rgba(139,92,246,0.1)'
+                 boxShadow: '0 16px 40px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.15)'
                }}>
             
-            {/* 고급 글로우 효과 */}
+            {/* 고급 글로우 효과 제거 */}
             <div className="absolute inset-[2px] rounded-2xl pointer-events-none"
                  style={{
                    background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, transparent 50%, rgba(139,92,246,0.03) 100%)',
@@ -109,9 +109,9 @@ export default function WalletPage() {
                      style={{
                        background: 'linear-gradient(145deg, rgba(255,215,0,0.25) 0%, rgba(255,193,7,0.15) 100%)',
                        border: '2px solid rgba(255,215,0,0.4)',
-                       boxShadow: '0 6px 20px rgba(255,215,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3)'
+                       boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3)'
                      }}>
-                  <Coins size={24} className="text-yellow-200" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }} />
+                  <Coins size={24} className="text-yellow-200" />
                 </div>
                 <div>
                   <h2 style={{ 
@@ -119,8 +119,7 @@ export default function WalletPage() {
                     fontFamily: "'Inter', sans-serif",
                     color: 'rgba(255, 255, 255, 0.98)',
                     fontWeight: '700',
-                    letterSpacing: '0.02em',
-                    textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                    letterSpacing: '0.02em'
                   }}>Total Balance</h2>
                 </div>
               </div>
@@ -130,7 +129,7 @@ export default function WalletPage() {
                      style={{
                        background: 'linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.08) 100%)',
                        border: '3px solid rgba(255,255,255,0.4)',
-                       boxShadow: '0 12px 32px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.3), 0 0 30px rgba(255,255,255,0.1)'
+                       boxShadow: '0 12px 32px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.3)'
                      }}>
                   <div className="relative flex items-baseline gap-1">
                     <span style={{
@@ -138,7 +137,6 @@ export default function WalletPage() {
                       fontWeight: '900',
                       color: '#ffffff',
                       fontFamily: "'Inter', sans-serif",
-                      textShadow: '0 4px 8px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3)',
                       letterSpacing: '-0.02em'
                     }}>
                       {walletData.totalBalance.toLocaleString()}
@@ -148,7 +146,6 @@ export default function WalletPage() {
                       fontWeight: '700',
                       color: 'rgba(255,255,255,0.9)',
                       fontFamily: "'Inter', sans-serif",
-                      textShadow: '0 2px 4px rgba(0,0,0,0.4)',
                       marginLeft: '8px'
                     }}>
                       CC
@@ -159,11 +156,11 @@ export default function WalletPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <motion.div 
-                  className="backdrop-blur-md rounded-xl p-4 transition-all duration-300 group cursor-pointer"
+                  className="rounded-xl p-4 transition-all duration-300 group cursor-pointer"
                   style={{
                     background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.12) 50%, rgba(5, 150, 105, 0.08) 100%)',
                     border: '2px solid rgba(16, 185, 129, 0.4)',
-                    boxShadow: '0 8px 24px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255,255,255,0.1)'
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)'
                   }}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
@@ -173,24 +170,22 @@ export default function WalletPage() {
                     color: 'rgba(34, 197, 94, 0.95)',
                     fontWeight: '600',
                     marginBottom: '4px',
-                    fontFamily: "'Inter', sans-serif",
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                    fontFamily: "'Inter', sans-serif"
                   }}>Cash Balance</div>
                   <div style={{
                     fontSize: '16px',
                     fontWeight: '700',
                     color: 'rgba(255, 255, 255, 0.98)',
-                    fontFamily: "'Inter', sans-serif",
-                    textShadow: '0 1px 3px rgba(0,0,0,0.4)'
+                    fontFamily: "'Inter', sans-serif"
                   }}>{walletData.cashBalance.toLocaleString()} CC</div>
                 </motion.div>
                 
                 <motion.div 
-                  className="backdrop-blur-md rounded-xl p-4 transition-all duration-300 group cursor-pointer"
+                  className="rounded-xl p-4 transition-all duration-300 group cursor-pointer"
                   style={{
                     background: 'linear-gradient(145deg, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.12) 50%, rgba(124, 58, 237, 0.08) 100%)',
                     border: '2px solid rgba(139, 92, 246, 0.4)',
-                    boxShadow: '0 8px 24px rgba(139, 92, 246, 0.2), inset 0 1px 0 rgba(255,255,255,0.1)'
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)'
                   }}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
@@ -200,15 +195,13 @@ export default function WalletPage() {
                     color: 'rgba(167, 139, 250, 0.95)',
                     fontWeight: '600',
                     marginBottom: '4px',
-                    fontFamily: "'Inter', sans-serif",
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                    fontFamily: "'Inter', sans-serif"
                   }}>Bonus Balance</div>
                   <div style={{
                     fontSize: '16px',
                     fontWeight: '700',
                     color: 'rgba(255, 255, 255, 0.98)',
-                    fontFamily: "'Inter', sans-serif",
-                    textShadow: '0 1px 3px rgba(0,0,0,0.4)'
+                    fontFamily: "'Inter', sans-serif"
                   }}>{walletData.bonusBalance.toLocaleString()} CC</div>
                 </motion.div>
               </div>
@@ -218,11 +211,11 @@ export default function WalletPage() {
 
         {/* 프리미엄 탭 네비게이션 */}
         <motion.div 
-          className="flex backdrop-blur-xl rounded-2xl p-2"
+          className="flex rounded-2xl p-2"
           style={{
             background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
             border: '2px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)'
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)'
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -244,26 +237,19 @@ export default function WalletPage() {
                   ? '2px solid rgba(139, 92, 246, 0.6)'
                   : '1px solid rgba(255, 255, 255, 0.15)',
                 boxShadow: selectedTab === key 
-                  ? '0 8px 24px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255,255,255,0.2)'
+                  ? 'inset 0 1px 0 rgba(255,255,255,0.2)'
                   : '0 2px 8px rgba(0,0,0,0.1)',
                 color: selectedTab === key 
                   ? 'rgba(255, 255, 255, 0.98)'
                   : 'rgba(255, 255, 255, 0.75)'
               }}
             >
-              <Icon size={16} style={{
-                filter: selectedTab === key 
-                  ? 'drop-shadow(0 2px 4px rgba(139, 92, 246, 0.4)) brightness(1.1)' 
-                  : 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
-              }} />
+              <Icon size={16} />
               <span style={{
                 fontSize: '14px',
                 fontWeight: selectedTab === key ? '700' : '600',
                 fontFamily: "'Inter', sans-serif",
-                letterSpacing: '0.02em',
-                textShadow: selectedTab === key 
-                  ? '0 1px 2px rgba(0,0,0,0.3)' 
-                  : '0 1px 1px rgba(0,0,0,0.2)'
+                letterSpacing: '0.02em'
               }}>{label}</span>
             </button>
           ))}
@@ -292,7 +278,7 @@ export default function WalletPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="backdrop-blur-xl rounded-xl p-4 transition-all duration-300"
+                className="rounded-xl p-4 transition-all duration-300"
                 style={{
                   background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -375,7 +361,7 @@ export default function WalletPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="backdrop-blur-xl rounded-xl p-5 transition-all duration-300"
+                className="rounded-xl p-5 transition-all duration-300"
                 style={{
                   background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -388,8 +374,7 @@ export default function WalletPage() {
                       <div className="w-12 h-12 rounded-xl flex items-center justify-center"
                            style={{
                              background: 'linear-gradient(145deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.1) 100%)',
-                             border: '1px solid rgba(255, 215, 0, 0.3)',
-                             boxShadow: '0 4px 16px rgba(255, 215, 0, 0.2)'
+                             border: '1px solid rgba(255, 215, 0, 0.3)'
                            }}>
                         <Award size={20} className="text-yellow-400" />
                       </div>

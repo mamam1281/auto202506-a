@@ -79,9 +79,9 @@ function GameCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      {/* 프리미엄 카드 디자인 */}
-      <div className="relative h-[320px] backdrop-blur-xl rounded-2xl overflow-hidden
-                      transition-all duration-500 flex flex-col group"
+      {/* 프로페셔널 게임 카드 디자인 */}
+      <div className="relative h-[180px] backdrop-blur-xl rounded-xl overflow-hidden
+                      transition-all duration-500 flex group"
            style={{
              background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
              border: '1px solid rgba(255,255,255,0.12)',
@@ -89,92 +89,97 @@ function GameCard({
            }}>
         
         {/* 고급 글로우 효과 */}
-        <div className="absolute inset-[1px] rounded-2xl pointer-events-none"
+        <div className="absolute inset-[1px] rounded-xl pointer-events-none"
              style={{
                background: 'linear-gradient(145deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
                border: '1px solid rgba(255,255,255,0.08)'
              }}></div>
 
-        {/* 메인 콘텐츠 */}
-        <div className="flex-1 flex flex-col px-1 py-3">
-          {/* 아이콘 영역 */}
-          <div className="flex justify-center mb-4 mt-2">
-            <motion.div 
-              className="w-20 h-20 rounded-2xl flex items-center justify-center
-                        group-hover:scale-105 transition-all duration-500"
-              style={{
-                background: 'linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)'
-              }}
-              whileHover={{ rotate: 5 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="text-2xl">
-                {icon}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* 제목 */}
-          <div className="text-center mb-3">
-            <h3 className="text-base font-semibold text-white leading-tight tracking-wide"
-                style={{ 
-                  fontFamily: "'Inter', sans-serif",
-                  letterSpacing: '0.02em'
-                }}>
-              {title}
-            </h3>
-          </div>
-
-          {/* 설명 */}
-          <div className="text-center mb-4 flex-1">
-            <p className="text-sm leading-relaxed px-1"
-               style={{ 
-                 fontFamily: "'Inter', sans-serif",
-                 color: 'rgba(255, 255, 255, 0.7)',
-                 letterSpacing: '0.01em',
-                 fontWeight: '400'
-               }}>
-              {description.substring(0, 20)}...
-            </p>
-          </div>
-
-          {/* 게임 정보 */}
-          <div className="flex items-center justify-between text-xs mb-4 px-1">
-            <div className="flex items-center gap-1">
-              <Coins className="w-3 h-3 text-yellow-400" />
-              <span className="text-white font-medium">{minBet}💎</span>
+        {/* 왼쪽: 아이콘 영역 */}
+        <div className="flex items-center justify-center w-24 p-4">
+          <motion.div 
+            className="w-16 h-16 rounded-lg flex items-center justify-center
+                      group-hover:scale-110 transition-all duration-500"
+            style={{
+              background: 'linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
+            }}
+            whileHover={{ rotate: 5 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="text-2xl">
+              {icon}
             </div>
-            <div className="flex items-center gap-0.5">
-              {[...Array(3)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  className={`w-2 h-2 ${
-                    i < (difficulty === 'Easy' ? 1 : difficulty === 'Medium' ? 2 : 3)
-                      ? 'text-yellow-400 fill-yellow-400'
-                      : 'text-slate-500'
-                  }`} 
-                />
-              ))}
-            </div>
-          </div>
+          </motion.div>
         </div>
 
-        {/* 플레이 버튼 */}
-        <div className="p-4 pt-0">
+        {/* 오른쪽: 콘텐츠 영역 */}
+        <div className="flex-1 flex flex-col justify-between p-4 pl-0">
+          {/* 상단: 제목과 태그 */}
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-white leading-tight mb-1"
+                  style={{ 
+                    fontFamily: "'Inter', sans-serif",
+                    letterSpacing: '-0.02em'
+                  }}>
+                {title}
+              </h3>
+              
+              {/* 난이도 태그 */}
+              <div className="flex items-center gap-2">
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  difficulty === 'Easy' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                  difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
+                  'bg-red-500/20 text-red-400 border border-red-500/30'
+                }`}>
+                  {difficulty}
+                </span>
+                {isNew && (
+                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                    NEW
+                  </span>
+                )}
+                {isHot && (
+                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                    HOT
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 중간: 게임 정보 */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-1">
+                <Coins className="w-4 h-4 text-yellow-400" />
+                <span className="text-white font-medium">{minBet}💎</span>
+                <span className="text-gray-400">min</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Trophy className="w-4 h-4 text-orange-400" />
+                <span className="text-white font-medium">{maxWin.toLocaleString()}</span>
+                <span className="text-gray-400">max</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 하단: 플레이 버튼 */}
           <motion.button
-            className="w-full py-3 px-4 rounded-xl 
-                       bg-slate-700 hover:bg-slate-600
-                       border border-slate-600/50 hover:border-slate-500/60
+            className="w-full py-2.5 px-4 rounded-lg 
+                       bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500
+                       border border-slate-500/50 hover:border-slate-400/60
                        transition-all duration-300 
                        flex items-center justify-center gap-2 
-                       text-white font-medium"
+                       text-white font-semibold text-sm
+                       shadow-lg hover:shadow-xl"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             <Play className="w-4 h-4" />
-            <span>플레이</span>
+            <span>PLAY NOW</span>
           </motion.button>
         </div>
       </div>

@@ -88,11 +88,15 @@ export default function MissionCards({
               <div 
                 className={`
                   rounded-xl min-h-[250px] relative overflow-hidden bg-gray-800/95 
-                  backdrop-blur-sm border border-gray-600/50 shadow-lg
+                  backdrop-blur-sm border border-gray-600/50 shadow-lg w-full
                   cursor-pointer transition-all duration-300 flex flex-col
                   ${isCompleted ? 'opacity-75' : 'hover:shadow-xl hover:shadow-gray-600/20'}
                 `}
-                style={{ padding: '14px' }}
+                style={{ 
+                  padding: '24px',
+                  maxWidth: '100% !important',
+                  width: '100% !important'
+                }}
                 onClick={() => onMissionClick?.(mission)}
               >
                 {/* Background decoration */}

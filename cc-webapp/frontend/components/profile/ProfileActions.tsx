@@ -18,7 +18,12 @@ export default function ProfileActions({ onLogout }: ProfileActionsProps) {
   return (
     <div className="space-y-4">
       {/* 본사 사이트 바로가기 - 개선된 단일 버튼 */}
-      <div className="rounded-xl p-6 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg">
+      <div className="rounded-xl p-8 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg w-full"
+           style={{ 
+             maxWidth: '100% !important',
+             width: '100% !important',
+             padding: '32px !important'
+           }}>
         <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
         
         <div className="relative z-10 text-center space-y-4">

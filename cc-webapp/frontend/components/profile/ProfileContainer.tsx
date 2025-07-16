@@ -8,6 +8,7 @@ import FlashOfferBanner from './FlashOfferBanner';
 import MissionCards from './MissionCards';
 import ProfileActions from './ProfileActions';
 import type { User, ProfileContainerProps, FlashOffer, Mission } from './types';
+import '../../styles/profile-mobile.css';
 
 export default function ProfileContainer({ className = '' }: ProfileContainerProps) {
   // Mock user data
@@ -112,11 +113,12 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
   };
 
   return (
-    <div className={`profile-container min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 ${className}`}>
-      {/* 프리미엄 레이아웃 - 다른 페이지와 동일한 max-w-md 사용 */}
-      <div className="w-full max-w-md min-h-screen mx-auto px-4 pt-6 pb-8 
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+      {/* 420px 모바일 최적화 컨테이너 */}
+      <div className="w-full max-w-sm min-h-screen mx-auto px-4 pt-6 pb-8 
                       overflow-y-auto overscroll-y-contain
-                      scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                      scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent"
+           style={{ maxWidth: '420px' }}>
         
         {/* Flash Offer Banner - 최우선 노출 */}
         {showFlashOffer && (
@@ -129,8 +131,8 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
           </section>
         )}
 
-        {/* 메인 컨텐츠 - 데일리 모달과 동일한 간격 (space-y-6) */}
-        <main className="space-y-6">
+        {/* 메인 컨텐츠 - 더 넓은 간격 */}
+        <main className="space-y-8">
           {/* 프로필 헤더 */}
           <section>
             <ProfileHeader user={user} />
@@ -143,8 +145,13 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
 
           {/* 데일리 체크인 - 실용앱 수준 개선 */}
           <section>
-            <div className="rounded-xl py-6 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg"
-                 style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+            <div className="rounded-xl py-8 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg w-full"
+                 style={{ 
+                   paddingLeft: '32px', 
+                   paddingRight: '32px',
+                   maxWidth: '100% !important',
+                   width: '100% !important'
+                 }}>
               <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
               <div className="relative z-10 space-y-4">
                 {/* 헤더 섹션 */}
@@ -193,8 +200,8 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
 
           {/* 미션 카드 섹션 */}
           <section>
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white px-2">오늘의 미션</h3>
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-white px-4">오늘의 미션</h3>
               <MissionCards 
                 missions={missions}
                 onMissionClick={handleMissionClick}
@@ -205,8 +212,8 @@ export default function ProfileContainer({ className = '' }: ProfileContainerPro
 
           {/* 프로필 액션 버튼들 */}
           <section>
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white px-2">빠른 액션</h3>
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-white px-4">빠른 액션</h3>
               <ProfileActions />
             </div>
           </section>

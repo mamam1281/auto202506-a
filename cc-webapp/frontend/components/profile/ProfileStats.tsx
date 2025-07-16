@@ -16,13 +16,18 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
   const handleClaimReward = () => console.log('연속 출석 보상 받기');
 
   return (
-    <div className="rounded-xl py-6 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg"
-         style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+    <div className="rounded-xl py-8 relative overflow-hidden bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 shadow-lg w-full"
+         style={{ 
+           paddingLeft: '32px', 
+           paddingRight: '32px',
+           maxWidth: '100% !important',
+           width: '100% !important'
+         }}>
       {/* 통합 색상 스킴 배경 효과 */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 via-transparent to-gray-900/30 pointer-events-none" />
       
       <div className="relative z-10 space-y-8">
-        <div className="grid grid-cols-2 gap-6" role="region" aria-label="계정 통계">
+        <div className="grid grid-cols-2 gap-8" role="region" aria-label="계정 통계">
           {/* 토큰 (가장 중요) */}
           <div className="bg-yellow-600/20 border border-yellow-500/30 
                           rounded-xl text-center focus-within:ring-2 focus-within:ring-yellow-400/50
@@ -31,7 +36,7 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
                           before:content-[''] before:absolute before:inset-0 before:rounded-xl
                           before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-black/5
                           before:pointer-events-none relative overflow-hidden"
-               style={{ padding: '12px' }}
+               style={{ padding: '16px' }}
                tabIndex={0}
                role="button"
                aria-label={`보유 토큰 ${(user.cyber_token_balance || 0).toLocaleString()}개`}>
@@ -52,7 +57,7 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
                           before:content-[''] before:absolute before:inset-0 before:rounded-xl
                           before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-black/5
                           before:pointer-events-none relative overflow-hidden"
-               style={{ padding: '12px' }}
+               style={{ padding: '16px' }}
                tabIndex={0}
                role="button"
                aria-label={`연속 출석 ${user.loginStreak || 0}일째`}>
@@ -73,7 +78,7 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
                           before:content-[''] before:absolute before:inset-0 before:rounded-xl
                           before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-black/5
                           before:pointer-events-none relative overflow-hidden"
-               style={{ padding: '12px' }}
+               style={{ padding: '16px' }}
                tabIndex={0}
                role="button"
                aria-label={`총 ${user.wins || 0}승 달성`}>
@@ -91,7 +96,7 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
                           before:content-[''] before:absolute before:inset-0 before:rounded-xl
                           before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-black/5
                           before:pointer-events-none relative overflow-hidden"
-               style={{ padding: '12px' }}
+               style={{ padding: '16px' }}
                tabIndex={0}
                role="button"
                aria-label={`${user.completedMissions || 0}개 미션 완료`}>
