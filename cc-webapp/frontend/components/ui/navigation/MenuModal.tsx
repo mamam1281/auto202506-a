@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { 
@@ -13,12 +13,8 @@ import {
   Bell,
   Gift,
   Trophy,
-  BarChart3,
-  HelpCircle,
-  LogOut,
   ChevronRight
 } from 'lucide-react';
-import LogoutConfirmModal from '../feedback/LogoutConfirmModal';
 
 interface MenuModalProps {
   isOpen: boolean;
@@ -27,20 +23,9 @@ interface MenuModalProps {
 
 const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleNavigation = (path: string) => {
     router.push(path);
-    onClose();
-  };
-
-  const handleLogout = () => {
-    setShowLogoutModal(true);
-  };
-
-  const confirmLogout = () => {
-    // 실제 로그아웃 로직
-    router.push('/auth');
     onClose();
   };
 
@@ -52,15 +37,12 @@ const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose }) => {
     { icon: Bell, label: '알림', path: '/notifications', color: 'text-amber-400' },
     { icon: Gift, label: '프로모션', path: '/promotions', color: 'text-pink-400' },
     { icon: Trophy, label: '리워드', path: '/rewards', color: 'text-orange-400' },
-    { icon: BarChart3, label: '통계', path: '/stats', color: 'text-cyan-400' },
-    { icon: Settings, label: '설정', path: '/settings', color: 'text-gray-400' },
-    { icon: HelpCircle, label: '고객지원', path: '/support', color: 'text-indigo-400' }
+    { icon: Settings, label: '설정', path: '/settings', color: 'text-gray-400' }
   ];
 
   const quickActions = [
     { icon: Gift, label: '일일 보너스', action: () => console.log('Daily bonus') },
-    { icon: Trophy, label: '업적', action: () => console.log('Achievements') },
-    { icon: LogOut, label: '로그아웃', action: handleLogout, danger: true }
+    { icon: Trophy, label: '업적', action: () => console.log('Achievements') }
   ];
 
   return (
@@ -107,9 +89,6 @@ const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose }) => {
               {/* 사용자 정보 카드 - 콤팩트 버전 */}
               <div className="p-4 border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-                    <User size={18} className="text-white" />
-                  </div>
                   <div className="flex-1">
                     <h3 className="text-white font-semibold text-sm">플레이어</h3>
                     <p className="text-gray-400 text-xs">레벨 15 • VIP 실버</p>
@@ -165,15 +144,13 @@ const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose }) => {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: (menuItems.length + index) * 0.05 }}
                           onClick={action.action}
-                          className={`w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-all duration-200 group ${
-                            action.danger ? 'hover:bg-red-500/10' : ''
-                          }`}
+                          className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-all duration-200 group"
                         >
                           <IconComponent 
                             size={20} 
-                            className={`${action.danger ? 'text-red-400' : 'text-gray-400'} group-hover:scale-110 transition-transform`} 
+                            className="text-gray-400 group-hover:scale-110 transition-transform" 
                           />
-                          <span className={`${action.danger ? 'text-red-400' : 'text-white'} group-hover:text-white/90 font-medium flex-1 text-left`}>
+                          <span className="text-white group-hover:text-white/90 font-medium flex-1 text-left">
                             {action.label}
                           </span>
                         </motion.button>
@@ -191,13 +168,6 @@ const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
           </motion.div>
-
-          {/* 로그아웃 확인 모달 */}
-          <LogoutConfirmModal
-            isOpen={showLogoutModal}
-            onClose={() => setShowLogoutModal(false)}
-            onConfirm={confirmLogout}
-          />
         </>
       )}
     </AnimatePresence>

@@ -225,7 +225,7 @@ const NotificationSettingsModal: React.FC<NotificationSettingsModalProps> = ({
                         const allEnabled = Object.values(settings.gameNotifications).every(v => v);
                         toggleCategory('gameNotifications', !allEnabled);
                       }}
-                      className="text-xs"
+                      className="text-base"
                     >
                       전체 {Object.values(settings.gameNotifications).every(v => v) ? '끄기' : '켜기'}
                     </Button>
@@ -267,7 +267,7 @@ const NotificationSettingsModal: React.FC<NotificationSettingsModalProps> = ({
                         const allEnabled = Object.values(settings.promotionNotifications).every(v => v);
                         toggleCategory('promotionNotifications', !allEnabled);
                       }}
-                      className="text-xs"
+                      className="text-base"
                     >
                       전체 {Object.values(settings.promotionNotifications).every(v => v) ? '끄기' : '켜기'}
                     </Button>

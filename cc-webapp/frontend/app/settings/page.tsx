@@ -39,7 +39,9 @@ export default function SettingsPage() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-border">
                   <span className="text-sm text-white">프로필 편집</span>
-                  <Button variant="ghost" size="sm">수정</Button>
+                  <Link href="/profile">
+                    <Button variant="ghost" size="sm">수정</Button>
+                  </Link>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-border">
                   <span className="text-sm text-white">비밀번호 변경</span>
@@ -98,14 +100,6 @@ export default function SettingsPage() {
                 <div className="flex justify-between items-center py-2 border-b border-border">
                   <span className="text-sm text-white">버전</span>
                   <span className="text-sm text-muted-foreground">1.0.0</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-border">
-                  <span className="text-sm text-white">이용약관</span>
-                  <Button variant="ghost" size="sm">보기</Button>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-border">
-                  <span className="text-sm text-white">개인정보처리방침</span>
-                  <Button variant="ghost" size="sm">보기</Button>
                 </div>
               </div>
             </section>
