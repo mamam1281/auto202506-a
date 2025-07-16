@@ -75,7 +75,7 @@ export default function WalletPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="text-white mb-0 tracking-tight" style={{ fontSize: '24px', fontWeight: '900' }}>
+          <h1 className="text-white mb-0 tracking-tight" style={{ fontSize: '30px', fontWeight: '900' }}>
             💎 Cosmic Wallet
           </h1>
         </motion.div>
@@ -103,7 +103,7 @@ export default function WalletPage() {
                    border: '1px solid rgba(255,255,255,0.12)'
                  }}></div>
 
-            <div className="p-6 relative z-10">
+            <div className="p-4 relative z-10">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center"
                      style={{
@@ -282,12 +282,12 @@ export default function WalletPage() {
                 style={{
                   background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
                   border: '1px solid rgba(255,255,255,0.1)',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.05)'
                 }}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center"
                          style={{
                            background: transaction.type === 'win' 
                              ? 'linear-gradient(145deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%)'
@@ -300,35 +300,38 @@ export default function WalletPage() {
                              ? '1px solid rgba(139, 92, 246, 0.3)'
                              : '1px solid rgba(239, 68, 68, 0.3)'
                          }}>
-                      {transaction.type === 'win' ? <TrendingUp size={16} className="text-emerald-400" /> :
-                       transaction.type === 'bonus' ? <Gift size={16} className="text-purple-400" /> :
-                       <TrendingDown size={16} className="text-red-400" />}
+                      {transaction.type === 'win' ? <TrendingUp size={20} className="text-emerald-400" /> :
+                       transaction.type === 'bonus' ? <Gift size={20} className="text-purple-400" /> :
+                       <TrendingDown size={20} className="text-red-400" />}
                     </div>
                     <div>
                       <div style={{
-                        fontSize: '14px',
+                        fontSize: '16px',
                         fontWeight: '600',
                         color: 'rgba(255, 255, 255, 0.9)',
-                        fontFamily: "'Inter', sans-serif"
+                        fontFamily: "'Inter', sans-serif",
+                        whiteSpace: 'nowrap'
                       }}>{transaction.game}</div>
                       <div style={{
-                        fontSize: '12px',
+                        fontSize: '14px',
                         color: 'rgba(255, 255, 255, 0.6)',
                         fontFamily: "'Inter', sans-serif",
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '4px'
+                        gap: '4px',
+                        whiteSpace: 'nowrap'
                       }}>
-                        <Clock size={12} />
+                        <Clock size={14} />
                         {transaction.time}
                       </div>
                     </div>
                   </div>
                   <div style={{
-                    fontSize: '14px',
+                    fontSize: '16px',
                     fontWeight: '600',
                     color: transaction.amount > 0 ? 'rgba(16, 185, 129, 0.9)' : 'rgba(239, 68, 68, 0.9)',
-                    fontFamily: "'Inter', sans-serif"
+                    fontFamily: "'Inter', sans-serif",
+                    whiteSpace: 'nowrap'
                   }}>
                     {transaction.amount > 0 ? '+' : ''}{transaction.amount} CC
                   </div>
@@ -361,11 +364,11 @@ export default function WalletPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="rounded-xl p-5 transition-all duration-300"
+                className="rounded-xl p-4 transition-all duration-300"
                 style={{
                   background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
                   border: '1px solid rgba(255,255,255,0.1)',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.05)'
                 }}
               >
                 <div className="space-y-4">

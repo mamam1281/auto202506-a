@@ -79,108 +79,73 @@ function GameCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      {/* 프로페셔널 게임 카드 디자인 */}
-      <div className="relative h-[180px] backdrop-blur-xl rounded-xl overflow-hidden
-                      transition-all duration-500 flex group"
+      {/* 깔끔하고 선명한 카드 디자인 */}
+      <div className="relative rounded-xl overflow-hidden
+                      transition-all duration-500"
            style={{
              background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
-             border: '1px solid rgba(255,255,255,0.12)',
-             boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
+             border: '1px solid rgba(255,255,255,0.15)',
+             boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
            }}>
-        
-        {/* 고급 글로우 효과 */}
-        <div className="absolute inset-[1px] rounded-xl pointer-events-none"
-             style={{
-               background: 'linear-gradient(145deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
-               border: '1px solid rgba(255,255,255,0.08)'
-             }}></div>
 
-        {/* 왼쪽: 아이콘 영역 */}
-        <div className="flex items-center justify-center w-24 p-4">
-          <motion.div 
-            className="w-16 h-16 rounded-lg flex items-center justify-center
-                      group-hover:scale-110 transition-all duration-500"
-            style={{
-              background: 'linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
-            }}
-            whileHover={{ rotate: 5 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="text-2xl">
-              {icon}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* 오른쪽: 콘텐츠 영역 */}
-        <div className="flex-1 flex flex-col justify-between p-4 pl-0">
-          {/* 상단: 제목과 태그 */}
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex-1">
-              <h3 className="text-lg font-bold text-white leading-tight mb-1"
-                  style={{ 
-                    fontFamily: "'Inter', sans-serif",
-                    letterSpacing: '-0.02em'
-                  }}>
-                {title}
-              </h3>
-              
-              {/* 난이도 태그 */}
-              <div className="flex items-center gap-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  difficulty === 'Easy' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                  difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
-                  'bg-red-500/20 text-red-400 border border-red-500/30'
-                }`}>
-                  {difficulty}
-                </span>
-                {isNew && (
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400 border border-purple-500/30">
-                    NEW
-                  </span>
-                )}
-                {isHot && (
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-orange-500/20 text-orange-400 border border-orange-500/30">
-                    HOT
-                  </span>
-                )}
-              </div>
-            </div>
+        {/* 전문적으로 재설계된 콘텐츠 */}
+        <div className="p-4 space-y-5">
+          {/* 상단: 제목 */}
+          <div className="text-center">
+            <h3 className="text-2xl font-black text-white mb-3"
+                style={{ 
+                  fontFamily: "'Inter', sans-serif",
+                  letterSpacing: '-0.02em',
+                  fontSize: '22px'
+                }}>
+              {title}
+            </h3>
+            
+            {/* 난이도 태그 */}
+            <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${
+              difficulty === 'Easy' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+              difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
+              'bg-red-500/20 text-red-400 border border-red-500/30'
+            }`}>
+              {difficulty}
+            </span>
           </div>
 
           {/* 중간: 게임 정보 */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-4 text-sm">
-              <div className="flex items-center gap-1">
-                <Coins className="w-4 h-4 text-yellow-400" />
-                <span className="text-white font-medium">{minBet}💎</span>
-                <span className="text-gray-400">min</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Trophy className="w-4 h-4 text-orange-400" />
-                <span className="text-white font-medium">{maxWin.toLocaleString()}</span>
-                <span className="text-gray-400">max</span>
-              </div>
+          <div className="flex justify-center gap-8">
+            <div className="text-center">
+              <Coins className="w-7 h-7 text-yellow-400 mx-auto mb-1.5" />
+              <div className="text-white font-bold text-lg">{minBet}💎</div>
+              <div className="text-gray-300 text-xs font-medium">MIN BET</div>
+            </div>
+            <div className="text-center">
+              <Trophy className="w-7 h-7 text-orange-400 mx-auto mb-1.5" />
+              <div className="text-white font-bold text-lg">{maxWin.toLocaleString()}</div>
+              <div className="text-gray-300 text-xs font-medium">MAX WIN</div>
             </div>
           </div>
 
-          {/* 하단: 플레이 버튼 */}
-          <motion.button
-            className="w-full py-2.5 px-4 rounded-lg 
-                       bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500
-                       border border-slate-500/50 hover:border-slate-400/60
-                       transition-all duration-300 
-                       flex items-center justify-center gap-2 
-                       text-white font-semibold text-sm
-                       shadow-lg hover:shadow-xl"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Play className="w-4 h-4" />
-            <span>PLAY NOW</span>
-          </motion.button>
+          {/* 하단: 선명한 버튼 */}
+          <div className="pt-2">
+            <motion.button
+              className="w-full py-4 px-6 rounded-lg 
+                         bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400
+                         border border-emerald-400/40 hover:border-emerald-300/60
+                         transition-all duration-300 
+                         flex items-center justify-center gap-3 
+                         text-white font-bold text-xl
+                         transform hover:scale-105 active:scale-95"
+              style={{
+                background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Play className="w-7 h-7" />
+              <span className="tracking-wide">PLAY NOW</span>
+            </motion.button>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -192,7 +157,7 @@ function HomePage() {
     {
       title: "코스믹 포츈",
       description: "우주 슬롯머신의 짜릿한 재미",
-      icon: <Sparkles className="w-5 h-5 text-purple-400 drop-shadow-lg" />,
+      icon: <Sparkles className="w-5 h-5 text-purple-400" />,
       gameType: "slots",
       accent: "purple-400",
       difficulty: "Easy",
@@ -204,7 +169,7 @@ function HomePage() {
     {
       title: "갤럭시 룰렛",
       description: "운명의 숫자를 맞춰보세요",
-      icon: <Target className="w-5 h-5 text-blue-400 drop-shadow-lg" />,
+      icon: <Target className="w-5 h-5 text-blue-400" />,
       gameType: "roulette",
       accent: "blue-400",
       difficulty: "Medium",
@@ -215,7 +180,7 @@ function HomePage() {
     {
       title: "코스믹 배틀",
       description: "가위바위보 우주 대결",
-      icon: <Dice1 className="w-5 h-5 text-emerald-400 drop-shadow-lg" />,
+      icon: <Dice1 className="w-5 h-5 text-emerald-400" />,
       gameType: "rps",
       accent: "emerald-400",
       difficulty: "Easy",
@@ -225,7 +190,7 @@ function HomePage() {
     {
       title: "스텔라 가챠",
       description: "신비로운 우주 아이템 수집",
-      icon: <Star className="w-5 h-5 text-orange-400 drop-shadow-lg" />,
+      icon: <Star className="w-5 h-5 text-orange-400" />,
       gameType: "gacha",
       accent: "orange-400",
       difficulty: "Hard",
@@ -239,19 +204,8 @@ function HomePage() {
     <div className="game-dashboard w-full max-w-[420px] mx-auto min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 
                     relative overflow-hidden">
       
-      {/* 부드러운 배경 효과 */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-yellow-500/20 rounded-full 
-                        mix-blend-multiply filter blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-purple-600/20 rounded-full 
-                        mix-blend-multiply filter blur-3xl animate-pulse animation-delay-4000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                        w-24 h-24 bg-blue-500/20 rounded-full mix-blend-multiply filter blur-3xl 
-                        animate-pulse animation-delay-2000"></div>
-      </div>
-
-      {/* 부드러운 별빛 효과 */}
-      <div className="absolute inset-0 opacity-40">
+      {/* 깔끔한 별빛 효과만 유지 */}
+      <div className="absolute inset-0 opacity-20">
         {[
           { left: 15, top: 20, delay: 0.5, duration: 3.2 },
           { left: 85, top: 35, delay: 1.2, duration: 4.1 },
@@ -262,17 +216,7 @@ function HomePage() {
           { left: 90, top: 25, delay: 2.5, duration: 3.3 },
           { left: 10, top: 50, delay: 0.3, duration: 4.0 },
           { left: 60, top: 40, delay: 1.5, duration: 3.6 },
-          { left: 80, top: 80, delay: 2.2, duration: 3.9 },
-          { left: 20, top: 30, delay: 0.7, duration: 3.4 },
-          { left: 70, top: 10, delay: 1.7, duration: 4.3 },
-          { left: 40, top: 65, delay: 1.3, duration: 3.1 },
-          { left: 95, top: 45, delay: 2.8, duration: 3.8 },
-          { left: 5, top: 75, delay: 0.9, duration: 4.1 },
-          { left: 55, top: 55, delay: 2.1, duration: 3.5 },
-          { left: 30, top: 90, delay: 1.4, duration: 3.7 },
-          { left: 65, top: 20, delay: 0.6, duration: 4.0 },
-          { left: 85, top: 65, delay: 2.3, duration: 3.2 },
-          { left: 15, top: 40, delay: 1.1, duration: 3.9 }
+          { left: 80, top: 80, delay: 2.2, duration: 3.9 }
         ].map((star, i) => (
           <div
             key={i}
@@ -288,7 +232,7 @@ function HomePage() {
       </div>
 
       {/* 메인 컨텐츠 */}
-      <div className="relative z-10 min-h-screen flex flex-col px-3">
+      <div className="relative z-10 min-h-screen flex flex-col px-2 max-w-lg mx-auto w-full">
         
         {/* 개선된 헤더 */}
         <motion.header
@@ -371,7 +315,7 @@ function HomePage() {
         {/* 게임 그리드 */}
         <main className="flex-1 pb-8">
           <motion.div
-            className="grid grid-cols-2 gap-3"
+            className="flex flex-col gap-4"
             initial="hidden"
             animate="visible"
             variants={{

@@ -40,10 +40,6 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
     router.push(path);
   };
 
-  const handleProfileClick = () => {
-    console.log('Profile clicked');
-  };
-
   const handleNotificationsClick = () => {
     console.log('Notifications clicked');
   };
@@ -58,10 +54,8 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
         {/* AppHeader - 고정 상단 (CSS fixed 적용) */}
         <AppHeader
           appName="CasinoClub"
-          onProfileClick={handleProfileClick}
           onNotificationsClick={handleNotificationsClick}
           onSettingsClick={handleSettingsClick}
-          showTokenBalanceOnMobile={true}
           hasNotifications={false}
         />
         
