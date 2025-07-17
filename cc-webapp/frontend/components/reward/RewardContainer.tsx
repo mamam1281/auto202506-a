@@ -276,19 +276,19 @@ export default function RewardContainer() {
         pointerEvents: 'none'
       }} />
 
-      <div className="max-w-md mx-auto p-4 space-y-6 relative z-10">
+      <div className="max-w-md mx-auto px-4 py-4 space-y-4 relative z-10">
         
         {/* 프리미엄 헤더 */}
         <motion.div 
-          className="text-center py-4"
+          className="text-center py-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="text-white mb-0 tracking-tight" style={{ fontSize: '30px', fontWeight: '900' }}>
+          <h1 className="text-white text-2xl font-bold tracking-tight mb-2">
             🏆 리워드 센터
           </h1>
-          <p className="text-gray-400 text-sm mt-2">플레이어 업적과 보상</p>
+          <p className="text-gray-400 text-sm">플레이어 업적과 보상</p>
         </motion.div>
 
         {/* 탭 메뉴 */}
@@ -320,29 +320,29 @@ export default function RewardContainer() {
             className="space-y-4"
           >
             {/* 출석 현황 */}
-            <div className="rounded-xl p-6 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-400/30"
+            <div className="rounded-xl p-4 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-400/30"
                  style={{
                    background: 'linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.08) 50%, rgba(59,130,246,0.05) 100%)',
                    border: '1px solid rgba(255,255,255,0.2)',
                    backdropFilter: 'blur(10px)'
                  }}>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Calendar size={24} className="text-blue-400" />
+                  <Calendar size={20} className="text-blue-400" />
                   <div>
-                    <h3 className="text-white font-semibold text-base">연속 출석</h3>
+                    <h3 className="text-white text-base font-semibold">연속 출석</h3>
                     <p className="text-gray-300 text-sm">{currentStreak}일 연속</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-blue-400 font-bold text-lg">{currentStreak}</p>
+                  <p className="text-blue-400 text-lg font-bold">{currentStreak}</p>
                   <p className="text-gray-400 text-xs">일</p>
                 </div>
               </div>
             </div>
 
             {/* 출석 달력 */}
-            <div className="grid grid-cols-5 gap-3">
+            <div className="grid grid-cols-5 gap-2">
               {dailyRewards.map((day, index) => (
                 <motion.div
                   key={day.day}
@@ -378,13 +378,13 @@ export default function RewardContainer() {
                   <div className="text-xs text-gray-400 mb-1">Day {day.day}</div>
                   <div className="text-xs text-white font-medium mb-1">{day.reward}</div>
                   {day.claimed && (
-                    <CheckCircle size={16} className="text-green-400 mx-auto" />
+                    <CheckCircle size={14} className="text-green-400 mx-auto" />
                   )}
                   {day.today && (
                     <div className="w-2 h-2 bg-yellow-400 rounded-full mx-auto animate-ping"></div>
                   )}
                   {day.special && !day.claimed && (
-                    <Star size={16} className="text-purple-400 mx-auto" />
+                    <Star size={14} className="text-purple-400 mx-auto" />
                   )}
                 </motion.div>
               ))}
@@ -406,7 +406,7 @@ export default function RewardContainer() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`rounded-xl p-6 transition-all duration-300 cursor-pointer ${
+                className={`rounded-xl p-4 transition-all duration-300 cursor-pointer ${
                   achievement.completed 
                     ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30'
                     : 'bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-400/30'
@@ -425,18 +425,18 @@ export default function RewardContainer() {
                   backdropFilter: 'blur(10px)'
                 }}
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
                     {achievement.icon}
                   </div>
                   
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-white font-semibold text-base">
+                      <h3 className="text-white text-base font-semibold">
                         {achievement.title}
                       </h3>
                       {achievement.completed && (
-                        <CheckCircle size={20} className="text-green-400" />
+                        <CheckCircle size={18} className="text-green-400" />
                       )}
                     </div>
                     
@@ -479,22 +479,22 @@ export default function RewardContainer() {
             className="space-y-4"
           >
             {/* 현재 레벨 정보 */}
-            <div className="rounded-xl p-6 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-400/30"
+            <div className="rounded-xl p-4 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-400/30"
                  style={{
                    background: 'linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.08) 50%, rgba(139,92,246,0.05) 100%)',
                    border: '1px solid rgba(255,255,255,0.2)',
                    backdropFilter: 'blur(10px)'
                  }}>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <BarChart3 size={24} className="text-purple-400" />
+                  <BarChart3 size={20} className="text-purple-400" />
                   <div>
-                    <h3 className="text-white font-semibold text-base">레벨 {currentLevel}</h3>
+                    <h3 className="text-white text-base font-semibold">레벨 {currentLevel}</h3>
                     <p className="text-gray-300 text-sm">다음 레벨까지</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-purple-400 font-bold text-lg">{currentExp}/{nextLevelExp}</p>
+                  <p className="text-purple-400 text-lg font-bold">{currentExp}/{nextLevelExp}</p>
                   <p className="text-gray-400 text-xs">EXP</p>
                 </div>
               </div>
@@ -510,13 +510,13 @@ export default function RewardContainer() {
             </div>
 
             {/* 레벨 보상 목록 */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               {levelRewards.map((reward, index) => (
                 <motion.div
                   key={reward.level}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.05 }}                    className={`rounded-xl p-4 transition-all duration-300 ${
+                  transition={{ duration: 0.6, delay: index * 0.05 }}                    className={`rounded-xl p-3 transition-all duration-300 ${
                     reward.claimed 
                       ? 'bg-green-500/20 border border-green-400/30'
                       : reward.current
@@ -555,13 +555,13 @@ export default function RewardContainer() {
                     </div>
                     
                     {reward.claimed ? (
-                      <CheckCircle size={20} className="text-green-400" />
+                      <CheckCircle size={18} className="text-green-400" />
                     ) : reward.current ? (
-                      <Award size={20} className="text-purple-400" />
+                      <Award size={18} className="text-purple-400" />
                     ) : reward.special ? (
-                      <Star size={20} className="text-yellow-400" />
+                      <Star size={18} className="text-yellow-400" />
                     ) : (
-                      <Clock size={20} className="text-gray-400" />
+                      <Clock size={18} className="text-gray-400" />
                     )}
                   </div>
                 </motion.div>
@@ -576,7 +576,7 @@ export default function RewardContainer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className="space-y-4"
+            className="space-y-3"
           >
             {accumulatedRewards.map((reward, index) => (
               <motion.div
@@ -584,7 +584,7 @@ export default function RewardContainer() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`rounded-xl p-6 transition-all duration-300 cursor-pointer ${
+                className={`rounded-xl p-4 transition-all duration-300 cursor-pointer ${
                   reward.claimed 
                     ? 'bg-gray-600/20 border border-gray-400/30 opacity-60'
                     : 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-400/30'
@@ -603,22 +603,22 @@ export default function RewardContainer() {
                   backdropFilter: 'blur(10px)'
                 }}
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                    <Gift size={20} className={reward.claimed ? "text-gray-400" : "text-emerald-400"} />
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <Gift size={18} className={reward.claimed ? "text-gray-400" : "text-emerald-400"} />
                   </div>
                   
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-white font-semibold text-base">
+                      <h3 className="text-white text-base font-semibold">
                         {reward.title}
                       </h3>
                       {reward.claimed && (
-                        <CheckCircle size={20} className="text-green-400" />
+                        <CheckCircle size={18} className="text-green-400" />
                       )}
                     </div>
                     
-                    <p className="text-emerald-400 font-medium text-sm mb-2">
+                    <p className="text-emerald-400 text-sm font-medium mb-2">
                       {reward.amount}
                     </p>
                     
@@ -633,7 +633,7 @@ export default function RewardContainer() {
                   </div>
                   
                   {!reward.claimed && (
-                    <ChevronRight size={20} className="text-emerald-400 flex-shrink-0" />
+                    <ChevronRight size={18} className="text-emerald-400 flex-shrink-0" />
                   )}
                 </div>
               </motion.div>
